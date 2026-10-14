@@ -209,3 +209,72 @@ def test_reconcile_flags_all_honesty() -> None:
     report = _ledger().reconcile()
     assert report["research_only"] is True
     assert report["live_pnl_claim"] is False
+
+
+def test_overfill_is_not_applied() -> None:
+    led = _ledger(starting_cash=1000.0)
+    led.submit(_order(qty=10.0))
+    assert led.record_fill(_fill(fid="f1", qty=6.0, price=10.0)) == "accepted"
+    assert led.record_fill(_fill(fid="f2", qty=5.0, price=10.0, t=T1, seq=2)) == "overfill"
+    report = led.reconcile()
+    assert report["counters"]["overfills"] == 1
+    assert report["computed_positions"]["SEC_A"] == 6.0
+    assert report["computed_cash"] == 940.0
+    assert report["ok"] is False
+    assert report["orders"][0]["status"] == "partial"
+
+
+def test_security_mismatch_is_not_applied() -> None:
+    led = _ledger(starting_cash=1000.0)
+    led.submit(_order(qty=10.0))
+    mismatch = Fill(
+        fill_id="f1",
+        order_id="o1",
+        security_id="OTHER",
+        quantity=10.0,
+        price=10.0,
+        fill_time=T0,
+        seq=1,
+    )
+    assert led.record_fill(mismatch) == "security_mismatch"
+    report = led.reconcile()
+    assert report["computed_positions"] == {}
+    assert report["computed_cash"] == 1000.0
+    assert report["counters"]["security_mismatches"] == 1
+    assert report["ok"] is False
+
+
+def test_cancel_then_late_fill_is_not_applied() -> None:
+    led = _ledger(starting_cash=1000.0)
+    led.submit(_order(qty=10.0))
+    led.trip_kill("halt")
+    assert led.cancel("o1") == "cancelled"
+    assert led.record_fill(_fill(qty=10.0, price=10.0)) == "fill_after_cancel"
+    report = led.reconcile()
+    assert report["computed_positions"] == {}
+    assert report["missing_fills"] == []
+    assert report["orders"][0]["status"] == "cancelled"
+    assert report["counters"]["fills_after_cancel"] == 1
+    assert report["ok"] is False
+
+
+def test_cancel_rejects_unknown_duplicate_and_filled() -> None:
+    led = _ledger()
+    assert led.cancel("missing") == "unknown_order"
+    led.submit(_order(qty=10.0))
+    assert led.cancel("o1") == "cancelled"
+    assert led.cancel("o1") == "duplicate_cancel"
+    led.submit(_order(oid="o2", qty=4.0))
+    led.record_fill(_fill(fid="f2", oid="o2", qty=4.0))
+    assert led.cancel("o2") == "already_filled"
+
+
+def test_nonpositive_fill_is_rejected() -> None:
+    led = _ledger()
+    led.submit(_order())
+    with pytest.raises(OrderLedgerError):
+        led.record_fill(_fill(qty=0.0))
+    with pytest.raises(OrderLedgerError):
+        led.record_fill(_fill(fid="f-neg", qty=-1.0))
+    with pytest.raises(OrderLedgerError):
+        led.record_fill(_fill(fid="f-price", price=0.0))

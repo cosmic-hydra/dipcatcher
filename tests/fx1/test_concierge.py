@@ -147,8 +147,20 @@ def test_help_and_exit(env: Path, tmp_path: Path) -> None:
     concierge, out = make_concierge(tmp_path)
     assert concierge.handle_line("/help") is False
     assert "/superpower" in joined(out)
+    assert "/trade" in joined(out)
     assert concierge.handle_line("/exit") is True
     assert concierge.handle_line("quit") is True
+
+
+def test_trade_readiness_refuses_live_orders(env: Path, tmp_path: Path) -> None:
+    concierge, out = make_concierge(tmp_path)
+    assert concierge.handle_line("/trade") is False
+    text = joined(out)
+    assert "Live orders: disabled" in text
+    assert "would_promote_live=false" in text
+    assert concierge.handle_line("/trade help") is False
+    assert "dipcatcher trade session" in joined(out)
+    assert concierge.handle_line("/trade live") is False
 
 
 def test_unknown_command_reports_error(env: Path, tmp_path: Path) -> None:

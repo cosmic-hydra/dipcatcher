@@ -565,9 +565,75 @@ def sim_live(
     typer.echo("SIMULATED — no live-PnL claim.")
 
 
+@app.command()
+def trade(
+    op: str = typer.Argument(..., help="readiness or session"),
+    state: Path | None = typer.Option(None, help="Paper session state path."),
+    commands: Path | None = typer.Option(None, help="JSONL paper-session commands."),
+    starting_cash: float = typer.Option(
+        1_000_000.0, help="Simulated starting cash for a new session."
+    ),
+    resume: bool = typer.Option(False, help="Resume an existing paper session."),
+    max_order_notional: float = typer.Option(1_000_000.0),
+    max_position_notional: float = typer.Option(5_000_000.0),
+    max_gross_notional: float = typer.Option(5_000_000.0),
+    max_order_quantity: float = typer.Option(1_000_000.0),
+) -> None:
+    """Paper trading session. Live orders are refused.
+
+    ``readiness`` prints why live capital is blocked. ``session`` applies a
+    JSONL script of simulated commands (mark, submit, fill, cancel, kill,
+    clear_kill, checkpoint). Prices in the script are caller-supplied.
+    """
+    import json
+
+    from quant_fund.execution.trading_session import (
+        SessionCommandError,
+        SessionLimits,
+        format_readiness,
+        live_readiness_report,
+        load_commands,
+        run_session,
+    )
+
+    if op == "readiness":
+        report = live_readiness_report()
+        typer.echo("DATA_LABEL=SIMULATED")
+        typer.echo(format_readiness(report))
+        typer.echo(json.dumps(report, indent=2, allow_nan=False))
+        return
+    if op != "session":
+        raise typer.BadParameter("op must be readiness or session")
+    if state is None or commands is None:
+        raise typer.BadParameter("session requires --state and --commands")
+    try:
+        limits = SessionLimits(
+            max_order_quantity=max_order_quantity,
+            max_order_notional=max_order_notional,
+            max_position_notional=max_position_notional,
+            max_gross_notional=max_gross_notional,
+        )
+        script = load_commands(commands)
+        result = run_session(
+            state_path=state,
+            commands=script,
+            resume=resume,
+            starting_cash=starting_cash,
+            limits=limits,
+        )
+    except SessionCommandError as exc:
+        raise typer.BadParameter(str(exc)) from exc
+    typer.echo("DATA_LABEL=SIMULATED")
+    typer.echo("PAPER_SESSION_ONLY; live orders are refused")
+    typer.echo(json.dumps(result, indent=2, allow_nan=False))
+    if not result["consistent"]:
+        raise typer.Exit(code=1)
+
+
 __all__ = [
     "api",
     "monitor",
     "paper",
     "sim_live",
+    "trade",
 ]

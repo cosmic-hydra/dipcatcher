@@ -18,12 +18,16 @@ SYNTHETIC fills in tests are correctness fixtures only, never market evidence.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any, Literal
 
 from quant_fund.schemas.errors import ConfigError, KillSwitchActive
+
+#: Float slack for filled-quantity comparisons. Not a price tolerance.
+_QTY_EPS = 1e-9
 
 #: The only endpoint kinds this paper/simulated adapter accepts.
 ALLOWED_ENDPOINT_KINDS: frozenset[str] = frozenset({"paper", "simulated"})
@@ -96,6 +100,7 @@ class _OrderState:
     fill_ids: list[str] = field(default_factory=list)
     last_fill_time: datetime | None = None
     last_seq: int | None = None
+    cancelled: bool = False
 
 
 def _signed_qty(side: Side, quantity: float) -> float:
@@ -133,10 +138,14 @@ class OrderFillLedger:
         self._counters: dict[str, int] = {
             "orders": 0,
             "duplicate_orders": 0,
+            "cancels": 0,
             "fills": 0,
             "duplicate_fills": 0,
             "orphan_fills": 0,
             "out_of_order_fills": 0,
+            "overfills": 0,
+            "security_mismatches": 0,
+            "fills_after_cancel": 0,
         }
 
     # -- kill switch --
@@ -168,15 +177,38 @@ class OrderFillLedger:
         self._counters["orders"] += 1
         return "accepted"
 
+    def cancel(self, order_id: str) -> str:
+        """Cancel a working order. Allowed while the kill switch is tripped.
+
+        Returns ``cancelled``, ``duplicate_cancel``, ``already_filled``, or
+        ``unknown_order``. A cancel drops the residual from the missing-fill
+        set. Fills that arrive afterward are recorded and not applied.
+        """
+        if not isinstance(order_id, str) or not order_id.strip():
+            raise OrderLedgerError("order_id must be a non-empty string")
+        state = self._orders.get(order_id)
+        if state is None:
+            return "unknown_order"
+        if state.cancelled:
+            return "duplicate_cancel"
+        if state.filled_qty + _QTY_EPS >= state.order.quantity:
+            return "already_filled"
+        state.cancelled = True
+        self._counters["cancels"] += 1
+        return "cancelled"
+
     # -- fill intake --
 
     def record_fill(self, fill: Fill) -> str:
         """Record a fill idempotently, classifying every anomaly.
 
-        Returns one of ``accepted``, ``duplicate_fill``, ``orphan_fill`` or
-        ``out_of_order_fill``. Duplicates and out-of-order fills are counted
-        and never double-count into positions/cash.
+        Returns ``accepted``, ``duplicate_fill``, ``orphan_fill``,
+        ``out_of_order_fill``, ``overfill``, ``security_mismatch``, or
+        ``fill_after_cancel``. Duplicates are never double-counted. Overfills,
+        security mismatches, and fills after cancel are stored for replay and
+        are not applied to positions or cash.
         """
+        _validate_fill(fill)
         if fill.fill_id in self._fills:
             self._counters["duplicate_fills"] += 1
             return "duplicate_fill"
@@ -185,6 +217,11 @@ class OrderFillLedger:
         if state is None:
             self._counters["orphan_fills"] += 1
             return "orphan_fill"
+        blocked = self._unapplied_fill(state, fill)
+        if blocked is not None:
+            counter, verdict = blocked
+            self._counters[counter] += 1
+            return verdict
         verdict = "accepted"
         if self._is_out_of_order(state, fill):
             self._counters["out_of_order_fills"] += 1
@@ -192,6 +229,17 @@ class OrderFillLedger:
         self._apply_fill(state, fill)
         self._counters["fills"] += 1
         return verdict
+
+    def _unapplied_fill(self, state: _OrderState, fill: Fill) -> tuple[str, str] | None:
+        """Anomaly that must not move positions or cash, if any."""
+        if fill.security_id != state.order.security_id:
+            return ("security_mismatches", "security_mismatch")
+        if state.cancelled:
+            return ("fills_after_cancel", "fill_after_cancel")
+        remaining = state.order.quantity - state.filled_qty
+        if abs(fill.quantity) > remaining + _QTY_EPS:
+            return ("overfills", "overfill")
+        return None
 
     def _is_out_of_order(self, state: _OrderState, fill: Fill) -> bool:
         if state.last_fill_time is not None and fill.fill_time < state.last_fill_time:
@@ -220,7 +268,31 @@ class OrderFillLedger:
 
     def _missing_fills(self) -> list[str]:
         return [
-            oid for oid, st in self._orders.items() if st.order.expects_fill and not st.fill_ids
+            oid
+            for oid, st in self._orders.items()
+            if st.order.expects_fill and not st.cancelled and not st.fill_ids
+        ]
+
+    def _order_status(self, state: _OrderState) -> str:
+        if state.cancelled:
+            return "cancelled"
+        if state.filled_qty <= _QTY_EPS:
+            return "open"
+        if state.filled_qty + _QTY_EPS < state.order.quantity:
+            return "partial"
+        return "filled"
+
+    def _order_rows(self) -> list[dict[str, Any]]:
+        return [
+            {
+                "order_id": oid,
+                "security_id": state.order.security_id,
+                "side": state.order.side,
+                "quantity": state.order.quantity,
+                "filled_qty": state.filled_qty,
+                "status": self._order_status(state),
+            }
+            for oid, state in self._orders.items()
         ]
 
     def _drift_report(self) -> dict[str, Any]:
@@ -259,6 +331,9 @@ class OrderFillLedger:
             self._counters["duplicate_fills"]
             or self._counters["orphan_fills"]
             or self._counters["out_of_order_fills"]
+            or self._counters["overfills"]
+            or self._counters["security_mismatches"]
+            or self._counters["fills_after_cancel"]
             or missing
             or drift["alarm"]
         )
@@ -268,6 +343,7 @@ class OrderFillLedger:
             "kill_state": self._kill_state,
             "counters": dict(self._counters),
             "missing_fills": missing,
+            "orders": self._order_rows(),
             "drift": drift,
             "computed_cash": self._computed_cash,
             "computed_positions": dict(self._computed_positions),
@@ -276,6 +352,20 @@ class OrderFillLedger:
             "research_only": True,
             "live_pnl_claim": False,
         }
+
+
+def _validate_fill(fill: Fill) -> None:
+    """Reject a fill that cannot be an execution print."""
+    if isinstance(fill.quantity, bool) or not isinstance(fill.quantity, (int, float)):
+        raise OrderLedgerError("fill quantity must be a finite number")
+    if isinstance(fill.price, bool) or not isinstance(fill.price, (int, float)):
+        raise OrderLedgerError("fill price must be a finite number")
+    if not math.isfinite(float(fill.quantity)) or float(fill.quantity) <= 0.0:
+        raise OrderLedgerError("fill quantity must be finite and strictly positive")
+    if not math.isfinite(float(fill.price)) or float(fill.price) <= 0.0:
+        raise OrderLedgerError("fill price must be finite and strictly positive")
+    if not fill.fill_id or not fill.order_id or not fill.security_id:
+        raise OrderLedgerError("fill_id, order_id, and security_id must be non-empty")
 
 
 __all__ = [

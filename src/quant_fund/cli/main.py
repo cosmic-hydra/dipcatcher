@@ -100,6 +100,7 @@ from quant_fund.cli.ops_cmds import (
     paper,
     monitor,
     sim_live,
+    trade,
 )
 from quant_fund.cli.train_cmds import (
     _train as _train,
@@ -230,6 +231,7 @@ __all__ = [
     "paper",
     "monitor",
     "sim_live",
+    "trade",
     "Path",
     "typer",
     "dump_resolved",

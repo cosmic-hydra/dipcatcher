@@ -130,10 +130,30 @@ class PaperBrokerAdapter:
         self._orders: dict[str, Order] = {}
         self._order_sequence: list[str] = []
         self._fills: dict[str, Fill] = {}
+        self._cancelled: list[str] = []
         self._marks: dict[str, float] = {}
         self._persisted_nav: float | None = None
 
     # -- NAV identity (simulated mark-to-model, never live P&L) --
+
+    @property
+    def starting_cash(self) -> float:
+        return self._starting_cash
+
+    @property
+    def cash(self) -> float:
+        return float(self._ledger.reconcile()["computed_cash"])
+
+    @property
+    def marks(self) -> dict[str, float]:
+        return dict(self._marks)
+
+    def position(self, security_id: str) -> float:
+        positions = self._ledger.reconcile()["computed_positions"]
+        return float(positions.get(str(security_id), 0.0))
+
+    def reconcile(self) -> dict[str, Any]:
+        return self._ledger.reconcile()
 
     @property
     def nav(self) -> float:
@@ -160,6 +180,13 @@ class PaperBrokerAdapter:
             self._fills[fill.fill_id] = fill
         return verdict
 
+    def cancel(self, order_id: str) -> str:
+        """Cancel a working order. Risk-reducing, so a halt does not block it."""
+        verdict = self._ledger.cancel(order_id)
+        if verdict == "cancelled":
+            self._cancelled.append(order_id)
+        return verdict
+
     def trip_kill(self, reason: str) -> str:
         return self._ledger.trip_kill(reason)
 
@@ -177,6 +204,7 @@ class PaperBrokerAdapter:
             "orders": [_order_to_dict(self._orders[oid]) for oid in self._order_sequence],
             "order_sequence": list(self._order_sequence),
             "fills": [_fill_to_dict(f) for f in self._fills.values()],
+            "cancelled_order_ids": list(self._cancelled),
             "marks": dict(self._marks),
             "kill_state": self._ledger.kill_state,
             "nav": self.nav,
@@ -228,6 +256,8 @@ class PaperBrokerAdapter:
         data = json.loads(self.state_path.read_text(encoding="utf-8"))
         if not isinstance(data, dict):
             raise OrderLedgerError(f"broker state at {self.state_path} is not an object")
+        if data.get("schema") != "paper_broker_state.v1":
+            raise OrderLedgerError("broker state schema must be paper_broker_state.v1")
         return cast(dict[str, Any], data)
 
     def _replay(self, persisted: dict[str, Any]) -> dict[str, Any]:
@@ -243,6 +273,10 @@ class PaperBrokerAdapter:
                 duplicate_orders += 1
         for raw in persisted.get("fills", []):
             ledger.record_fill(_fill_from_dict(raw))
+        for order_id in _cancelled_ids(persisted):
+            verdict = ledger.cancel(order_id)
+            if verdict != "cancelled":
+                raise OrderLedgerError(f"cannot replay cancel of {order_id}: {verdict}")
         if persisted.get("kill_state") == "HALT_NEW_ORDERS":
             ledger.trip_kill("resumed_halt")
         marks = {str(k): float(v) for k, v in dict(persisted.get("marks", {})).items()}
@@ -282,12 +316,23 @@ class PaperBrokerAdapter:
             adapter.submit(order)
         for raw in persisted.get("fills", []):
             adapter.apply_fill(_fill_from_dict(raw))
+        for order_id in _cancelled_ids(persisted):
+            verdict = adapter.cancel(order_id)
+            if verdict != "cancelled":
+                raise OrderLedgerError(f"cannot replay cancel of {order_id}: {verdict}")
         for sec, price in dict(persisted.get("marks", {})).items():
             adapter.mark(str(sec), float(price))
         if persisted.get("kill_state") == "HALT_NEW_ORDERS":
             adapter.trip_kill("resumed_halt")
         adapter._persisted_nav = float(persisted.get("nav", 0.0))
         return adapter, adapter.seam_report()
+
+
+def _cancelled_ids(persisted: dict[str, Any]) -> list[str]:
+    raw = persisted.get("cancelled_order_ids", [])
+    if not isinstance(raw, list) or not all(isinstance(item, str) and item for item in raw):
+        raise OrderLedgerError("cancelled_order_ids must be a list of non-empty strings")
+    return list(raw)
 
 
 __all__ = [

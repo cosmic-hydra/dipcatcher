@@ -87,6 +87,7 @@ Slash commands:
 /flash add|list|show|remove|correct|search|refresh ...
 /keys list|set|remove           model endpoints (presence-only)
 /harness list|describe|run      registered lab commands
+/trade [readiness|help]         live orders are disabled; paper is the only book
 /use <model>  /model  /help  /exit
 ```
 
@@ -98,6 +99,23 @@ loop degrades to blocking reads (jobs still stream progress).
 On Windows the console uses blocking input because console handles are not
 supported by `select`; queued background progress appears between submitted
 lines. Full cross-platform editing and live progress remain acceptance work.
+
+## /trade — paper book, live orders refused
+
+`/trade` and `/trade readiness` print the five institutional conditions.
+Every condition is blocked or not yet collected: live orders stay disabled,
+and the report cannot be flipped from inside the process. The shell command
+that actually runs a book is simulated:
+
+```sh
+dipcatcher trade readiness
+dipcatcher trade session --state ./paper-session.json --commands ./orders.jsonl
+```
+
+`orders.jsonl` is one command per line: `mark`, `submit`, `fill`, `cancel`,
+`kill`, `clear_kill`, `checkpoint`. Prices are caller-supplied. Short sales
+are refused. A live endpoint is not a flag on this command. This session is
+not a broker connection and not evidence for a live-trading claim.
 
 ## /superpower — capability orchestration
 
