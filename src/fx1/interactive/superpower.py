@@ -86,6 +86,7 @@ _TRIGGERS: dict[str, tuple[str, ...]] = {
     "train": ("train", "fine-tune", "finetune", "lora", "qlora"),
     "optimize": ("optimize", "hyperparameter", "optuna"),
     "paper": ("paper trading", "shadow run", "simulated broker"),
+    "live": ("live desk", "live trading", "arm live", "drop folder"),
 }
 
 _CONSEQUENTIAL = frozenset({"train", "optimize", "paper"})

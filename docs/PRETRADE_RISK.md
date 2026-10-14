@@ -1,9 +1,10 @@
 # Pre-trade risk engine
 
-Standalone shadow checks for orders a simulated broker or paper loop would
-send. The engine does not submit, cancel, or amend anything. It is not
-imported by `quant_fund.execution.simulated_broker` or `quant_fund.paper.loop`.
-Connecting it to a live route is a separate decision and is not implemented.
+Standalone shadow checks for orders a simulated broker, paper loop, or the
+operator live desk would send. The engine does not submit, cancel, or amend
+anything. It is not imported by `quant_fund.execution.simulated_broker` or
+`quant_fund.paper.loop`. The desk in `quant_fund.live` calls `decide` and
+routes only after that decision. See [LIVE_DESK.md](LIVE_DESK.md).
 
 This is an operational control. It is not a research score and it does not
 report P&L.

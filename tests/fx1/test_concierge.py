@@ -147,8 +147,20 @@ def test_help_and_exit(env: Path, tmp_path: Path) -> None:
     concierge, out = make_concierge(tmp_path)
     assert concierge.handle_line("/help") is False
     assert "/superpower" in joined(out)
+    assert "/live" in joined(out)
     assert concierge.handle_line("/exit") is True
     assert concierge.handle_line("quit") is True
+
+
+def test_live_slash_does_not_transmit(env: Path, tmp_path: Path) -> None:
+    harness = FakeHarness()
+    concierge, out = make_concierge(tmp_path, harness=harness)
+    assert concierge.handle_line("/live submit --symbol AAPL --side BUY --qty 1") is False
+    text = joined(out)
+    assert "does not transmit" in text
+    assert "DIP_LIVE_ARM=1" in text
+    assert "SYNTHETIC" in text
+    assert harness.calls == []
 
 
 def test_unknown_command_reports_error(env: Path, tmp_path: Path) -> None:

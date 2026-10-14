@@ -48,6 +48,7 @@ def test_registry_covers_full_lab_surface():
         "train",
         "optimize",
         "paper",
+        "live",
     }
     assert expected <= names
     # Hidden/network-serving surfaces are deliberately unreachable by fx-1.
@@ -58,6 +59,12 @@ def test_role_filter():
     harness = Harness(runner=_fake_runner)
     verification = harness.list_commands(role=HarnessRole.VERIFICATION)
     assert verification and all(c.role == HarnessRole.VERIFICATION for c in verification)
+
+
+def test_live_harness_command_is_status_only():
+    command = next(c for c in Harness(runner=_fake_runner).list_commands() if c.name == "live")
+    assert command.argv == ["live", "status"]
+    assert command.role == HarnessRole.MODEL_TRAINING
 
 
 def test_unregistered_command_fails_closed():

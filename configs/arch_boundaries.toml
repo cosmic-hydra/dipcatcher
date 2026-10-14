@@ -70,6 +70,7 @@ packages = [
     "pretrade",   # pre-trade risk over execution
     "parity",     # backtest/live parity over execution
     "formal",     # formal trace checks over execution
+    "live",       # operator desk: shadow, loopback, drop folder
 ]
 
 [[layers]]
@@ -129,7 +130,12 @@ note = "the library must not depend on the CLI entry points"
 [[deny]]
 name = "order-path-boundary"
 importer = "**"
-forbidden = ["quant_fund.paper.**", "quant_fund.execution.simulated_broker"]
+forbidden = [
+    "quant_fund.paper.**",
+    "quant_fund.execution.simulated_broker",
+    "quant_fund.live",
+    "quant_fund.live.**",
+]
 except_importers = [
     "quant_fund.cli",
     "quant_fund.cli.**",
@@ -138,6 +144,8 @@ except_importers = [
     "quant_fund.simtest.**",
     "quant_fund.pretrade.**",
     "quant_fund.formal.**",
+    "quant_fund.live",
+    "quant_fund.live.**",
     # parity drives the simulated broker to measure backtest/live divergence —
     # same simulation-boundary role as simtest/pretrade/formal (kept in sync
     # with BROKER_ALLOWED_PREFIXES in tests/unit/test_architecture.py).
@@ -156,6 +164,8 @@ forbidden = [
     "quant_fund.monitoring.**",
     "quant_fund.observe.**",
     "quant_fund.pretrade.**",
+    "quant_fund.live",
+    "quant_fund.live.**",
 ]
 note = "research code must not import live-facing plumbing (repo hard rule)"
 

@@ -114,9 +114,13 @@ publication, preserve the run directory and resume from the last valid
 
 ## Deployment
 
-There is **no live-trading deployment** — no broker connectivity exists
-(see [INSTITUTIONAL_READINESS.md](INSTITUTIONAL_READINESS.md)). "Deployment"
-here means three research/simulation surfaces:
+There is **no hosted live-trading deployment** and no in-process broker
+session (see [INSTITUTIONAL_READINESS.md](INSTITUTIONAL_READINESS.md)).
+`dipcatcher live` is the operator desk: shadow by default, loopback for a
+SYNTHETIC rehearsal, and a drop folder for an operator-owned bridge. The
+desk does not satisfy institutional condition 2 and does not claim live
+performance. See [LIVE_DESK.md](LIVE_DESK.md). "Deployment" here means three
+research/simulation surfaces:
 
 1. **Research harness (local or container).** `make sync` installs the locked
    environment. `Dockerfile` builds the research API image (non-root uid

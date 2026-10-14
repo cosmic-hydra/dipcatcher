@@ -1,7 +1,8 @@
 """Pre-trade engine: snapshot checks, latched kill switch, signed decisions.
 
-Shadow mode is the supported deployment. ``check`` returns a bitset and does
-not route orders. Wiring this into a live broker is intentionally not provided.
+Shadow checks are the engine's job. ``check`` returns a bitset and does not
+route orders. ``quant_fund.live`` is the desk that consumes ``decide`` and,
+when armed, hands a ticket to a bridge.
 """
 
 from __future__ import annotations

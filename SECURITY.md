@@ -54,8 +54,15 @@ Sigstore and `gh attestation verify` cover signatures and SLSA provenance.
   honesty gates, and invalid receipts all *block* rather than warn.
 - Network access is opt-in (explicit `collect`, explicit API serve), never
   part of default ingest or training paths.
-- This repository has no broker connectivity and no order-placement path.
-  Reports that assume a live trading account are out of scope.
+- The paper and simulated brokers still refuse live endpoints
+  (`LiveEndpointRefused`). `dipcatcher live` is a separate operator desk.
+  It does not embed a broker SDK or a broker credential. Shadow is the
+  default and writes no order ticket. Loopback fills stay in-process and
+  are labeled SYNTHETIC. The drop folder writes a ticket only when the
+  desk was armed with the confirm phrase `SEND-LIVE-ORDERS` and the
+  process environment has `DIP_LIVE_ARM=1`. Chat cannot transmit. Reports
+  keep `live_pnl_claim` false. A live trading account is still out of
+  scope for research claims; see `docs/LIVE_DESK.md`.
 
 ## Reporting a vulnerability
 

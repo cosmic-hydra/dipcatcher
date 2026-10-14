@@ -92,7 +92,7 @@ def test_every_registered_harness_command_is_a_capability() -> None:
 
 def test_consequential_capabilities_are_training_surfaces() -> None:
     consequential = {k for k, v in CAPABILITIES.items() if v.get("consequential")}
-    assert consequential == {"train", "optimize", "paper"}
+    assert consequential == {"train", "optimize", "paper", "live"}
 
 
 def test_front_door_capabilities_present() -> None:
@@ -134,6 +134,11 @@ def test_plan_falls_back_to_web_when_no_harness_match() -> None:
     ids = plan.ids()
     assert "web_research" in ids
     assert not any(CAPABILITIES[i]["kind"] == KIND_HARNESS for i in ids)
+
+
+def test_plan_selects_the_live_desk() -> None:
+    plan = plan_goal("arm the live desk for live trading")
+    assert "live" in plan.ids()
 
 
 def test_plan_caps_harness_selections() -> None:

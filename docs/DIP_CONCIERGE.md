@@ -87,6 +87,7 @@ Slash commands:
 /flash add|list|show|remove|correct|search|refresh ...
 /keys list|set|remove           model endpoints (presence-only)
 /harness list|describe|run      registered lab commands
+/live                           operator card for the live desk (chat does not transmit)
 /use <model>  /model  /help  /exit
 ```
 

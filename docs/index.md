@@ -4,7 +4,7 @@
 
 Underneath the chat, `quant_fund` is the research harness: the data engine, the evaluation bench, and the receipt verifier. **fx-1** (`src/fx1`) is a sub-project in this repository. It contains the corpus builder, the eval bank, and training plumbing, plus a training plan. No trained checkpoint is in the tree. The declared base constant is `moonshotai/Kimi-K3`. This site documents the harness and that plan.
 
-The lab builds a point-in-time market-state object, scores forecasts with proper scoring rules, and keeps every claim tied to a sealed receipt. Simulated paper and shadow runs exercise those same gates. Live broker connectivity is not implemented.
+The lab builds a point-in-time market-state object, scores forecasts with proper scoring rules, and keeps every claim tied to a sealed receipt. Simulated paper and shadow runs exercise those same gates. `dipcatcher live` is the operator desk: shadow by default, an in-process SYNTHETIC rehearsal, and a drop folder for an operator-owned bridge. That desk does not authenticate to a broker and does not claim live performance. See [LIVE_DESK.md](LIVE_DESK.md).
 
 ## Honesty and receipts
 

@@ -65,6 +65,7 @@ conversation          plain text chats with the active model (tools: flash, web,
 /model                show the active model
 /keys list|set|remove  manage model endpoints (presence-only)
 /harness list|describe|run  registered dipcatcher harness commands (fail-closed)
+/live                 how to run the live desk (this chat does not transmit orders)
 /help                 this help
 /exit                 leave
 """
@@ -346,6 +347,28 @@ class Concierge:
             self._run_harness(tokens[1], tokens[2:])
             return False
         raise ValueError("usage: /harness [list | describe <name> | run <name> [args...]]")
+
+    def _cmd_live(self, rest: str) -> bool:
+        """Operator card. The chat never transmits an order."""
+        del rest
+        self._say(
+            "\n".join(
+                (
+                    "Live desk — this chat does not transmit orders.",
+                    "  dipcatcher live status",
+                    "  dipcatcher live arm --venue loopback",
+                    "  dipcatcher live submit --symbol AAPL --side BUY --qty 1 --mark 100",
+                    "  dipcatcher live arm --venue drop --confirm SEND-LIVE-ORDERS",
+                    "  DIP_LIVE_ARM=1 dipcatcher live submit --symbol AAPL --side BUY --qty 1 --mark 100",
+                    "Shadow is the default and transmits nothing.",
+                    "Loopback fills are SYNTHETIC.",
+                    "The drop folder is the operator bridge. Evidence conditions stay blocked.",
+                    "The desk does not report a live-performance claim.",
+                    "Approved status only: /harness run live",
+                )
+            )
+        )
+        return False
 
     def _run_harness(self, name: str, extra_args: list[str]) -> str:
         """Approval-gated, registry-constrained harness execution."""

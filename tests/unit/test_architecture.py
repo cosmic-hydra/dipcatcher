@@ -20,6 +20,7 @@ CLI_PREFIX = "quant_fund.cli"
 # They are not on the research/pipeline/models import path.
 BROKER_MODULES = ("quant_fund.execution.simulated_broker",)
 PAPER_PREFIX = "quant_fund.paper"
+LIVE_PREFIX = "quant_fund.live"
 BROKER_ALLOWED_PREFIXES = (
     "quant_fund.cli",
     "quant_fund.paper",
@@ -28,6 +29,7 @@ BROKER_ALLOWED_PREFIXES = (
     "quant_fund.pretrade",
     "quant_fund.formal",
     "quant_fund.parity",
+    "quant_fund.live",
 )
 
 
@@ -168,8 +170,10 @@ def test_core_does_not_import_broker_or_paper() -> None:
             if any(_under(module, prefix) for prefix in BROKER_ALLOWED_PREFIXES):
                 continue
             for imported in _imported_modules(path):
-                if _under(imported, PAPER_PREFIX) or any(
-                    _under(imported, broker) for broker in BROKER_MODULES
+                if (
+                    _under(imported, PAPER_PREFIX)
+                    or _under(imported, LIVE_PREFIX)
+                    or any(_under(imported, broker) for broker in BROKER_MODULES)
                 ):
                     offenders.append(f"{module} imports {imported}")
     assert offenders == []
