@@ -100,6 +100,7 @@ from quant_fund.cli.ops_cmds import (
     paper,
     monitor,
     sim_live,
+    trade,
 )
 from quant_fund.cli.live_cmds import (
     live_app as live_app,
@@ -234,6 +235,7 @@ __all__ = [
     "monitor",
     "sim_live",
     "live_app",
+    "trade",
     "Path",
     "typer",
     "dump_resolved",

@@ -10,6 +10,9 @@ slash commands:
   progress, ``/cancel`` and ``/redirect``.
 - ``/flash ...`` — inspect, correct, remove, search, and refresh persistent
   research memory.
+- ``/trade`` — live-trading readiness. Live orders stay disabled; the only
+  executable book is the paper session.
+- ``/live`` — operator card for the live desk. The chat does not transmit.
 - plain text — a conversational turn with tool access to flash context,
   a bounded web lookup, and approval-gated harness commands.
 
@@ -66,6 +69,7 @@ conversation          plain text chats with the active model (tools: flash, web,
 /keys list|set|remove  manage model endpoints (presence-only)
 /harness list|describe|run  registered dipcatcher harness commands (fail-closed)
 /live                 how to run the live desk (this chat does not transmit orders)
+/trade [readiness|help]  live orders are disabled; paper session is the only book
 /help                 this help
 /exit                 leave
 """
@@ -368,6 +372,22 @@ class Concierge:
                 )
             )
         )
+        return False
+
+    def _cmd_trade(self, rest: str) -> bool:
+        tokens = shlex.split(rest) if rest.strip() else []
+        if tokens and tokens[0] not in {"readiness", "help"}:
+            raise ValueError("usage: /trade [readiness|help]")
+        if tokens and tokens[0] == "help":
+            self._say(
+                "Live orders are disabled. /trade readiness prints the five blocked "
+                "conditions. A paper book is the shell command "
+                "`dipcatcher trade session --state <path> --commands <jsonl>`."
+            )
+            return False
+        from quant_fund.validation.live_readiness import format_readiness, live_readiness_report
+
+        self._say(format_readiness(live_readiness_report()))
         return False
 
     def _run_harness(self, name: str, extra_args: list[str]) -> str:

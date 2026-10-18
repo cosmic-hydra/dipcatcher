@@ -131,6 +131,10 @@ matrix against real broker drop-copy. Owner: Engineering; reviewer: independent.
 | 2.b.7 | Kill switch | Trips and blocks new orders | Trading |
 | 2.b.8 | **Live-endpoint refusal** | Configuring a live endpoint **raises** | Engineering |
 | 2.b.9 | Crash/resume mid-run | NAV seam parity, **no duplicate orders** | Engineering |
+| 2.b.10 | Overfill (fill quantity above the residual) | Detected and **not applied** to position or cash | Engineering |
+| 2.b.11 | Fill security differs from the order | Detected and **not applied** | Engineering |
+| 2.b.12 | Cancel, then a late fill | Cancel is durable across resume; the late fill is **not applied**. A halt does not block cancel | Engineering |
+| 2.b.13 | Paper session pre-trade | Short sales, missing marks, cash, and size caps refuse before the book moves. No network client | Engineering |
 
 ---
 

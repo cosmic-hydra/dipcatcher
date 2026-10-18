@@ -91,6 +91,23 @@ def test_resume_continues_and_totals_are_consistent(tmp_path) -> None:
     assert abs(run2.nav - 1020.0) <= 1e-6
 
 
+def test_cancel_survives_resume_and_blocks_the_late_fill(tmp_path) -> None:
+    path = tmp_path / "state.json"
+    run1 = PaperBrokerAdapter(state_path=path, starting_cash=1000.0)
+    run1.submit(_order("o1", qty=10.0))
+    run1.mark("SEC_A", 10.0)
+    run1.cancel("o1")
+    run1.checkpoint()
+
+    run2, seam = PaperBrokerAdapter.resume(path)
+    assert seam["ok"] is True
+    assert seam["nav_seam_parity"] is True
+    assert run2.cancel("o1") == "duplicate_cancel"
+    assert run2.apply_fill(_fill("f-late", "o1", qty=10.0, price=10.0)) == "fill_after_cancel"
+    assert abs(run2.nav - 1000.0) <= 1e-6
+    assert run2.position("SEC_A") == 0.0
+
+
 def test_seam_reports_research_only(tmp_path) -> None:
     path = tmp_path / "state.json"
     run = PaperBrokerAdapter(state_path=path, starting_cash=0.0)
