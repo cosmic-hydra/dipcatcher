@@ -91,9 +91,9 @@ does not score them.
 - `receipts/evidence_audit_d449e1ca0cc119a6.json`: receipt.v2; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/fast_replay_p42_conformance_20260928.json`: no schema; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/fleet_eval_5ddf15b0dc7d3ca1.json`: fleet_eval.v1; no reality_gate, backtest_overfitting block, or candidate band search
-- `receipts/fleet_eval_5e907be710811a44.json`: fleet_eval.v1; no reality_gate, backtest_overfitting block, or candidate band search
+- `receipts/fleet_eval_cee9aaee0a0f0f36.json`: fleet_eval.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/fleet_race_real_drill.json`: fleet_race.v1; no reality_gate, backtest_overfitting block, or candidate band search
-- `receipts/honest_verdict_b133e8b3992af893.json`: no schema; no reality_gate, backtest_overfitting block, or candidate band search
+- `receipts/honest_verdict_d5d9bf60e0d5e1a4.json`: no schema; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/honest_verdict_real_drill.json`: no schema; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/lane_power_drill.json`: lane_power.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/lattice_drill_verdict.json`: receipt_lattice.v1; no reality_gate, backtest_overfitting block, or candidate band search
@@ -103,7 +103,7 @@ does not score them.
 - `receipts/loss_cs_real_drill_gaussian_vs_conf_t.json`: loss_cs.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/mcs_real_drill.json`: no schema; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/mcs_vol_drill.json`: no schema; no reality_gate, backtest_overfitting block, or candidate band search
-- `receipts/monitor_run_13d20aef00774027.json`: monitor_run.v1; no reality_gate, backtest_overfitting block, or candidate band search
+- `receipts/monitor_run_85aece35e89b5b12.json`: monitor_run.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/monitor_run_drill_clean.json`: monitor_run.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/monitor_run_drill_defect.json`: monitor_run.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/monitor_run_real_drill.json`: monitor_run.v1; no reality_gate, backtest_overfitting block, or candidate band search
@@ -138,4 +138,4 @@ does not score them.
 - `receipts/suite_health_drill.json`: suite_health.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/tail_real_drill.json`: tail_audit.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/verdict_real_drill.json`: no schema; no reality_gate, backtest_overfitting block, or candidate band search
-- `receipts/vol_bench_f3bf2afc2f159ace.json`: vol_bench.v1; no reality_gate, backtest_overfitting block, or candidate band search
+- `receipts/vol_bench_ad0e217766309267.json`: vol_bench.v1; no reality_gate, backtest_overfitting block, or candidate band search

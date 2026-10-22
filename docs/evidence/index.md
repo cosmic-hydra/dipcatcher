@@ -39323,11 +39323,11 @@ counted. Prose that contains such a token is quoted verbatim.
   - 0.9
   - 0.95
 
-### `receipts/fleet_eval_5e907be710811a44.json`
+### `receipts/fleet_eval_cee9aaee0a0f0f36.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/fleet_eval_5e907be710811a44.json | c95ce361609bdb00912147e0f87548fdbd2c0221ad27b8c1a4d0ba558b9330e1 | 5e907be710811a448c7268f805138bf0e59efffecdb21b7a467678681f85c9e4 | not_checked | absent | inputs_sha256=ca64872956b0c9fb2ce99d12504ae02cf54610a95efea34c53ede9c48fd5f443 | unspecified | absent | absent | false |
+| receipts/fleet_eval_cee9aaee0a0f0f36.json | 4709607074c51beb277a3b3721f7aa8cf1609f4997a7266edc0a9708d5def667 | cee9aaee0a0f0f362fe9d12c4eb8297aecfa1d06bad8c034945fb40abf23ac61 | not_checked | absent | inputs_sha256=ca64872956b0c9fb2ce99d12504ae02cf54610a95efea34c53ede9c48fd5f443 | unspecified | absent | absent | false |
 
 - `data_label`: SYNTHETIC
 - `kind`: distribution_fleet_eval
@@ -39357,7 +39357,7 @@ counted. Prose that contains such a token is quoted verbatim.
 - `n_eval`: 64
 - `n_rows`: 10
 - `n_train`: 128
-- `receipt_sha256`: 5e907be710811a448c7268f805138bf0e59efffecdb21b7a467678681f85c9e4
+- `receipt_sha256`: cee9aaee0a0f0f362fe9d12c4eb8297aecfa1d06bad8c034945fb40abf23ac61
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -39376,13 +39376,13 @@ counted. Prose that contains such a token is quoted verbatim.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/fleet_eval_9418dee658765f89.json
-      - `sha256`: 1904079220e70c8076b7149d3340dffa3ca457627873764f16c0f29d3db36f6c
+      - `path`: data/metadata/replay/fleet_eval_80b6bfaaba13b04a.json
+      - `sha256`: 94ec2898d42f69ce7a1f29b4f63254cbf4c16032ae8a5f4a5f0aed94241f6c11
 - `results`:
   - [0]
     - `coverage_80`: 0.75
     - `coverage_90`: 0.90625
-    - `crps`: 0.009466660066469929
+    - `crps`: 0.00946666006646993
     - `error`: null
     - `family`: distribution
     - `model`: empirical
@@ -39396,14 +39396,14 @@ counted. Prose that contains such a token is quoted verbatim.
     - `pinball_0.9`: 0.0032023020990120735
     - `pinball_0.95`: 0.0016780920934117566
     - `pit_ks`: 0.09861788199866184
-    - `pit_ks_p`: 0.5298376418958527
+    - `pit_ks_p`: 0.5298376418958533
     - `seed`: 7
     - `shard`: iid_gaussian
     - `status`: ok
   - [1]
     - `coverage_80`: 0.765625
     - `coverage_90`: 0.90625
-    - `crps`: 0.009413058212869852
+    - `crps`: 0.009413058212869854
     - `error`: null
     - `family`: distribution
     - `model`: gaussian
@@ -39436,16 +39436,16 @@ counted. Prose that contains such a token is quoted verbatim.
     - `pinball_0.5`: 0.006712071030714845
     - `pinball_0.75`: 0.006213295101327136
     - `pinball_0.9`: 0.003225665682499545
-    - `pinball_0.95`: 0.0018395848036675845
+    - `pinball_0.95`: 0.0018395848036675852
     - `pit_ks`: 0.09952680663843394
-    - `pit_ks_p`: 0.5181371984963417
+    - `pit_ks_p`: 0.5181371984963419
     - `seed`: 7
     - `shard`: iid_gaussian
     - `status`: ok
   - [3]
     - `coverage_80`: 0.75
     - `coverage_90`: 0.90625
-    - `crps`: 0.00941428508499235
+    - `crps`: 0.009414285084992348
     - `error`: null
     - `family`: distribution
     - `model`: hstep_t
@@ -39455,7 +39455,7 @@ counted. Prose that contains such a token is quoted verbatim.
     - `pinball_0.1`: 0.002769856378425242
     - `pinball_0.25`: 0.005177740163532663
     - `pinball_0.5`: 0.006750982884428852
-    - `pinball_0.75`: 0.0058905528928857006
+    - `pinball_0.75`: 0.0058905528928857
     - `pinball_0.9`: 0.003140699593415551
     - `pinball_0.95`: 0.0016486355107766097
     - `pit_ks`: 0.08770862981301075
@@ -39466,7 +39466,7 @@ counted. Prose that contains such a token is quoted verbatim.
   - [4]
     - `coverage_80`: 0.75
     - `coverage_90`: 0.90625
-    - `crps`: 0.009466660066469929
+    - `crps`: 0.00946666006646993
     - `error`: null
     - `family`: distribution
     - `model`: hstep_emp
@@ -39479,15 +39479,15 @@ counted. Prose that contains such a token is quoted verbatim.
     - `pinball_0.75`: 0.005899595616393209
     - `pinball_0.9`: 0.0032023020990120743
     - `pinball_0.95`: 0.0016780920934117568
-    - `pit_ks`: 0.09861788199866217
-    - `pit_ks_p`: 0.5298376418958487
+    - `pit_ks`: 0.09861788199866228
+    - `pit_ks_p`: 0.5298376418958473
     - `seed`: 7
     - `shard`: iid_gaussian
     - `status`: ok
   - [5]
     - `coverage_80`: 0.96875
     - `coverage_90`: 1.0
-    - `crps`: 0.009603513524494758
+    - `crps`: 0.009603513524494756
     - `error`: null
     - `family`: distribution
     - `model`: empirical
@@ -39550,19 +39550,19 @@ counted. Prose that contains such a token is quoted verbatim.
   - [8]
     - `coverage_80`: 0.96875
     - `coverage_90`: 1.0
-    - `crps`: 0.009544535748182773
+    - `crps`: 0.009544535748182774
     - `error`: null
     - `family`: distribution
     - `model`: hstep_t
     - `n_eval`: 64
     - `n_train`: 128
-    - `pinball_0.05`: 0.0029057463744273054
-    - `pinball_0.1`: 0.004733329242586955
-    - `pinball_0.25`: 0.007099679022316869
+    - `pinball_0.05`: 0.002905746374427305
+    - `pinball_0.1`: 0.004733329242586957
+    - `pinball_0.25`: 0.00709967902231687
     - `pinball_0.5`: 0.005104440669116631
     - `pinball_0.75`: 0.0052870019485251555
     - `pinball_0.9`: 0.003977290671391971
-    - `pinball_0.95`: 0.0026181596954780286
+    - `pinball_0.95`: 0.0026181596954780277
     - `pit_ks`: 0.30047499040043485
     - `pit_ks_p`: null
     - `seed`: 8
@@ -39571,7 +39571,7 @@ counted. Prose that contains such a token is quoted verbatim.
   - [9]
     - `coverage_80`: 0.96875
     - `coverage_90`: 1.0
-    - `crps`: 0.009603513524494758
+    - `crps`: 0.009603513524494756
     - `error`: null
     - `family`: distribution
     - `model`: hstep_emp
@@ -50577,24 +50577,24 @@ counted. Prose that contains such a token is quoted verbatim.
   - `fail`: a recursion disagrees with the enumeration oracle — see failures[]
 - `receipt_sha256`: 2022f016f3207a83226f8faa9f16f8586785ad3f0ebe30c6dd2b6af3a8cd15c2
 
-### `receipts/honest_verdict_b133e8b3992af893.json`
+### `receipts/honest_verdict_d5d9bf60e0d5e1a4.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/honest_verdict_b133e8b3992af893.json | 1a003a670945452a5c86d033900bc33429f2981422c8938b1b8e2469fc764f3a | b133e8b3992af8937df8b38e6d89432215769344f3fd58af3251652ceba7c882 | not_checked | absent | inputs_sha256=8d8cdbcb4d70535f3b10e5dfa969b96fffdc18784fd00979e8bd587e7ee9a626 | unspecified | absent | true | false |
+| receipts/honest_verdict_d5d9bf60e0d5e1a4.json | 600a4532ac34b11a39508838c609bbc03c9bbfc6ffad8551835f2d2083a05595 | d5d9bf60e0d5e1a456b303b1cc8b6fee03cc1340e0bf12a6bad77178fcf112a2 | not_checked | absent | inputs_sha256=59fc033a0c9eadd1e0b1685773588ef5857d169cf4ddc4c8919f761da6fc0a59 | unspecified | absent | true | false |
 
 - `alpha`: 0.05
 - `components`:
   - `calibration`:
     - `alarm_origin`: 119
     - `channel_wealths`:
-      - `grapa_disp`: 1030.4024638903657
-      - `grapa_loc`: 0.4851113698532761
-      - `loc_hi`: 0.9385093598974767
-      - `loc_lo`: 0.00044817339722807835
-      - `overconf`: 1.0460856313663306e-16
+      - `grapa_disp`: 1030.4024638903652
+      - `grapa_loc`: 0.48511136985327596
+      - `loc_hi`: 0.9385093598974757
+      - `loc_lo`: 0.00044817339722807824
+      - `overconf`: 1.046085631366333e-16
       - `underconf`: 0.0
-    - `final_evalue`: 171.97108879891894
+    - `final_evalue`: 171.97108879891886
     - `miscalibrated`: true
   - `drift`:
     - `alarm_index`: null
@@ -50607,7 +50607,7 @@ counted. Prose that contains such a token is quoted verbatim.
     - `alpha`: 0.05
     - `bound`: 0.002735780949881265
     - `challenger`: challenger
-    - `cs_high`: 0.00014372628968201232
+    - `cs_high`: 0.00014372628968201243
     - `cs_low`: -0.0002043815517922361
     - `data_label`: UNKNOWN
     - `evidence`:
@@ -50620,7 +50620,7 @@ counted. Prose that contains such a token is quoted verbatim.
     - `interpretation`: inconclusive
     - `kind`: loss_cs.v1
     - `lam`: 0.5
-    - `mean_diff`: -2.8897283353086835e-05
+    - `mean_diff`: -2.8897283353086838e-05
     - `n`: 128
     - `schema`: loss_cs.v1
   - `promotion`:
@@ -50635,7 +50635,7 @@ counted. Prose that contains such a token is quoted verbatim.
     - `naive_score`: 0.00418254937835278
     - `selected_head`: qar
     - `selection_aware_ci`:
-      - 0.0038444700889850784
+      - 0.003844470088985079
       - 0.004508393721572966
     - `selection_bias`: 2.796389909611764e-06
 - `data_label`: SYNTHETIC
@@ -50650,7 +50650,7 @@ counted. Prose that contains such a token is quoted verbatim.
 - `kind`: honest_verdict.v1
 - `n_heads`: 3
 - `n_obs`: 128
-- `receipt_sha256`: b133e8b3992af8937df8b38e6d89432215769344f3fd58af3251652ceba7c882
+- `receipt_sha256`: d5d9bf60e0d5e1a456b303b1cc8b6fee03cc1340e0bf12a6bad77178fcf112a2
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -50671,8 +50671,8 @@ counted. Prose that contains such a token is quoted verbatim.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/honest_verdict_9a043a885f02042b.json
-      - `sha256`: 9725bced9cbbf03beea8c4f111e61e3c076d8875441fa2c0757fae11d0770549
+      - `path`: data/metadata/replay/honest_verdict_9b5abef8567f72c2.json
+      - `sha256`: 03d694e7d3219eef15e0be570f2bc1782da31695dce285e247a22f23cdaa9715
 - `research_only`: true
 - `run`:
   - `excluded_heads`:
@@ -59678,11 +59678,11 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
 - `research_only`: true
 - `schema`: modelcard_audit.v1
 
-### `receipts/monitor_run_13d20aef00774027.json`
+### `receipts/monitor_run_85aece35e89b5b12.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/monitor_run_13d20aef00774027.json | 3ce1cd7f59c301be6b4710326ab905313725317bee3669ae8e755f6d422bc12d | 13d20aef00774027a9772ced8a4a118c875cec064b33ed826e7b78311b411e83 | not_checked | absent | inputs_sha256=b1a31d66d88e2934bb13c29f4161d1f51ebaa0afaa3de2b135c73fbb44521b0b | unspecified | absent | true | false |
+| receipts/monitor_run_85aece35e89b5b12.json | ae2c1dec2a6718452e5d591ac736ce8ebe09ed37352619199e9190516211c266 | 85aece35e89b5b12ddd19560e9d6b32b5c23e6222f56e95cc18095a954b1bd2b | not_checked | absent | inputs_sha256=b9859c5255c17708ab5588eb88bd13ffa2eac4ff25f339b0268c67932d722db6 | unspecified | absent | true | false |
 
 - `data_label`: SYNTHETIC
 - `evidence`:
@@ -59721,7 +59721,7 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
   - `tail_cell`:
     - 0.05
     - 0.1
-- `receipt_sha256`: 13d20aef00774027a9772ced8a4a118c875cec064b33ed826e7b78311b411e83
+- `receipt_sha256`: 85aece35e89b5b12ddd19560e9d6b32b5c23e6222f56e95cc18095a954b1bd2b
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -59740,8 +59740,8 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/monitor_run_5a2fdb39470f5feb.json
-      - `sha256`: a57dca296b0cab9b3128f67956fe36150eebfdb0a026cc3db51a8a8728f231e4
+      - `path`: data/metadata/replay/monitor_run_2c9ce71fd88970e0.json
+      - `sha256`: fa219c937355ec05a205d8959e61b886ca6892533000ce840872b152e33fd059
 - `research_only`: true
 - `schema`: monitor_run.v1
 
@@ -97950,11 +97950,11 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
 - `research_only`: true
 - `schema`: vine_panel.v1
 
-### `receipts/vol_bench_f3bf2afc2f159ace.json`
+### `receipts/vol_bench_ad0e217766309267.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/vol_bench_f3bf2afc2f159ace.json | b9b70f7186d75054e91ee734b87b8aeeba22d66af713806a8d5410a9bc603ee3 | f3bf2afc2f159acea32293b04760b07db7584dd45d460d1b4c295711b31d4aea | not_checked | absent | inputs_sha256=9bf80b4bc0721991e245a7a34983a851cc7e722713f5f6212446aec936c67302 | unspecified | absent | absent | false |
+| receipts/vol_bench_ad0e217766309267.json | d3491318363e1ceea6bd2c436acca9b37023b34e039c633671f8b1f8d63b1d7f | ad0e217766309267c7691e50c029e93c6b0e61bd3babc9227d2a0ce09b723d1a | not_checked | absent | inputs_sha256=4a8e5834b0e913f6e9de2c08b870c2b6b229f8a2b4994af353d7ee02129151ff | unspecified | absent | absent | false |
 
 - `claim`: research_only
 - `data_label`: SYNTHETIC
@@ -97971,7 +97971,7 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
 - `n_error_rows`: 0
 - `n_origins`: 10
 - `n_rows`: 6
-- `receipt_sha256`: f3bf2afc2f159acea32293b04760b07db7584dd45d460d1b4c295711b31d4aea
+- `receipt_sha256`: ad0e217766309267c7691e50c029e93c6b0e61bd3babc9227d2a0ce09b723d1a
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -97994,13 +97994,13 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/vol_bench_c584407c8097493e.json
-      - `sha256`: 8594d8d5d8b0f4a50891ce3c47ae273d06890af537ed27a6274eb85587ecfd32
+      - `path`: data/metadata/replay/vol_bench_c770505112aeabce.json
+      - `sha256`: deaafdde472fe5a553c6345ef608c7b69ce3b52e334945607cb710d55693fab8
 - `results`:
   - [0]
-    - `dm_qlike_mean`: 0.026282817105292722
-    - `dm_qlike_se`: 0.023566845208215056
-    - `dm_qlike_t`: 1.1152454591644247
+    - `dm_qlike_mean`: 0.026282817105292768
+    - `dm_qlike_se`: 0.023566845208215025
+    - `dm_qlike_t`: 1.115245459164428
     - `epromotion_anytime_p`: 1.0
     - `epromotion_evalue`: 1.0
     - `epromotion_origin`: null
@@ -98014,9 +98014,9 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `shard`: garch_vol
     - `status`: ok
   - [1]
-    - `dm_qlike_mean`: 0.030448239544444134
-    - `dm_qlike_se`: 0.012281091759916499
-    - `dm_qlike_t`: 2.479277912719639
+    - `dm_qlike_mean`: 0.03044823954444418
+    - `dm_qlike_se`: 0.01228109175991647
+    - `dm_qlike_t`: 2.4792779127196485
     - `epromotion_anytime_p`: 1.0
     - `epromotion_evalue`: 1.0
     - `epromotion_origin`: null
@@ -98041,30 +98041,30 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `model`: har
     - `mse`: 2.500331818486244e-09
     - `n_origins`: 10
-    - `qlike`: 0.08498072964252756
+    - `qlike`: 0.08498072964252752
     - `seed`: 7
     - `shard`: garch_vol
     - `status`: ok
   - [3]
-    - `dm_qlike_mean`: 0.052878800151732186
+    - `dm_qlike_mean`: 0.052878800151732165
     - `dm_qlike_se`: 0.0751954896897419
-    - `dm_qlike_t`: 0.7032177111939981
+    - `dm_qlike_t`: 0.7032177111939978
     - `epromotion_anytime_p`: 0.5892857142857143
     - `epromotion_evalue`: 1.696969696969697
     - `epromotion_origin`: null
     - `error`: null
     - `horizon`: 1
     - `model`: rv_roll
-    - `mse`: 1.4262236853662166e-07
+    - `mse`: 1.4262236853662163e-07
     - `n_origins`: 10
-    - `qlike`: 0.1334280472455576
+    - `qlike`: 0.1334280472455575
     - `seed`: 8
     - `shard`: rough_vol
     - `status`: ok
   - [4]
-    - `dm_qlike_mean`: 0.00874331189813149
-    - `dm_qlike_se`: 0.04519296766068152
-    - `dm_qlike_t`: 0.19346620394080222
+    - `dm_qlike_mean`: 0.008743311898131444
+    - `dm_qlike_se`: 0.04519296766068155
+    - `dm_qlike_t`: 0.19346620394080108
     - `epromotion_anytime_p`: 0.5892857142857143
     - `epromotion_evalue`: 1.696969696969697
     - `epromotion_origin`: null
@@ -98073,7 +98073,7 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `model`: rv_ewma
     - `mse`: 1.11496408638407e-07
     - `n_origins`: 10
-    - `qlike`: 0.0892925589919569
+    - `qlike`: 0.0892925589919568
     - `seed`: 8
     - `shard`: rough_vol
     - `status`: ok
@@ -98087,9 +98087,9 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `error`: null
     - `horizon`: 1
     - `model`: har
-    - `mse`: 1.2548993848632043e-07
+    - `mse`: 1.2548993848632045e-07
     - `n_origins`: 10
-    - `qlike`: 0.08054924709382541
+    - `qlike`: 0.08054924709382535
     - `seed`: 8
     - `shard`: rough_vol
     - `status`: ok
@@ -98124,9 +98124,9 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
       - `seed`: 8
       - `vol_of_logvol`: 0.75
     - `n`: 200
-    - `parkinson_sha256`: f3edfbe36c2ac830dc677b0ec78b6b8d4bc6d82d47ae2697da655999b1808878
-    - `returns_sha256`: 28df1304f4bd66ff73589805060717b4fca43788f35b241639b158e34ae25b76
-    - `rv_sha256`: e95f54b6ca2cd8bf33e8edd948ceaf186740fa1dae5f629b45b5bb9517ddc080
+    - `parkinson_sha256`: b06404ce93bad645cb94ce8918763c05db045d317bcb9cc57a113b8448003d4c
+    - `returns_sha256`: 8239ff740c5218f389288296d32c008c6b07f61cd189b4f27d8d930b6878b385
+    - `rv_sha256`: 7051ef42837714879b112ec882b6d526ecfb8ed3d5f3a12cfa351c809e1e2936
     - `seed`: 8
 - `stride`: 1
 - `target`: cumulative_realized_variance
