@@ -49,8 +49,23 @@ def _reimport_fast_replay() -> object:
 
 
 def _restore_fast_replay() -> None:
+    """Drop ``fast_replay`` from ``sys.modules`` and reload a clean copy.
+
+    Gated ``builtins.__import__`` failures can leave a partial module entry.
+    Later tests then see ImportError on symbols that exist after a healthy
+    import — an order-dependent flake under xdist/loadfile. Callers undo the
+    gate in ``finally`` before restore; the autouse fixture also restores.
+    """
     sys.modules.pop(_MOD, None)
     importlib.import_module(_MOD)
+
+
+@pytest.fixture(autouse=True)
+def _fast_replay_module_isolation() -> object:
+    """Ensure each test in this module starts and ends with a healthy import."""
+    _restore_fast_replay()
+    yield
+    _restore_fast_replay()
 
 
 def test_fast_replay_forecast_import_error_sets_mro_none(
