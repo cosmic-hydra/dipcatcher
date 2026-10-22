@@ -5,7 +5,7 @@
 quant_fund/cli/research_cmds.py 4472
 quant_fund/microstructure/multilevel_mm.py 2227
 quant_fund/microstructure/zi_lob_simulator.py 3460
-quant_fund/research/agent.py 5839
+quant_fund/research/agent.py 5836
 quant_fund/research/catalog/registry.py 13283
 quant_fund/research/catalog/retired_families.py 7591
 fx1/cli.py 5597
