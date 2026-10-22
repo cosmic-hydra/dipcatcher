@@ -75,7 +75,6 @@ Transport = Callable[
 # an explicit ``None`` sends the JSON-null that clears the bound.
 _UNSET: Any = object()
 
-
 class HarnessTransportError(RuntimeError):
     """Network-level failure talking to the harness API."""
 
