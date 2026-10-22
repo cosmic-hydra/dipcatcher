@@ -2,22 +2,28 @@
   "files": {
     "adaptive_mix_20asset_1d_20260922.json": {
       "errors": [
-        "forbidden_metric_keys",
-        "receipt_sha256_missing_or_invalid"
+        "receipt_sha256_missing_or_invalid",
+        "forbidden_metric_keys"
       ],
       "sha256": "b59422415e556f674ea03fb8e9a3b867408bf6d163cf7c11c64feeb7e33b4313"
     },
     "adaptive_mix_band_search_20asset_1d_20260922.json": {
       "errors": [
-        "forbidden_metric_keys",
-        "receipt_sha256_missing_or_invalid"
+        "receipt_sha256_missing_or_invalid",
+        "forbidden_metric_keys"
       ],
       "sha256": "5e02918850944a68d1d45815b5928f1eed462d456eac4723ac9290514e7b97f4"
     },
+    "basis_carry_dd7705fc0f2f1c25.json": {
+      "errors": [
+        "tape_manifest_unknown"
+      ],
+      "sha256": "852f56a1e2aeb3654d406fbb14a4a2baa7cd20949d45153a98c5a99a2248f741"
+    },
     "basis_pair_candidate_20asset_1d_20260922.json": {
       "errors": [
-        "forbidden_metric_keys",
-        "receipt_sha256_missing_or_invalid"
+        "receipt_sha256_missing_or_invalid",
+        "forbidden_metric_keys"
       ],
       "sha256": "d021801c94e33d8720f9084762138893978a61e36ef670b4c0140edeaf37c1ec"
     },
@@ -26,6 +32,24 @@
         "receipt_sha256_missing_or_invalid"
       ],
       "sha256": "61c9c8f5b3e502f0c5218dd743ad030ecbb962d6822bb7b81a2b962445aa378f"
+    },
+    "cp_real_drill_gaussian_minus_conf_t_pinball.json": {
+      "errors": [
+        "missing_params"
+      ],
+      "sha256": "64a38aba74a56b44aa64dfd68ca1859d4d142c9dc2f4e0a657b447a041e434b7"
+    },
+    "cp_real_drill_gaussian_pit.json": {
+      "errors": [
+        "missing_params"
+      ],
+      "sha256": "6deaa336ee288e28ea35f93caa5d8b8b8436c99fd47efb97ceed792f6d3b8a62"
+    },
+    "crossvenue_basis_3f4ff76f517655a7.json": {
+      "errors": [
+        "tape_manifest_unknown"
+      ],
+      "sha256": "14ce799a46e282849e8e7852ff74489ed4747274c164040fcc52974bbb72a087"
     },
     "dip_bench_crypto_1d_20260925.json": {
       "errors": [
@@ -39,10 +63,22 @@
       ],
       "sha256": "8236a26489e9253dfcc1f3d879a2fd276c0023fb4d167c764c5330406ce950d8"
     },
+    "forward_record_preregistration_v1.json": {
+      "errors": [
+        "receipt_sha256_missing_or_invalid"
+      ],
+      "sha256": "d1f0022744261fbc52aa1296e8f4d859ae1d56705bf4920bbee7d4a75281cad3"
+    },
+    "forward_record_preregistration_v1.json.seal.json": {
+      "errors": [
+        "receipt_sha256_missing_or_invalid"
+      ],
+      "sha256": "afc88d0767169ff88e22920d492ddc3c2db25c9dbdd00cb391504e81bb29fbcc"
+    },
     "incumbent_bench_qlib.json": {
       "errors": [
-        "forbidden_metric_keys",
-        "receipt_sha256_missing_or_invalid"
+        "receipt_sha256_missing_or_invalid",
+        "forbidden_metric_keys"
       ],
       "sha256": "f455123351b44151d68876d1a93fa3a2dc449c51d280ee83926f22cd9861984f"
     }

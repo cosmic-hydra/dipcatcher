@@ -14,7 +14,7 @@
     },
     "receipts__forward_record_preregistration_v1.json.seal.json.tsr": {
       "sha256": "afc88d0767169ff88e22920d492ddc3c2db25c9dbdd00cb391504e81bb29fbcc",
-      "target": "receipts/forward_record_preregistration_v1.json.seal.json"
+      "target": "receipts/legacy-unsealed/forward_record_preregistration_v1.json.seal.json"
     }
   },
   "schema": "timestamp_anchors.v1"
