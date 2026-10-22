@@ -127,9 +127,22 @@ build-backend = "hatchling.build"
 
 [tool.uv]
 # Security floors for transitive packages; these are not runtime imports.
-# urllib3: CVE-2026-97687/97688/97689; virtualenv: activation/config injection
-# (CVE-2026-113722, CVE-2026-113725, CVE-2026-113726) fixed in 21.14.9.
-constraint-dependencies = ["urllib3>=2.8.0", "virtualenv>=21.14.9"]
+# Keep floors at the lowest fixed advisory version so `uv lock` cannot
+# regress below what `make audit` (all extras/groups) already cleared.
+# urllib3: CVE-2026-97687/97688/97689
+# virtualenv: CVE-2026-113722/113725/113726 (fixed in 21.14.9)
+# aiohttp: CVE-2026-111063..111750 / GHSA-2g87-pp6c-29x5 (fixed in 3.14.4)
+# certifi: PYSEC-2026-4320 / GHSA-6q48-6c7w-9gw2 (fixed in 2026.10.19)
+# pillow: CVE-2026-112390..112901 (fixed in 13.0.0)
+# yarl: advisory floor paired with the aiohttp 3.14.4+ bump (1.25.1)
+constraint-dependencies = [
+    "urllib3>=2.8.0",
+    "virtualenv>=21.14.9",
+    "aiohttp>=3.14.4",
+    "certifi>=2026.10.19",
+    "pillow>=13.0.0",
+    "yarl>=1.25.1",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/fx1", "src/quant_fund", "src/dipcatcher_cli"]

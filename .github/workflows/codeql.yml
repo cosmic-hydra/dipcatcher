@@ -36,6 +36,9 @@ jobs:
         uses: github/codeql-action/init@2892aa5e19bbd11bc0cff5427e3b750a04d9e3c2 # v4.38.2
         with:
           languages: ${{ matrix.language }}
+          # Interpreted languages: no compile step. Explicit none avoids
+          # autobuild flaking the job when no build is defined.
+          build-mode: none
           config-file: .github/codeql/codeql-config.yml
           queries: security-extended
 

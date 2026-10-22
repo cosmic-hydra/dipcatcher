@@ -34,6 +34,7 @@ updates:
       - /web
       - /replay
       - /clients/typescript
+      - /clients/typescript/fx1
     schedule:
       interval: weekly
     open-pull-requests-limit: 5

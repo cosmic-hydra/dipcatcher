@@ -1,4 +1,6 @@
 name: dipcatcher
+# Keep in sync with SECURITY.md supply-chain and tests/unit/test_workflow_security.py.
+# Nested fx1 client lives under clients/typescript/ and is covered by that path.
 paths:
   - src
   - tests
@@ -10,3 +12,7 @@ paths-ignore:
   - third_party
   - data
   - .dsh-24x7
+  - '**/node_modules'
+  - '**/dist'
+  - '**/.venv'
+  - '**/coverage'

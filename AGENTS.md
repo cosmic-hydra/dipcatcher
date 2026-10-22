@@ -46,7 +46,10 @@ make sync          # uv sync --frozen --all-groups --all-extras (uv.lock is
    `tests/fx1/test_honesty_inheritance.py` blocks drift.
 2. SYNTHETIC results are correctness tests, always labeled, never market
    evidence.
-3. No live-trading claims — no broker connectivity; see
+3. Live capital stays fail-closed. `alpaca-live` raises `LiveBrokerRefused`
+   before any HTTP call; the operator desk transmits only with both
+   `SEND-LIVE-ORDERS` and `DIP_LIVE_ARM=1`. Paper/gateway fills are not
+   research evidence. See `docs/LIVE_DESK.md`, `docs/LIVE_TRADING.md`, and
    `docs/INSTITUTIONAL_READINESS.md` for the five minimum-evidence conditions.
 4. Receipts are immutable evidence (`receipts/`, `verify-research`). Every
    research claim should be reproducible from a receipt hash.
