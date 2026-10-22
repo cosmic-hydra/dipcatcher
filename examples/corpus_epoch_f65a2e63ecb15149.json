@@ -1,0 +1,78 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "06c1d26b20b1dce6a1d5cc1a04fa4443a2a59fda0336db500cbd6136f1e864a1",
+  "inputs_sha256": "1a3a7cff42ee11dc29c77c5b7024620c84de90ceaf6500c1002228d7d1fbf5da",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "b2efc1cb9e68ee9a689ab66747c62e97d7a2df40b4aad868756ebc9ed331c1ba",
+  "members": [
+    {
+      "name": "01_receipt_round_trip.py",
+      "sha256": "34f227711127f2f73838c34f234897469e3405f65f16f1d8a8f41c8660e59771"
+    },
+    {
+      "name": "02_purged_walkforward_conformal.py",
+      "sha256": "301c12051f0bf949eb8e9a49a61c7493773086174974815607f9602665695560"
+    },
+    {
+      "name": "03_synthetic_l2_book.py",
+      "sha256": "9739f4aef5a96684e6faedde7d1bb72dd373fab5c25d54c85126402a0b87a157"
+    },
+    {
+      "name": "04_hf_ohlcv_1m.py",
+      "sha256": "44fd2d3f47ba0bb8f0c9f7d92a6460ffdf9b1eba2d31351e4f7ce75f0896ef7d"
+    },
+    {
+      "name": "05_phase1_evidence.py",
+      "sha256": "ba04234cce5ce86e8d54736561806ac0de9b8443e8ad78b687605a9b744f012b"
+    },
+    {
+      "name": "README.md",
+      "sha256": "7c043904779a47a4f883e8f833fa616d135a9a64900b43cb681205b917667181"
+    },
+    {
+      "name": "corpus_epoch_220d69b9f68c38e7.json",
+      "sha256": "2e1da21be9a1f79b55220d0597e3268737bad34df54f7c961b3ebf95e216c1b4"
+    },
+    {
+      "name": "corpus_epoch_6316b1c08fd94eec.json",
+      "sha256": "8d6a01b2f3e83b5ceb9477fb2019e13e218ca89d2011214b69ca1a481e4a7166"
+    },
+    {
+      "name": "corpus_epoch_72de59dafdb8808d.json",
+      "sha256": "e29bd1082e3651c1bb0af5133bd3bd819b1a5ce37bd899d50168c3feabe3219d"
+    },
+    {
+      "name": "corpus_epoch_a86bf03468a1e38c.json",
+      "sha256": "61b8e29c0dcb07f507b764afaafc2ef6eb94de2f2921a8335fcd0d24c96add97"
+    },
+    {
+      "name": "fixtures/hf_ohlcv_1m/ohlcv_sample.parquet",
+      "sha256": "a9e45a27ff54acf82efd38649840083742d7963386c6407cbf1a3f8ebc5486b8"
+    },
+    {
+      "name": "fx1_quickstart_http.py",
+      "sha256": "6c2922ac0bc648b671a8ec26a2efb9b1be8926fd0cf09b6df3dae6f06b9239ae"
+    },
+    {
+      "name": "fx1_quickstart_sdk.py",
+      "sha256": "e160004728f9614f8a65a07a0fcb27917cc41a0fc0be59c4924ee26f2287b3b8"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_72de59dafdb8808d.json"
+  ],
+  "members_removed": [],
+  "n_members": 13,
+  "params": {
+    "head_sha": "27ef6e63723090e07cec4e24285588ce611941b5",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_72de59dafdb8808d.json",
+  "prev_epoch_sha256": "001d9d6c234e94b5d1f3fa61f5a7682b6b53e44b5e24b49ab3954fadf2f1c6b3",
+  "receipt_sha256": "f65a2e63ecb15149987d0c30e0530aea3563f316023e52de54c81e8eb2149a8e",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

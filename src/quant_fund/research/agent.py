@@ -5617,7 +5617,17 @@ def _merge_live_optional(families: dict[str, Any], *, include: bool) -> None:
         families.update(_live_optional_family_blobs())
 
 
-def run_research(config: AppConfig, *, include_live_optional: bool = True) -> ResearchNotebook:
+def run_research(
+    config: AppConfig,
+    *,
+    include_live_optional: bool | None = None,
+) -> ResearchNotebook:
+    # Default follows DIPCATCHER_RESEARCH_REQUIRED_ONLY so CI smoke / examples
+    # can bound the catalog without forking the runner. Explicit True/False wins.
+    if include_live_optional is None:
+        from quant_fund.research.research_flags import research_required_only
+
+        include_live_optional = not research_required_only()
     set_global_seed(config.train.random_seed)
     build_gold(config, refresh=config.data.source == "synthetic")
     df = panel(config)

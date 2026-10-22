@@ -374,6 +374,10 @@ jobs:
       - name: Collect paper and analytics tests
         run: uv run pytest --collect-only -q -m smoke
       - name: Synthetic research smoke
+        # Required families alone exercise the seal/verify path; the live-optional
+        # catalog is thousands of benches and starves the smoke budget.
+        env:
+          DIPCATCHER_RESEARCH_REQUIRED_ONLY: "1"
         run: uv run dipcatcher research --config configs/research.yaml
       - name: Data lineage health
         run: |

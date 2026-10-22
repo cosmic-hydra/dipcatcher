@@ -27,6 +27,9 @@ import tempfile
 from pathlib import Path
 
 os.environ["MLFLOW_DISABLE_AGENT_HINT"] = "1"
+# Required families alone satisfy verify_research_artifact; the live-optional
+# catalog is thousands of benches and makes this example unbounded in CI.
+os.environ["DIPCATCHER_RESEARCH_REQUIRED_ONLY"] = "1"
 
 from quant_fund.config import load_config
 from quant_fund.research.agent import run_research
@@ -34,9 +37,7 @@ from quant_fund.research.catalog import family_blob_forbidden_metrics_absent
 from quant_fund.research.verify import verify_research_artifact
 
 ROOT = Path(__file__).resolve().parents[1]
-# Smaller panels leave the roughness family without a finite observation, and
-# the receipt verifier rejects that scorecard. This size matches the synthetic
-# oracle recovery used by the research-agent tests.
+# Panel sized for required-family finite observations on the synthetic oracle.
 N_ASSETS = 36
 N_DAYS = 220
 TRAIN_BARS = 80
