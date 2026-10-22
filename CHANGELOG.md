@@ -10,6 +10,15 @@ The version source is `fx1.__version__`.
 
 ### Added
 
+- **Release and deploy readiness**: `release.yml` preflight (tag ↔
+  `fx1.__version__` ↔ CHANGELOG, same-SHA CI/fx1/proofcore/matrix, plus
+  `evidence-audit`), wheel smoke, CycloneDX SBOM, Sigstore/SLSA on tags only,
+  container build + `/health` wait (no registry push), `make release-dry-run`,
+  `make docs-consistency`, production deploy runbook
+  (`docs/PRODUCTION_DEPLOY.md`) covering config/secrets/`deploy/observability`,
+  and research-API `GET /ready`. Does not tag, publish, or authorize live
+  trading.
+
 - **PROOFCORE wave 2 — causal proven runs + cryptographic replay + IO
   guard**: `quant_fund.proofcore.scheduler` (pure decision-window scheduler),
   `quant_fund.proof.runner.run_proven` (causal walk-forward over a declared
