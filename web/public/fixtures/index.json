@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-22T14:04:43.140448+00:00",
+ "generated_at": "2026-10-22T17:45:22.780694+00:00",
  "generator": "web/scripts/export_fixtures.py",
  "hash_matches": {
   "01268826f737dc0fc1fc7e28555ce3aeb54760c7d759a29bf6ad7c8be3c59e64": "configs/corpus_epoch_3c319fb43ab0351e.json",
@@ -49,7 +49,6 @@
   "195c5461c91d8d5faa684d1c3b179292e1ad717fcdabe1a61f0a851dea7e016f": "receipts/refill_hazard_amzn.json",
   "19a95549bfb8e5f3143474a94bfaa24ccc593f634237b3e8f33e811481dd0add": "receipts/fx1_cli_audit.json",
   "19bba277befd9b88272175e899a962822a40a3bd8757c750882d56d92513d8dc": "receipts/dispatch_audit.json",
-  "1a003a670945452a5c86d033900bc33429f2981422c8938b1b8e2469fc764f3a": "receipts/honest_verdict_b133e8b3992af893.json",
   "1ab3f40cde174ed27e8d82efeaacbeb7e62a66da91e7f801107e9a6555f9a0d3": "configs/corpus_epoch_ac16e3e9fc93ec03.json",
   "1ae02ca68d023ddd18c2b0023b240d1cf729b0a2b04597954548402afbe769c6": "receipts/crown_behind.json",
   "1bd84264cd6b886a28c16ff5246ec2c4467f81d0a656589c534dad34d8754846": "receipts/depth_consumption_amzn.json",
@@ -106,7 +105,6 @@
   "3a444c77bfef84e0e070d4611368569639ee6a551ed30cbdc6a107202ccbff7d": "receipts/churn_reseed.json",
   "3c1b21418c1b617164a629f45f039f341ce9bab5321c81d77831a339222cde9d": "receipts/level_gap_amzn.json",
   "3c83b261c8966f3ae7d63bb5bb18371adddb1b3ca2c21795223b8d3ceab3acc4": "receipts/fx1_client_audit.json",
-  "3ce1cd7f59c301be6b4710326ab905313725317bee3669ae8e755f6d422bc12d": "receipts/monitor_run_13d20aef00774027.json",
   "3ceb9374251d3e50f65edb6424915c17bb11fbad2b846fca7f42c3ebd3cfc901": "receipts/corpus_epoch_a1a8323db3be4842.json",
   "3d94c3ed069123be4b774613a3e35d114698ab6000ce195fa97187e2a5596bb1": "receipts/fx1_api_audit.json",
   "3d98298e540b6ab7fa14c9b8452feb06c7b5c28a2b09a55ea8a9c4b6710acb39": "receipts/hit_starve_amzn.json",
@@ -319,7 +317,6 @@
   "b90d2efaa694eb46c93cae795b121fe7019fceb4ea37d52e5242eeb417a6519e": "receipts/serial_watch_2c14615c26efd19b.json",
   "b947be50a8b9288521a245481f4e6a93d8e40c49433d28347ab039c252483d05": "configs/corpus_epoch_dcf0d8e9d5337c24.json",
   "b9a8d0e5e42087e034ca2551afedaadd6f82eeee74666794dff88fdbaeb00b4c": "receipts/attribution.json",
-  "b9b70f7186d75054e91ee734b87b8aeeba22d66af713806a8d5410a9bc603ee3": "receipts/vol_bench_f3bf2afc2f159ace.json",
   "bce466d9ffb4b6144cf78590caa1bb1c48f59ac06ad94a7141d1796013ab53fe": "receipts/contamination_audit.json",
   "bd65b431cfc36ce9ec54bd7262002eeb735025e2dc71995e983df73924bceb4b": "receipts/hypotheses_audit.json",
   "bd65e84d2037d452282b5fba052b6be102fef2e50995a14cb2a381405d8d2565": "receipts/kill_audit.json",
@@ -340,7 +337,6 @@
   "c59780d853d0f62d924a3bb673430c93ef060ecb8be9fc006a0c7fa5b815a479": "configs/corpus_epoch_0f9752e7c31f8596.json",
   "c7d13f38ed66bc3864f6f711c46ca13852bd11d70886236d74eb7f137e322dd8": "receipts/corpus_epoch_2ecce33392960d8d.json",
   "c952e24df7c07978437e3ed7f36aadf0cd13103980588013f3677e371f9775bf": "receipts/fx1_jobs_audit.json",
-  "c95ce361609bdb00912147e0f87548fdbd2c0221ad27b8c1a4d0ba558b9330e1": "receipts/fleet_eval_5e907be710811a44.json",
   "c9f800216f05073fed4da606f04823cc71bb37909d4242492f5e280cdb64964f": "receipts/calibration_audit.json",
   "cafb78f75257cff2a338fe26021e82a4eae4b8049feeb02c7256ccfef805db0f": "receipts/serial_watch_78dd891261e2aae9.json",
   "cb002632c4d286eb8d3a1c9597f86b16d05bca58d12e3b06f472b25627bd61f1": "receipts/pin_stability.json",
@@ -1016,7 +1012,7 @@
    "file": "receipts/corpus_epoch_52f80a0cc915f58d.json",
    "id": "corpus_epoch_52f80a0cc915f58d",
    "live_pnl_claim": false,
-   "n_hash_matches": 397,
+   "n_hash_matches": 393,
    "n_hashes": 403,
    "research_only": true,
    "schema": "corpus_epoch.v1"
@@ -1082,7 +1078,7 @@
    "file": "receipts/corpus_epoch_62bfa90c28254f19.json",
    "id": "corpus_epoch_62bfa90c28254f19",
    "live_pnl_claim": false,
-   "n_hash_matches": 396,
+   "n_hash_matches": 392,
    "n_hashes": 402,
    "research_only": true,
    "schema": "corpus_epoch.v1"
@@ -1379,7 +1375,7 @@
    "file": "receipts/corpus_epoch_f8d91d9a3266ce89.json",
    "id": "corpus_epoch_f8d91d9a3266ce89",
    "live_pnl_claim": false,
-   "n_hash_matches": 397,
+   "n_hash_matches": 393,
    "n_hashes": 403,
    "research_only": true,
    "schema": "corpus_epoch.v1"
@@ -1412,7 +1408,7 @@
    "file": "receipts/corpus_epoch_ff585b9d7c8badaa.json",
    "id": "corpus_epoch_ff585b9d7c8badaa",
    "live_pnl_claim": false,
-   "n_hash_matches": 399,
+   "n_hash_matches": 395,
    "n_hashes": 405,
    "research_only": true,
    "schema": "corpus_epoch.v1"
@@ -1940,7 +1936,7 @@
    "file": "receipts/evidence_audit_5c9f07c823727701.json",
    "id": "evidence_audit_5c9f07c823727701",
    "live_pnl_claim": false,
-   "n_hash_matches": 66,
+   "n_hash_matches": 62,
    "n_hashes": 74,
    "research_only": true,
    "schema": "receipt.v2"
@@ -2058,8 +2054,8 @@
   {
    "created_at": null,
    "evidence_level": null,
-   "file": "receipts/fleet_eval_5e907be710811a44.json",
-   "id": "fleet_eval_5e907be710811a44",
+   "file": "receipts/fleet_eval_cee9aaee0a0f0f36.json",
+   "id": "fleet_eval_cee9aaee0a0f0f36",
    "live_pnl_claim": false,
    "n_hash_matches": 0,
    "n_hashes": 8,
@@ -2663,8 +2659,8 @@
   {
    "created_at": null,
    "evidence_level": null,
-   "file": "receipts/honest_verdict_b133e8b3992af893.json",
-   "id": "honest_verdict_b133e8b3992af893",
+   "file": "receipts/honest_verdict_d5d9bf60e0d5e1a4.json",
+   "id": "honest_verdict_d5d9bf60e0d5e1a4",
    "live_pnl_claim": false,
    "n_hash_matches": 0,
    "n_hashes": 5,
@@ -3224,8 +3220,8 @@
   {
    "created_at": null,
    "evidence_level": null,
-   "file": "receipts/monitor_run_13d20aef00774027.json",
-   "id": "monitor_run_13d20aef00774027",
+   "file": "receipts/monitor_run_85aece35e89b5b12.json",
+   "id": "monitor_run_85aece35e89b5b12",
    "live_pnl_claim": false,
    "n_hash_matches": 0,
    "n_hashes": 4,
@@ -3744,7 +3740,7 @@
    "file": "receipts/replay_proof_0de5fa4e0c739037.json",
    "id": "replay_proof_0de5fa4e0c739037",
    "live_pnl_claim": false,
-   "n_hash_matches": 1,
+   "n_hash_matches": 0,
    "n_hashes": 9,
    "research_only": true,
    "schema": "receipt.v2"
@@ -3755,7 +3751,7 @@
    "file": "receipts/replay_proof_6d266ef51218e3e7.json",
    "id": "replay_proof_6d266ef51218e3e7",
    "live_pnl_claim": false,
-   "n_hash_matches": 138,
+   "n_hash_matches": 130,
    "n_hashes": 153,
    "research_only": true,
    "schema": "receipt.v2"
@@ -3766,7 +3762,7 @@
    "file": "receipts/replay_proof_701ae84c3d9813e0.json",
    "id": "replay_proof_701ae84c3d9813e0",
    "live_pnl_claim": false,
-   "n_hash_matches": 1,
+   "n_hash_matches": 0,
    "n_hashes": 9,
    "research_only": true,
    "schema": "receipt.v2"
@@ -3799,7 +3795,7 @@
    "file": "receipts/replay_proof_b23a176a5c91e210.json",
    "id": "replay_proof_b23a176a5c91e210",
    "live_pnl_claim": false,
-   "n_hash_matches": 1,
+   "n_hash_matches": 0,
    "n_hashes": 9,
    "research_only": true,
    "schema": "receipt.v2"
@@ -3810,7 +3806,7 @@
    "file": "receipts/replay_proof_cbbad2b0389750e5.json",
    "id": "replay_proof_cbbad2b0389750e5",
    "live_pnl_claim": false,
-   "n_hash_matches": 1,
+   "n_hash_matches": 0,
    "n_hashes": 9,
    "research_only": true,
    "schema": "receipt.v2"
@@ -4643,8 +4639,8 @@
   {
    "created_at": null,
    "evidence_level": null,
-   "file": "receipts/vol_bench_f3bf2afc2f159ace.json",
-   "id": "vol_bench_f3bf2afc2f159ace",
+   "file": "receipts/vol_bench_ad0e217766309267.json",
+   "id": "vol_bench_ad0e217766309267",
    "live_pnl_claim": false,
    "n_hash_matches": 0,
    "n_hashes": 10,
@@ -4784,7 +4780,7 @@
    "schema": "zone_ttl.v1"
   }
  ],
- "repo_revision": "90e9b77658b32d2cb4257b4b3cb09d41b891cb43",
+ "repo_revision": "37eb8d278d2b6c8a0d5a99eef44342edab33b70c",
  "strategies": [
   {
    "data_source": "UNVERIFIED",
