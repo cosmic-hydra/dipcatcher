@@ -120,7 +120,14 @@ def _safe_import(name: str, *a: Any, **k: Any) -> Any:
 
 
 def backtest(code: str, px: FloatArray, params: dict[str, float]) -> dict[str, Any]:
-    """Execute generated signal() in a restricted namespace."""
+    """Execute generated signal() in a restricted namespace.
+
+    Fail closed: ``static_check`` must pass before ``exec``. Callers that
+    skip the check cannot reach the sandbox.
+    """
+    errs = static_check(code)
+    if errs:
+        raise ValueError(f"static_check failed: {errs}")
     globs: dict[str, Any] = {
         "params": params,
         "np": np,
@@ -136,8 +143,8 @@ def backtest(code: str, px: FloatArray, params: dict[str, float]) -> dict[str, A
         },
     }
     ns: dict[str, Any] = {}
-    # Sandbox contract: code passed AST static_check (numpy/math imports only,
-    # no eval/exec/open) and runs with restricted builtins + _safe_import.
+    # Sandbox contract: AST static_check (numpy/math imports only, no
+    # eval/exec/open) then restricted builtins + _safe_import.
     exec(code, globs, ns)  # nosec B102
     pos = np.asarray(ns["signal"](px), dtype=float)
     if pos.shape != px.shape or not np.isfinite(pos).all():

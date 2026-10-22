@@ -1,7 +1,7 @@
 #!/bin/sh
 # fxi installer — interactive CLI for fx-1.
 #
-#   curl -fsSL https://raw.githubusercontent.com/artificial-hedge/dipcatcher/main/install.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/cosmic-hydra/dipcatcher/main/install.sh | sh
 #
 # What it does, in order:
 #   1. finds a Python >= 3.12 (FXI_PYTHON to override)
@@ -22,7 +22,7 @@ set -eu
 FXI_VERSION="${FXI_VERSION:-0.4.0}"
 FXI_HOME="${FXI_HOME:-$HOME/.local/share/fxi}"
 FXI_BIN_DIR="${FXI_BIN_DIR:-$HOME/.local/bin}"
-DEFAULT_WHEEL_URL="https://github.com/artificial-hedge/dipcatcher/releases/download/v${FXI_VERSION}/fx_1-${FXI_VERSION}-py3-none-any.whl"
+DEFAULT_WHEEL_URL="https://github.com/cosmic-hydra/dipcatcher/releases/download/v${FXI_VERSION}/fx_1-${FXI_VERSION}-py3-none-any.whl"
 ENTRY_POINTS="fxi fx1 dipcatcher quant verify-ledger mc-engine"
 
 log()  { printf '\033[1;34mfxi>\033[0m %s\n' "$*"; }
@@ -35,7 +35,7 @@ usage() {
     cat <<'EOF'
 fxi installer — interactive CLI for fx-1.
 
-  curl -fsSL https://raw.githubusercontent.com/artificial-hedge/dipcatcher/main/install.sh | sh
+  curl -fsSL https://raw.githubusercontent.com/cosmic-hydra/dipcatcher/main/install.sh | sh
 
 What it does, in order:
   1. finds a Python >= 3.12 (FXI_PYTHON to override)

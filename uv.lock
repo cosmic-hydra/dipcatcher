@@ -22,8 +22,12 @@ resolution-markers = [
 
 [manifest]
 constraints = [
+    { name = "aiohttp", specifier = ">=3.14.4" },
+    { name = "certifi", specifier = ">=2026.10.19" },
+    { name = "pillow", specifier = ">=13.0.0" },
     { name = "urllib3", specifier = ">=2.8.0" },
     { name = "virtualenv", specifier = ">=21.14.9" },
+    { name = "yarl", specifier = ">=1.25.1" },
 ]
 
 [[package]]

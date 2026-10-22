@@ -1,4 +1,4 @@
-.PHONY: help test test-full coverage lint typecheck doctor sync fmt security audit ci examples evidence native audit-obs docs docs-serve formal simtest simtest-large fx1-test fx1-lint fx1-corpus fx1-corpus-full fx1-eval fx1-gate mc-engine-smoke diffbacktest proofcore-test proofcore-coverage proof-integrity proof-verify leakage-scan reality-gate receipts-reverify receipt-integrity-scan audit-cli-mounts pretrade-bench stress-smoke market-sim-test parity-smoke demo-data lattice-check replay-sweep perf-record perf-check evidence-audit admission-gate stamp-epochs sign-pins anchor-pins checkpoint anchor-checkpoint witness-checkpoint verify-witness witness-bundle verify-bundle epoch-consistency verify-rotations rotate-key tamper-drill fuzz-drill fuzz-receipts evidence-bundle bundle-verify audit-js audit-rust audit-kronos audit-all native-lint native-test robustness-smoke fx1-coverage arch-guard
+.PHONY: help test test-full coverage lint typecheck doctor sync fmt security audit ci examples evidence native audit-obs docs docs-serve formal simtest simtest-large fx1-test fx1-lint fx1-corpus fx1-corpus-full fx1-eval fx1-gate mc-engine-smoke diffbacktest proofcore-test proofcore-coverage proof-integrity proof-verify leakage-scan reality-gate receipts-reverify receipt-integrity-scan audit-cli-mounts pretrade-bench stress-smoke market-sim-test parity-smoke demo-data lattice-check replay-sweep perf-record perf-check evidence-audit admission-gate stamp-epochs sign-pins anchor-pins checkpoint anchor-checkpoint witness-checkpoint verify-witness witness-bundle verify-bundle epoch-consistency verify-rotations rotate-key tamper-drill fuzz-drill fuzz-receipts evidence-bundle bundle-verify audit-js audit-rust audit-kronos audit-all requirements-lock check-requirements-lock native-lint native-test robustness-smoke fx1-coverage arch-guard
 
 .DEFAULT_GOAL := help
 
@@ -72,13 +72,34 @@ audit-obs: ## Audit ledger and observability tests
 	uv run mypy src/quant_fund/audit src/quant_fund/observe
 
 # Remove export markers before scanning so Windows/Linux extras are audited
-# on every host. --disable-pip --no-deps queries the exported pins directly.
+# on every host. Export without hashes: some platform wheels (cuda-*) omit
+# hashes and pip-audit --strict then refuses the whole file. Hashed installs
+# use requirements.lock.txt (--no-dev) instead.
 audit: ## All-platform locked Python dependency vulnerability audit (pip-audit)
 	@set -eu; requirements=$$(mktemp); trap 'rm -f "$$requirements" "$$requirements.all"' EXIT; \
 		uv export --frozen --quiet --format requirements.txt --no-hashes --no-emit-project \
 		--all-extras --all-groups -o "$$requirements"; \
 		sed 's/ ;.*//' "$$requirements" > "$$requirements.all"; \
 		uvx --from pip-audit==2.10.1 pip-audit --strict --disable-pip --no-deps -r "$$requirements.all"
+
+# Hashed runtime lock for pip --require-hashes installers (install.sh / offline).
+# uv.lock remains authoritative; regenerate after every `uv lock`.
+requirements-lock: ## Write requirements.lock.txt (hashed, --no-dev) from uv.lock
+	uv export --frozen --format requirements.txt --no-emit-project --no-dev \
+		-o requirements.lock.txt
+
+check-requirements-lock: ## Fail if requirements.lock.txt drifts from uv.lock
+	@set -eu; tmp=$$(mktemp); exp=$$(mktemp); got=$$(mktemp); \
+		trap 'rm -f "$$tmp" "$$exp" "$$got"' EXIT; \
+		uv export --frozen --quiet --format requirements.txt --no-emit-project --no-dev \
+		-o "$$tmp"; \
+		tail -n +3 requirements.lock.txt > "$$exp"; \
+		tail -n +3 "$$tmp" > "$$got"; \
+		if ! cmp -s "$$exp" "$$got"; then \
+			echo "requirements.lock.txt is stale; run: make requirements-lock"; \
+			diff -u "$$exp" "$$got" | head -n 80 || true; \
+			exit 1; \
+		fi
 
 audit-js: ## Audit all four locked npm dependency trees
 	cd web && npm audit
@@ -95,7 +116,7 @@ audit-kronos: ## Resolve and audit the independent vendored Kronos dependencies
 		--quiet -o "$$requirements"; \
 		uvx --from pip-audit==2.10.1 pip-audit --strict --disable-pip --no-deps -r "$$requirements"
 
-audit-all: audit audit-js audit-rust audit-kronos ## Repository-wide dependency audits
+audit-all: check-requirements-lock audit audit-js audit-rust audit-kronos ## Repository-wide dependency audits
 
 doctor: ## Harness environment check
 	uv run dipcatcher doctor
