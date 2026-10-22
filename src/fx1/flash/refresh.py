@@ -40,6 +40,28 @@ def _now_iso() -> str:
     return datetime.now(UTC).isoformat(timespec="seconds")
 
 
+def _probe_source(fetch_fn: FetchFn, url: str) -> str | None:
+    """Return ``None`` when reachable, else a short unreachable reason."""
+    try:
+        result = fetch_fn(url)
+        status = getattr(result, "status", None)
+        error = getattr(result, "error", None)
+        if status is not None and 200 <= status < 400 and not error:
+            return None
+        return str(error or f"HTTP {status}")
+    except Exception as exc:  # noqa: BLE001 — network faults must not kill refresh
+        return f"{type(exc).__name__}: {exc}"
+
+
+def _refresh_note(report: RefreshReport) -> str:
+    if not report.checked:
+        return "no sources recorded; nothing to refresh"
+    ratio = f"{len(report.reachable)}/{len(report.checked)} sources reachable"
+    if report.all_reachable:
+        return f"{ratio}; finding refreshed without change"
+    return f"{ratio}; unreachable: {', '.join(report.unreachable)}"
+
+
 def refresh_entry(
     store: FlashStore,
     entry: FlashEntry,
@@ -64,31 +86,15 @@ def refresh_entry(
         if not url:
             continue
         report.checked.append(url)
-        try:
-            result = fetch_fn(url)
-            status = getattr(result, "status", None)
-            error = getattr(result, "error", None)
-            if status is not None and 200 <= status < 400 and not error:
-                report.reachable.append(url)
-            else:
-                reason = error or f"HTTP {status}"
-                report.unreachable.append(f"{url} ({reason})")
-        except Exception as exc:  # noqa: BLE001 — network faults must not kill refresh
-            report.unreachable.append(f"{url} ({type(exc).__name__}: {exc})")
+        reason = _probe_source(fetch_fn, url)
+        if reason is None:
+            report.reachable.append(url)
+        else:
+            report.unreachable.append(f"{url} ({reason})")
 
+    report.note = _refresh_note(report)
     if not report.checked:
-        report.note = "no sources recorded; nothing to refresh"
         return report
-    if report.all_reachable:
-        report.note = (
-            f"{len(report.reachable)}/{len(report.checked)} sources reachable; "
-            "finding refreshed without change"
-        )
-    else:
-        report.note = (
-            f"{len(report.reachable)}/{len(report.checked)} sources reachable; "
-            f"unreachable: {', '.join(report.unreachable)}"
-        )
     attempted_at = _now_iso()
     patch = {
         "refresh_attempted_at": attempted_at,

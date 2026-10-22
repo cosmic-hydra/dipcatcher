@@ -25,7 +25,6 @@ src/fx1/forecast/features.py:resample_ohlcv 15
 src/fx1/forecast/runner.py:_predict_walk_forward 10
 src/fx1/forecast/schema.py:validate_forecast_schema 17
 src/fx1/harness_bench.py:run_bench 14
-src/fx1/interactive/concierge.py:Concierge._cmd_research 10
 src/fx1/interactive/concierge.py:Concierge._execute_tool 10
 src/fx1/interactive/superpower.py:run_plan 19
 src/fx1/interactive/wizard.py:enter 10
@@ -80,7 +79,6 @@ src/fx1/serve/api.py:_mount_complete_routes.openai_completions 16
 src/fx1/serve/api.py:_mount_complete_routes.openai_responses 39
 src/fx1/serve/api.py:_mount_job_routes 22
 src/fx1/serve/api.py:_mount_key_lifecycle 23
-src/fx1/serve/api.py:_mount_receipt_routes 16
 src/fx1/serve/api.py:_resolve_auth 12
 src/fx1/serve/api.py:_submit_job 14
 src/fx1/serve/api.py:create_app 71
@@ -137,7 +135,6 @@ src/fx1/serve/webhooks.py:deliver_signed 13
 src/fx1/train/pipeline.py:Pipeline.run_eval_candidate 10
 src/fx1/webresearch/engine.py:Researcher._fetch_doc 11
 src/fx1/webresearch/engine.py:Researcher.run 14
-src/fx1/webresearch/engine.py:group_claims 13
 src/fx1/webresearch/fetch.py:_robots_disallowed 11
 src/fx1/webresearch/fetch.py:fetch_page 15
 src/quant_fund/api/app.py:api_auth_middleware 11
@@ -155,7 +152,7 @@ src/quant_fund/audit/trace.py:trace_published_number 20
 src/quant_fund/audit/verify.py:_check_checkpoint 16
 src/quant_fund/audit/verify.py:verify_ledger 20
 src/quant_fund/backtest/adaptive_mix.py:trailing_nav_allocations 13
-src/quant_fund/backtest/carry_engine.py:run_carry_backtest 52
+src/quant_fund/backtest/carry_engine.py:run_carry_backtest 16
 src/quant_fund/backtest/engine.py:_run_backtest_event_loop 36
 src/quant_fund/backtest/event_sim/fills.py:advance_queue 10
 src/quant_fund/backtest/event_sim/sensitivity.py:execution_sensitivity 10
@@ -243,19 +240,15 @@ src/quant_fund/formal/order_lifecycle.py:enumerate_safety 11
 src/quant_fund/formal/order_lifecycle.py:step 18
 src/quant_fund/fusion/quantile_stack.py:cross_fitted_quantile_stack 14
 src/quant_fund/hedge_lab/directional.py:antonacci_returns 10
-src/quant_fund/hedge_lab/lightspeed_book.py:run_lightspeed_file_book 10
-src/quant_fund/hedge_lab/runner.py:run_hedge_lab 22
+src/quant_fund/hedge_lab/runner.py:run_hedge_lab 20
 src/quant_fund/hedge_lab/target_hunt.py:run_target_hunt 18
 src/quant_fund/hmm/discrete.py:DiscreteHMM.__post_init__ 10
 src/quant_fund/labels/barriers.py:triple_barrier 13
 src/quant_fund/labels/engine.py:build_labels 12
 src/quant_fund/leakage/ast_scan.py:_check_lh003 12
 src/quant_fund/leakage/ast_scan.py:_check_lh009 10
-src/quant_fund/leakage/ast_scan.py:_check_lh011 15
-src/quant_fund/leakage/ast_scan.py:_check_lh013 14
 src/quant_fund/leakage/ast_scan.py:_check_lh014 10
 src/quant_fund/leakage/ast_scan.py:_fold_num 12
-src/quant_fund/leakage/ast_scan.py:_receiver_price_like 11
 src/quant_fund/leakage/cli.py:scan_cmd 10
 src/quant_fund/lightspeed/momentum.py:momentum_target_weights 34
 src/quant_fund/lightspeed/rotation.py:_raw_sleeves 10
@@ -711,7 +704,6 @@ src/quant_fund/models/xor_filter.py:build 13
 src/quant_fund/models/xva.py:SyntheticBook.__post_init__ 20
 src/quant_fund/models/xva.py:compute_cva 13
 src/quant_fund/models/xva.py:compute_mva 10
-src/quant_fund/monitoring/drift.py:model_health_report 12
 src/quant_fund/monitoring/kill_audit.py:kill_switch_audit 11
 src/quant_fund/native/conformance.py:_compare 11
 src/quant_fund/northset/benches.py:bench_northset 14
@@ -744,7 +736,7 @@ src/quant_fund/pipeline/forecast/covariance.py:_named_dcc_optimizer_estimate 13
 src/quant_fund/pipeline/forecast/covariance.py:estimate_optimizer_covariance_asof 12
 src/quant_fund/pipeline/forecast/decide.py:_apply_forecast_interval_caps 12
 src/quant_fund/pipeline/forecast/decide.py:forecast_asof 31
-src/quant_fund/pipeline/forecast/history.py:history_for_calibration 15
+src/quant_fund/pipeline/forecast/history.py:history_for_calibration 14
 src/quant_fund/pipeline/forecast/history.py:history_upto 10
 src/quant_fund/pipeline/train/families.py:train_reinforcement 10
 src/quant_fund/pipeline/train/families.py:train_tail 13
@@ -872,7 +864,6 @@ src/quant_fund/research/catalog/never_equate_gap.py:sweep_reject_signed_p_ic_vs_
 src/quant_fund/research/catalog/never_equate_gap.py:vpin_p_ic_vs_gap_finite_never_equate_honesty_errors 12
 src/quant_fund/research/catalog/never_equate_gap.py:wick_skew_p_ic_vs_gap_finite_never_equate_honesty_errors 12
 src/quant_fund/research/catalog/primitives.py:_ic_pack_honesty_errors 16
-src/quant_fund/research/catalog/rates.py:northset_all_floor_unit_honesty_errors 10
 src/quant_fund/research/catalog/rates.py:northset_all_mean_rank_ic_unit_honesty_errors 10
 src/quant_fund/research/catalog/rates.py:northset_all_p_ic_unit_interval_honesty_errors 10
 src/quant_fund/research/catalog/receipt.py:join_coverage_honesty_errors 12
@@ -908,7 +899,6 @@ src/quant_fund/research/corpus_epoch.py:corpus_epoch 12
 src/quant_fund/research/corpus_epoch.py:epoch_contract_errors 34
 src/quant_fund/research/corpus_epoch.py:load_heads_pin 10
 src/quant_fund/research/corpus_inference.py:corpus_audit 18
-src/quant_fund/research/cost_allocation.py:allocate 17
 src/quant_fund/research/cost_calibration.py:cost_calibration_contract_errors 30
 src/quant_fund/research/coverage_cs.py:audit_coverage_cs 19
 src/quant_fund/research/coverage_floor.py:audit_coverage_floor 19
@@ -1016,7 +1006,6 @@ src/quant_fund/research/reality_survivorship.py:grid_cells 16
 src/quant_fund/research/reality_survivorship.py:run_study 15
 src/quant_fund/research/reality_sweep.py:fetch_yahoo_panel 10
 src/quant_fund/research/reality_sweep.py:grid_cells 11
-src/quant_fund/research/reality_sweep.py:run_sweep 10
 src/quant_fund/research/receipt_graph.py:_edge_errors 13
 src/quant_fund/research/receipt_graph.py:_filename_cycles 10
 src/quant_fund/research/receipt_graph.py:_harvest_edges 22
