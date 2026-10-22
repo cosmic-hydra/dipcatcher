@@ -10,12 +10,10 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  # Do NOT cancel in-flight runs — this is a gate, and a gate that gets
-  # cancelled before it finishes produces no verdict (see the 400-run
-  # zero-success history in ci.yml). The group key still serialises; runs are
-  # allowed to drain instead of being superseded by the next push.
-  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || format('{0}-{1}', github.event_name, github.ref) }}
+  # Cancel superseded PR pushes only. Main/merge_group must finish (see the
+  # 400-run zero-success history when every push cancelled the previous gate).
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test:

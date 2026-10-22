@@ -21,15 +21,12 @@ on:
 permissions:
   contents: read
 
-# Added in Phase 0: this workflow was the only one with no concurrency block at
-# all, so overlapping pushes could stack identical witness-verification runs and
-# starve the queue. Modelled on the other lanes. cancel-in-progress is false
-# because this is an integrity/monitoring lane: a superseded run yields no
-# verdict about whether the committed proofs are still intact, and the public
-# log cannot be re-checked later — the observation is only valid when made.
+# Path-filtered lane: cancel superseded runs on the same ref so rapid witness
+# proof edits do not stack identical online checks against the 20-job cap
+# (#2853 Tier 1). Weekly schedule still gets a full observation.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   witness-online:

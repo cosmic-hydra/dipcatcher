@@ -1,12 +1,14 @@
 name: CodeQL
 
 on:
-  push:
-    branches: [main]
+  # Push-to-main removed: two CodeQL languages × every main push competed with
+  # the fast gates for the 20-job cap. PRs still analyze the diff; the weekly
+  # schedule keeps a full default-branch scan.
   pull_request:
     branches: [main]
   schedule:
     - cron: "17 6 * * 1"
+  workflow_dispatch:
 
 permissions: {}
 

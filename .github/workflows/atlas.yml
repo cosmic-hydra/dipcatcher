@@ -8,18 +8,28 @@ name: atlas
 on:
   push:
     branches: [main]
-    # Deliberately NOT filtered with paths-ignore. The diagram half
-    # (gen_arch_diagrams.py --check) is source-derived, so a doc-only push
-    # cannot change it — but this lane also runs `pytest tests/unit/docs`,
-    # which does assert things about the docs. This is a single cheap job;
-    # reclaiming CI budget belongs in matrix.yml (36 jobs), not here, and
-    # skipping a docs-consistency test is the wrong trade while verification
-    # is already dark.
+    # Positive paths (not paths-ignore): only run when diagram inputs, the
+    # generator, docs unit tests, or this workflow change. A pure README tweak
+    # no longer occupies a runner slot.
+    paths:
+      - "src/**"
+      - "docs/architecture/**"
+      - "docs/ARCHITECTURE_ATLAS.md"
+      - "scripts/gen_arch_diagrams.py"
+      - "tests/unit/docs/**"
+      - ".github/workflows/atlas.yml"
   pull_request:
     branches: [main]
+    paths:
+      - "src/**"
+      - "docs/architecture/**"
+      - "docs/ARCHITECTURE_ATLAS.md"
+      - "scripts/gen_arch_diagrams.py"
+      - "tests/unit/docs/**"
+      - ".github/workflows/atlas.yml"
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
