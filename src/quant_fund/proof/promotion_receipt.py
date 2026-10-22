@@ -33,7 +33,7 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 from quant_fund.pipeline.artifact_manifest import (
     ArtifactIdentity,
@@ -219,7 +219,7 @@ def _approver_checked(approver: Mapping[str, Any]) -> Approver:
     """Step 5: approving identity — named, honest, timestamped."""
     try:
         approver_record = Approver.model_validate(dict(approver))
-    except Exception as exc:
+    except ValidationError as exc:
         raise PromotionCompositionError(
             f"approver identity is missing or dishonest: {exc}"
         ) from exc

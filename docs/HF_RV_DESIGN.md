@@ -126,30 +126,31 @@ sigma, fail-closed on missing intraday.
 
 ## 6. Test surface
 
+Landed coverage lives in `tests/unit/test_hf_rv.py` (contract cases below)
+and `tests/test_hf_rv_scaffolding.py` (public surface + fail-closed pins).
+
 ### Synthetic intraday
 
-- `tests/unit/test_hf_rv_synthetic.py` — Brownian motion + sparse jumps,
-  expect `rv_5min ≈ σ^2 * window` and `n_jumps` matching the injected count.
+- Brownian motion + sparse jumps: expect `rv_5min ≈ σ^2 * window` and
+  `n_jumps` matching the injected count.
 - Jump detection accuracy: at SNR=10, ≥ 95% true-positive rate; at SNR=1,
   ≤ 5% false-positive rate (Lee–Mykland operating characteristics).
 - BPV consistency: `RV - BPV ≥ 0` on synthesized jumpy series.
 
 ### PIT contamination
 
-- `tests/unit/test_hf_rv_pit.py` — feed a bar with
-  `available_time > asof`, expect drop + receipt stamp. Feed null
-  `available_time`, expect `HFRVResult(honest=False)`.
+- Feed a bar with `available_time > asof`, expect drop + receipt stamp.
+  Feed null `available_time`, expect `HFRVResult(honest=False)`.
 
 ### Fail-closed for missing intraday
 
-- `tests/unit/test_hf_rv_fail_closed.py` — empty bars, single-bar
-  windows, 100% holes, expect `HFRVResult(honest=False)` and no
-  `market_risk_overlay=hf_rv` stamp.
+- Empty bars, single-bar windows, 100% holes: expect
+  `HFRVResult(honest=False)` and no `market_risk_overlay=hf_rv` stamp.
 
 ### Source authority
 
-- `tests/unit/test_hf_rv_source_authority.py` — CLS + Binance both
-  available → CLS wins, receipt records `primary=cls, secondary=binance`.
+- CLS + Binance both available → CLS wins, receipt records
+  `primary=cls, secondary=binance`.
 - Source missing → `hf_rv_source_missing` stamp + `honest=False`.
 
 ## 7. Open questions
@@ -171,7 +172,8 @@ sigma, fail-closed on missing intraday.
    co-RV we'd need a 2-bar frame with aligned `event_time`. Deferred.
 5. **Receipt schema** — `HFRVResult` is a Python dataclass, but receipts
    are JSON. Do we serialize via `dataclasses.asdict` or define a
-   stable JSON schema? Recommend the latter, in `quality/hf_rv_receipt.json`.
+   stable JSON schema under the quality pin directory? Prefer a pinned
+   schema file once the wire format is frozen (not landed yet).
 
 ## 8. Honest reporting (per AGENTS.md)
 

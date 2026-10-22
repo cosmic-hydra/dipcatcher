@@ -579,7 +579,14 @@ class PerSecurityVol:
             values = _finite_history(history, self.min_obs)
             self._fits[key] = _KEY_FIT_DISPATCH[self.spec](values, self)
             self._status[key] = STATUS_OK
-        except Exception as exc:  # noqa: BLE001 - per-key isolation is the contract
+        except (
+            PerKeyVolError,
+            ValueError,
+            ArithmeticError,
+            RuntimeError,
+            np.linalg.LinAlgError,
+        ) as exc:
+            # Per-key isolation: one bad series must not poison the panel fit.
             self._status[key] = f"failed:{_failure_reason(exc)}"
 
     def forecast(
@@ -603,7 +610,13 @@ class PerSecurityVol:
             return _failed_forecast(key, self._status[key], horizon, levels)
         try:
             raw = self._fits[key].forecast(horizon, levels, self.seed if seed is None else seed)
-        except Exception as exc:  # noqa: BLE001 - per-key isolation is the contract
+        except (
+            PerKeyVolError,
+            ValueError,
+            ArithmeticError,
+            RuntimeError,
+            np.linalg.LinAlgError,
+        ) as exc:
             return _failed_forecast(key, f"failed:{_failure_reason(exc)}", horizon, levels)
         return _forecast_dict(key, self._status[key], raw, horizon)
 

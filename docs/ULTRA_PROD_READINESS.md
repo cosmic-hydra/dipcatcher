@@ -157,7 +157,7 @@ Tracked-file census (`git ls-files`, 22,280 files total):
 
 **Operational consequence, and it is load-bearing: editing any `.yml` under `.github/workflows/` invalidates its pinned member sha256.** Any workflow change must be followed by `make stamp-epochs` → `make sign-pins` → `make anchor-pins`, in that order, before `make epoch-consistency` can pass. Do not move or delete these files. This was caught while implementing Phase 0 — the workflow edits *will* leave the tree failing epoch verification until re-stamped, and that is the intended handoff state, not a regression.
 
-**Correction 2 — `tests/tests/` is a known sftp-clobber artifact, already handled.** `.gitignore:96-103` documents the root cause: the off-machine `put -r src /D:/dipcatcher/src` re-creates `src/src`, `tests/tests`, and `scripts/scripts`, and all three are already ignored (`/tests/tests/`). `pyproject.toml:358` `testpaths` correctly excludes it. On disk it is four empty directories. **Nothing to fix** — and deleting it is pointless because the clobber recreates it.
+**Correction 2 — `tests/tests/` is a known sftp-clobber artifact, already handled.** `.gitignore:96-103` documents the root cause: the off-machine `put -r src /D:/dipcatcher/src` re-creates nested mirrors under `src`, `tests`, and `scripts` (directory-inside-itself clobbers), and all three are already ignored (`/tests/tests/`). `pyproject.toml:358` `testpaths` correctly excludes it. On disk it is four empty directories. **Nothing to fix** — and deleting it is pointless because the clobber recreates it.
 
 Also: **231 local branches**, many stale `devin/*`, `kimi/*`, `codex/*` agent branches.
 
@@ -273,7 +273,7 @@ Sequenced first because receipts bind revision: rebasing 300+ commits after re-s
 2. **Untrack operational scratch.** Add `.dsh-24x7/`, `.box-soft-verify/`, `.cursor/`, `.serena/`, `.freebuff/` to `.gitignore` **and** `git rm -r --cached` them. Correct `AGENTS.md`, which currently asserts `.dsh-24x7` is gitignored when only two subpaths are. 936 tracked files leave the tree.
 3. **Prune branches.** 231 local branches; delete merged and stale agent branches (`devin/*`, `kimi/*`, `codex/*`, `cursor/*`, `copilot/*`).
 4. **Delete the empty `tests/tests/`** shell so the dropped mirror cannot re-enter collection. `testpaths` already excludes it; this makes that durable.
-5. **De-colonize `INFLIGHT`.** 4,154 lines, newest 50 entries are mythology family names. Move the retired-family ledger to `verifier/retired_families_log.md` and keep `INFLIGHT` for live state. `day_grind_progress.md` (139 KB) and `.test_durations` (777 KB) get the same treatment — move to artifacts, keep a pointer.
+5. **De-colonize `INFLIGHT`.** 4,154 lines, newest 50 entries are mythology family names. Move the retired-family ledger into a dedicated verifier-side log file and keep `INFLIGHT` for live state. `day_grind_progress.md` (139 KB) and `.test_durations` (777 KB) get the same treatment — move to artifacts, keep a pointer.
 
 **Exit gate**
 

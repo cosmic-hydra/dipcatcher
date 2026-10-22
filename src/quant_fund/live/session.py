@@ -14,6 +14,7 @@ import os
 import re
 import secrets
 import time
+import urllib.error
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from datetime import datetime
@@ -556,7 +557,14 @@ class LiveSession:
             row["reason"] = "broker credentials are not set"
             self._persist()
             raise
-        except Exception:
+        except (
+            OSError,
+            TimeoutError,
+            urllib.error.URLError,
+            ValueError,
+            TypeError,
+            KeyError,
+        ):
             recovered = self._safe_recover(order.client_order_id)
             if recovered is not None:
                 return recovered
@@ -572,7 +580,15 @@ class LiveSession:
     def _safe_recover(self, client_order_id: str) -> BrokerAck | None:
         try:
             return self.broker.recover(client_order_id)
-        except Exception:
+        except (
+            OSError,
+            TimeoutError,
+            urllib.error.URLError,
+            BrokerRejected,
+            ValueError,
+            TypeError,
+            KeyError,
+        ):
             return None
 
     def _apply_ack(self, row: dict[str, Any], ack: BrokerAck, ts: int) -> None:

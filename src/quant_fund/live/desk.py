@@ -20,9 +20,16 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
-from quant_fund.formal.order_lifecycle import TERMINAL, Book, check_trace, step
+from quant_fund.formal.order_lifecycle import (
+    TERMINAL,
+    Book,
+    LifecycleViolation,
+    check_trace,
+    step,
+)
 from quant_fund.live.arming import (
     Arming,
+    ArmingError,
     held_reason,
     read_arming,
     transmits,
@@ -189,7 +196,15 @@ class LiveDesk:
         try:
             desk.arming = read_arming(desk_root / "arming.json")
             desk._load(cash=cash, account_value=account_value, ts_ns=stamp)
-        except Exception:
+        except (
+            OSError,
+            json.JSONDecodeError,
+            ArmingError,
+            LiveDeskError,
+            TypeError,
+            KeyError,
+            ValueError,
+        ):
             desk.close()
             raise
         return desk
@@ -635,7 +650,7 @@ class LiveDesk:
     def _step(self, event: dict[str, Any]) -> None:
         try:
             self.book = step(self.book, event)
-        except Exception as exc:
+        except (LifecycleViolation, KeyError, TypeError, ValueError) as exc:
             self.trace_ok = False
             self._latch(f"lifecycle refused {event.get('op')}: {exc}")
             raise LiveDeskError(str(exc)) from exc
