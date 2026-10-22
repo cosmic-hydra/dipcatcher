@@ -29,10 +29,7 @@ KNOWN_UNSEALED: dict[str, str] = {}
 # written before `changepoint_localize.v1` required a `params` block).
 # Exempt ONLY for the exact `missing_params` contract error — any other
 # failure still fails. Values pin the file bytes.
-KNOWN_CONTRACT_LEGACY: dict[str, str] = {
-    "cp_real_drill_gaussian_minus_conf_t_pinball.json": "64a38aba74a56b44aa64dfd68ca1859d4d142c9dc2f4e0a657b447a041e434b7",
-    "cp_real_drill_gaussian_pit.json": "6deaa336ee288e28ea35f93caa5d8b8b8436c99fd47efb97ceed792f6d3b8a62",
-}
+KNOWN_CONTRACT_LEGACY: dict[str, str] = {}
 
 
 def _bytes_match(path: Path, expected: str) -> bool:

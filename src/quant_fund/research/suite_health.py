@@ -54,6 +54,15 @@ def _lazy_epoch_check() -> Any:
         return None
 
 
+def _lazy_allowed_removals() -> Any:
+    try:
+        import importlib
+
+        return importlib.import_module("quant_fund.research.corpus_epoch").load_allowed_removals
+    except ImportError:
+        return None
+
+
 def suite_health(
     receipts_dir: Path | str = "receipts",
     *,
@@ -144,7 +153,13 @@ def suite_health(
     if epoch_check is None:
         epoch_state: dict[str, Any] = {"available": False}
     else:
-        chain = epoch_check(root)
+        load_removals = _lazy_allowed_removals()
+        # Declared removals live at <repo>/quality — the corpus dir's
+        # parent is the repo root for the committed `receipts/` corpus.
+        chain = epoch_check(
+            root,
+            allowed_removals=load_removals(root.parent) if load_removals else None,
+        )
         epoch_state = {
             "available": True,
             "head": chain.get("head"),

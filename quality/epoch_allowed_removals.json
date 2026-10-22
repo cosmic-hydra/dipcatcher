@@ -1,6 +1,13 @@
 {
+  "basis_carry_dd7705fc0f2f1c25.json": "852f56a1e2aeb3654d406fbb14a4a2baa7cd20949d45153a98c5a99a2248f741",
+  "calib_real_drill.json": "667678dba192c0418d4fb2d1d68054ab18f7f1745cd89cba706caa8f57536f5c",
   "corpus_history_absence_1791a18109fce973.json": "35a5a663f861c0ac399faefa432ca410da4fae597a0a9111d6c9a2341e0dfe03",
+  "corpus_real_drill.json": "082f16234bae90433c9f699d575a57b2ef5f1bf826fdb61ccba838e936f9f119",
+  "cp_real_drill_gaussian_minus_conf_t_pinball.json": "64a38aba74a56b44aa64dfd68ca1859d4d142c9dc2f4e0a657b447a041e434b7",
+  "cp_real_drill_gaussian_pit.json": "6deaa336ee288e28ea35f93caa5d8b8b8436c99fd47efb97ceed792f6d3b8a62",
+  "crossvenue_basis_3f4ff76f517655a7.json": "14ce799a46e282849e8e7852ff74489ed4747274c164040fcc52974bbb72a087",
   "fuzz_drill_b966c0d125b2a999.json": "1e404fef2428d0c1f9fc0c0b32f5904e0c3dd1ad7f743d1587d4f95f04b471ac",
   "fuzz_drill_cb1a0f56a4e67716.json": "977431c492d834e0c4817e9e032f8ef6e36c998facda0415385ba8b80d3ac49c",
+  "mid_dark_amzn.json": "da7afa773a1280ac1bff785c8fa1fbf9b10e2512ac39d3120f528ccc735207e1",
   "public/fixtures/receipts/fast_replay_p42_conformance_20260927.json": "8236a26489e9253dfcc1f3d879a2fd276c0023fb4d167c764c5330406ce950d8"
 }

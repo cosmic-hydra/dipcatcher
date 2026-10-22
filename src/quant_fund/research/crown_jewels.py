@@ -85,6 +85,7 @@ DEFAULT_JEWELS: tuple[str, ...] = (
     "fx1_seed_corpus.jsonl",  # tracked training input — a silent edit changes
     # what the model learns with no gate noticing
     # --- the verifier itself: a silent rewrite beats every layer above ---
+    "src/quant_fund/research/admission.py",
     "src/quant_fund/research/auditor_bundle.py",
     "src/quant_fund/research/checkpoint_chain.py",
     "src/quant_fund/research/corpus_epoch.py",
@@ -103,11 +104,13 @@ DEFAULT_JEWELS: tuple[str, ...] = (
     "src/quant_fund/research/ots_anchor.py",
     "src/quant_fund/research/quorum_rotation.py",  # M-of-N registry lineage —
     # the authority a v2 checkpoint's signatures resolve under
+    "src/quant_fund/research/receipt_graph.py",
     "src/quant_fund/research/receipt_lattice.py",
     "src/quant_fund/research/receipt_tombstone.py",
     "src/quant_fund/research/receipt_v2.py",
     "src/quant_fund/research/release_attestation.py",
     "src/quant_fund/research/repo_integrity.py",
+    "src/quant_fund/research/selective_inference.py",
     "src/quant_fund/research/tamper_drill.py",
     "src/quant_fund/research/timestamp_anchor.py",
     "src/quant_fund/research/witness_scan.py",

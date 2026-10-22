@@ -28,6 +28,7 @@
     "spec": "configs/cost_aware_tournament.json (frozen slate, unchanged)",
     "tolerance_direction": "tightened vs every historical formulation, never loosened"
   },
+  "receipt_sha256": "007f0bdf5588eaae7d7085c3e09540f284261db4043756608d5f1a5b805008ae",
   "research_only": true,
   "runs": {
     "run_20261007": {
