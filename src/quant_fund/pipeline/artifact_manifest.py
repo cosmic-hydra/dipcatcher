@@ -28,7 +28,14 @@ from pathlib import Path
 from tempfile import NamedTemporaryFile
 from typing import Annotated, Any, Final, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, StringConstraints, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StringConstraints,
+    ValidationError,
+    field_validator,
+)
 
 from quant_fund.features.metadata import FEATURE_SET_VERSION
 from quant_fund.models.base import save_joblib_artifact
@@ -284,7 +291,7 @@ def _verify_identity_block(record: dict[str, Any]) -> ArtifactIdentity:
         raise ArtifactManifestError("artifact manifest carries no dataset identity block")
     try:
         identity = ArtifactIdentity.model_validate(block)
-    except Exception as exc:  # pydantic ValidationError — fail closed on any gap
+    except ValidationError as exc:  # fail closed on any gap
         raise ArtifactManifestError(f"artifact identity block is incomplete: {exc}") from exc
     return identity
 

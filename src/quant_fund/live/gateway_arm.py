@@ -59,7 +59,7 @@ def load_hmac_key(path: Path) -> bytes:
     try:
         os.write(fd, data)
         os.fsync(fd)
-    except Exception:
+    except OSError:
         os.close(fd)
         path.unlink(missing_ok=True)
         raise
