@@ -886,20 +886,7 @@ class LiveDesk:
     def _load(self, *, cash: float | None, account_value: float | None, ts_ns: int) -> None:
         path = self.root / "state.json"
         if not path.exists():
-            if (self.root / "journal.jsonl").exists():
-                self._freeze("journal exists without a desk snapshot")
-                return
-            if cash is None or account_value is None:
-                self.funded = False
-                self.cash = 0.0
-                return
-            self.funded = True
-            self.cash = _positive(cash, None)
-            self.engine.book.settled = self.cash
-            value = _positive(account_value, None)
-            self.peak = value
-            self.session_start = value
-            self.engine.update_account(nav=value, mark_ts_ns=ts_ns if ts_ns > 0 else 0)
+            self._load_fresh(cash=cash, account_value=account_value, ts_ns=ts_ns)
             return
         if cash is not None or account_value is not None:
             raise LiveDeskError("cash and account are already persisted; refusing to override")
@@ -907,6 +894,28 @@ class LiveDesk:
         if not isinstance(raw, dict):
             raise LiveDeskError("desk state must be a JSON object")
         _require_closed_state(raw)
+        self._apply_stored_state(raw)
+        self._restore_engine(raw)
+        self._restore_trace()
+        self._finish_stored_load(raw)
+
+    def _load_fresh(self, *, cash: float | None, account_value: float | None, ts_ns: int) -> None:
+        if (self.root / "journal.jsonl").exists():
+            self._freeze("journal exists without a desk snapshot")
+            return
+        if cash is None or account_value is None:
+            self.funded = False
+            self.cash = 0.0
+            return
+        self.funded = True
+        self.cash = _positive(cash, None)
+        self.engine.book.settled = self.cash
+        value = _positive(account_value, None)
+        self.peak = value
+        self.session_start = value
+        self.engine.update_account(nav=value, mark_ts_ns=ts_ns if ts_ns > 0 else 0)
+
+    def _apply_stored_state(self, raw: Mapping[str, Any]) -> None:
         if raw.get("config_sha256") != self.config_sha256:
             self._latch("risk config changed")
         self.funded = True
@@ -933,10 +942,9 @@ class LiveDesk:
         for item in list(raw["orders"]):
             if not isinstance(item, dict):
                 raise LiveDeskError("order record must be an object")
-            order = _order_from(item)
-            self._store(order)
-        self._restore_engine(raw)
-        self._restore_trace()
+            self._store(_order_from(item))
+
+    def _finish_stored_load(self, raw: Mapping[str, Any]) -> None:
         problem = self._verify_journal()
         if problem:
             self._freeze(problem)
@@ -962,6 +970,12 @@ class LiveDesk:
             session_start_nav=self.session_start,
             peak_nav=self.peak,
         )
+        self._restore_lots(raw)
+        self._restore_opened_sessions(raw)
+        self._restore_unsettled(raw)
+        self._restore_day_trades(raw)
+
+    def _restore_lots(self, raw: Mapping[str, Any]) -> None:
         for symbol, lots in dict(raw.get("lots", {})).items():
             sid = self._sid(str(symbol))
             if not isinstance(lots, list):
@@ -975,29 +989,36 @@ class LiveDesk:
                     settles_ns=int(lot["settles_ns"]),
                     unsettled_funded=bool(lot["unsettled"]),
                 )
+
+    def _restore_opened_sessions(self, raw: Mapping[str, Any]) -> None:
         opened = raw.get("opened_sessions", {})
-        if isinstance(opened, dict):
-            for symbol, sess in opened.items():
-                sid = self.engine.ensure_symbol(str(symbol))
-                if sid >= 0:
-                    self.engine.book.syms[sid].opened_session = int(sess)
+        if not isinstance(opened, dict):
+            return
+        for symbol, sess in opened.items():
+            sid = self.engine.ensure_symbol(str(symbol))
+            if sid >= 0:
+                self.engine.book.syms[sid].opened_session = int(sess)
+
+    def _restore_unsettled(self, raw: Mapping[str, Any]) -> None:
         unsettled = raw.get("unsettled", [])
-        if isinstance(unsettled, list):
-            for item in unsettled:
-                if not isinstance(item, dict):
-                    raise LiveDeskError("unsettled cash must be an object")
-                if not self.engine._enqueue_unsettled(
-                    float(item["amount"]), int(item["available_ns"])
-                ):
-                    self._latch("unsettled cash queue failed to restore")
+        if not isinstance(unsettled, list):
+            return
+        for item in unsettled:
+            if not isinstance(item, dict):
+                raise LiveDeskError("unsettled cash must be an object")
+            if not self.engine._enqueue_unsettled(float(item["amount"]), int(item["available_ns"])):
+                self._latch("unsettled cash queue failed to restore")
+
+    def _restore_day_trades(self, raw: Mapping[str, Any]) -> None:
         trades = raw.get("day_trades", [])
-        if isinstance(trades, list):
-            for sess_id in trades:
-                if self.engine.book.dt_n >= self.engine.book.dt_cap:
-                    self._latch("day-trade memory failed to restore")
-                    break
-                self.engine.book.dt_sess[self.engine.book.dt_n] = int(sess_id)
-                self.engine.book.dt_n += 1
+        if not isinstance(trades, list):
+            return
+        for sess_id in trades:
+            if self.engine.book.dt_n >= self.engine.book.dt_cap:
+                self._latch("day-trade memory failed to restore")
+                break
+            self.engine.book.dt_sess[self.engine.book.dt_n] = int(sess_id)
+            self.engine.book.dt_n += 1
 
     def _restore_trace(self) -> None:
         checked = check_trace(self.trace)

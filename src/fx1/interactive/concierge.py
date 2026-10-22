@@ -487,7 +487,7 @@ class Concierge:
 
     # -- /research -----------------------------------------------------------
 
-    def _cmd_research(self, rest: str) -> bool:
+    def _parse_research_args(self, rest: str) -> tuple[str, dict[str, Any]]:
         tokens = shlex.split(rest)
         if not tokens:
             raise ValueError(
@@ -519,6 +519,10 @@ class Concierge:
         goal = " ".join(positional)
         if not goal.strip():
             raise ValueError("usage: /research <goal> ...")
+        return goal, options
+
+    def _cmd_research(self, rest: str) -> bool:
+        goal, options = self._parse_research_args(rest)
         if not self._job_slot_available():
             return False
         from fx1.webresearch.engine import ResearchBudget

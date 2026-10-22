@@ -351,39 +351,53 @@ def _numeric_disagreement(left: Claim, right: Claim) -> bool:
     return bool(left_facts or right_facts) and left_facts != right_facts
 
 
+def _claims_conflict(left: Claim, right: Claim) -> bool:
+    if left.source_url == right.source_url:
+        return False
+    if _negated(left) != _negated(right):
+        return True
+    left_pol = _polarity(left)
+    right_pol = _polarity(right)
+    if left_pol and right_pol and left_pol != right_pol:
+        return True
+    return _numeric_disagreement(left, right)
+
+
+def _best_claim_group(
+    claim: Claim, groups: list[ClaimGroup], *, threshold: float
+) -> ClaimGroup | None:
+    best: ClaimGroup | None = None
+    best_score = 0.0
+    for group in groups:
+        for member in group.claims[:5]:
+            score = _overlap(claim.tokens, member.tokens)
+            if score > best_score:
+                best, best_score = group, score
+    if best is not None and best_score >= threshold:
+        return best
+    return None
+
+
+def _record_group_contradictions(group: ClaimGroup) -> None:
+    for i, left in enumerate(group.claims):
+        for right in group.claims[i + 1 :]:
+            pair = (left.text, right.text)
+            if _claims_conflict(left, right) and pair not in group.contradictions:
+                group.contradictions.append(pair)
+
+
 def group_claims(claims: list[Claim], *, threshold: float = 0.6) -> list[ClaimGroup]:
     """Cluster claims by token overlap and detect contradictions inside each
     cluster: negation, or antonym polarity in opposite directions."""
     groups: list[ClaimGroup] = []
     for claim in claims:
-        best: ClaimGroup | None = None
-        best_score = 0.0
-        for group in groups:
-            for member in group.claims[:5]:
-                score = _overlap(claim.tokens, member.tokens)
-                if score > best_score:
-                    best, best_score = group, score
-        if best is not None and best_score >= threshold:
+        best = _best_claim_group(claim, groups, threshold=threshold)
+        if best is not None:
             best.claims.append(claim)
         else:
             groups.append(ClaimGroup(key=" ".join(sorted(claim.tokens)[:6]), claims=[claim]))
-
     for group in groups:
-        for i, left in enumerate(group.claims):
-            for right in group.claims[i + 1 :]:
-                if left.source_url == right.source_url:
-                    continue
-                conflict = False
-                if _negated(left) != _negated(right):
-                    conflict = True
-                left_pol = _polarity(left)
-                right_pol = _polarity(right)
-                if left_pol and right_pol and left_pol != right_pol:
-                    conflict = True
-                if _numeric_disagreement(left, right):
-                    conflict = True
-                if conflict and (left.text, right.text) not in group.contradictions:
-                    group.contradictions.append((left.text, right.text))
+        _record_group_contradictions(group)
     groups = [g for g in groups if g.claims]
     groups.sort(key=lambda g: (-len(g.sources), -len(g.claims)))
     return groups
