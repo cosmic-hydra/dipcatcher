@@ -549,6 +549,26 @@ def load_heads_pin(pin_path: Path | str) -> dict[str, dict[str, str]]:
     return heads
 
 
+def load_allowed_removals(root: Path | str) -> dict[str, str]:
+    """Load ``<root>/quality/epoch_allowed_removals.json`` → name→sha256 map.
+
+    Absent or malformed file yields an empty map — declared removals are a
+    courtesy layer on top of the chain, not a prerequisite for checking it.
+    ``root`` is the repo root; corpus-relative callers pass the corpus dir's
+    parent.
+    """
+    ar_path = Path(root) / "quality" / "epoch_allowed_removals.json"
+    if not ar_path.is_file():
+        return {}
+    try:
+        raw = json.loads(ar_path.read_text())
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+    return {str(k): str(v) for k, v in raw.items() if isinstance(v, str)}
+
+
 def update_heads_pin(
     pin_path: Path | str,
     corpus_dir: Path | str,

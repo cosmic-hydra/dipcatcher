@@ -38,8 +38,19 @@ def verified_corpus_files(root: Path, *, pattern: str = "*.json") -> list[Path]:
 
     Per-file verification must match the epoch chain's ``rglob`` member
     semantics — a claim receipt dropped in a subdirectory is still corpus
-    evidence, not a blind spot."""
-    return sorted(p for p in root.rglob(pattern) if p.is_file() and not is_quarantined(p, root))
+    evidence, not a blind spot.
+
+    ``*.seal.json`` sidecars (``prereg_seal.v1``) are seal evidence, not
+    receipts — same exclusion as ``proofcore.ci.receipt_paths``. Feeding one
+    to ``verify-receipt`` reports a spurious ``receipt_sha256_missing_or_invalid``.
+    """
+    return sorted(
+        p
+        for p in root.rglob(pattern)
+        if p.is_file()
+        and not is_quarantined(p, root)
+        and not p.name.endswith(".seal.json")
+    )
 
 
 def seal_receipt(receipt: Mapping[str, Any], *, exclude: Iterable[str] = ()) -> dict[str, Any]:

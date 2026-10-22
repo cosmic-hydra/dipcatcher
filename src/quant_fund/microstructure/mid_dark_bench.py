@@ -226,6 +226,8 @@ def mid_dark_bench(*, horizon: int = 20000, seed: int = 7) -> dict[str, Any]:
         "schema": MID_DARK_SCHEMA,
         "kind": "sim_bench",
         "data_label": "SYNTHETIC",
+        "research_only": True,
+        "live_pnl_claim": False,
         "git_revision": git_revision(),
         "seed": seed,
         "horizon_events": horizon,

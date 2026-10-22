@@ -280,16 +280,16 @@ audit-cli-mounts: ## Detect Typer apps defined in src/ but never mounted (droppe
 
 evidence-audit: ## CI gate: re-verify every committed receipt; fail on any unverifiable non-legacy artifact
 	uv run dipcatcher suite-health --strict --out-dir "$${RUNNER_TEMP:-/tmp}/evidence-audit"
-	uv run dipcatcher corpus-epoch --corpus-dir receipts --check --heads-pin quality/epoch_heads.json --require-stamped
-	uv run dipcatcher corpus-epoch --corpus-dir verifier --glob '*.md' --check --heads-pin quality/epoch_heads.json --require-stamped
-	uv run dipcatcher corpus-epoch --corpus-dir quality --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates
-	uv run dipcatcher corpus-epoch --corpus-dir .github/workflows --glob '*.yml' --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates
-	uv run dipcatcher corpus-epoch --corpus-dir configs --glob '*' --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates
-	uv run dipcatcher corpus-epoch --corpus-dir artifacts --glob '*' --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates
-	uv run dipcatcher corpus-epoch --corpus-dir .dsh-24x7 --glob '*' --check --heads-pin quality/epoch_heads.json
-	uv run dipcatcher corpus-epoch --corpus-dir data/metadata --glob '*' --check --heads-pin quality/epoch_heads.json --require-stamped
+	uv run dipcatcher corpus-epoch --corpus-dir receipts --check --heads-pin quality/epoch_heads.json --require-stamped --allowed-removals quality/epoch_allowed_removals.json
+	uv run dipcatcher corpus-epoch --corpus-dir verifier --glob '*.md' --check --heads-pin quality/epoch_heads.json --require-stamped --allowed-removals quality/epoch_allowed_removals.json
+	uv run dipcatcher corpus-epoch --corpus-dir quality --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates --allowed-removals quality/epoch_allowed_removals.json
+	uv run dipcatcher corpus-epoch --corpus-dir .github/workflows --glob '*.yml' --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates --allowed-removals quality/epoch_allowed_removals.json
+	uv run dipcatcher corpus-epoch --corpus-dir configs --glob '*' --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates --allowed-removals quality/epoch_allowed_removals.json
+	uv run dipcatcher corpus-epoch --corpus-dir artifacts --glob '*' --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates --allowed-removals quality/epoch_allowed_removals.json
+	uv run dipcatcher corpus-epoch --corpus-dir .dsh-24x7 --glob '*' --check --heads-pin quality/epoch_heads.json --allowed-removals quality/epoch_allowed_removals.json
+	uv run dipcatcher corpus-epoch --corpus-dir data/metadata --glob '*' --check --heads-pin quality/epoch_heads.json --require-stamped --allowed-removals quality/epoch_allowed_removals.json
 	for spec in "src" "tests" "scripts" "docs" "research" "replay" "reports" "notebooks" "examples" "clients" "typings" "spec" "docker" "deploy" "third_party" "rust" "web" ".box-soft-verify" ".cursor" ".github"; do \
-	  uv run dipcatcher corpus-epoch --corpus-dir "$$spec" --glob '*' --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates || exit 1; \
+	  uv run dipcatcher corpus-epoch --corpus-dir "$$spec" --glob '*' --check --heads-pin quality/epoch_heads.json --require-stamped --allow-member-updates --allowed-removals quality/epoch_allowed_removals.json || exit 1; \
 	done
 	uv run dipcatcher crown-jewels --check
 	uv run dipcatcher verify-witness
