@@ -13,7 +13,9 @@ from pathlib import Path
 # ``not network`` gate cannot disclose environment metadata or depend on egress.
 os.environ["MLFLOW_DISABLE_TELEMETRY"] = "true"
 os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
-os.environ.setdefault("OPENBLAS_CORETYPE", "HASWELL")
+# Do NOT pin OPENBLAS_CORETYPE. Forcing HASWELL (as some Intel CI hosts need)
+# segfaults ``numpy.linalg.lstsq`` on AMD EPYC (and any host whose OpenBLAS
+# build rejects that kernel). Leave core detection to OpenBLAS.
 # Mirror Makefile TEST_ENV / CI / fleet thread pinning before any native
 # extension (torch, sklearn, xgboost, LightGBM) can load a second OpenMP
 # runtime. OMP_NUM_THREADS=1 keeps colliding libgomp/libomp copies out of
@@ -30,6 +32,10 @@ for _k, _v in (
     ("TOKENIZERS_PARALLELISM", "false"),
 ):
     os.environ.setdefault(_k, _v)
+# Strip a leaked HASWELL pin from the parent env (e.g. an older conftest or
+# shell export). Empty / unset restores OpenBLAS auto-detection.
+if os.environ.get("OPENBLAS_CORETYPE", "").upper() == "HASWELL":
+    os.environ.pop("OPENBLAS_CORETYPE", None)
 
 import pytest  # noqa: E402
 
