@@ -646,11 +646,19 @@ def estimate_event_kernel(prices: object, signs: object, n_lags: int) -> Array:
         raise ValueError(
             f"need at least max(2*n_lags, 32)={max(2 * L, 32)} usable rows, got {rows}"
         )
-    x = np.empty((rows, L + 1))
+    x = np.empty((rows, L + 1), dtype=np.float64)
     x[:, 0] = 1.0
     for lag in range(1, L + 1):
         x[:, lag] = s[L - lag : p.size - lag]
-    coef, _, _, _ = np.linalg.lstsq(x, p[L:], rcond=None)
+    # Contiguous float64 design + scipy's driver: numpy.linalg.lstsq under a
+    # mismatched OPENBLAS_CORETYPE (e.g. HASWELL on AMD EPYC) has segfaulted
+    # here and taken the xdist worker with it ("node down", no Python frame
+    # on the faulting OpenBLAS thread). scipy.linalg.lstsq is the same solve
+    # with a more defensive LAPACK binding.
+    y = np.ascontiguousarray(p[L:], dtype=np.float64)
+    from scipy.linalg import lstsq as _lstsq
+
+    coef, _, _, _ = _lstsq(np.ascontiguousarray(x), y, lapack_driver="gelsy")
     return np.asarray(coef[1:], dtype=float)
 
 

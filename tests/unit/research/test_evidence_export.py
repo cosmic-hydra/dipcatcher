@@ -8,6 +8,7 @@ fails its own gates.
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -29,6 +30,26 @@ def _has_git(root: Path) -> bool:
         return True
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
+
+
+_HAS_REAL_TREE = (REPO_ROOT / "quality" / "epoch_heads.json").is_file() and _has_git(REPO_ROOT)
+
+
+@pytest.fixture(scope="session")
+def real_evidence_bundle(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """One live-tree export per xdist worker.
+
+    Each real-tree test used to call ``export_evidence_bundle(REPO_ROOT, …)``
+    independently (~140MB, dominated by ``.dsh-24x7``). Concurrent copies under
+    ``-n auto`` on a tight disk race native allocators into segfault / xdist
+    ``node down``. Sharing one export per worker keeps coverage identical while
+    cutting peak tmp by ~3× for this file.
+    """
+    if not _HAS_REAL_TREE:
+        pytest.skip("requires the real repo tree with committed integrity state")
+    out = tmp_path_factory.mktemp("real_evidence_bundle")
+    export_evidence_bundle(REPO_ROOT, out)
+    return out
 
 
 def _minimal_evidence_tree(tmp_path: Path) -> Path:
@@ -91,8 +112,6 @@ def test_export_refuses_nonempty_target(tmp_path: Path) -> None:
 
 def test_export_fails_closed_on_missing_corpus(tmp_path: Path) -> None:
     root = _minimal_evidence_tree(tmp_path)
-    import shutil
-
     shutil.rmtree(root / sorted(EVIDENCE_CORPORA)[0])
     with pytest.raises(FileNotFoundError, match="corpus missing"):
         export_evidence_bundle(root, tmp_path / "bundle")
@@ -112,18 +131,18 @@ def test_export_manifest_records_source_revision(tmp_path: Path) -> None:
 
 
 @pytest.mark.skipif(
-    not (REPO_ROOT / "quality" / "epoch_heads.json").is_file() or not _has_git(REPO_ROOT),
-    reason="requires the real repo tree with committed integrity state",
+    not _HAS_REAL_TREE, reason="requires the real repo tree with committed integrity state"
 )
-def test_real_tree_export_verifies_evidence_only(tmp_path: Path) -> None:
+def test_real_tree_export_verifies_evidence_only(real_evidence_bundle: Path) -> None:
     """Export the live repo's evidence store and run the real gate set on it:
     every epoch chain must re-derive its pinned head; crown_jewels reports
     the skipped marker; signature/witness gates verify offline."""
-    bundle = tmp_path / "bundle"
-    manifest = export_evidence_bundle(REPO_ROOT, bundle)
+    import json
+
+    manifest = json.loads((real_evidence_bundle / BUNDLE_MANIFEST).read_text(encoding="utf-8"))
     assert manifest["source_revision"]
 
-    result = verify_repo(bundle, evidence_only=True)
+    result = verify_repo(real_evidence_bundle, evidence_only=True)
     fails = {
         name: gate["errors"]
         for name, gate in result["gates"].items()
@@ -134,15 +153,15 @@ def test_real_tree_export_verifies_evidence_only(tmp_path: Path) -> None:
 
 
 @pytest.mark.skipif(
-    not (REPO_ROOT / "quality" / "epoch_heads.json").is_file() or not _has_git(REPO_ROOT),
-    reason="requires the real repo tree with committed integrity state",
+    not _HAS_REAL_TREE, reason="requires the real repo tree with committed integrity state"
 )
-def test_manifest_git_blob_ids_match_ls_tree(tmp_path: Path) -> None:
+def test_manifest_git_blob_ids_match_ls_tree(real_evidence_bundle: Path) -> None:
     """The manifest's per-member git blob ids must equal what git itself
     records at HEAD — the bundle is thereby bound to the commit's object
     database, not just to a directory that happened to be present."""
-    bundle = tmp_path / "bundle"
-    manifest = export_evidence_bundle(REPO_ROOT, bundle)
+    import json
+
+    manifest = json.loads((real_evidence_bundle / BUNDLE_MANIFEST).read_text(encoding="utf-8"))
     committed = manifest["corpora"]["receipts"]["git_members"]
     out = subprocess.run(
         ["git", "ls-tree", "-r", "HEAD", "--", "receipts"],
@@ -162,14 +181,15 @@ def test_manifest_git_blob_ids_match_ls_tree(tmp_path: Path) -> None:
 
 
 @pytest.mark.skipif(
-    not (REPO_ROOT / "quality" / "epoch_heads.json").is_file() or not _has_git(REPO_ROOT),
-    reason="requires the real repo tree with committed integrity state",
+    not _HAS_REAL_TREE, reason="requires the real repo tree with committed integrity state"
 )
-def test_corrupted_bundle_member_fails_verification(tmp_path: Path) -> None:
+def test_corrupted_bundle_member_fails_verification(
+    real_evidence_bundle: Path, tmp_path: Path
+) -> None:
     """A bundle with a tampered member must not verify — the export is only
     as trustworthy as the gates that re-check it."""
     bundle = tmp_path / "bundle"
-    export_evidence_bundle(REPO_ROOT, bundle)
+    shutil.copytree(real_evidence_bundle, bundle)
     victim = bundle / "receipts"
     target = next(p for p in victim.glob("*.json") if not p.name.startswith("corpus_epoch_"))
     target.write_bytes(b'{"forged": true}\n')

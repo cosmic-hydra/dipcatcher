@@ -218,7 +218,39 @@ def shap_attribution(
         max_evals=int(max_evals) if max_evals is not None else max(2 * n_features + 1, 11),
         seed=int(seed),
     )
-    explanation = explainer(x_eval)
+    try:
+        explanation = explainer(x_eval)
+    except AttributeError as exc:
+        from quant_fund.compute.numba_guard import compiler_defect
+
+        if not compiler_defect(exc):
+            raise
+        # Numba 0.68 on CPython 3.13 raises get_call_template inside shap's
+        # masker. The permutation attribution is the same proper-score view.
+        fallback = permutation_attribution(
+            predict,
+            x_eval,
+            y_eval,
+            names,
+            scoring=spec,
+            n_repeats=1,
+            seed=int(seed),
+            max_rows=int(x_eval.shape[0]),
+        )
+        return AttributionResult(
+            method="shap_permutation_numba_fallback",
+            scoring=fallback.scoring,
+            baseline_score=fallback.baseline_score,
+            attributions=fallback.attributions,
+            n_rows=fallback.n_rows,
+            n_repeats=fallback.n_repeats,
+            seed=fallback.seed,
+            warnings=fallback.warnings
+            + (
+                "shap permutation explainer hit a Numba compiler defect; "
+                "fell back to permutation attribution",
+            ),
+        )
     values = np.asarray(explanation.values, dtype=float)
     if values.ndim != 2 or values.shape[1] != n_features:
         raise ValueError(f"unexpected shap value shape {values.shape}")

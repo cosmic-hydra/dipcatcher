@@ -3,3 +3,11 @@
 # One node id per line. Empty (comments only) means the PR gate runs the
 # full offline suite. Populate from a measured `--durations` run, and only
 # keep a node id here when coverage of the fast subset does not fall.
+#
+# Real-tree evidence exports copy ~140MB each (dominated by .dsh-24x7). Under
+# xdist with tight disk, concurrent copies race native allocators into
+# segfault / "node down". Session-scoped sharing cuts peak tmp; marking slow
+# keeps them out of the PR-gate worker pool entirely.
+tests/unit/research/test_evidence_export.py::test_real_tree_export_verifies_evidence_only
+tests/unit/research/test_evidence_export.py::test_manifest_git_blob_ids_match_ls_tree
+tests/unit/research/test_evidence_export.py::test_corrupted_bundle_member_fails_verification

@@ -41,7 +41,8 @@ coverage: ## PR-gate tests + coverage (threshold in pyproject)
 	# Threshold lives in [tool.coverage.report] (pyproject.toml) — no inline
 	# --cov-fail-under so CI and local cannot drift. Sharded CI combines
 	# partial data files and applies the same threshold once.
-	uv run pytest -n auto --dist loadfile -m "not network and not slow" --cov --cov-report=term-missing --cov-report=xml
+	# TEST_ENV required: same OpenMP multi-runtime crash class as `make test`.
+	$(TEST_ENV) uv run pytest -n auto --dist loadfile -m "not network and not slow" --cov --cov-report=term-missing --cov-report=xml
 
 lint: ## Ruff check + format check repo-wide
 	uv run ruff check .
