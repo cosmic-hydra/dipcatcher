@@ -2747,6 +2747,91 @@ def _stored_receipt_matches(body: bytes, sha256: str) -> bool:
     return isinstance(stored_sha, str) and hmac.compare_digest(stored_sha, sha256)
 
 
+def _receipt_verify_response(receipt: object) -> ReceiptVerifyResponse:
+    """Map one verify call to the API response; verifier faults stay fail-closed."""
+    try:
+        result = verify_receipt_payload(receipt, path=Path("<api>"))
+    except Exception as exc:  # verifier must fail closed, never 500
+        return ReceiptVerifyResponse(
+            valid=False,
+            path="<api>",
+            schema_tag="",
+            kind=None,
+            verdict=None,
+            digest_convention=None,
+            errors=[str(exc)],
+            warnings=[],
+        )
+    return ReceiptVerifyResponse(
+        valid=result["valid"],
+        path=result["path"],
+        schema_tag=result["schema"],
+        kind=result["kind"] if isinstance(result["kind"], str) else None,
+        verdict=result["verdict"] if isinstance(result["verdict"], str) else None,
+        digest_convention=result["digest_convention"],
+        errors=list(result["errors"]),
+        warnings=list(result["warnings"]),
+    )
+
+
+def _receipt_batch_item(index: int, receipt: object) -> ReceiptVerifyBatchItem:
+    """One batch-verify row; faults stay item-local rather than 500ing the batch."""
+    try:
+        result = verify_receipt_payload(receipt, path=Path("<api>"))
+    except Exception as exc:  # verifier must fail item-local, never 500
+        return ReceiptVerifyBatchItem(
+            index=index,
+            valid=False,
+            path="<api>",
+            schema_tag="",
+            kind=None,
+            verdict=None,
+            digest_convention=None,
+            errors=[str(exc)],
+            warnings=[],
+        )
+    return ReceiptVerifyBatchItem(
+        index=index,
+        valid=result["valid"],
+        path=result["path"],
+        schema_tag=result["schema"],
+        kind=result["kind"] if isinstance(result["kind"], str) else None,
+        verdict=result["verdict"] if isinstance(result["verdict"], str) else None,
+        digest_convention=result["digest_convention"],
+        errors=list(result["errors"]),
+        warnings=list(result["warnings"]),
+    )
+
+
+def _receipt_fetch_body(receipt_index: _ReceiptIndex, sha256: str) -> bytes:
+    """Load and integrity-check a content-addressed receipt; fail closed on mismatch."""
+    if not _SHA256_HEX.fullmatch(sha256):
+        raise ApiError(422, "sha256 must be 64 lowercase hex", code="invalid_sha256")
+    if not receipt_index.available():
+        raise ApiError(503, "receipts store unavailable", code="receipts_unavailable")
+    path = receipt_index.lookup(sha256)
+    if path is None:
+        raise ApiError(404, "receipt not found", code="receipt_not_found")
+    try:
+        body = path.read_bytes()
+    except OSError as exc:
+        raise ApiError(503, "receipts store read failed", code="receipts_unavailable") from exc
+    verdict = verify_receipt_bytes(body, path)
+    if not verdict["valid"]:
+        raise ApiError(
+            409,
+            "stored receipt failed integrity verification",
+            code="receipt_integrity_failed",
+        )
+    if not _stored_receipt_matches(body, sha256):
+        raise ApiError(
+            409,
+            "stored receipt does not match requested digest",
+            code="receipt_integrity_failed",
+        )
+    return body
+
+
 def _mount_receipt_routes(app: FastAPI, receipt_index: _ReceiptIndex) -> None:
     """Receipt-verify + content-addressed fetch routes, kept out of
     ``create_app`` to keep its branch complexity under the repo's ruff cap."""
@@ -2757,29 +2842,7 @@ def _mount_receipt_routes(app: FastAPI, receipt_index: _ReceiptIndex) -> None:
         operation_id="verify_receipt",
     )
     def verify_receipt(body: ReceiptVerifyRequest) -> ReceiptVerifyResponse:
-        try:
-            result = verify_receipt_payload(body.receipt, path=Path("<api>"))
-        except Exception as exc:  # verifier must fail closed, never 500
-            return ReceiptVerifyResponse(
-                valid=False,
-                path="<api>",
-                schema_tag="",
-                kind=None,
-                verdict=None,
-                digest_convention=None,
-                errors=[str(exc)],
-                warnings=[],
-            )
-        return ReceiptVerifyResponse(
-            valid=result["valid"],
-            path=result["path"],
-            schema_tag=result["schema"],
-            kind=result["kind"] if isinstance(result["kind"], str) else None,
-            verdict=result["verdict"] if isinstance(result["verdict"], str) else None,
-            digest_convention=result["digest_convention"],
-            errors=list(result["errors"]),
-            warnings=list(result["warnings"]),
-        )
+        return _receipt_verify_response(body.receipt)
 
     @app.post(
         "/receipts/verify/batch",
@@ -2787,38 +2850,7 @@ def _mount_receipt_routes(app: FastAPI, receipt_index: _ReceiptIndex) -> None:
         operation_id="verify_receipts_batch",
     )
     def verify_receipts_batch(body: ReceiptVerifyBatchRequest) -> ReceiptVerifyBatchResponse:
-        items: list[ReceiptVerifyBatchItem] = []
-        for i, receipt in enumerate(body.receipts):
-            try:
-                result = verify_receipt_payload(receipt, path=Path("<api>"))
-            except Exception as exc:  # verifier must fail item-local, never 500
-                items.append(
-                    ReceiptVerifyBatchItem(
-                        index=i,
-                        valid=False,
-                        path="<api>",
-                        schema_tag="",
-                        kind=None,
-                        verdict=None,
-                        digest_convention=None,
-                        errors=[str(exc)],
-                        warnings=[],
-                    )
-                )
-                continue
-            items.append(
-                ReceiptVerifyBatchItem(
-                    index=i,
-                    valid=result["valid"],
-                    path=result["path"],
-                    schema_tag=result["schema"],
-                    kind=result["kind"] if isinstance(result["kind"], str) else None,
-                    verdict=result["verdict"] if isinstance(result["verdict"], str) else None,
-                    digest_convention=result["digest_convention"],
-                    errors=list(result["errors"]),
-                    warnings=list(result["warnings"]),
-                )
-            )
+        items = [_receipt_batch_item(i, receipt) for i, receipt in enumerate(body.receipts)]
         verified = sum(1 for it in items if it.valid)
         return ReceiptVerifyBatchResponse(
             verified=verified,
@@ -2856,49 +2888,16 @@ def _mount_receipt_routes(app: FastAPI, receipt_index: _ReceiptIndex) -> None:
         verifier is reported on ``X-Fx1-Receipt-Valid`` so a caller learns
         the receipt it fetched still verifies without a second round trip.
         """
-        if not _SHA256_HEX.fullmatch(sha256):
-            raise ApiError(422, "sha256 must be 64 lowercase hex", code="invalid_sha256")
-        if not receipt_index.available():
-            raise ApiError(503, "receipts store unavailable", code="receipts_unavailable")
-        path = receipt_index.lookup(sha256)
-        if path is None:
-            raise ApiError(404, "receipt not found", code="receipt_not_found")
-        try:
-            body = path.read_bytes()
-        except OSError as exc:
-            raise ApiError(503, "receipts store read failed", code="receipts_unavailable") from exc
-        verdict = verify_receipt_bytes(body, path)
-        if not verdict["valid"]:
-            raise ApiError(
-                409,
-                "stored receipt failed integrity verification",
-                code="receipt_integrity_failed",
-            )
-        if not _stored_receipt_matches(body, sha256):
-            raise ApiError(
-                409,
-                "stored receipt does not match requested digest",
-                code="receipt_integrity_failed",
-            )
+        body = _receipt_fetch_body(receipt_index, sha256)
+        headers = {
+            "ETag": f'"{sha256}"',
+            "Cache-Control": "public, immutable",
+            "X-Fx1-Receipt-Valid": "true",
+        }
         inm = request.headers.get("if-none-match", "")
         if inm.strip() == "*" or f'"{sha256}"' in inm:
-            return Response(
-                status_code=304,
-                headers={
-                    "ETag": f'"{sha256}"',
-                    "Cache-Control": "public, immutable",
-                    "X-Fx1-Receipt-Valid": "true",
-                },
-            )
-        return Response(
-            content=body,
-            media_type="application/json",
-            headers={
-                "ETag": f'"{sha256}"',
-                "Cache-Control": "public, immutable",
-                "X-Fx1-Receipt-Valid": "true",
-            },
-        )
+            return Response(status_code=304, headers=headers)
+        return Response(content=body, media_type="application/json", headers=headers)
 
 
 def _mount_v1_catch_all(app: FastAPI) -> None:
