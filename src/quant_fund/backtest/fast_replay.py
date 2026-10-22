@@ -44,6 +44,7 @@ from quant_fund.backtest.engine import (
     _validate_bar_panel,
     run_backtest,
 )
+from quant_fund.compute.numba_guard import compiler_defect
 from quant_fund.config.models import AppConfig, CostConfig, FillConvention, RiskGateConfig
 from quant_fund.execution.spread_calibration import is_calibrated_spread_estimator
 from quant_fund.monitoring.kill_switch import KillSwitch
@@ -1090,6 +1091,13 @@ def run_backtest_fast(
             # machinery failures (compile/type errors on an exotic environment)
             # land here — degrade to the interpreted loop, which is bit-identical,
             # rather than failing the run. Exotic errors propagate.
+            kernel_out = None
+        except AttributeError as exc:
+            # Numba 0.68 types np.empty's overload as a plain function
+            # (ol_np_empty.impl has no get_call_template). Same degrade.
+            # Any other AttributeError still propagates.
+            if not compiler_defect(exc):
+                raise
             kernel_out = None
     if kernel_out is not None:
         (
