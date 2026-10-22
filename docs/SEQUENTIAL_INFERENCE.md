@@ -283,8 +283,8 @@ mismatch. Coverage today:
 | serial_watch | `serial_watch_78dd891261e2aae9.json` | yes — PIT fixture + argv are byte-deterministic |
 | fleet_eval (incl. hstep heads `hstep_t`/`hstep_emp`) | `fleet_eval_5e907be710811a44.json` | yes — seeded shards and heads |
 | vol_bench | `vol_bench_f3bf2afc2f159ace.json` | yes — seeded vol shards and forecasters |
-| cross_sectional_rankic | `rankic_eval_8d740c0ddf6d5c54.json` | yes — seeded panels and challengers |
-| capacity_overlay | `capacity_eval_3622d0c059d42009.json` | yes — seeded books and AUM ladder |
+| cross_sectional_rankic | `rankic_eval_fd19af03152d5a6a.json` | yes — seeded panels and challengers |
+| capacity_overlay | `capacity_eval_9cbc81cf3790a7d6.json` | yes — seeded books and AUM ladder |
 | monitor_run (coverage_watch, tail_watch, drift_alarm, calibration, conformal, emerge) | `monitor_run_13d20aef00774027.json` | yes — seeded tournament; the six monitor lanes are streams inside one receipt |
 | honest_verdict | `honest_verdict_b133e8b3992af893.json` | yes — seeded tournament + bootstrap |
 

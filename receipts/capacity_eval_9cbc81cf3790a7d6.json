@@ -1,7 +1,7 @@
 {
   "books": [
     {
-      "adv_sha256": "8ecaf67526c80a674e9fd3b972398e12d551a8391e381a39b829e5de918eb790",
+      "adv_sha256": "57ae995144d03b98c8981995c8d079f51035108ce1b7169a35c609ac291ae233",
       "data_label": "SYNTHETIC",
       "n_dates": 60,
       "n_names": 8,
@@ -9,7 +9,7 @@
       "weights_sha256": "5f939a795d092e615b019dcadf28e4eed6bbb1c67021d9b7f07c3f0a8d61fbeb"
     },
     {
-      "adv_sha256": "bbda34e4c6f87974736f20d0826f529b29ffd62104d2e07f3a61207f43583ceb",
+      "adv_sha256": "7953c2de4f1ec93e29d63705c4e3cc0fd593606ded2ec3f988417044ab905b90",
       "data_label": "SYNTHETIC",
       "n_dates": 60,
       "n_names": 8,
@@ -18,13 +18,13 @@
     }
   ],
   "data_label": "SYNTHETIC",
-  "dataset_sha256": "5ec1f9c3788ce251018dfaff7a377515fb6676aa430b39c3becb8e7b0cdc91d0",
+  "dataset_sha256": "324bdbc0ae0efc44ff52358c6982f0ff9c6a359f85b5ebc485d7608be05af2ef",
   "dev_only": true,
-  "inputs_sha256": "c077426959f2bafc71eecbe4c8507d337fcbc842a84c574ff1a4a7eebc4ac9a3",
+  "inputs_sha256": "c8ec9ca7120f91275467706797779f4c660e55df4bfe2bcd8dd24a2cb020b3c1",
   "kind": "capacity_overlay_eval",
   "live_pnl_claim": false,
   "n_rows": 4,
-  "receipt_sha256": "3622d0c059d42009e9870101afb35c232ac27d58456fa915dc482db6679c3116",
+  "receipt_sha256": "9cbc81cf3790a7d63e58c46726ffe4b1ad9460814e30f098d39cc5e2e112faaa",
   "replay": {
     "argv": [
       "dipcatcher",
@@ -45,8 +45,8 @@
     ],
     "artifacts": [
       {
-        "path": "data/metadata/replay/capacity_eval_ad7dd6aef6c94d20.json",
-        "sha256": "044638ce5091d330368059531cd2ce3d0001c8694a915750af9a56a6c928b4d8"
+        "path": "data/metadata/replay/capacity_eval_f990aaadaa5b647b.json",
+        "sha256": "7d5d3502ad6587d67ce442364468121b4feb59941f148645bbcb92071dc706cb"
       }
     ]
   },
@@ -89,7 +89,7 @@
       "book": "concentrated",
       "days_to_trade": 2.447301480939121,
       "feasible": 0,
-      "impact_bps": 114.7578964340513,
+      "impact_bps": 114.75789643405132,
       "max_participation": 0.2447301480939121,
       "mean_participation": 0.03480376246735458,
       "participation_cap": 0.1,
