@@ -387,7 +387,12 @@ LH011_LAZY_WHITELIST: dict[str, frozenset[str]] = {
     # proof lazily reaches pit (W1 vault seam, §5.2), leakage (W3 watchdog,
     # §5.2 step 2), and metrics (A1 F2 headline recompute). None of pit /
     # leakage import proof back, so the lazy edges cannot create a cycle.
-    "proof": _LH011_LAYER0_LAZY | {"backtest", "pit", "metrics", "leakage"},
+    # promotion_receipt also lazily reaches pipeline (artifact identity),
+    # registry (promotion_is_approved), and research (receipt_v2 seal) —
+    # composition-only seams; pipeline/registry never import proof, and
+    # research only reaches proof.bundle lazily, so no import-time cycle.
+    "proof": _LH011_LAYER0_LAZY
+    | {"backtest", "pit", "metrics", "leakage", "pipeline", "registry", "research"},
     # §6.2: patterns.py lazily sources FORBIDDEN_HEADLINE_TOKENS from
     # research.catalog.FORBIDDEN_RESEARCH_METRIC_KEYS (no copy); lazy-only so
     # no import-time edge into the SCC.

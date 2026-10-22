@@ -45,8 +45,21 @@ LAZY_WHITELIST: dict[str, frozenset[str]] = {
     # Adjudicated lazy edges (LH011_LAZY_WHITELIST in leakage/rules.py):
     # proof lazily reaches pit (W1 vault seam), leakage (W3 watchdog), and
     # metrics (A1 F2 headline recompute); none import proof back, so the lazy
-    # edges cannot create a cycle.
-    "proof": frozenset({"backtest", "cli", "leakage", "metrics", "pit"}),
+    # edges cannot create a cycle. promotion_receipt also lazily reaches
+    # pipeline / registry / research (identity + approval + seal) — same
+    # no-import-time-cycle reasoning.
+    "proof": frozenset(
+        {
+            "backtest",
+            "cli",
+            "leakage",
+            "metrics",
+            "pit",
+            "pipeline",
+            "registry",
+            "research",
+        }
+    ),
     "leakage": frozenset({"pit", "cli", "config", "utils", "research"}),
     # Adjudicated lazy edge (this durability sweep): reality/cli writes its
     # outputs via utils.atomicio — same layer-0 reasoning as proofcore.

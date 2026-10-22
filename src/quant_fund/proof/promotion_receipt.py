@@ -35,15 +35,12 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from quant_fund.pipeline.artifact_manifest import (
-    ArtifactIdentity,
-    ArtifactManifestError,
-    manifest_path,
-    verify_artifact_manifest,
-)
-from quant_fund.registry.mlflow_store import promotion_is_approved
-from quant_fund.research.receipt_v2 import build_receipt_v2, seal_receipt
 from quant_fund.utils.hashing import hash_file
+
+# pipeline / registry / research are reached only via function-level imports
+# below (LH011 lazy whitelist). They supply artifact identity verification,
+# the promotion.v1 approval predicate, and receipt_v2 sealing — required for
+# fail-closed composition, but not needed at proof/ import time.
 
 PROMOTION_RECEIPT_SCHEMA = "promotion_receipt.v1"
 PROMOTION_RECEIPT_KIND = "promotion_receipt"
@@ -113,7 +110,7 @@ def _load_evidence_report(path: Path) -> dict[str, Any]:
     return report
 
 
-def _require_dataset_identity(identity: ArtifactIdentity) -> None:
+def _require_dataset_identity(identity: Any) -> None:
     dataset = identity.dataset
     _require(
         bool(dataset.materialized_panel_sha256) and bool(dataset.source_manifest_sha256),
@@ -142,8 +139,16 @@ def _gate_results_checked(gates: Mapping[str, Any]) -> dict[str, dict[str, Any]]
 
 def _artifact_identity_checked(
     artifact: Path,
-) -> tuple[ArtifactIdentity, Path, Path, str, str, object]:
+) -> tuple[Any, Path, Path, str, str, object]:
     """Step 1: verified artifact manifest with mandated dataset identity."""
+    # Lazy: pipeline is outside proof's top-level LH011 whitelist; identity
+    # verification only runs when composing a receipt.
+    from quant_fund.pipeline.artifact_manifest import (
+        ArtifactManifestError,
+        manifest_path,
+        verify_artifact_manifest,
+    )
+
     artifact_path = Path(artifact)
     try:
         identity = verify_artifact_manifest(artifact_path)
@@ -168,6 +173,10 @@ def _artifact_identity_checked(
 
 def _decision_checked(decision: Mapping[str, Any], artifact_sha: str) -> str:
     """Step 2: approved, non-synthetic decision bound to this artifact."""
+    # Lazy: registry lives outside proof's top-level LH011 whitelist; the
+    # approval predicate is only needed at composition time.
+    from quant_fund.registry.mlflow_store import promotion_is_approved
+
     _require(
         promotion_is_approved(dict(decision)),
         "promotion decision is not an approved fail-closed promotion.v1 decision",
@@ -188,7 +197,7 @@ def _decision_checked(decision: Mapping[str, Any], artifact_sha: str) -> str:
 def _metrics_checked(
     input_metrics: Mapping[str, Any],
     artifact_sha: str,
-    identity: ArtifactIdentity,
+    identity: Any,
     decision_source: str,
 ) -> None:
     """Step 3: metrics bind the same artifact and dataset (staleness)."""
@@ -244,7 +253,7 @@ def _report_stage_warnings(report: Mapping[str, Any]) -> list[str]:
 
 
 def _report_checked(
-    report_path: Path, artifact_sha: str, identity: ArtifactIdentity
+    report_path: Path, artifact_sha: str, identity: Any
 ) -> tuple[str, str, list[str]]:
     """Step 6: report bytes-bound, complete-or-resolved, research-only."""
     if not report_path.is_file():
@@ -345,6 +354,10 @@ def compose_promotion_receipt(
     approver_record = _approver_checked(approver)
     report_path = Path(evidence_report)
     report_sha, report_status, stage_warnings = _report_checked(report_path, artifact_sha, identity)
+
+    # Lazy: research.receipt_v2 is outside proof's top-level LH011 whitelist;
+    # sealing only runs after all fail-closed gates pass.
+    from quant_fund.research.receipt_v2 import build_receipt_v2, seal_receipt
 
     payload: dict[str, Any] = {
         "schema": PROMOTION_RECEIPT_SCHEMA,
