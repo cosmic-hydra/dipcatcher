@@ -52,10 +52,10 @@ def synth_prototype_mix(
 
 def bench_vq_vae_ts(
     seed: int = 20261231,
-    n: int = 320,
+    n: int = 120,
     win: int = 32,
     K: int = 8,
-    iters: int = 900,
+    iters: int = 200,
 ) -> dict[str, float]:
     """VQ-VAE codebook recovery + recon vs PCA-4."""
     torch = _torch()

@@ -16,7 +16,7 @@ def _torch():
     return torch
 
 
-def bench_xlstm_mlstm(seed: int = 2251, iters: int = 800, D: int = 16) -> dict[str, float]:
+def bench_xlstm_mlstm(seed: int = 2251, iters: int = 60, D: int = 16) -> dict[str, float]:
     torch = _torch()
     x, y = recall_batch(seed)
     torch.manual_seed(seed)

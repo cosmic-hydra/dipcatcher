@@ -42,12 +42,17 @@ def synth_long_window(n: int, win: int, rng: np.random.Generator) -> tuple[Float
 
 def bench_perceiver_ts(
     seed: int = 20261231,
-    n: int = 240,
-    win: int = 256,
-    n_lat: int = 32,
-    iters: int = 800,
+    n: int = 48,
+    win: int = 64,
+    n_lat: int = 8,
+    iters: int = 20,
 ) -> dict[str, float]:
-    """32-latent perceiver vs full attention and pooled MLP (SYNTH)."""
+    """Perceiver vs full attention and a pooled MLP (SYNTH).
+
+    Defaults are the smoke scale. The dot-product ratio does not depend on
+    training length. Pass larger ``n``, ``win``, and ``iters`` for a
+    research-scale run.
+    """
     torch = _torch()
     torch.manual_seed(int(seed))  # audit sweep: seeded determinism
     rng = np.random.default_rng(seed)

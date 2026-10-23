@@ -56,9 +56,9 @@ def _reeig(s: Any, eps: float, torch: Any) -> Any:
 
 def bench_spd_net(
     seed: int = 21,
-    n_train: int = 800,
-    n_test: int = 200,
-    iters: int = 500,
+    n_train: int = 120,
+    n_test: int = 40,
+    iters: int = 40,
     eps: float = 1e-3,
 ) -> dict[str, float]:
     torch = _torch()

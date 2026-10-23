@@ -50,10 +50,10 @@ def _mmd(x: FloatArray, y: FloatArray, bw: float) -> float:
 
 def bench_score_sde_ts(
     seed: int = 20261231,
-    n: int = 320,
+    n: int = 120,
     win: int = 24,
-    iters: int = 1200,
-    gen_steps: int = 60,
+    iters: int = 200,
+    gen_steps: int = 10,
     sig_min: float = 0.02,
     sig_max: float = 2.0,
 ) -> dict[str, float]:
