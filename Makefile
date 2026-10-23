@@ -204,8 +204,9 @@ fx1-gate: fx1-lint ## Full fx-1 CI gate locally: lint + types + tests + honesty 
 	PYTHONPATH=src uv run pytest tests/fx1 -q -k honesty
 	uv run fx1 corpus build --receipts-dir receipts --out data/fx1/corpus_ci_smoke.jsonl
 
-fx1-coverage: ## fx-1 coverage ratchet, floor 80 (same command as proofcore.yml fx1-coverage)
-	uv run pytest tests/fx1 tests/unit/fx1_serve -q --cov=fx1 --cov-fail-under=80 --cov-report=term-missing
+fx1-coverage: ## fx-1 coverage ratchet, floor 80 (invoked by proofcore.yml fx1-coverage)
+	# loadfile keeps each audit module on one worker. Floor unchanged.
+	$(TEST_ENV) uv run pytest tests/fx1 tests/unit/fx1_serve -q -n auto --dist loadfile --cov=fx1 --cov-fail-under=80 --cov-report=term-missing
 
 # --- PROOFCORE gates (DESIGN.md §9.3; additive — no existing target changed) -
 # Merge order: W5 lands last; the W1-W4 CLIs below exist once those waves merge.
