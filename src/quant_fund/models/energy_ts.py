@@ -64,9 +64,9 @@ def _auc(scores: FloatArray, y: FloatArray) -> float:
 
 def bench_energy_ts(
     seed: int = 20261231,
-    n: int = 120,
+    n: int = 320,
     win: int = 24,
-    iters: int = 150,
+    iters: int = 700,
     langevin_steps: int = 15,
 ) -> dict[str, float]:
     """EBM energy ranking vs AE recon-error baseline (AUC, SYNTH)."""
