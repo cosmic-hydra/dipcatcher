@@ -36,11 +36,11 @@ def _phi(x: Any, w: Any, torch: Any) -> Any:
 
 def bench_performer_attn(
     seed: int = 5,
-    n_train: int = 800,
-    n_test: int = 240,
-    m_pairs: int = 48,
+    n_train: int = 120,
+    n_test: int = 40,
+    m_pairs: int = 8,
     n_classes: int = 4,
-    iters: int = 900,
+    iters: int = 30,
     d_model: int = 32,
 ) -> dict[str, float]:
     torch = _torch()

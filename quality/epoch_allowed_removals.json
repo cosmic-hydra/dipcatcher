@@ -1,11 +1,21 @@
 {
   "calib_real_drill.json": "667678dba192c0418d4fb2d1d68054ab18f7f1745cd89cba706caa8f57536f5c",
+  "capacity_eval_3622d0c059d42009.json": "57ad3394513fe58e48127141858a990580fade56ae4755ad0a3b868aa2568f2b",
   "corpus_epoch_39a2bfe477cdc688.json": "d46b3c2c81cc535bac5a3635d2a7ec32d036a7d37ca6f3d69e9e7999f5046b56",
   "corpus_history_absence_1791a18109fce973.json": "35a5a663f861c0ac399faefa432ca410da4fae597a0a9111d6c9a2341e0dfe03",
+  "fleet_eval_5e907be710811a44.json": "c95ce361609bdb00912147e0f87548fdbd2c0221ad27b8c1a4d0ba558b9330e1",
   "fuzz_drill_b966c0d125b2a999.json": "1e404fef2428d0c1f9fc0c0b32f5904e0c3dd1ad7f743d1587d4f95f04b471ac",
   "fuzz_drill_cb1a0f56a4e67716.json": "977431c492d834e0c4817e9e032f8ef6e36c998facda0415385ba8b80d3ac49c",
+  "honest_verdict_b133e8b3992af893.json": "1a003a670945452a5c86d033900bc33429f2981422c8938b1b8e2469fc764f3a",
+  "monitor_run_13d20aef00774027.json": "3ce1cd7f59c301be6b4710326ab905313725317bee3669ae8e755f6d422bc12d",
   "public/fixtures/receipts/calib_real_drill.json": "667678dba192c0418d4fb2d1d68054ab18f7f1745cd89cba706caa8f57536f5c",
+  "public/fixtures/receipts/capacity_eval_3622d0c059d42009.json": "57ad3394513fe58e48127141858a990580fade56ae4755ad0a3b868aa2568f2b",
   "public/fixtures/receipts/fast_replay_p42_conformance_20260927.json": "8236a26489e9253dfcc1f3d879a2fd276c0023fb4d167c764c5330406ce950d8",
+  "public/fixtures/receipts/fleet_eval_5e907be710811a44.json": "c95ce361609bdb00912147e0f87548fdbd2c0221ad27b8c1a4d0ba558b9330e1",
+  "public/fixtures/receipts/honest_verdict_b133e8b3992af893.json": "1a003a670945452a5c86d033900bc33429f2981422c8938b1b8e2469fc764f3a",
+  "public/fixtures/receipts/monitor_run_13d20aef00774027.json": "3ce1cd7f59c301be6b4710326ab905313725317bee3669ae8e755f6d422bc12d",
+  "public/fixtures/receipts/rankic_eval_8d740c0ddf6d5c54.json": "e48fce1ae4cebf94e417773bdef20c9ed7b0822397505c6a51e8843a8da06c81",
+  "public/fixtures/receipts/vol_bench_f3bf2afc2f159ace.json": "b9b70f7186d75054e91ee734b87b8aeeba22d66af713806a8d5410a9bc603ee3",
   "quant_core/target/.rustc_info.json": "1524e283f1ce483c38e878a6a7c89647dc9d944b3bc7c151c4603f9081503974",
   "quant_core/target/CACHEDIR.TAG": "6d9d1d216e0f83abc5e5662ca62c92b4f23009466b54fa27321a69acdb778bb2",
   "quant_core/target/debug/.cargo-lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
@@ -268,6 +278,7 @@
   "quant_core/target/debug/incremental/quant_core-3k7gy39nykp8r/s-hng1fjuh53-111q3wc-cterjqtkewhk8ciqevb1f4lgz/query-cache.bin": "61a1140d1bd259fbe77cf927bda4bbee527fdf33b9c11060c3aca3ee33f44145",
   "quant_core/target/debug/incremental/quant_core-3k7gy39nykp8r/s-hng1fjuh53-111q3wc-cterjqtkewhk8ciqevb1f4lgz/work-products.bin": "62f39f5804d033ba8d7e58315f5c5835777ae3993f4c113ec42dd058ce9b3873",
   "quant_core/target/debug/incremental/quant_core-3k7gy39nykp8r/s-hng1fjuh53-111q3wc.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "rankic_eval_8d740c0ddf6d5c54.json": "e48fce1ae4cebf94e417773bdef20c9ed7b0822397505c6a51e8843a8da06c81",
   "scripts/README.md": "ba0562b22f96e7606e26028fc862dfb07576355671d83a7afe9c6341c5659ccc",
   "scripts/benchmark_crypto_external.py": "2b67812dd0f8a0409d76a9c0a7722c8c72c4e56e214ebb5a5cb52d93dcdc3206",
   "scripts/benchmark_garch.py": "3ccc0eb5b9c8ab196b95f4dcb77e003a7e70d8272564074271c6ecfbdd446eb6",
@@ -276,5 +287,7 @@
   "scripts/verify_binance_receipt.py": "72a85d71f24a02143c42f5b16cd088fa6443b1d03a0157e4d3e2726ccafc5276",
   "scripts/verify_bugbot_findings.py": "c191397754af2fa19289022a3c29dfd74be9e01b0754f0f57ae8ecfcb7b2aece",
   "scripts/verify_external_receipt.py": "951663c2ae6dc094cb5bc946bb28fade7d36d069192a3e195f38e90f751a772f",
-  "suite_health_drill.json": "5a7d32e1da6c12cd23d1d713f996f242cf6dec95b22923b0264ec96818734de4"
+  "smoke_installed_wheel.py": "0e178b21ee112387e82d5317b874b8350b6092d58b7fb415e1728041c95bfe2d",
+  "suite_health_drill.json": "5a7d32e1da6c12cd23d1d713f996f242cf6dec95b22923b0264ec96818734de4",
+  "vol_bench_f3bf2afc2f159ace.json": "b9b70f7186d75054e91ee734b87b8aeeba22d66af713806a8d5410a9bc603ee3"
 }

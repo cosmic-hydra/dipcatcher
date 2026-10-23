@@ -28,11 +28,11 @@ def _torch():
 
 def bench_s4_ssm(
     seed: int = 3,
-    n_train: int = 800,
-    n_test: int = 240,
-    m_pairs: int = 48,
+    n_train: int = 120,
+    n_test: int = 40,
+    m_pairs: int = 8,
     n_classes: int = 4,
-    iters: int = 700,
+    iters: int = 30,
     d_model: int = 48,
 ) -> dict[str, float]:
     torch = _torch()

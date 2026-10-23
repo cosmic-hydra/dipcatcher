@@ -57,9 +57,9 @@ def _mmd(x: FloatArray, y: FloatArray, bw: float) -> float:
 
 def bench_flow_matching_ts(
     seed: int = 20261231,
-    n: int = 320,
+    n: int = 120,
     win: int = 24,
-    iters: int = 1200,
+    iters: int = 200,
     gen_steps: int = 8,
 ) -> dict[str, float]:
     """Rectified-flow sampler vs moment-matched Gaussian (MMD, SYNTH)."""

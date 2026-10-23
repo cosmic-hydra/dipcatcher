@@ -1,0 +1,86 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "be7692c3f1dc59945f46429c4f67ca53df3ae2520866b98370ca5417754d2ac3",
+  "inputs_sha256": "47adb9dc626346e49ee4d3404a129d3947f0b0397ad27c9e383389bb2821bab6",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "7350fb982ec60b1defe0becc3a0864c8cdebab9759b5f4d865e3df55edbb9385",
+  "members": [
+    {
+      "name": "corpus_epoch_46ded8fbd908afa3.json",
+      "sha256": "2e788f552d5a1b2b89a57ec222a87ecce492f3072cba93422956b62c56ff74db"
+    },
+    {
+      "name": "corpus_epoch_9bac62631af2fcb6.json",
+      "sha256": "a5c24003a9494ae616e1e631d1861b679f2d6b910a9b581893623853a3d8a09c"
+    },
+    {
+      "name": "corpus_epoch_b52c1e2f6ba28091.json",
+      "sha256": "0d3ef925a6b404757dd275da8c47795fbad61edcf34320b1025bbfea338259be"
+    },
+    {
+      "name": "corpus_epoch_ccea90f0955cc21b.json",
+      "sha256": "f04ced4809f2d0e33e1fdcb327972f5b65347c5b41bd6ae91df24be34a46bfcd"
+    },
+    {
+      "name": "corpus_epoch_d730d2181a933d63.json",
+      "sha256": "1c87e64c12ae2d78efbebf89419979d9901731e3dba7aca3199c7fb1881bead3"
+    },
+    {
+      "name": "quant_core/Cargo.lock",
+      "sha256": "95b6bd9432ae16423f1e83d49108446d4fbca8dded69c7d47b93d6ebdf0f57f3"
+    },
+    {
+      "name": "quant_core/Cargo.toml",
+      "sha256": "cfae7eb8c3bc01d0bd58d8964373f554178df7c0f9ab49b272ccf8c245a83f68"
+    },
+    {
+      "name": "quant_core/README.md",
+      "sha256": "12cb007ac45f0e1ce508c0ca32102d8b01e2f547a34cd109e196c3033aaee463"
+    },
+    {
+      "name": "quant_core/pyproject.toml",
+      "sha256": "f53e1659c6fa76a3d6fbc07a03aab398f1966b106cd156d48c811857d66f27ea"
+    },
+    {
+      "name": "quant_core/rust-toolchain.toml",
+      "sha256": "a458040d8678a00adf76f8041cc4ecca3d42b392683db7896a7e2d637006a4f2"
+    },
+    {
+      "name": "quant_core/src/book.rs",
+      "sha256": "c5950a0a7f55adb8acc4948da6e3d961ed67b495fee8a759976ff3d6aef1d094"
+    },
+    {
+      "name": "quant_core/src/hashing.rs",
+      "sha256": "850b13509dfbb64e08ef7a8dd902ed6ac442fa94235d00f27eb0f311e65ae8f9"
+    },
+    {
+      "name": "quant_core/src/lib.rs",
+      "sha256": "cd08ec069ac86b8bc41e794f82dd00825e78cc5ff677448223bf7dcf7627e297"
+    },
+    {
+      "name": "quant_core/src/returns.rs",
+      "sha256": "91fb7e7bd502b2aee77111baa09d908c9bc383e3ca9b5c82b234190435e7bbcb"
+    },
+    {
+      "name": "quant_core/src/rolling.rs",
+      "sha256": "77f2f688b4b88b8c76acf1f75a5d1466d16a231203082b775004757bfc88fd08"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_46ded8fbd908afa3.json"
+  ],
+  "members_removed": [],
+  "n_members": 15,
+  "params": {
+    "head_sha": "a65f3a8ad27555bd196a1fc680c32f6349cec875",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_46ded8fbd908afa3.json",
+  "prev_epoch_sha256": "b1fe970b3920d3fbdab5fad7f3032defcdd53ea9b2c85ba7665e318ef4c82a11",
+  "receipt_sha256": "1372623b02f7c45d38388171a1c7f468b4a5a80bddd87fdd6dcbe11acc108980",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

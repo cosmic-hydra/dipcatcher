@@ -77,6 +77,7 @@ does not score them.
 - `receipts/corpus_epoch_2ddb4fe7154677d3.json`: corpus_epoch.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/corpus_epoch_2ecce33392960d8d.json`: corpus_epoch.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/corpus_epoch_404d16a7af1d3862.json`: corpus_epoch.v1; no reality_gate, backtest_overfitting block, or candidate band search
+- `receipts/corpus_epoch_45e7c79ed405a79c.json`: corpus_epoch.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/corpus_epoch_4a75066db56e52fd.json`: corpus_epoch.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/corpus_epoch_4a79ac4ed05777f5.json`: corpus_epoch.v1; no reality_gate, backtest_overfitting block, or candidate band search
 - `receipts/corpus_epoch_52f80a0cc915f58d.json`: corpus_epoch.v1; no reality_gate, backtest_overfitting block, or candidate band search
