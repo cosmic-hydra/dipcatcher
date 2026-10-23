@@ -965,11 +965,22 @@ def test_vector_store_search_bounds_and_threshold_sieve() -> None:
         {"bogus": 1},
         {"score_threshold": "x"},
         {"score_threshold": True},
-        {"score_threshold": 1.5},
-        {"score_threshold": -0.1},
     ):
         with pytest.raises(ValidationError):
             OpenAIVectorStoreSearch.model_validate({"query": "x", "ranking_options": bad_ro})
+    # Numeric out-of-range thresholds pass the body model so VectorStore.search
+    # can answer 400 invalid_filters. Rejecting them here becomes a 422 first.
+    from fx1.serve.vectorstores import VectorStoreError, VectorStoreStore
+
+    store = VectorStoreStore.__new__(VectorStoreStore)
+    for threshold in (1.5, -0.1):
+        body = OpenAIVectorStoreSearch.model_validate(
+            {"query": "x", "ranking_options": {"score_threshold": threshold}}
+        )
+        assert body.ranking_options is not None
+        with pytest.raises(VectorStoreError) as exc:
+            store.search(["vs_1"], "x", score_threshold=float(threshold))
+        assert exc.value.status == 400 and exc.value.code == "invalid_filters"
     with pytest.raises(ValidationError):
         OpenAIVectorStoreSearch.model_validate({"query": "x", "rewrite_query": True})
     with pytest.raises(ValidationError):

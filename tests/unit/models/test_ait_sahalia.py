@@ -92,4 +92,4 @@ def test_bench_schema_and_score() -> None:
         "synthetic_score",
     ):
         assert np.isfinite(r[k])
-    assert r["synthetic_score"] == 1.0
+    assert r["synthetic_score"] == 1.0, r

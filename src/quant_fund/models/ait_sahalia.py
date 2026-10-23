@@ -275,7 +275,15 @@ def bench_ait_sahalia(seed: int = 20261231 + 296) -> dict[str, float]:
     d = synth_ckls(seed=seed)
     xx = np.asarray(d["x"])
     dt = float(d["dt"])
-    fit = fit_ckls(xx, dt)
+    # L-BFGS-B on this surface is start-dependent across BLAS builds. Keep the
+    # historical start, and two other generic starts, and take the best
+    # log-likelihood (``nll`` stores the maximized loglik).
+    starts = (
+        (0.02, -0.2, 0.15, 0.8),
+        (0.1, -1.2, 0.5, 1.0),
+        (0.01, -0.4, 0.2, 0.3),
+    )
+    fit = max((fit_ckls(xx, dt, *start) for start in starts), key=lambda row: row["nll"])
     # expansion must also reproduce the exact OU likelihood closely
     # in the rho -> 0 corner: evaluate both at Vasicek params.
     alpha, beta, sigma = 0.05, -0.8, 0.2
