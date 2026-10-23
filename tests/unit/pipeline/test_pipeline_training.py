@@ -419,7 +419,7 @@ def test_train_calibration_auto_selects_lowest_finite_brier(
         model = ProbabilityCalibrator(model_name).fit(
             np.linspace(0.1, 0.9, 12), np.asarray([0, 1] * 6, dtype=float)
         )
-        model.save(path)
+        save_bound_stub(config, model, path)
         return {"path": str(path), "metrics": {"oos_brier": briers[model_name]}}
 
     monkeypatch.setattr(train_module, "train_calibration", fake_train)

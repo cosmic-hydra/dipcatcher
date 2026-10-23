@@ -921,6 +921,20 @@ def _prereg_documented_errors(path: Path, payload: Mapping[str, Any]) -> list[st
     if path.is_file():
         side = verify_seal(path)
         errors.extend(str(item) for item in side.get("errors", []))
+        # File seals bind bytes on disk. A caller that hands a different
+        # object plus the original path must not inherit that seal — the
+        # mutation fuzz passes the mutated payload with the committed path.
+        # Forward records embed the content hash inside ``_seal``, which
+        # excludes the seal block, so a seal-metadata edit still matches
+        # the hash and the untouched sidecar.
+        if is_sidecar_lane or is_forward:
+            try:
+                on_disk = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                errors.append("sealed_file_unreadable")
+            else:
+                if on_disk != payload:
+                    errors.append("payload_file_mismatch")
     elif is_sidecar_lane:
         errors.append("seal_sidecar_missing")
     return errors

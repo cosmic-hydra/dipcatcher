@@ -171,7 +171,9 @@ def bench_fukasawa_iv() -> dict[str, float]:
         mapped = {
             k: float(v)
             for k, v in raw.items()
-            if k != "runtime_seconds"  # wall-clock telemetry, not a diagnostic
+            # synthetic_runtime_seconds is wall-clock telemetry. The core
+            # bench keeps it; the wave blob is the seeded diagnostic.
+            if k not in {"runtime_seconds", "synthetic_runtime_seconds"}
         }
         return _finite_blob(mapped)
     except (ValueError, RuntimeError, FloatingPointError, KeyError, TypeError):

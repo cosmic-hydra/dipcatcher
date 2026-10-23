@@ -5493,7 +5493,7 @@
     },
     "metrics": {
       "doc": "docs/AUDIT_P62_STATS.md",
-      "n_modules": 107,
+      "n_modules": 108,
       "status": "audited"
     },
     "features": {

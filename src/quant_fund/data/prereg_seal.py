@@ -62,6 +62,10 @@ def verify_payload(sealed: dict[str, Any]) -> dict[str, Any]:
     if not isinstance(seal, dict):
         return {"valid": False, "errors": ["seal_missing"]}
     errors: list[str] = []
+    # The content hash excludes the seal block, so a renamed schema would
+    # otherwise verify. Sidecar seals already require this schema.
+    if seal.get("schema") != SEAL_SCHEMA:
+        errors.append("seal_schema_mismatch")
     expected = seal.get("content_sha256")
     actual = content_hash(sealed)
     if not isinstance(expected, str) or expected != actual:

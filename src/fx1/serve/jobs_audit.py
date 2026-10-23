@@ -1078,6 +1078,12 @@ def _batch_probes() -> dict[str, bool]:
             ]
         },
     )
+    # The executor is async. Count calls only after the first batch has
+    # actually run, or a slow worker lands those calls inside the replay
+    # window and a faithful replay looks like new work.
+    for item in r4.json().get("jobs", []):
+        if item.get("job_id"):
+            _wait(client, item["job_id"])
     calls_before = len(runner.calls)
     r5 = client.post(
         f"{_JOBS}/batch",

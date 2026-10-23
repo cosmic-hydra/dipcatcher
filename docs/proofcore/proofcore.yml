@@ -185,7 +185,10 @@ jobs:
           enable-cache: true
           cache-dependency-glob: uv.lock
       - name: Sync
-        run: uv sync --frozen --all-groups
+        # tiny_lm and the weight loader import torch / safetensors. Those
+        # live in the nn extra; without it the coverage lane fails closed
+        # before it can measure the package.
+        run: uv sync --frozen --all-groups --extra nn
       - name: fx1 coverage ratchet
         # Ratcheted 2026-09-28: suite measures 88% locally. Floor 80 keeps
         # ~4pp headroom under the expected (lower) CI reading while closing

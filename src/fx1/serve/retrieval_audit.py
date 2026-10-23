@@ -1210,14 +1210,19 @@ def _stream_probes() -> dict[str, bool]:
     jid = str(jb.json()["job_id"])
     frames: list[str] = []
     terminal_seen = False
+    # _WAIT_S, not a 3s slice: the access log stamps response start, and a
+    # loaded runner can still be queued when a short stream hits its deadline.
     with client.stream(
-        "GET", f"/harness/jobs/{jid}/events", params={"timeout_s": 3}, headers=_h()
+        "GET", f"/harness/jobs/{jid}/events", params={"timeout_s": _WAIT_S}, headers=_h()
     ) as s:
         assert s.status_code == 200, "job events stream refused"
         for chunk in s.iter_text():
             frames.append(chunk)
         # reaching here means the stream closed (terminal or deadline)
     joined = "".join(frames)
+    # SSE frames are blank-line separated in the concatenated body.
+    # iter_text chunks are a transport detail — gzip and the ASGI
+    # buffer split "\n\n" across yields — so they are not frames.
     snap_lines = [ln for ln in joined.split("\n") if ln.startswith("data: ")]
     for ln in snap_lines:
         try:
@@ -1226,8 +1231,12 @@ def _stream_probes() -> dict[str, bool]:
                 terminal_seen = True
         except json.JSONDecodeError:
             pass
+    blocks = [b for b in joined.split("\n\n") if b.strip()]
     out["job_events_sse_frames_end_terminal"] = (
-        "event: job" in joined and terminal_seen and all("\n\n" in f or f == "" for f in frames)
+        joined.endswith("\n\n")
+        and terminal_seen
+        and bool(blocks)
+        and all(b.lstrip().startswith(("event: job", ":")) for b in blocks)
     )
     # every frame body parses as the job snapshot — no partial lines
     out["job_events_frames_complete_json"] = (

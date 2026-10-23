@@ -519,7 +519,7 @@ flowchart LR
   quant_fund_research -->|6| quant_fund_audit
   quant_fund_research -->|5| quant_fund_backtest
   quant_fund_research -->|14| quant_fund_config
-  quant_fund_research -->|8| quant_fund_data
+  quant_fund_research -->|9| quant_fund_data
   quant_fund_research -->|9| quant_fund_execution
   quant_fund_research -->|1| quant_fund_hedge_lab
   quant_fund_research -->|122| quant_fund_metrics
@@ -811,7 +811,7 @@ sequenceDiagram
 | `quant_fund.live` | 11 |
 | `quant_fund.market_sim` | 13 |
 | `quant_fund.mc_engine` | 13 |
-| `quant_fund.metrics` | 107 |
+| `quant_fund.metrics` | 108 |
 | `quant_fund.microstructure` | 182 |
 | `quant_fund.models` | 10400 |
 | `quant_fund.monitoring` | 7 |
@@ -842,7 +842,7 @@ sequenceDiagram
 | `quant_fund.utils` | 9 |
 | `quant_fund.validation` | 14 |
 
-- Modules scanned: **13397**
+- Modules scanned: **13398**
 - Packages: **95**
 - Cross-package import edges: **395**
 

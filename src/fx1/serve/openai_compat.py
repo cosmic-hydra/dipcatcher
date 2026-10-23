@@ -2300,12 +2300,10 @@ class OpenAIVectorStoreSearch(_Model):
         if ro.get("ranker", "auto") != "auto":
             raise ValueError("ranking_options.ranker accepts only 'auto'")
         st = ro.get("score_threshold")
-        # the cosine floor gets the file_search tool's bound: a bool is
-        # not a threshold, and out-of-range refuses at validation — the
-        # same verdict the direct-search core applies at call time.
-        if st is not None and (
-            not isinstance(st, (int, float)) or isinstance(st, bool) or not 0.0 <= st <= 1.0
-        ):
+        # A bool is not a threshold. Numeric range is enforced by
+        # VectorStore.search as 400 invalid_filters — rejecting it here
+        # turns that contract into a 422 before the core sees the call.
+        if st is not None and (not isinstance(st, (int, float)) or isinstance(st, bool)):
             raise ValueError("score_threshold must be a number in [0, 1]")
         return self
 

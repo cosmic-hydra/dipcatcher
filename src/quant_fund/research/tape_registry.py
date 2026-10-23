@@ -368,7 +368,12 @@ def tape_binding_errors(body: Mapping[str, Any], *, root: Path | str | None = No
     ``tape_manifest_sha256`` is always a tape pin.
     """
     label = body.get("data_label")
-    if isinstance(label, str) and label.upper() in SYNTHETIC_LABELS:
+    # A missing or blank label is an honesty-quarantine finding, not a
+    # non-synthetic tape claim. Enforcing the registry here turns that
+    # quarantine into a seal rejection and hides the honesty verdict.
+    if not isinstance(label, str) or not label.strip():
+        return []
+    if label.upper() in SYNTHETIC_LABELS:
         return []
     # Corpus lanes evaluate the committed receipt corpus itself — pinned by
     # the corpus epoch chains (verify-repo), not by a tape manifest.

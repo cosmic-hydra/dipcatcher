@@ -76,7 +76,11 @@ def _isinstance_floats(raw: Mapping[str, object]) -> dict[str, float]:
     return {
         k: float(v)
         for k, v in raw.items()
-        if isinstance(v, (int, float)) and not isinstance(v, bool) and k != "runtime_seconds"
+        if (
+            isinstance(v, (int, float))
+            and not isinstance(v, bool)
+            and k not in {"runtime_seconds", "live_pnl_claim"}
+        )
     }
 
 
