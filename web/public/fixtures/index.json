@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-22T17:45:22.780694+00:00",
+ "generated_at": "2026-10-23T22:15:26.432972+00:00",
  "generator": "web/scripts/export_fixtures.py",
  "hash_matches": {
   "01268826f737dc0fc1fc7e28555ce3aeb54760c7d759a29bf6ad7c8be3c59e64": "configs/corpus_epoch_3c319fb43ab0351e.json",
@@ -109,6 +109,7 @@
   "3d94c3ed069123be4b774613a3e35d114698ab6000ce195fa97187e2a5596bb1": "receipts/fx1_api_audit.json",
   "3d98298e540b6ab7fa14c9b8452feb06c7b5c28a2b09a55ea8a9c4b6710acb39": "receipts/hit_starve_amzn.json",
   "3e3473c359007fb425361a8a618d1e7b3de5edc23e1a0937ab241d2831c95dc0": "receipts/corpus_epoch_6340cdebc9a6efe1.json",
+  "3f1533c16f51153d03996f7253c79dc68816d8df89d214c8b37ca8ee17b27500": "receipts/corpus_epoch_ff585b9d7c8badaa.json",
   "3f98624499677af6306c90bcaa7cd706090b10060b3168fc35f88a876f24ffe3": "receipts/corpus_epoch_52f80a0cc915f58d.json",
   "409a097a1fae3128d9a1100e78ac4a42dcfbfd405a2a9b6bef63fbd42caee3c1": "receipts/monitor_run_real_drill.json",
   "436c3737e93cd19673ae6e6127e69f47498efbeacdfc25e8447a9abdc1b7512a": "receipts/asof_audit.json",
@@ -119,6 +120,7 @@
   "467134b64f8e9b397acd3f221e716b735ee62a5e70e2a533875be62b5d42924a": "receipts/queue_jump_amzn.json",
   "4696227f39dac4b343da3dc5f9a708069d44b64db94a7f5ca12e6455c54629b5": "receipts/tape_surgery_amzn.json",
   "46d6eea1a430e5762ab3de9a2c929527a7955019e47e2389f5c0ef67db49a507": "configs/corpus_epoch_9cfb95d86b5633e3.json",
+  "4709607074c51beb277a3b3721f7aa8cf1609f4997a7266edc0a9708d5def667": "receipts/fleet_eval_cee9aaee0a0f0f36.json",
   "48b240ea495b7ab633a4ec61c7da34f82c414f2370220f60894612ceef8b3dc9": "receipts/conformal_real_drill_gaussian_minus_conf_t_pinball.json",
   "4915ad1bb6cf3c0857a09020ca27f3c7e6685a9f64681c2fefd8f2e91a8b15cd": "receipts/tape_digest_amzn.json",
   "493540278637dde9c9500d180d3651a9a34efa279eda7278da2a6655f5e1d4df": "receipts/quote_place_amzn.json",
@@ -170,6 +172,7 @@
   "5f386d77d237a6bbdc12fad5d794184508548fad474b1cb258f48bded96d7431": "receipts/hawkes_mv.json",
   "5fdba4c796f2dff49486c62bd3c501e3053657231d6c45bfdd5bdb04ba2bb1cb": "receipts/receipts_audit.json",
   "5fe71d9e05862d39cdaf2aaf153f508d992a2bc6132bc882f45d86da64f54396": "receipts/engine_fuzz.json",
+  "600a4532ac34b11a39508838c609bbc03c9bbfc6ffad8551835f2d2083a05595": "receipts/honest_verdict_d5d9bf60e0d5e1a4.json",
   "60c619c630ec06fd0384bdf08f11b6940e06c914bc89fe75b7c62a4817aa06bc": "receipts/quality_audit.json",
   "60e68e2af9cd2544458a8ac821e1468b47b322798cb498a3e116d3f0ce0964de": "receipts/loss_cs_real_drill_gaussian_vs_conf_t.json",
   "611ad72af3e3734f34e39d3310e502444d2ede665018b7ffb7223ee0f7c19b02": "receipts/corpus_absence_exemplar.json",
@@ -197,6 +200,7 @@
   "6952a3f11642bddec43c83e9026bcd2b9699e69f59fe760ba60552e85eb20518": "configs/corpus_epoch_bb88b9759b4e232b.json",
   "69735454a8da7e781be4e56dc4d9eb83c56f05bbd51ce6e3a4db47e2bb547e00": "receipts/em_audit.json",
   "6baa7552e7954a8c081b94f02f1034bf0430b77eee57d4d852952e057aede65c": "receipts/monitor_run_drill_clean.json",
+  "6bbb890de032973d300d44584c8f250ef8b8172ad1b687e876295986fb676742": "receipts/capacity_eval_bdf234110827cd1f.json",
   "6c8a3677f6a72ea8b9790126779d5b0c67838c3c4461dbd1f9fc1ef62fc0509b": "receipts/cost_calibration_eval_df9b8d7068bf709b.json",
   "6deaa336ee288e28ea35f93caa5d8b8b8436c99fd47efb97ceed792f6d3b8a62": "receipts/cp_real_drill_gaussian_pit.json",
   "6e135a43144e89e3fab4b7d4473d89db1d98ae6f888f7611d2e9433ac00cadca": "receipts/fx1_quota2_audit.json",
@@ -214,6 +218,7 @@
   "751a7c4351d1639d547330d7b8f8251fb6341f500f099304a13945810a560fe0": "receipts/crown_size.json",
   "751e3497d28c9a1f6e50d5040ec6b80a416194b0ea1b0ab2b05462c897b219d3": "receipts/zone_card.json",
   "77c38c8edc534276ad901f4c64c5024f8e79c99c5ece43b001b003f362584a5d": "receipts/evidence_audit_3464d8f8197bf737.json",
+  "784cc633b6d9e6abff52b6b391e7056c863a0b322acae173aa38196439ed11d8": "receipts/rankic_eval_b0f9818dfe2b3663.json",
   "787b45652557c719c5beffef50ad571f773d3253f28ddc0e0a406e0cdc75399c": "receipts/capability_audit.json",
   "79f2a55cc0ba899cbdb8a26e7e103e3e008acc554890ef21d63d1d3bf48d0538": "receipts/disclosure_audit.json",
   "7ab02a6f41f6c626d79bca729a02300d4c79dae243758a460b57a636604fdcc4": "receipts/churn_stability.json",
@@ -263,6 +268,7 @@
   "9913a8a80d7232d5af2f1b6864389ea666b8fd81582ea55ce9dbdc835394385d": "receipts/corpus_epoch_a83ba798e9abd892.json",
   "994f8f2cf89faaace83e6e3f7441d3361e111c0d2b9e05cf123c2c602c2389cd": "receipts/closure_stack_amzn.json",
   "99737d09622533bad5f5793cd7fef198e211b235251bb79455c9a5e8643547b3": "receipts/fx1_cap_audit.json",
+  "9a7dac094aaae3d1c11ce853d8951ae816f263816c56703536c2ddd337532d90": "receipts/vol_bench_860a3412278105ca.json",
   "9b06d26cc1c30cd3cfdd70f3dad1b058aedd98268b9069fde4d2093b8fa1b40f": "configs/corpus_epoch_0c3fab9ae380cd1a.json",
   "9b2b2433e4106a88b1f2583bca0816a738370635046254267a50f83e50b3ac5c": "receipts/backend_parity.json",
   "9b36d560170c53b02f873de648f4c9ea83d7e30e61ab0ad598a2ea4d05b477e4": "receipts/tail_real_drill.json",
@@ -297,6 +303,7 @@
   "ab2a078fc13c3bebf659ea962fb21ab18e826508f0abad2fc83e1210ba3c8463": "receipts/spread_response_amzn.json",
   "ad949f2ebda26df715cc45e1d6efef08c10e6deeac503580bc6668b61bf10ee6": "receipts/wave23_map_amzn.json",
   "adfab5e558bdaa8b54abb8376b1d4f33c11f605d9215146ccea3b82d163b0c7f": "receipts/price_clustering_synth.json",
+  "ae2c1dec2a6718452e5d591ac736ce8ebe09ed37352619199e9190516211c266": "receipts/monitor_run_85aece35e89b5b12.json",
   "aea10d964151ed5af028e1f308b42c23378dfe6da86bcb5d6392174bb21d4bc7": "receipts/sbom_audit.json",
   "af272bd9ef0a1845d901080caa9c3a27257a3ae341848cdffadd8f03475c0427": "receipts/trade_decomp_amzn.json",
   "afc88d0767169ff88e22920d492ddc3c2db25c9dbdd00cb391504e81bb29fbcc": "receipts/forward_record_preregistration_v1.json.seal.json",
@@ -981,6 +988,17 @@
    "live_pnl_claim": false,
    "n_hash_matches": 73,
    "n_hashes": 78,
+   "research_only": true,
+   "schema": "corpus_epoch.v1"
+  },
+  {
+   "created_at": null,
+   "evidence_level": null,
+   "file": "receipts/corpus_epoch_45e7c79ed405a79c.json",
+   "id": "corpus_epoch_45e7c79ed405a79c",
+   "live_pnl_claim": false,
+   "n_hash_matches": 402,
+   "n_hashes": 406,
    "research_only": true,
    "schema": "corpus_epoch.v1"
   },
@@ -4780,7 +4798,7 @@
    "schema": "zone_ttl.v1"
   }
  ],
- "repo_revision": "37eb8d278d2b6c8a0d5a99eef44342edab33b70c",
+ "repo_revision": "f817b2ba144b50be9c40367cb06fb8672b7e2a9b",
  "strategies": [
   {
    "data_source": "UNVERIFIED",
