@@ -355,6 +355,12 @@ def _check_horizons(horizons: Sequence[int]) -> tuple[int, ...]:
     return resolved
 
 
+def _stable_metric(value: float) -> float:
+    from quant_fund.utils.numeric import stable_decimal
+
+    return stable_decimal(value)
+
+
 def _validate_shard(shard: VolShard, shard_name: str, n_bars: int) -> VolShard:
     if not isinstance(shard, VolShard):
         raise ValueError(f"shard {shard_name!r} did not return a VolShard")
@@ -372,7 +378,16 @@ def _validate_shard(shard: VolShard, shard_name: str, n_bars: int) -> VolShard:
             raise ValueError(f"shard {shard_name!r} produced non-finite {label}")
     if (rv <= 0.0).any() or (parkinson <= 0.0).any():
         raise ValueError(f"shard {shard_name!r} produced non-positive rv/parkinson")
-    return VolShard(shard.name, returns, rv, parkinson, dict(shard.config))
+    from quant_fund.utils.numeric import stable_decimal_array
+
+    # Hashing uses tobytes(); collapse libm ulps before the seal and the fit.
+    return VolShard(
+        shard.name,
+        stable_decimal_array(returns),
+        stable_decimal_array(rv),
+        stable_decimal_array(parkinson),
+        dict(shard.config),
+    )
 
 
 def _eval_shard_model(
@@ -523,8 +538,8 @@ def run_vol_bench(
                 else:
                     targets, forecasts = scored
                     losses[model_name] = (targets, forecasts)
-                    row["qlike"] = float(np.mean(qlike_loss(targets, forecasts)))
-                    row["mse"] = float(np.mean(mse_loss(targets, forecasts)))
+                    row["qlike"] = _stable_metric(float(np.mean(qlike_loss(targets, forecasts))))
+                    row["mse"] = _stable_metric(float(np.mean(mse_loss(targets, forecasts))))
                 rows.append(row)
                 row_refs[model_name] = row
             if DM_REFERENCE in losses:
@@ -533,9 +548,9 @@ def run_vol_bench(
                     if model_name == DM_REFERENCE:
                         continue
                     diff = vol_loss_diff(targets, forecasts, ref_forecasts, loss="qlike")
-                    row_refs[model_name]["dm_qlike_mean"] = float(diff["mean_diff"])
-                    row_refs[model_name]["dm_qlike_se"] = float(diff["se"])
-                    row_refs[model_name]["dm_qlike_t"] = float(diff["t"])
+                    row_refs[model_name]["dm_qlike_mean"] = _stable_metric(float(diff["mean_diff"]))
+                    row_refs[model_name]["dm_qlike_se"] = _stable_metric(float(diff["se"]))
+                    row_refs[model_name]["dm_qlike_t"] = _stable_metric(float(diff["t"]))
                     # Anytime-valid promotion: per-origin e-process on the
                     # QLIKE stream vs the HAR incumbent (challenger=model).
                     proc = LossEProcess(alpha=0.05, init_scale=_EPROMOTION_INIT_SCALE)
@@ -546,9 +561,13 @@ def run_vol_bench(
                     ):
                         proc.update(c_loss, b_loss)
                     final_state = proc.states[-1]
-                    row_refs[model_name]["epromotion_evalue"] = float(final_state.evalue)
+                    row_refs[model_name]["epromotion_evalue"] = _stable_metric(
+                        float(final_state.evalue)
+                    )
                     row_refs[model_name]["epromotion_origin"] = proc.promotion_origin
-                    row_refs[model_name]["epromotion_anytime_p"] = float(final_state.anytime_p)
+                    row_refs[model_name]["epromotion_anytime_p"] = _stable_metric(
+                        float(final_state.anytime_p)
+                    )
 
     frame = pl.DataFrame(
         rows,

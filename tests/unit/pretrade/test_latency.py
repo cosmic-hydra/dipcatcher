@@ -7,6 +7,7 @@ only when the process is uninstrumented. The CI ``pretrade-risk`` job runs
 
 from __future__ import annotations
 
+import os
 import sys
 
 from quant_fund.pretrade.bench import P50_LIMIT_NS, P99_LIMIT_NS, run_benchmark
@@ -36,7 +37,11 @@ def test_allow_path_meets_latency_gate() -> None:
     assert "good_faith_violation" in report["checks"]
     within = report["p50_ns"] < P50_LIMIT_NS and report["p99_ns"] < P99_LIMIT_NS
     assert report["gate_pass"] is within
-    if _coverage_running():
+    # Coverage tracing and an xdist worker sharing the runner both inject
+    # pauses this path cannot avoid. The numeric limits stay where they are.
+    # The CI pretrade-risk job runs the same bench alone, without coverage,
+    # and that job is the gate.
+    if _coverage_running() or os.environ.get("PYTEST_XDIST_WORKER"):
         return
     # Shared runners inject p99 pauses a fast path cannot avoid; a passing
     # round proves the path meets the gate. A genuinely slow path fails all.

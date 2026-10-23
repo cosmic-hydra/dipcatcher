@@ -4306,22 +4306,22 @@ counted. Prose that contains such a token is quoted verbatim.
 - `research_only`: true
 - `schema`: capability_audit.v1
 
-### `receipts/capacity_eval_9cbc81cf3790a7d6.json`
+### `receipts/capacity_eval_bdf234110827cd1f.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/capacity_eval_9cbc81cf3790a7d6.json | 09b1089dda2a45dc73afa6f99fc861605adf34bda616df4bb5836b8db61ea5c9 | 9cbc81cf3790a7d63e58c46726ffe4b1ad9460814e30f098d39cc5e2e112faaa | not_checked | absent | inputs_sha256=c8ec9ca7120f91275467706797779f4c660e55df4bfe2bcd8dd24a2cb020b3c1 | unspecified | absent | absent | false |
+| receipts/capacity_eval_bdf234110827cd1f.json | 6bbb890de032973d300d44584c8f250ef8b8172ad1b687e876295986fb676742 | bdf234110827cd1f1a5646e2222af03c131e2923d9b67d0e8fe19667fdfa6dd6 | not_checked | absent | inputs_sha256=dad71e6a0005e2117e5f5625a2d3f7d10687ce77a5e0cd7e6830f7507a6bc20e | unspecified | absent | absent | false |
 
 - `books`:
   - [0]
-    - `adv_sha256`: 57ae995144d03b98c8981995c8d079f51035108ce1b7169a35c609ac291ae233
+    - `adv_sha256`: c479f6242d8aadabdc7399e3ea08d3dd2b5c421a17c5723c2c89a6c833316f66
     - `data_label`: SYNTHETIC
     - `n_dates`: 60
     - `n_names`: 8
     - `name`: uniform
     - `weights_sha256`: 5f939a795d092e615b019dcadf28e4eed6bbb1c67021d9b7f07c3f0a8d61fbeb
   - [1]
-    - `adv_sha256`: 7953c2de4f1ec93e29d63705c4e3cc0fd593606ded2ec3f988417044ab905b90
+    - `adv_sha256`: 5e5e564b370d6f6d09eb3911c7418509f9322377323edb9abbbcecdbd6cd06fc
     - `data_label`: SYNTHETIC
     - `n_dates`: 60
     - `n_names`: 8
@@ -4331,7 +4331,7 @@ counted. Prose that contains such a token is quoted verbatim.
 - `dev_only`: true
 - `kind`: capacity_overlay_eval
 - `n_rows`: 4
-- `receipt_sha256`: 9cbc81cf3790a7d63e58c46726ffe4b1ad9460814e30f098d39cc5e2e112faaa
+- `receipt_sha256`: bdf234110827cd1f1a5646e2222af03c131e2923d9b67d0e8fe19667fdfa6dd6
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -4351,47 +4351,47 @@ counted. Prose that contains such a token is quoted verbatim.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/capacity_eval_f990aaadaa5b647b.json
-      - `sha256`: 7d5d3502ad6587d67ce442364468121b4feb59941f148645bbcb92071dc706cb
+      - `path`: data/metadata/replay/capacity_eval_b7bc2bfc87aa6be2.json
+      - `sha256`: 0ea9ff505e24f4bb3d843aa8e8eb8caf4e7460072b43fb10a2d9ffa6fe544b34
 - `results`:
   - [0]
     - `aum`: 1000000.0
     - `book`: uniform
-    - `days_to_trade`: 0.10643505246394389
+    - `days_to_trade`: 0.10643505
     - `feasible`: 1
-    - `impact_bps`: 58.62177950726087
-    - `max_participation`: 0.010643505246394389
-    - `mean_participation`: 0.004054086569775791
+    - `impact_bps`: 58.621779
+    - `max_participation`: 0.010643505
+    - `mean_participation`: 0.0040540866
     - `participation_cap`: 0.1
     - `status`: ok
   - [1]
     - `aum`: 10000000.0
     - `book`: uniform
-    - `days_to_trade`: 1.064350524639439
+    - `days_to_trade`: 1.0643505
     - `feasible`: 0
-    - `impact_bps`: 185.37834373512757
-    - `max_participation`: 0.10643505246394389
-    - `mean_participation`: 0.0405408656977579
+    - `impact_bps`: 185.37834
+    - `max_participation`: 0.10643505
+    - `mean_participation`: 0.040540866
     - `participation_cap`: 0.1
     - `status`: ok
   - [2]
     - `aum`: 1000000.0
     - `book`: concentrated
-    - `days_to_trade`: 0.24473014809391208
+    - `days_to_trade`: 0.24473015
     - `feasible`: 1
-    - `impact_bps`: 36.2896332221317
-    - `max_participation`: 0.02447301480939121
-    - `mean_participation`: 0.003480376246735458
+    - `impact_bps`: 36.289633
+    - `max_participation`: 0.024473015
+    - `mean_participation`: 0.0034803763
     - `participation_cap`: 0.1
     - `status`: ok
   - [3]
     - `aum`: 10000000.0
     - `book`: concentrated
-    - `days_to_trade`: 2.447301480939121
+    - `days_to_trade`: 2.4473015
     - `feasible`: 0
-    - `impact_bps`: 114.75789643405132
-    - `max_participation`: 0.2447301480939121
-    - `mean_participation`: 0.03480376246735458
+    - `impact_bps`: 114.7579
+    - `max_participation`: 0.24473015
+    - `mean_participation`: 0.034803763
     - `participation_cap`: 0.1
     - `status`: ok
 - `schema`: capacity_overlay.v1
@@ -83820,11 +83820,11 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
 - `schema`: cross_sectional_rankic.v1
 - `seed`: 11
 
-### `receipts/rankic_eval_fd19af03152d5a6a.json`
+### `receipts/rankic_eval_b0f9818dfe2b3663.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/rankic_eval_fd19af03152d5a6a.json | 9e2dad33bb6c245f3e7f15f0d3d7525f99b5f3745b40ba19c1eee0dff1aa2b96 | fd19af03152d5a6a5b12c76700c680ec14bffc607e48481138c9959cc13f9fc4 | not_checked | absent | inputs_sha256=84bd0ff233f2c3fd0e81e17beb2f1a7d6f0b8deb7194933f53ad83b66ced640a | unspecified | absent | absent | false |
+| receipts/rankic_eval_b0f9818dfe2b3663.json | 784cc633b6d9e6abff52b6b391e7056c863a0b322acae173aa38196439ed11d8 | b0f9818dfe2b3663877c3932d6400c6428c2ce180ed63b11025c548df9d87c67 | not_checked | absent | inputs_sha256=437be2f1464c2ec32a6cc9f2bb6b8fe752f8ac14a922027310b8f9b0d4b0c89a | unspecified | absent | absent | false |
 
 - `challengers`:
   - identity
@@ -83844,23 +83844,23 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `data_label`: SYNTHETIC
     - `description`: linear_signal: fwd = beta*signal + eps
     - `forward_sha256`:
-      - `1`: 51d1e0bbed51c0f8f4b230ad7d69de55a4856f802632ad0879dfdfda09f0758b
-      - `5`: 43cd4784d5b72c460bcc140bb7741f3f1e8f2f6b0997429d9db7e5d1c9a7dbb1
+      - `1`: 2f832b588ef6e23c7112fd83a3d0f12fd69f348c88663f17f3e367ee8d756602
+      - `5`: 03b0854dc7b65065b8a958dc84840cc2123930199edf4753ef54beb9b0c3c39e
     - `n_assets`: 16
     - `n_dates`: 60
     - `seed`: 104740
-    - `signal_sha256`: c7884445bca9d6fec2393903596fc0b54fbf9ca2a1df0bd55cdecc06e190ae06
+    - `signal_sha256`: 8a971c338289f20a529b385f642b7c5f2bea588b0ba5d4de9e06c286fc32a8f9
   - `pure_noise`:
     - `data_label`: SYNTHETIC
     - `description`: pure_noise: fwd independent of signal
     - `forward_sha256`:
-      - `1`: a881044a3be91bd2525f21feaa8c4c9c67313da8bd2eb8817d89a89d1ba29702
-      - `5`: cbf40b4f83d6ed1c9efa4737f40f22b3a76e53032c269a6864448f4f59873d1a
+      - `1`: 9b60394c3cb49a2cd1f443114b75102bd807aafa15723a41d9eb4943d7728fee
+      - `5`: 19ca2176f7eefab644887ef3de07c581a012195e8c6f0e46ca5ce5c8529b260b
     - `n_assets`: 16
     - `n_dates`: 60
     - `seed`: 11
-    - `signal_sha256`: 83beddccaef4913fc22b82476f2a47e5296220c67b65502a6985a96a7947a54a
-- `receipt_sha256`: fd19af03152d5a6a5b12c76700c680ec14bffc607e48481138c9959cc13f9fc4
+    - `signal_sha256`: a6aaf77d36ed7e1557d48a3a68b40c8f519e15a51fe886105903b124e44c0155
+- `receipt_sha256`: b0f9818dfe2b3663877c3932d6400c6428c2ce180ed63b11025c548df9d87c67
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -83881,177 +83881,177 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/rankic_eval_507c328d7ea41c76.json
-      - `sha256`: 3671585a73edeab75c50c4a1eed874b7af4842e0a0156f223d39b7c4e6804100
+      - `path`: data/metadata/replay/rankic_eval_4310945be91ef9a3.json
+      - `sha256`: 1909d48b779a036d3f7ec32bf67269d29f0c453a523b2e89e188d727139ae392
 - `results`:
   - [0]
     - `challenger`: identity
     - `error`: 
     - `horizon`: 1
-    - `icir_ann_pearson`: -1.9009782088751646
-    - `icir_pearson`: -0.11975037115325438
-    - `mean_pearson`: -0.029132726573750066
-    - `mean_spearman`: -0.02023928215353938
+    - `icir_ann_pearson`: -1.9009782
+    - `icir_pearson`: -0.11975037
+    - `mean_pearson`: -0.029132727
+    - `mean_spearman`: -0.020239282
     - `n_dates`: 59
-    - `p_spearman`: 0.5212153650308188
+    - `p_spearman`: 0.52121537
     - `shard`: pure_noise
     - `status`: ok
-    - `t_pearson`: -1.0864487092922395
-    - `t_spearman`: -0.6453964804947411
+    - `t_pearson`: -1.0864487
+    - `t_spearman`: -0.64539648
   - [1]
     - `challenger`: identity
     - `error`: 
     - `horizon`: 5
-    - `icir_ann_pearson`: -3.181236294678684
-    - `icir_pearson`: -0.20039904993934257
-    - `mean_pearson`: -0.04671045762208652
-    - `mean_spearman`: -0.043957219251336895
+    - `icir_ann_pearson`: -3.1812363
+    - `icir_pearson`: -0.20039905
+    - `mean_pearson`: -0.046710458
+    - `mean_spearman`: -0.043957219
     - `n_dates`: 55
-    - `p_spearman`: 0.16389724796779584
+    - `p_spearman`: 0.16389726
     - `shard`: pure_noise
     - `status`: ok
-    - `t_pearson`: -1.5078063434783284
-    - `t_spearman`: -1.4112823477319312
+    - `t_pearson`: -1.5078064
+    - `t_spearman`: -1.4112823
   - [2]
     - `challenger`: noisy
     - `error`: 
     - `horizon`: 1
-    - `icir_ann_pearson`: 0.3159084349299725
-    - `icir_pearson`: 0.01990036085457947
-    - `mean_pearson`: 0.004151154783926075
-    - `mean_spearman`: 0.018295114656031904
+    - `icir_ann_pearson`: 0.31590845
+    - `icir_pearson`: 0.019900362
+    - `mean_pearson`: 0.0041511549
+    - `mean_spearman`: 0.018295115
     - `n_dates`: 59
-    - `p_spearman`: 0.47816234594986806
+    - `p_spearman`: 0.47816235
     - `shard`: pure_noise
     - `status`: ok
-    - `t_pearson`: 0.23070406655351647
-    - `t_spearman`: 0.713883391524331
+    - `t_pearson`: 0.23070407
+    - `t_spearman`: 0.71388339
   - [3]
     - `challenger`: noisy
     - `error`: 
     - `horizon`: 5
-    - `icir_ann_pearson`: -1.1327100490435362
-    - `icir_pearson`: -0.07135402612649934
-    - `mean_pearson`: -0.016480471607701247
-    - `mean_spearman`: 0.030374331550802137
+    - `icir_ann_pearson`: -1.1327101
+    - `icir_pearson`: -0.07135403
+    - `mean_pearson`: -0.016480473
+    - `mean_spearman`: 0.030374332
     - `n_dates`: 55
-    - `p_spearman`: 0.2046213278988017
+    - `p_spearman`: 0.20462131
     - `shard`: pure_noise
     - `status`: ok
-    - `t_pearson`: -0.7670130261443981
-    - `t_spearman`: 1.2840074521801745
+    - `t_pearson`: -0.76701306
+    - `t_spearman`: 1.2840075
   - [4]
     - `challenger`: lagged
     - `error`: 
     - `horizon`: 1
-    - `icir_ann_pearson`: -0.3351867773680959
-    - `icir_pearson`: -0.021114782277932256
-    - `mean_pearson`: -0.004633875014238986
-    - `mean_spearman`: 0.003988035892323026
+    - `icir_ann_pearson`: -0.33518681
+    - `icir_pearson`: -0.021114784
+    - `mean_pearson`: -0.0046338754
+    - `mean_spearman`: 0.0039880359
     - `n_dates`: 59
-    - `p_spearman`: 0.8840237932471338
+    - `p_spearman`: 0.88402379
     - `shard`: pure_noise
     - `status`: ok
-    - `t_pearson`: -0.1775692501462346
-    - `t_spearman`: 0.14651389172110127
+    - `t_pearson`: -0.17756926
+    - `t_spearman`: 0.14651389
   - [5]
     - `challenger`: lagged
     - `error`: 
     - `horizon`: 5
-    - `icir_ann_pearson`: -3.1192536516764973
-    - `icir_pearson`: -0.19649451043966915
-    - `mean_pearson`: -0.04585461395643827
-    - `mean_spearman`: -0.06203208556149732
+    - `icir_ann_pearson`: -3.1192537
+    - `icir_pearson`: -0.19649451
+    - `mean_pearson`: -0.045854615
+    - `mean_spearman`: -0.062032086
     - `n_dates`: 55
-    - `p_spearman`: 0.02183669959525495
+    - `p_spearman`: 0.0218367
     - `shard`: pure_noise
     - `status`: ok
-    - `t_pearson`: -1.7753433666931446
-    - `t_spearman`: -2.3615298104851985
+    - `t_pearson`: -1.7753434
+    - `t_spearman`: -2.3615298
   - [6]
     - `challenger`: identity
     - `error`: 
     - `horizon`: 1
-    - `icir_ann_pearson`: 24.058348902563278
-    - `icir_pearson`: 1.5155335274049082
-    - `mean_pearson`: 0.32009660976431614
-    - `mean_spearman`: 0.30558325024925226
+    - `icir_ann_pearson`: 24.058349
+    - `icir_pearson`: 1.5155335
+    - `mean_pearson`: 0.32009661
+    - `mean_spearman`: 0.30558325
     - `n_dates`: 59
-    - `p_spearman`: 4.3200684276339445e-15
+    - `p_spearman`: 4.3200615e-15
     - `shard`: linear_signal
     - `status`: ok
-    - `t_pearson`: 10.315092006069309
-    - `t_spearman`: 10.536371557789227
+    - `t_pearson`: 10.315092
+    - `t_spearman`: 10.536372
   - [7]
     - `challenger`: identity
     - `error`: 
     - `horizon`: 5
-    - `icir_ann_pearson`: 20.447672610228103
-    - `icir_pearson`: 1.2880823003983457
-    - `mean_pearson`: 0.3250210495917273
-    - `mean_spearman`: 0.31828877005347583
+    - `icir_ann_pearson`: 20.447673
+    - `icir_pearson`: 1.2880823
+    - `mean_pearson`: 0.32502105
+    - `mean_spearman`: 0.31828877
     - `n_dates`: 55
-    - `p_spearman`: 7.306060609585616e-11
+    - `p_spearman`: 7.3060603e-11
     - `shard`: linear_signal
     - `status`: ok
-    - `t_pearson`: 8.700203290887131
-    - `t_spearman`: 8.080873988546475
+    - `t_pearson`: 8.7002033
+    - `t_spearman`: 8.080874
   - [8]
     - `challenger`: noisy
     - `error`: 
     - `horizon`: 1
-    - `icir_ann_pearson`: 5.870630458212197
-    - `icir_pearson`: 0.36981495789501523
-    - `mean_pearson`: 0.09180780456101234
-    - `mean_spearman`: 0.06550348953140579
+    - `icir_ann_pearson`: 5.8706305
+    - `icir_pearson`: 0.36981496
+    - `mean_pearson`: 0.091807804
+    - `mean_spearman`: 0.06550349
     - `n_dates`: 59
-    - `p_spearman`: 0.008778074736495146
+    - `p_spearman`: 0.0087780747
     - `shard`: linear_signal
     - `status`: ok
-    - `t_pearson`: 4.359570753406415
-    - `t_spearman`: 2.712345300455227
+    - `t_pearson`: 4.3595708
+    - `t_spearman`: 2.7123453
   - [9]
     - `challenger`: noisy
     - `error`: 
     - `horizon`: 5
-    - `icir_ann_pearson`: 4.009475893297263
-    - `icir_pearson`: 0.2525732405088834
-    - `mean_pearson`: 0.0662299888073039
-    - `mean_spearman`: 0.05641711229946524
+    - `icir_ann_pearson`: 4.0094759
+    - `icir_pearson`: 0.25257324
+    - `mean_pearson`: 0.066229988
+    - `mean_spearman`: 0.056417112
     - `n_dates`: 55
-    - `p_spearman`: 0.07679457477986884
+    - `p_spearman`: 0.076794571
     - `shard`: linear_signal
     - `status`: ok
-    - `t_pearson`: 2.0038056663470662
-    - `t_spearman`: 1.8040976769676234
+    - `t_pearson`: 2.0038057
+    - `t_spearman`: 1.8040977
   - [10]
     - `challenger`: lagged
     - `error`: 
     - `horizon`: 1
-    - `icir_ann_pearson`: 0.4441794490577085
-    - `icir_pearson`: 0.027980675230770947
-    - `mean_pearson`: 0.0076792064828830825
-    - `mean_spearman`: 0.005583250249252248
+    - `icir_ann_pearson`: 0.44417942
+    - `icir_pearson`: 0.027980674
+    - `mean_pearson`: 0.0076792061
+    - `mean_spearman`: 0.0055832502
     - `n_dates`: 59
-    - `p_spearman`: 0.856718144019404
+    - `p_spearman`: 0.85671815
     - `shard`: linear_signal
     - `status`: ok
-    - `t_pearson`: 0.23048484733110888
-    - `t_spearman`: 0.18135894458447757
+    - `t_pearson`: 0.23048483
+    - `t_spearman`: 0.18135894
   - [11]
     - `challenger`: lagged
     - `error`: 
     - `horizon`: 5
-    - `icir_ann_pearson`: 0.5615668527397992
-    - `icir_pearson`: 0.03537538659254142
-    - `mean_pearson`: 0.010302578401837693
-    - `mean_spearman`: 0.005882352941176472
+    - `icir_ann_pearson`: 0.56156677
+    - `icir_pearson`: 0.035375381
+    - `mean_pearson`: 0.010302577
+    - `mean_spearman`: 0.0058823529
     - `n_dates`: 55
-    - `p_spearman`: 0.8965438224558474
+    - `p_spearman`: 0.89654382
     - `shard`: linear_signal
     - `status`: ok
-    - `t_pearson`: 0.25957480241352054
-    - `t_spearman`: 0.13064222081735188
+    - `t_pearson`: 0.25957476
+    - `t_spearman`: 0.13064222
 - `schema`: cross_sectional_rankic.v1
 - `seed`: 11
 
@@ -97950,11 +97950,11 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
 - `research_only`: true
 - `schema`: vine_panel.v1
 
-### `receipts/vol_bench_ad0e217766309267.json`
+### `receipts/vol_bench_860a3412278105ca.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/vol_bench_ad0e217766309267.json | d3491318363e1ceea6bd2c436acca9b37023b34e039c633671f8b1f8d63b1d7f | ad0e217766309267c7691e50c029e93c6b0e61bd3babc9227d2a0ce09b723d1a | not_checked | absent | inputs_sha256=4a8e5834b0e913f6e9de2c08b870c2b6b229f8a2b4994af353d7ee02129151ff | unspecified | absent | absent | false |
+| receipts/vol_bench_860a3412278105ca.json | 9a7dac094aaae3d1c11ce853d8951ae816f263816c56703536c2ddd337532d90 | 860a3412278105cafdaab6de3d1c13c9af3233b3770663ee97f05aacc70a0776 | not_checked | absent | inputs_sha256=677c9862dacbb2e885fd2a5e828e7a04dc2f98c2dc062f627a914ef4e4f7c911 | unspecified | absent | absent | false |
 
 - `claim`: research_only
 - `data_label`: SYNTHETIC
@@ -97971,7 +97971,7 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
 - `n_error_rows`: 0
 - `n_origins`: 10
 - `n_rows`: 6
-- `receipt_sha256`: ad0e217766309267c7691e50c029e93c6b0e61bd3babc9227d2a0ce09b723d1a
+- `receipt_sha256`: 860a3412278105cafdaab6de3d1c13c9af3233b3770663ee97f05aacc70a0776
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -97994,38 +97994,38 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/vol_bench_c770505112aeabce.json
-      - `sha256`: deaafdde472fe5a553c6345ef608c7b69ce3b52e334945607cb710d55693fab8
+      - `path`: data/metadata/replay/vol_bench_f9b06fda2a49e295.json
+      - `sha256`: 942c055a36cbe89dd1fbe630ac0ce2a643bd8e856853b08be209c04b1377c44a
 - `results`:
   - [0]
-    - `dm_qlike_mean`: 0.026282817105292768
-    - `dm_qlike_se`: 0.023566845208215025
-    - `dm_qlike_t`: 1.115245459164428
+    - `dm_qlike_mean`: 0.026282821
+    - `dm_qlike_se`: 0.023566847
+    - `dm_qlike_t`: 1.1152455
     - `epromotion_anytime_p`: 1.0
     - `epromotion_evalue`: 1.0
     - `epromotion_origin`: null
     - `error`: null
     - `horizon`: 1
     - `model`: rv_roll
-    - `mse`: 3.932024779468782e-09
+    - `mse`: 3.9320249e-09
     - `n_origins`: 10
-    - `qlike`: 0.11126354674782028
+    - `qlike`: 0.11126355
     - `seed`: 7
     - `shard`: garch_vol
     - `status`: ok
   - [1]
-    - `dm_qlike_mean`: 0.03044823954444418
-    - `dm_qlike_se`: 0.01228109175991647
-    - `dm_qlike_t`: 2.4792779127196485
+    - `dm_qlike_mean`: 0.030448242
+    - `dm_qlike_se`: 0.012281093
+    - `dm_qlike_t`: 2.479278
     - `epromotion_anytime_p`: 1.0
     - `epromotion_evalue`: 1.0
     - `epromotion_origin`: null
     - `error`: null
     - `horizon`: 1
     - `model`: rv_ewma
-    - `mse`: 3.9100970206722025e-09
+    - `mse`: 3.9100971e-09
     - `n_origins`: 10
-    - `qlike`: 0.1154289691869717
+    - `qlike`: 0.11542897
     - `seed`: 7
     - `shard`: garch_vol
     - `status`: ok
@@ -98039,41 +98039,41 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `error`: null
     - `horizon`: 1
     - `model`: har
-    - `mse`: 2.500331818486244e-09
+    - `mse`: 2.5003318e-09
     - `n_origins`: 10
-    - `qlike`: 0.08498072964252752
+    - `qlike`: 0.084980729
     - `seed`: 7
     - `shard`: garch_vol
     - `status`: ok
   - [3]
-    - `dm_qlike_mean`: 0.052878800151732165
-    - `dm_qlike_se`: 0.0751954896897419
-    - `dm_qlike_t`: 0.7032177111939978
-    - `epromotion_anytime_p`: 0.5892857142857143
-    - `epromotion_evalue`: 1.696969696969697
+    - `dm_qlike_mean`: 0.052878801
+    - `dm_qlike_se`: 0.075195491
+    - `dm_qlike_t`: 0.70321771
+    - `epromotion_anytime_p`: 0.58928571
+    - `epromotion_evalue`: 1.6969697
     - `epromotion_origin`: null
     - `error`: null
     - `horizon`: 1
     - `model`: rv_roll
-    - `mse`: 1.4262236853662163e-07
+    - `mse`: 1.4262237e-07
     - `n_origins`: 10
-    - `qlike`: 0.1334280472455575
+    - `qlike`: 0.13342805
     - `seed`: 8
     - `shard`: rough_vol
     - `status`: ok
   - [4]
-    - `dm_qlike_mean`: 0.008743311898131444
-    - `dm_qlike_se`: 0.04519296766068155
-    - `dm_qlike_t`: 0.19346620394080108
-    - `epromotion_anytime_p`: 0.5892857142857143
-    - `epromotion_evalue`: 1.696969696969697
+    - `dm_qlike_mean`: 0.0087433123
+    - `dm_qlike_se`: 0.045192968
+    - `dm_qlike_t`: 0.19346621
+    - `epromotion_anytime_p`: 0.58928571
+    - `epromotion_evalue`: 1.6969697
     - `epromotion_origin`: null
     - `error`: null
     - `horizon`: 1
     - `model`: rv_ewma
-    - `mse`: 1.11496408638407e-07
+    - `mse`: 1.1149641e-07
     - `n_origins`: 10
-    - `qlike`: 0.0892925589919568
+    - `qlike`: 0.089292561
     - `seed`: 8
     - `shard`: rough_vol
     - `status`: ok
@@ -98087,9 +98087,9 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `error`: null
     - `horizon`: 1
     - `model`: har
-    - `mse`: 1.2548993848632045e-07
+    - `mse`: 1.2548994e-07
     - `n_origins`: 10
-    - `qlike`: 0.08054924709382535
+    - `qlike`: 0.080549249
     - `seed`: 8
     - `shard`: rough_vol
     - `status`: ok
@@ -98109,9 +98109,9 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
       - `process`: gjr_garch_1_1
       - `seed`: 7
     - `n`: 200
-    - `parkinson_sha256`: bb5a06a1548a38a310ee4eded08a1180ee522245172eea2acc81ae97e9778015
-    - `returns_sha256`: a18b838f11608d59bd5e528bdd9fc90e4a962b4172be20d3d9ad926417b19823
-    - `rv_sha256`: bae765dc72bb29c614d0ef402d65f5256efb5c0e91b561f57c0acdde6661a0dc
+    - `parkinson_sha256`: 8f5dec47dea9b841d3ed47c629434902db2cf066776bfc9eebfb0d0791f56c7f
+    - `returns_sha256`: a63a8a41dc5a3b813578f55e1a15f0776914a8e38e5658f084675d5ba67b1986
+    - `rv_sha256`: c256b1ff8a8fd632f12977c91c453d9e745f1cdf284b0bf9dbe7abc557f5edbb
     - `seed`: 7
   - `rough_vol`:
     - `config`:
@@ -98124,9 +98124,9 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
       - `seed`: 8
       - `vol_of_logvol`: 0.75
     - `n`: 200
-    - `parkinson_sha256`: b06404ce93bad645cb94ce8918763c05db045d317bcb9cc57a113b8448003d4c
-    - `returns_sha256`: 8239ff740c5218f389288296d32c008c6b07f61cd189b4f27d8d930b6878b385
-    - `rv_sha256`: 7051ef42837714879b112ec882b6d526ecfb8ed3d5f3a12cfa351c809e1e2936
+    - `parkinson_sha256`: e0a4ea15dfa74a77887cba2fc5ee4ac6999484251eff71a539ae4d10c927d315
+    - `returns_sha256`: e39326219b2c263d92a07ad26e3b54404b7457360d8d8d3cb6ff4fe1b52cd9b8
+    - `rv_sha256`: 5c2077f9f8818f7fdad9c86d02d5d42fffeaa9f0b953d633f54e704e5bc6fdd2
     - `seed`: 8
 - `stride`: 1
 - `target`: cumulative_realized_variance

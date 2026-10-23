@@ -129,6 +129,12 @@ def _panel(
             sign[flip_after:] = -1.0
             effect = effect * sign[:, None]
         forward[h] = fwd + effect
+    from quant_fund.utils.numeric import stable_decimal_array
+
+    # Same libm-ulp collapse as the capacity books: the receipt hashes these
+    # arrays with tobytes(), so the pin is a byte identity.
+    signal = stable_decimal_array(signal)
+    forward = {h: stable_decimal_array(fwd) for h, fwd in forward.items()}
     return CrossSectionalPanel(
         dates=_dates(n_dates),
         asset_ids=tuple(f"S{i:03d}" for i in range(n_assets)),
@@ -288,6 +294,27 @@ def _to_flat(score: Array, target: Array) -> tuple[Array, Array, Array]:
     )
 
 
+def _stable_metric(value: float) -> float:
+    from quant_fund.utils.numeric import stable_decimal
+
+    return stable_decimal(float(value))
+
+
+def _stable_t_p(t_value: float, n_dates: int) -> tuple[float, float]:
+    """Round the t-stat, then the two-sided Student-t tail of that rounded t.
+
+    The lane contract re-derives ``p`` from ``t``. Rounding them independently
+    breaks that check, and an unrounded tail still moves with libm.
+    """
+    from scipy.stats import t as t_dist
+
+    t_rounded = _stable_metric(t_value)
+    if n_dates < 2 or not math.isfinite(t_rounded):
+        return t_rounded, _stable_metric(float("nan"))
+    p_value = 2.0 * float(t_dist.sf(abs(t_rounded), df=n_dates - 1))
+    return t_rounded, _stable_metric(p_value)
+
+
 def run_cross_sectional_bench(
     panels: Mapping[str, PanelGenerator] | None = None,
     challengers: Sequence[str] | None = None,
@@ -351,6 +378,7 @@ def run_cross_sectional_bench(
                     date_idx,
                     min_names=min_names,
                 )
+                t_spearman, p_spearman = _stable_t_p(result.t_spearman, result.n_dates)
                 rows.append(
                     {
                         "shard": name,
@@ -359,13 +387,13 @@ def run_cross_sectional_bench(
                         "status": "ok",
                         "error": "",
                         "n_dates": result.n_dates,
-                        "mean_spearman": result.mean_spearman,
-                        "t_spearman": result.t_spearman,
-                        "p_spearman": result.p_spearman,
-                        "mean_pearson": result.mean_pearson,
-                        "t_pearson": result.t_pearson,
-                        "icir_pearson": result.icir_pearson,
-                        "icir_ann_pearson": result.icir_ann_pearson,
+                        "mean_spearman": _stable_metric(result.mean_spearman),
+                        "t_spearman": t_spearman,
+                        "p_spearman": p_spearman,
+                        "mean_pearson": _stable_metric(result.mean_pearson),
+                        "t_pearson": _stable_metric(result.t_pearson),
+                        "icir_pearson": _stable_metric(result.icir_pearson),
+                        "icir_ann_pearson": _stable_metric(result.icir_ann_pearson),
                     }
                 )
 

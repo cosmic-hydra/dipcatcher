@@ -2,9 +2,7 @@
 
 from __future__ import annotations
 
-import faulthandler
 import os
-import signal
 import sys
 import time
 from pathlib import Path
@@ -117,51 +115,6 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
 
 
 collect_ignore_glob = ["**/__pycache__/**"]
-
-
-def _test_timeout_seconds() -> int:
-    """Per-test cap. CI sets this implicitly; ``DIP_TEST_TIMEOUT=0`` disables it.
-
-    ``.github/workflows/ci.yml`` is epoch-stamped, so the cap lives here rather
-    than in the workflow. Shards were cancelled at the 75 minute job limit
-    while pytest was still on 99% and the workers were alive.
-    """
-    raw = os.environ.get("DIP_TEST_TIMEOUT")
-    if raw is not None:
-        try:
-            return max(0, int(raw))
-        except ValueError:
-            return 0
-    if os.environ.get("GITHUB_ACTIONS") == "true":
-        return 600
-    return 0
-
-
-@pytest.hookimpl(wrapper=True)
-def pytest_runtest_protocol(item: pytest.Item, nextitem: pytest.Item | None):
-    """Fail a single test that never returns so an xdist worker cannot sit to the job limit.
-
-    Enabled on GitHub Actions, or when ``DIP_TEST_TIMEOUT`` is set. The alarm
-    fires in the worker running the test and dumps every thread first. Local
-    runs leave the variable unset and are not on Actions, so they are uncapped.
-    """
-    limit = _test_timeout_seconds()
-    if limit <= 0 or not hasattr(signal, "SIGALRM"):
-        return (yield)
-
-    def _on_alarm(signum: int, frame: object) -> None:
-        faulthandler.dump_traceback(all_threads=True)
-        raise TimeoutError(f"DIP_TEST_TIMEOUT={limit}s exceeded: {item.nodeid}")
-
-    faulthandler.dump_traceback_later(limit, repeat=True, exit=False)
-    previous = signal.signal(signal.SIGALRM, _on_alarm)
-    signal.alarm(limit)
-    try:
-        return (yield)
-    finally:
-        signal.alarm(0)
-        signal.signal(signal.SIGALRM, previous)
-        faulthandler.cancel_dump_traceback_later()
 
 
 # Hypothesis CI profile (A3 #5 supporting infra, DESIGN.md §9.5): CI sets

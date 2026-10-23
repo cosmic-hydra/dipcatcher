@@ -125,10 +125,14 @@ class SyntheticBook:
 
 
 def _prices_and_adv(n_dates: int, n_names: int, seed: int) -> tuple[Array, Array]:
+    from quant_fund.utils.numeric import stable_decimal_array
+
     rng = np.random.default_rng(seed)
     adv_shares = np.exp(rng.normal(np.log(1e6), 0.8, size=(n_dates, n_names)))
     prices = np.exp(rng.normal(np.log(50.0), 0.5, size=n_names))
-    return prices, adv_shares * prices[None, :]
+    # Quantize before the receipt hashes raw float bytes. libm exp is not
+    # bit-stable across glibc, and the seal is a byte pin.
+    return stable_decimal_array(prices), stable_decimal_array(adv_shares * prices[None, :])
 
 
 def uniform_book(n_dates: int, n_names: int, seed: int) -> SyntheticBook:
@@ -229,15 +233,19 @@ def capacity_metrics(
     days = np.divide(required, ceiling, out=np.full_like(required, np.inf), where=ceiling > 0)
     days_to_trade = float(np.max(days)) if np.isfinite(days).all() else float("inf")
     traded = participation > 0
+    from quant_fund.utils.numeric import stable_decimal
+
     impact_bps = (
         float(1e4 * impact_coeff * np.sqrt(participation[traded]).mean()) if traded.any() else 0.0
     )
     return {
         "feasible": int(feasible),
-        "max_participation": float(participation.max()),
-        "mean_participation": float(participation[traded].mean()) if traded.any() else 0.0,
-        "days_to_trade": days_to_trade,
-        "impact_bps": impact_bps,
+        "max_participation": stable_decimal(float(participation.max())),
+        "mean_participation": stable_decimal(
+            float(participation[traded].mean()) if traded.any() else 0.0
+        ),
+        "days_to_trade": stable_decimal(days_to_trade),
+        "impact_bps": stable_decimal(impact_bps),
     }
 
 

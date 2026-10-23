@@ -19,6 +19,7 @@ the tripwire.
 from __future__ import annotations
 
 import ast
+import contextvars
 import fnmatch
 import hashlib
 import io
@@ -392,8 +393,9 @@ def _merged_assigns(tree: ast.AST, scope: ast.AST) -> dict[str, list[tuple[int, 
 
     Module constants (``HALF = 10``) must resolve inside functions; scope
     names are appended so use-line-aware resolution picks the live binding.
+    Copies the cached lists: the cache itself must stay immutable.
     """
-    assigns = _scope_assignments(tree)
+    assigns = {name: list(entries) for name, entries in _scope_assignments(tree).items()}
     for name, entries in _scope_assignments(scope).items():
         assigns.setdefault(name, []).extend(entries)
     return assigns
@@ -762,6 +764,11 @@ def _sharpe_call_unit_safe(
 # negative period and unannotated/destructured/walrus bindings cannot hide
 # one either.
 _ScopeAssigns = dict[str, list[tuple[int, ast.AST]]]
+# Per-scan cache. AST node ids are only unique while that tree is alive, so
+# scan_file installs a fresh map and drops it before the tree can be freed.
+_SCOPE_CACHE: contextvars.ContextVar[dict[int, _ScopeAssigns] | None] = contextvars.ContextVar(
+    "dipcatcher_leakage_scope_cache", default=None
+)
 
 
 def _iter_binds(node: ast.AST) -> list[tuple[str, ast.expr]]:
@@ -797,6 +804,11 @@ def _iter_binds(node: ast.AST) -> list[tuple[str, ast.expr]]:
 
 
 def _scope_assignments(func: ast.AST) -> _ScopeAssigns:
+    cache = _SCOPE_CACHE.get()
+    if cache is not None:
+        cached = cache.get(id(func))
+        if cached is not None:
+            return cached
     assigns: _ScopeAssigns = {}
     for node in ast.walk(func):
         binds = _iter_binds(node)
@@ -805,6 +817,8 @@ def _scope_assignments(func: ast.AST) -> _ScopeAssigns:
         line = node.lineno if isinstance(node, (ast.stmt, ast.expr)) else 0
         for name, value in binds:
             assigns.setdefault(name, []).append((line, value))
+    if cache is not None:
+        cache[id(func)] = assigns
     return assigns
 
 
@@ -1432,6 +1446,14 @@ _ALL_RULES = frozenset(_CHECKERS) | {"LH012", "LH013", "LH014"}
 
 def scan_file(path: Path, *, rules: set[str] | None = None) -> list[_Finding]:
     """Scan one .py file; never raises on parse errors (LH012 instead)."""
+    cache_token = _SCOPE_CACHE.set({})
+    try:
+        return _scan_file_cached(path, rules=rules)
+    finally:
+        _SCOPE_CACHE.reset(cache_token)
+
+
+def _scan_file_cached(path: Path, *, rules: set[str] | None = None) -> list[_Finding]:
     path_str = path.as_posix()
     enabled = rules if rules is not None else set(_ALL_RULES)
     findings: list[_Finding] = []

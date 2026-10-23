@@ -2061,9 +2061,14 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         backend_resolver=lambda *a, **k: _CleanBackend(),
         rate_limit_rps=20.0,
     )
+    # Freeze the bucket clock. Under coverage a single TestClient call can
+    # take longer than 1/rps, which refills the bucket and hides the 429s
+    # this probe counts. Advance one second only so /metrics is admitted.
+    _rl_clock = {"t": 10_000.0}
+    limited2.state.rate_limiter._clock = lambda: _rl_clock["t"]
     lc2 = _TC2(limited2)
     statuses = [lc2.get("/harness/version").status_code for _ in range(23)]
-    time.sleep(0.15)
+    _rl_clock["t"] += 1.0
     m = lc2.get("/metrics")
     out["rate_limit_metrics_counts"] = (
         statuses.count(429) >= 2
@@ -2076,6 +2081,8 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
             harness=_Harness(runner=lambda argv, t: (0, "ran:" + " ".join(argv), "")),
             backend_resolver=lambda *a, **k: _CleanBackend(),
         )
+        _env_clock = {"t": 10_000.0}
+        env_app.state.rate_limiter._clock = lambda: _env_clock["t"]
         ec = _TC2(env_app)
         out["rate_limit_env_config"] = [
             ec.get("/harness/version").status_code for _ in range(5)

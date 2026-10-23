@@ -154,15 +154,32 @@ def hawkes_simulate(mu: float, alpha: float, beta: float, horizon: float, seed: 
     events: list[float] = []
     t = 0.0
     while t < horizon:
-        lam_bar = mu + alpha * beta * sum(np.exp(-beta * (t - e)) for e in events[-200:])
+        lam_bar = mu + alpha * beta * _hawkes_kernel(events, t, beta)
         lam_bar = max(lam_bar, mu)
         t += rng.exponential(1.0 / lam_bar)
         if t >= horizon:
             break
-        lam_t = mu + alpha * beta * sum(np.exp(-beta * (t - e)) for e in events[-200:])
+        lam_t = mu + alpha * beta * _hawkes_kernel(events, t, beta)
         if rng.uniform() <= lam_t / lam_bar:
             events.append(t)
     return np.asarray(events)
+
+
+def _hawkes_kernel(events: list[float], t: float, beta: float) -> float:
+    """Sum of ``exp(-beta * (t - e))`` over the last 200 events.
+
+    One vectorized ``exp`` plus a left-to-right add. The previous generator
+    expression called ``np.exp`` once per event and dominated the research
+    benches that resimulate this path.
+    """
+    window = events[-200:]
+    if not window:
+        return 0.0
+    weights = np.exp(-beta * (t - np.asarray(window, dtype=np.float64)))
+    total = 0.0
+    for weight in weights:
+        total += float(weight)
+    return total
 
 
 def hawkes2_mle(t1: Array, t2: Array) -> dict[str, float]:

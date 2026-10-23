@@ -4196,12 +4196,15 @@ class _RateLimiter:
         self.max_keys = max_keys
         self._lock = threading.Lock()
         self._buckets: OrderedDict[str, tuple[float, float]] = OrderedDict()
+        # Production uses the monotonic clock. Probes may replace this with a
+        # frozen clock so a slow handler cannot refill the bucket mid-burst.
+        self._clock = time.monotonic
 
     def allow(self, identity: str) -> tuple[float, float]:
         """Consume one token: returns ``(wait, remaining)`` — seconds until a
         token refills (0.0 when the request may proceed) and the post-consume
         token count for the `X-RateLimit-Remaining` header."""
-        now = time.monotonic()
+        now = self._clock()
         with self._lock:
             entry = self._buckets.pop(identity, None)
             tokens, ts = entry if entry is not None else (self.capacity, now)

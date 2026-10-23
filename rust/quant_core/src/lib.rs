@@ -237,18 +237,70 @@ fn hash_bytes(data: &[u8]) -> String {
 
 #[pyfunction]
 fn hash_many(py: Python<'_>, chunks: &Bound<'_, PyAny>) -> PyResult<Vec<String>> {
-    // Copy under the GIL, then hash outside it. Per-item pyo3 calls were
-    // most of the 64-byte workload, and Python 3.13's hashlib loop was
-    // close enough that the median speedup fell under the floor.
-    let mut owned: Vec<Vec<u8>> = Vec::new();
+    // One buffer, then hash outside the GIL. A Vec per 64-byte chunk was
+    // most of the overhead against CPython's hashlib, and 3.13 closed the
+    // rest of the gap. Split the hash across cores when the runner has them;
+    // std threads only, no extra crate.
+    let mut buf: Vec<u8> = Vec::new();
+    let mut lens: Vec<usize> = Vec::new();
     for item in chunks.try_iter()? {
         let item = item?;
         let blob = item.cast::<PyBytes>().map_err(|_| {
             pyo3::exceptions::PyTypeError::new_err("hash_many expects a sequence of bytes")
         })?;
-        owned.push(blob.as_bytes().to_vec());
+        let bytes = blob.as_bytes();
+        buf.extend_from_slice(bytes);
+        lens.push(bytes.len());
     }
-    Ok(py.detach(|| owned.iter().map(|blob| hashing::sha256_hex(blob)).collect()))
+    let count = lens.len();
+    Ok(py.detach(move || hash_owned(&buf, &lens, count)))
+}
+
+fn hash_owned(buf: &[u8], lens: &[usize], count: usize) -> Vec<String> {
+    if count == 0 {
+        return Vec::new();
+    }
+    let mut offsets = Vec::with_capacity(count);
+    let mut cursor = 0usize;
+    for len in lens {
+        offsets.push(cursor);
+        cursor += *len;
+    }
+    let workers = std::thread::available_parallelism()
+        .map(|n| n.get())
+        .unwrap_or(1)
+        .clamp(1, 8);
+    if workers == 1 || count < 512 {
+        return (0..count)
+            .map(|index| hashing::sha256_hex(&buf[offsets[index]..offsets[index] + lens[index]]))
+            .collect();
+    }
+    let span = count.div_ceil(workers);
+    std::thread::scope(|scope| {
+        let mut joins = Vec::new();
+        for worker in 0..workers {
+            let start = worker * span;
+            if start >= count {
+                break;
+            }
+            let end = (start + span).min(count);
+            let bytes: &[u8] = buf;
+            let offs: &[usize] = &offsets;
+            let sizes: &[usize] = lens;
+            joins.push(scope.spawn(move || {
+                (start..end)
+                    .map(|index| {
+                        hashing::sha256_hex(&bytes[offs[index]..offs[index] + sizes[index]])
+                    })
+                    .collect::<Vec<_>>()
+            }));
+        }
+        let mut out = Vec::with_capacity(count);
+        for join in joins {
+            out.extend(join.join().expect("hash worker"));
+        }
+        out
+    })
 }
 
 #[pymodule]
