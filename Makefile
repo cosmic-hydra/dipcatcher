@@ -245,6 +245,7 @@ leakage-scan: ## Leakage hunter — WARN MODE this wave (adjudicated: advisory o
 	uv run quant leakage scan --paths src/quant_fund --format json > leakage-report.json || \
 		echo "::warning::leakage scan failed or is not yet merged (advisory this wave)"
 	@if [ -d tests/leakage_fixtures ]; then \
+		uv sync --frozen --all-groups --extra nn && \
 		uv run pytest tests/unit -q -k "leakage"; \
 	else \
 		echo "tests/leakage_fixtures not present yet (W3 lands separately); skipped"; \

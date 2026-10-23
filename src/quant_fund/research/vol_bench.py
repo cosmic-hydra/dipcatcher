@@ -358,7 +358,34 @@ def _check_horizons(horizons: Sequence[int]) -> tuple[int, ...]:
 def _stable_metric(value: float) -> float:
     from quant_fund.utils.numeric import stable_decimal
 
+    # Eight significant figures match the committed vol-bench replay carrier.
+    # The in-memory frame keeps full precision for the closed-form check;
+    # only the sealed results use this round.
     return stable_decimal(value)
+
+
+_SEALED_METRIC_KEYS = (
+    "qlike",
+    "mse",
+    "dm_qlike_mean",
+    "dm_qlike_se",
+    "dm_qlike_t",
+    "epromotion_evalue",
+    "epromotion_anytime_p",
+)
+
+
+def _sealed_result_rows(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Copy result rows with libm-sensitive metrics rounded for the seal."""
+    sealed: list[dict[str, Any]] = []
+    for row in rows:
+        copy = dict(row)
+        for key in _SEALED_METRIC_KEYS:
+            value = copy.get(key)
+            if isinstance(value, float):
+                copy[key] = _stable_metric(value)
+        sealed.append(copy)
+    return sealed
 
 
 def _validate_shard(shard: VolShard, shard_name: str, n_bars: int) -> VolShard:
@@ -538,8 +565,8 @@ def run_vol_bench(
                 else:
                     targets, forecasts = scored
                     losses[model_name] = (targets, forecasts)
-                    row["qlike"] = _stable_metric(float(np.mean(qlike_loss(targets, forecasts))))
-                    row["mse"] = _stable_metric(float(np.mean(mse_loss(targets, forecasts))))
+                    row["qlike"] = float(np.mean(qlike_loss(targets, forecasts)))
+                    row["mse"] = float(np.mean(mse_loss(targets, forecasts)))
                 rows.append(row)
                 row_refs[model_name] = row
             if DM_REFERENCE in losses:
@@ -548,9 +575,9 @@ def run_vol_bench(
                     if model_name == DM_REFERENCE:
                         continue
                     diff = vol_loss_diff(targets, forecasts, ref_forecasts, loss="qlike")
-                    row_refs[model_name]["dm_qlike_mean"] = _stable_metric(float(diff["mean_diff"]))
-                    row_refs[model_name]["dm_qlike_se"] = _stable_metric(float(diff["se"]))
-                    row_refs[model_name]["dm_qlike_t"] = _stable_metric(float(diff["t"]))
+                    row_refs[model_name]["dm_qlike_mean"] = float(diff["mean_diff"])
+                    row_refs[model_name]["dm_qlike_se"] = float(diff["se"])
+                    row_refs[model_name]["dm_qlike_t"] = float(diff["t"])
                     # Anytime-valid promotion: per-origin e-process on the
                     # QLIKE stream vs the HAR incumbent (challenger=model).
                     proc = LossEProcess(alpha=0.05, init_scale=_EPROMOTION_INIT_SCALE)
@@ -561,13 +588,9 @@ def run_vol_bench(
                     ):
                         proc.update(c_loss, b_loss)
                     final_state = proc.states[-1]
-                    row_refs[model_name]["epromotion_evalue"] = _stable_metric(
-                        float(final_state.evalue)
-                    )
+                    row_refs[model_name]["epromotion_evalue"] = float(final_state.evalue)
                     row_refs[model_name]["epromotion_origin"] = proc.promotion_origin
-                    row_refs[model_name]["epromotion_anytime_p"] = _stable_metric(
-                        float(final_state.anytime_p)
-                    )
+                    row_refs[model_name]["epromotion_anytime_p"] = float(final_state.anytime_p)
 
     frame = pl.DataFrame(
         rows,
@@ -641,7 +664,10 @@ def run_vol_bench(
         "dataset_sha256": dataset_sha256,
         "n_rows": len(rows),
         "n_error_rows": sum(1 for row in rows if row["status"] != "ok"),
-        "results": rows,
+        # The frame keeps full precision for the closed-form QLIKE check.
+        # The sealed results are decimal-stable so the replay hash does not
+        # follow libm.
+        "results": _sealed_result_rows(rows),
     }
     return frame, receipt
 

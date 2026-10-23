@@ -58863,6 +58863,10 @@
       "src": "quant_fund.research.capacity_overlay"
     },
     {
+      "dst": "quant_fund.utils.numeric",
+      "src": "quant_fund.research.capacity_overlay"
+    },
+    {
       "dst": "quant_fund.utils.reproducibility",
       "src": "quant_fund.research.capacity_overlay"
     },
@@ -59272,6 +59276,10 @@
     },
     {
       "dst": "quant_fund.utils.hashing",
+      "src": "quant_fund.research.cross_sectional"
+    },
+    {
+      "dst": "quant_fund.utils.numeric",
       "src": "quant_fund.research.cross_sectional"
     },
     {
@@ -60988,6 +60996,10 @@
     },
     {
       "dst": "quant_fund.utils.hashing",
+      "src": "quant_fund.research.vol_bench"
+    },
+    {
+      "dst": "quant_fund.utils.numeric",
       "src": "quant_fund.research.vol_bench"
     },
     {
@@ -77096,7 +77108,7 @@
     },
     {
       "dst": "quant_fund.utils",
-      "imports": 146,
+      "imports": 149,
       "src": "quant_fund.research"
     },
     {
