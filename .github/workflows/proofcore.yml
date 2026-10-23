@@ -187,7 +187,7 @@ jobs:
         # before it can measure the package.
         run: uv sync --frozen --all-groups --extra nn
       - name: fx1 coverage ratchet
-        # Ratcheted 2026-09-28: suite measures 88% locally. Floor 80 keeps
-        # ~4pp headroom under the expected (lower) CI reading while closing
-        # most of the drift window. Raise, never lower.
-        run: uv run pytest tests/fx1 -q --cov=fx1 --cov-fail-under=80 --cov-report=term-missing
+        # The 80% floor covers the whole fx1 package. tests/unit/fx1_serve
+        # holds the audit probes; tests/fx1 alone leaves those modules at 0%.
+        # Floor unchanged.
+        run: uv run pytest tests/fx1 tests/unit/fx1_serve -q --cov=fx1 --cov-fail-under=80 --cov-report=term-missing
