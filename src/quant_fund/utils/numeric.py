@@ -27,6 +27,35 @@ def require_finite(x: Array, name: str = "array") -> Array:
     return x
 
 
+def stable_decimal(value: float, sig: int = 8) -> float:
+    """Round to ``sig`` significant decimal digits via CPython's formatter.
+
+    ``np.exp`` / ``np.sqrt`` follow libm, so the same seeded synthetic path
+    differs by an ulp between glibc builds. Eight significant digits sit well
+    above that noise and below the figures these receipts report. Non-finite
+    values and exact zeros pass through.
+    """
+    number = float(value)
+    if not math.isfinite(number) or number == 0.0:
+        return number
+    return float(format(number, f".{sig}g"))
+
+
+def stable_decimal_array(values: Array, sig: int = 8) -> Array:
+    """Elementwise :func:`stable_decimal`. Shape is preserved."""
+    arr = np.asarray(values, dtype=np.float64)
+    flat = arr.reshape(-1)
+    out = np.empty(flat.shape[0], dtype=np.float64)
+    spec = f".{sig}g"
+    for index, item in enumerate(flat):
+        number = float(item)
+        if not math.isfinite(number) or number == 0.0:
+            out[index] = number
+        else:
+            out[index] = float(format(number, spec))
+    return out.reshape(arr.shape)
+
+
 def clip_positive(x: Array | float, floor: float = 1e-12) -> Array | float:
     if np.isscalar(x):
         v = float(np.asarray(x).item())

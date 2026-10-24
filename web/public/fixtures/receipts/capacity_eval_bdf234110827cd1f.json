@@ -1,7 +1,7 @@
 {
   "books": [
     {
-      "adv_sha256": "8ecaf67526c80a674e9fd3b972398e12d551a8391e381a39b829e5de918eb790",
+      "adv_sha256": "c479f6242d8aadabdc7399e3ea08d3dd2b5c421a17c5723c2c89a6c833316f66",
       "data_label": "SYNTHETIC",
       "n_dates": 60,
       "n_names": 8,
@@ -9,7 +9,7 @@
       "weights_sha256": "5f939a795d092e615b019dcadf28e4eed6bbb1c67021d9b7f07c3f0a8d61fbeb"
     },
     {
-      "adv_sha256": "bbda34e4c6f87974736f20d0826f529b29ffd62104d2e07f3a61207f43583ceb",
+      "adv_sha256": "5e5e564b370d6f6d09eb3911c7418509f9322377323edb9abbbcecdbd6cd06fc",
       "data_label": "SYNTHETIC",
       "n_dates": 60,
       "n_names": 8,
@@ -18,13 +18,13 @@
     }
   ],
   "data_label": "SYNTHETIC",
-  "dataset_sha256": "5ec1f9c3788ce251018dfaff7a377515fb6676aa430b39c3becb8e7b0cdc91d0",
+  "dataset_sha256": "daeb714473097f85fa31dc503835f2da3584ea2b19695b12528ff66d49a668ad",
   "dev_only": true,
-  "inputs_sha256": "c077426959f2bafc71eecbe4c8507d337fcbc842a84c574ff1a4a7eebc4ac9a3",
+  "inputs_sha256": "dad71e6a0005e2117e5f5625a2d3f7d10687ce77a5e0cd7e6830f7507a6bc20e",
   "kind": "capacity_overlay_eval",
   "live_pnl_claim": false,
   "n_rows": 4,
-  "receipt_sha256": "3622d0c059d42009e9870101afb35c232ac27d58456fa915dc482db6679c3116",
+  "receipt_sha256": "bdf234110827cd1f1a5646e2222af03c131e2923d9b67d0e8fe19667fdfa6dd6",
   "replay": {
     "argv": [
       "dipcatcher",
@@ -45,8 +45,8 @@
     ],
     "artifacts": [
       {
-        "path": "data/metadata/replay/capacity_eval_ad7dd6aef6c94d20.json",
-        "sha256": "044638ce5091d330368059531cd2ce3d0001c8694a915750af9a56a6c928b4d8"
+        "path": "data/metadata/replay/capacity_eval_b7bc2bfc87aa6be2.json",
+        "sha256": "0ea9ff505e24f4bb3d843aa8e8eb8caf4e7460072b43fb10a2d9ffa6fe544b34"
       }
     ]
   },
@@ -54,44 +54,44 @@
     {
       "aum": 1000000.0,
       "book": "uniform",
-      "days_to_trade": 0.10643505246394389,
+      "days_to_trade": 0.10643505,
       "feasible": 1,
-      "impact_bps": 58.62177950726087,
-      "max_participation": 0.010643505246394389,
-      "mean_participation": 0.004054086569775791,
+      "impact_bps": 58.621779,
+      "max_participation": 0.010643505,
+      "mean_participation": 0.0040540866,
       "participation_cap": 0.1,
       "status": "ok"
     },
     {
       "aum": 10000000.0,
       "book": "uniform",
-      "days_to_trade": 1.064350524639439,
+      "days_to_trade": 1.0643505,
       "feasible": 0,
-      "impact_bps": 185.37834373512757,
-      "max_participation": 0.10643505246394389,
-      "mean_participation": 0.0405408656977579,
+      "impact_bps": 185.37834,
+      "max_participation": 0.10643505,
+      "mean_participation": 0.040540866,
       "participation_cap": 0.1,
       "status": "ok"
     },
     {
       "aum": 1000000.0,
       "book": "concentrated",
-      "days_to_trade": 0.24473014809391208,
+      "days_to_trade": 0.24473015,
       "feasible": 1,
-      "impact_bps": 36.2896332221317,
-      "max_participation": 0.02447301480939121,
-      "mean_participation": 0.003480376246735458,
+      "impact_bps": 36.289633,
+      "max_participation": 0.024473015,
+      "mean_participation": 0.0034803763,
       "participation_cap": 0.1,
       "status": "ok"
     },
     {
       "aum": 10000000.0,
       "book": "concentrated",
-      "days_to_trade": 2.447301480939121,
+      "days_to_trade": 2.4473015,
       "feasible": 0,
-      "impact_bps": 114.7578964340513,
-      "max_participation": 0.2447301480939121,
-      "mean_participation": 0.03480376246735458,
+      "impact_bps": 114.7579,
+      "max_participation": 0.24473015,
+      "mean_participation": 0.034803763,
       "participation_cap": 0.1,
       "status": "ok"
     }

@@ -1793,7 +1793,7 @@ def test_train_ranking_auto_selects_best_finite_ic(
     def fake_train(config, model_name):  # noqa: ANN001, ANN202
         path = Path(config.data.root) / "metadata" / f"ranker_{model_name}.joblib"
         model = RidgeRanker().fit(np.ones((4, 2)), np.arange(4, dtype=float))
-        model.save(path)
+        save_bound_stub(config, model, path)
         ic = {"ridge": 0.05, "elasticnet": 0.02, "neural": float("nan"), "ensemble": 0.04}[
             model_name
         ]
@@ -1853,7 +1853,7 @@ def test_train_calibration_auto_selects_lowest_brier(
             np.linspace(0.05, 0.95, 12),
             (np.linspace(0.05, 0.95, 12) > 0.5).astype(float),
         )
-        calibrator.save(path)
+        save_bound_stub(config, calibrator, path)
         brier = {"isotonic": 0.11, "platt": 0.09}[model_name]
         return {"path": str(path), "metrics": {"oos_brier": brier}}
 
@@ -1950,27 +1950,30 @@ def test_train_alpha_mean_branch(tmp_path: Path, stub_train) -> None:
     assert Path(result["path"]).name == "alpha_mean.joblib"
 
 
+class _PersistedFakeHMM:
+    """Module-level stand-in so the regime artifact can be joblib-pickled."""
+
+    labels = {"states": 3}
+
+    def __init__(self, *_args: object) -> None:
+        pass
+
+    def fit(self, _x: object) -> _PersistedFakeHMM:
+        return self
+
+    def aic_bic(self, _x: object) -> dict[str, float]:
+        return {"avg_ll": -1.25}
+
+    def save(self, path: Path) -> None:
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        Path(path).write_bytes(b"hmm")
+
+
 def test_train_regime_hmm_scores_heldout_likelihood(
     tmp_path: Path, stub_train, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    class FakeHMM:
-        labels = {"states": 3}
-
-        def __init__(self, *_args) -> None:
-            pass
-
-        def fit(self, _x):  # noqa: ANN001, ANN202
-            return self
-
-        def aic_bic(self, _x):  # noqa: ANN001, ANN202
-            return {"avg_ll": -1.25}
-
-        def save(self, path):  # noqa: ANN001
-            Path(path).parent.mkdir(parents=True, exist_ok=True)
-            Path(path).write_bytes(b"hmm")
-
     stub_train(_stub_panel())
-    monkeypatch.setattr(train_module, "GaussianHMMRegime", FakeHMM)
+    monkeypatch.setattr(train_module, "GaussianHMMRegime", _PersistedFakeHMM)
     result = train_regime(_cfg(tmp_path), "hmm")
     assert result["metrics"]["oos_avg_ll"] == -1.25
     assert result["labels"] == {"states": 3}

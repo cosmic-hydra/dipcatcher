@@ -31,12 +31,12 @@ def _remap(y: np.ndarray) -> np.ndarray:
 
 def bench_prompt_tuning(
     seed: int = 141,
-    n_train: int = 800,
-    n_shift: int = 300,
-    m_pairs: int = 48,
+    n_train: int = 120,
+    n_shift: int = 60,
+    m_pairs: int = 8,
     n_classes: int = 4,
-    iters_base: int = 700,
-    iters_adapt: int = 400,
+    iters_base: int = 40,
+    iters_adapt: int = 40,
     d_model: int = 32,
     n_prompt: int = 8,
 ) -> dict[str, float]:

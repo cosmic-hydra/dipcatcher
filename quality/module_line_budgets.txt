@@ -11,9 +11,9 @@ quant_fund/research/catalog/retired_families.py 7591
 fx1/cli.py 5597
 fx1/cli_audit.py 4942
 fx1/sdk.py 4532
-fx1/serve/api.py 11332
+fx1/serve/api.py 11331
 fx1/serve/api_audit.py 11073
 fx1/serve/client.py 3544
-fx1/serve/openai_compat.py 3315
+fx1/serve/openai_compat.py 3313
 fx1/serve/parity_audit.py 4513
 fx1/serve/vs_audit.py 2291

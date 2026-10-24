@@ -204,8 +204,9 @@ fx1-gate: fx1-lint ## Full fx-1 CI gate locally: lint + types + tests + honesty 
 	PYTHONPATH=src uv run pytest tests/fx1 -q -k honesty
 	uv run fx1 corpus build --receipts-dir receipts --out data/fx1/corpus_ci_smoke.jsonl
 
-fx1-coverage: ## fx-1 coverage ratchet, floor 80 (same command as proofcore.yml fx1-coverage)
-	uv run pytest tests/fx1 -q --cov=fx1 --cov-fail-under=80 --cov-report=term-missing
+fx1-coverage: ## fx-1 coverage ratchet, floor 80 (invoked by proofcore.yml fx1-coverage)
+	# loadfile keeps each audit module on one worker. Floor unchanged.
+	$(TEST_ENV) uv run pytest tests/fx1 tests/unit/fx1_serve -q -n auto --dist loadfile --cov=fx1 --cov-fail-under=80 --cov-report=term-missing
 
 # --- PROOFCORE gates (DESIGN.md §9.3; additive — no existing target changed) -
 # Merge order: W5 lands last; the W1-W4 CLIs below exist once those waves merge.
@@ -231,6 +232,17 @@ proofcore-coverage: ## Per-package coverage floors (A3 #2): pit/proof/reality/pr
 	uv run pytest -m "not network" -q \
 		-k "pit or proof or leakage or reality or proofcore" \
 		--cov --cov-report= --cov-fail-under=0
+	# -k matches substrings of the node id. Wave-2 files whose names do not
+	# contain those words (estimators, proven runner, replay, io guard,
+	# scheduler) never ran, so the per-module floors saw a partial import.
+	# Append the proofcore-test file list. Floors are unchanged.
+	uv run pytest -m "not network" -q \
+		tests/unit/test_scheduler.py tests/unit/test_proven_runner.py \
+		tests/unit/test_estimators.py tests/unit/test_replay_engine.py \
+		tests/unit/test_io_guard.py tests/unit/test_cscv_combo_guard.py \
+		tests/unit/test_fingerprint_fallback.py tests/unit/test_wave2_e2e.py \
+		tests/property/test_replay_determinism.py \
+		--cov --cov-append --cov-report= --cov-fail-under=0
 	uv run python -m quant_fund.proofcore.ci coverage-gate
 
 proof-integrity: ## Current proof signer/recorder integrity checks
@@ -245,6 +257,7 @@ leakage-scan: ## Leakage hunter — WARN MODE this wave (adjudicated: advisory o
 	uv run quant leakage scan --paths src/quant_fund --format json > leakage-report.json || \
 		echo "::warning::leakage scan failed or is not yet merged (advisory this wave)"
 	@if [ -d tests/leakage_fixtures ]; then \
+		uv sync --frozen --all-groups --extra nn && \
 		uv run pytest tests/unit -q -k "leakage"; \
 	else \
 		echo "tests/leakage_fixtures not present yet (W3 lands separately); skipped"; \

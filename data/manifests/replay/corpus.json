@@ -3,7 +3,7 @@
   "kind": "replay_manifest",
   "live_pnl_claim": false,
   "producer": "scripts/corpus_real_drill.py",
-  "receipt_sha256": "0318c81d28c53ce333c2c97f35eac3c9cf0323d370cbc99d7450a70767f786a2",
+  "receipt_sha256": "883913162cd883223667b8dd198fce4aba35d4a6245126d1139f6a96ee1e9bb3",
   "replay": {
     "argv": [
       "scripts/corpus_real_drill.py",
@@ -26,8 +26,8 @@
         "sha256": "667678dba192c0418d4fb2d1d68054ab18f7f1745cd89cba706caa8f57536f5c"
       },
       {
-        "path": "receipts/capacity_eval_3622d0c059d42009.json",
-        "sha256": "57ad3394513fe58e48127141858a990580fade56ae4755ad0a3b868aa2568f2b"
+        "path": "receipts/capacity_eval_bdf234110827cd1f.json",
+        "sha256": "6bbb890de032973d300d44584c8f250ef8b8172ad1b687e876295986fb676742"
       },
       {
         "path": "receipts/capacity_eval_cd0854242ed8a9ec.json",
@@ -106,7 +106,7 @@
         "sha256": "67713fe534eb3c4a508e4c0211836026af4f9efe8c27cd2cc7d69118a9cd1b98"
       },
       {
-        "path": "receipts/fleet_eval_5e907be710811a44.json",
+        "path": "receipts/fleet_eval_cee9aaee0a0f0f36.json",
         "sha256": "c95ce361609bdb00912147e0f87548fdbd2c0221ad27b8c1a4d0ba558b9330e1"
       },
       {
@@ -114,7 +114,7 @@
         "sha256": "0530bbc98903f8ee2944d468f6124fae0c0034da0956d8c22ece140295ad4def"
       },
       {
-        "path": "receipts/honest_verdict_b133e8b3992af893.json",
+        "path": "receipts/honest_verdict_d5d9bf60e0d5e1a4.json",
         "sha256": "1a003a670945452a5c86d033900bc33429f2981422c8938b1b8e2469fc764f3a"
       },
       {
@@ -154,7 +154,7 @@
         "sha256": "9d2b8e91aa81a8c1f2527135680f13ee4c8c71de6daa01f752fe1a4d9abd59c0"
       },
       {
-        "path": "receipts/monitor_run_13d20aef00774027.json",
+        "path": "receipts/monitor_run_85aece35e89b5b12.json",
         "sha256": "3ce1cd7f59c301be6b4710326ab905313725317bee3669ae8e755f6d422bc12d"
       },
       {
@@ -182,8 +182,8 @@
         "sha256": "0da1154c057ee11386df9fe306cf03d63cfaee1a7915df4e51e51b570e2a35de"
       },
       {
-        "path": "receipts/rankic_eval_8d740c0ddf6d5c54.json",
-        "sha256": "e48fce1ae4cebf94e417773bdef20c9ed7b0822397505c6a51e8843a8da06c81"
+        "path": "receipts/rankic_eval_b0f9818dfe2b3663.json",
+        "sha256": "784cc633b6d9e6abff52b6b391e7056c863a0b322acae173aa38196439ed11d8"
       },
       {
         "path": "receipts/rankic_eval_9ebdad7da83e7348.json",
@@ -302,8 +302,8 @@
         "sha256": "63e4fcfcd616f08ad740b2be0fe3163eaaae8243bdfbbdb8d196cafd19d790e7"
       },
       {
-        "path": "receipts/vol_bench_f3bf2afc2f159ace.json",
-        "sha256": "b9b70f7186d75054e91ee734b87b8aeeba22d66af713806a8d5410a9bc603ee3"
+        "path": "receipts/vol_bench_860a3412278105ca.json",
+        "sha256": "9a7dac094aaae3d1c11ce853d8951ae816f263816c56703536c2ddd337532d90"
       },
       {
         "path": "data/manifests/replay_corpus_members.json",

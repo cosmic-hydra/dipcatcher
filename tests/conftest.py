@@ -12,8 +12,34 @@ from pathlib import Path
 # Disable that optional telemetry before test modules import MLflow so the
 # ``not network`` gate cannot disclose environment metadata or depend on egress.
 os.environ["MLFLOW_DISABLE_TELEMETRY"] = "true"
+# GitHub Actions sets GITHUB_ACTIONS. Typer's option highlighter then splits
+# "--flag" into "\x1b[1m-\x1b[0m\x1b[1m-flag", so substring asserts fail.
+# NO_COLOR does not clear that when GITHUB_ACTIONS is set; Typer reads
+# _TYPER_FORCE_DISABLE_TERMINAL at import. If rich_utils is already loaded,
+# also clear the cached force bit.
+os.environ["NO_COLOR"] = "1"
+os.environ["_TYPER_FORCE_DISABLE_TERMINAL"] = "1"
+os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")
+# Do NOT pin OPENBLAS_CORETYPE. Forcing HASWELL segfaults numpy.linalg.lstsq
+# on AMD EPYC. Leave core detection to OpenBLAS.
+# Mirror Makefile TEST_ENV / CI thread pinning before any native extension
+# can load a second OpenMP runtime. setdefault: make/CI env wins when set.
+for _k, _v in (
+    ("OMP_NUM_THREADS", "1"),
+    ("MKL_NUM_THREADS", "1"),
+    ("NUMEXPR_NUM_THREADS", "1"),
+    ("VECLIB_MAXIMUM_THREADS", "1"),
+    ("KMP_INIT_AT_FORK", "FALSE"),
+    ("PYTHONFAULTHANDLER", "1"),
+    ("TOKENIZERS_PARALLELISM", "false"),
+):
+    os.environ.setdefault(_k, _v)
+if os.environ.get("OPENBLAS_CORETYPE", "").upper() == "HASWELL":
+    os.environ.pop("OPENBLAS_CORETYPE", None)
+if "typer.rich_utils" in sys.modules:
+    sys.modules["typer.rich_utils"].FORCE_TERMINAL = False  # type: ignore[attr-defined]
 
-import pytest
+import pytest  # noqa: E402
 
 _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
@@ -89,6 +115,7 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
 
 
 collect_ignore_glob = ["**/__pycache__/**"]
+
 
 # Hypothesis CI profile (A3 #5 supporting infra, DESIGN.md §9.5): CI sets
 # HYPOTHESIS_PROFILE=ci for derandomized, fixed-budget property runs. Explicit

@@ -2,6 +2,7 @@
 # Drift fails `test_type_ignore_manifest_matches_tree`; regen with:
 #   python scripts/update_type_ignores.py
 # Prefer a real type fix over adding a suppression.
+src/fx1/bench/dip.py 1
 src/fx1/data/sources/adapters.py 2
 src/fx1/data/sources/ds_audit.py 1
 src/fx1/serve/api_audit.py 2
@@ -15,6 +16,7 @@ src/quant_fund/data/point_in_time.py 1
 src/quant_fund/execution/langevin_impact.py 1
 src/quant_fund/formal/traces.py 1
 src/quant_fund/leakage/guard.py 8
+src/quant_fund/metrics/_bootstrap_kernels.py 1
 src/quant_fund/metrics/adaptive_eps.py 2
 src/quant_fund/metrics/conformal_coverage_inference.py 3
 src/quant_fund/metrics/evalues.py 1

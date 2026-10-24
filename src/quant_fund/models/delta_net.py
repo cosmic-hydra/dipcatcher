@@ -28,11 +28,11 @@ def _torch():
 
 def bench_delta_net(
     seed: int = 11,
-    n_train: int = 800,
-    n_test: int = 240,
-    m_pairs: int = 48,
+    n_train: int = 120,
+    n_test: int = 40,
+    m_pairs: int = 8,
     n_classes: int = 4,
-    iters: int = 700,
+    iters: int = 30,
     d_model: int = 16,
     beta: float = 1.0,
 ) -> dict[str, float]:

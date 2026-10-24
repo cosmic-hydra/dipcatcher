@@ -8,7 +8,7 @@ Regenerate with::
 
 Derived from ``quality/canon_qualification_summary.json``
 (ruleset_hash=7274f95d98db230d75b78a6752c909f21799428adb0e8c696375c4105f1cf3f4; full dump ``.dsh-24x7/canon_qualification_audit.json``
-sha256=1ce2b80facea3fe2138ed507092274c60da1d032ff1ddeae6cae0f4ca400e138). OPTIONAL -> RETIRED per
+sha256=ad4fb2eb14f8554d5698dde71abd7d254eadbd017a1fc85d3aa3478c543d4934). OPTIONAL -> RETIRED per
 ``docs/BENCHMARK_FAMILY_LIFECYCLE.md``. ``OPTIONAL_BENCHMARK_FAMILIES`` stays
 the append-only accepted set, so archived receipts naming these families keep
 verifying; each entry records its retirement reason and the last receipt

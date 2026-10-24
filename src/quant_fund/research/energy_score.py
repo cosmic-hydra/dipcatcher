@@ -21,7 +21,6 @@ from typing import Any
 
 import numpy as np
 from numpy.typing import NDArray
-from scipy.stats import norm
 
 from quant_fund.utils.hashing import canonical_json_bytes, hash_bytes
 from quant_fund.utils.reproducibility import git_revision
@@ -64,9 +63,9 @@ def gaussian_copula_samples(
 ) -> NDArray[np.float64]:
     """Couple per-name marginal samples into joint draws at equicorrelation ρ.
 
-    marginals[j]: (m,) samples for name j. Draws z ~ N(0, corr(ρ)),
-    maps through Φ → uniform → inverse-empirical-CDF of each marginal.
-    Returns (m, d).
+    marginals[j]: (m,) samples for name j. Draws z ~ N(0, corr(ρ)) and
+    assigns each marginal's order statistics by the latent rank, so the
+    column is a permutation of that marginal. Returns (m, d).
     """
     d = len(marginals)
     m = marginals[0].size
@@ -78,12 +77,14 @@ def gaussian_copula_samples(
     np.fill_diagonal(corr, 1.0)
     chol = np.linalg.cholesky(corr)
     z = rng.standard_normal((m, d)) @ chol.T
-    u = norm.cdf(z)
     out = np.empty((m, d))
     for j, x in enumerate(marginals):
-        xs = np.sort(x)
-        idx = np.clip((u[:, j] * m).astype(int), 0, m - 1)
-        out[:, j] = xs[idx]
+        xs = np.sort(np.asarray(x, dtype=np.float64))
+        # Rank-couple so each marginal sample is used once. Inverse-CDF with
+        # replacement duplicates some draws and drops others, so the sorted
+        # column is not the marginal.
+        order = np.argsort(z[:, j], kind="mergesort")
+        out[order, j] = xs
     return out
 
 

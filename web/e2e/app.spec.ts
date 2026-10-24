@@ -12,7 +12,7 @@ test.describe("research explorer", () => {
     await expect(table.locator("tbody tr")).toHaveCount(9);
     await expect(
       page.getByTestId("receipt-summary-table").locator("tbody tr"),
-    ).toHaveCount(56);
+    ).toHaveCount(396);
   });
 
   test("navigates to a strategy detail and renders charts", async ({
@@ -56,7 +56,7 @@ test.describe("research explorer", () => {
   test("receipt list and verification panel render", async ({ page }) => {
     await page.goto("/#/receipts");
     const table = page.getByTestId("receipt-table");
-    await expect(table.locator("tbody tr")).toHaveCount(56);
+    await expect(table.locator("tbody tr")).toHaveCount(396);
     await table
       .getByRole("link", { name: "corpus_epoch_d479e96760271bba" })
       .click();

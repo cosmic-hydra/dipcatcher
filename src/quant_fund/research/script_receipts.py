@@ -407,6 +407,234 @@ def joint_tune_v2_contract_errors(payload: Mapping[str, Any]) -> list[str]:
     return measurement_receipt_contract_errors(payload) + contract_errors(payload)
 
 
+def _sha256_hex(value: object) -> bool:
+    return (
+        isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+    )
+
+
+def _git_sha(value: object) -> bool:
+    return (
+        isinstance(value, str) and len(value) == 40 and all(c in "0123456789abcdef" for c in value)
+    )
+
+
+def _forbidden_headline_errors(payload: Mapping[str, Any]) -> list[str]:
+    from quant_fund.research.catalog.registry import FORBIDDEN_RESEARCH_METRIC_KEYS
+
+    return [
+        f"forbidden_headline_metric:{key}"
+        for key in payload
+        if str(key).lower() in FORBIDDEN_RESEARCH_METRIC_KEYS
+    ]
+
+
+def _lobster_match_errors(recon: Mapping[str, Any]) -> tuple[list[str], float | None, object]:
+    """Re-derive ``match_rate`` from ``n_match / n_compared``."""
+    errors: list[str] = []
+    match_rate = _as_finite_float(recon.get("match_rate"))
+    n_compared = recon.get("n_compared")
+    n_match = recon.get("n_match")
+    counts_ok = (
+        match_rate is not None
+        and _positive_int(n_compared)
+        and isinstance(n_match, int)
+        and not isinstance(n_match, bool)
+    )
+    if not counts_ok:
+        errors.append("reconstruction_counts_bad")
+    elif match_rate != (n_match / n_compared):
+        errors.append("match_rate_not_n_match_over_n_compared")
+    return errors, match_rate, n_match
+
+
+def _lobster_resync_errors(recon: Mapping[str, Any], n_match: object) -> list[str]:
+    """Re-derive ``resync_rate`` and the match/resync partition."""
+    n_compared = recon.get("n_compared")
+    n_resync = recon.get("n_resync_events")
+    resync = _as_finite_float(recon.get("resync_rate"))
+    resync_ok = (
+        isinstance(n_resync, int)
+        and not isinstance(n_resync, bool)
+        and _positive_int(n_compared)
+        and resync is not None
+        and resync == (n_resync / n_compared)
+    )
+    if not resync_ok:
+        return ["resync_rate_not_n_resync_over_n_compared"]
+    if (
+        isinstance(n_match, int)
+        and not isinstance(n_match, bool)
+        and n_match + n_resync != n_compared
+    ):
+        return ["compared_events_not_partitioned"]
+    return []
+
+
+def _lobster_engine_flag_errors(
+    payload: Mapping[str, Any], recon: Mapping[str, Any], match_rate: float | None
+) -> list[str]:
+    """``engine_valid_on_emitted`` is the writer's predicate on the counts."""
+    max_div = recon.get("max_divergence_len")
+    if not isinstance(max_div, int) or isinstance(max_div, bool) or max_div < 0:
+        return ["max_divergence_len_bad"]
+    if match_rate is None:
+        return []
+    expected = match_rate > 0.90 and max_div <= 5
+    if payload.get("engine_valid_on_emitted") is not expected:
+        return ["engine_valid_on_emitted_mismatch"]
+    return []
+
+
+def lobster_replay_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """``lobster_replay.v1``: re-derive match rate and the engine-valid flag.
+
+    The sample label is the tape identity (``LOBSTER-{ticker}-…``), not the
+    measurement envelope's SYNTHETIC/MIXED/REAL tag. ``engine_valid_on_emitted``
+    is the writer's predicate on the embedded reconstruction counts.
+    """
+    errors: list[str] = []
+    if payload.get("research_only") is not True:
+        errors.append("research_only_not_true")
+    if payload.get("live_pnl_claim") not in (None, False):
+        errors.append("live_pnl_claim_not_false")
+    if not _git_sha(payload.get("git_revision")):
+        errors.append("git_revision_missing")
+    if not _sha256_hex(payload.get("receipt_sha256")) or not _sha256_hex(
+        payload.get("tape_sha256")
+    ):
+        errors.append("sha256_missing")
+    ticker = payload.get("ticker")
+    if not isinstance(ticker, str) or not ticker:
+        errors.append("ticker_missing")
+    elif payload.get("data_label") != f"LOBSTER-{ticker}-2012-06-21-sample":
+        errors.append("data_label_not_lobster_sample")
+    recon = payload.get("reconstruction")
+    if not isinstance(recon, Mapping):
+        return errors + ["reconstruction_missing"]
+    match_errors, match_rate, n_match = _lobster_match_errors(recon)
+    errors.extend(match_errors)
+    errors.extend(_lobster_resync_errors(recon, n_match))
+    errors.extend(_lobster_engine_flag_errors(payload, recon, match_rate))
+    errors.extend(_forbidden_headline_errors(payload))
+    return errors
+
+
+def queue_priority_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """``queue_priority.v1``: headline comparison must copy the arm curves.
+
+    The producer stamps ``code_revision`` (not ``git_revision``) and seals
+    ``comparison`` by reading each arm's fill curve and survival table.
+    """
+    errors: list[str] = []
+    if payload.get("data_label") != "SYNTHETIC":
+        errors.append("data_label_not_synthetic")
+    if payload.get("research_only") is not True:
+        errors.append("research_only_not_true")
+    if payload.get("live_pnl_claim") is not False:
+        errors.append("live_pnl_claim_not_false")
+    if payload.get("claim") != "synthetic_simulator_diagnostic_only":
+        errors.append("claim_not_synthetic_diagnostic")
+    if not _git_sha(payload.get("code_revision")):
+        errors.append("code_revision_missing")
+    if not _sha256_hex(payload.get("receipt_sha256")):
+        errors.append("receipt_sha256_not_sha256_hex")
+    arms = payload.get("arms")
+    comparison = payload.get("comparison")
+    if not isinstance(arms, Mapping) or not isinstance(comparison, Mapping):
+        return errors + ["arms_or_comparison_missing"]
+    errors.extend(_queue_comparison_errors(arms, comparison))
+    errors.extend(_forbidden_headline_errors(payload))
+    return errors
+
+
+def _queue_comparison_errors(arms: Mapping[str, Any], comparison: Mapping[str, Any]) -> list[str]:
+    """Each comparison headline must copy the named arm curve field."""
+    errors: list[str] = []
+    pairs = (
+        ("iid", "p_queue_ahead_zero_iid", "fill_curve", "p_queue_ahead_zero"),
+        ("markov_regime", "p_queue_ahead_zero_markov", "fill_curve", "p_queue_ahead_zero"),
+        ("iid", "p_fill_overall_iid", "queue_survival", "p_fill_overall"),
+        ("markov_regime", "p_fill_overall_markov", "queue_survival", "p_fill_overall"),
+        ("iid", "mean_fill_wait_seconds_iid", "fill_curve", "mean_fill_wait_seconds"),
+        ("markov_regime", "mean_fill_wait_seconds_markov", "fill_curve", "mean_fill_wait_seconds"),
+    )
+    for arm_name, headline, section, field in pairs:
+        arm = arms.get(arm_name)
+        block = arm.get(section) if isinstance(arm, Mapping) else None
+        detail = block.get(field) if isinstance(block, Mapping) else None
+        if not _finite_number(detail) or detail != comparison.get(headline):
+            errors.append(f"comparison_mismatch:{headline}")
+    return errors
+
+
+def calibration_audit_drill_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """``calibration_audit.drill.v1``: shard label and train/eval echo.
+
+    The drill stamps ``data_label`` from the Yahoo shard (``yahoo_eod``) and
+    ``generated_at_commit`` rather than the measurement envelope's
+    ``git_revision``. Train and eval lengths must match between ``drill``
+    and ``params`` — those are the sizes the e-process actually ran.
+    """
+    errors: list[str] = []
+    if payload.get("research_only") is not True:
+        errors.append("research_only_not_true")
+    if payload.get("live_pnl_claim") is not False:
+        errors.append("live_pnl_claim_not_false")
+    if payload.get("kind") != "calibration_audit.drill.v1":
+        errors.append("kind_mismatch")
+    if not _git_sha(payload.get("generated_at_commit")):
+        errors.append("generated_at_commit_not_sha")
+    if not _sha256_hex(payload.get("receipt_sha256")) or not _sha256_hex(
+        payload.get("inputs_sha256")
+    ):
+        errors.append("sha256_missing")
+    drill = payload.get("drill")
+    params = payload.get("params")
+    if not isinstance(drill, Mapping) or not isinstance(params, Mapping):
+        return errors + ["drill_or_params_missing"]
+    errors.extend(_calibration_shard_errors(payload, drill))
+    errors.extend(_calibration_size_errors(payload, drill, params))
+    errors.extend(_forbidden_headline_errors(payload))
+    return errors
+
+
+def _calibration_shard_errors(payload: Mapping[str, Any], drill: Mapping[str, Any]) -> list[str]:
+    """``data_label`` must echo the Yahoo shard the drill names."""
+    shard = drill.get("shard")
+    if not isinstance(shard, Mapping):
+        return ["shard_missing"]
+    errors: list[str] = []
+    label = payload.get("data_label")
+    if not isinstance(label, str) or not label or label != shard.get("data_label"):
+        errors.append("data_label_not_shard_label")
+    if shard.get("source") != "yahoo":
+        errors.append("shard_source_not_yahoo")
+    return errors
+
+
+def _calibration_size_errors(
+    payload: Mapping[str, Any], drill: Mapping[str, Any], params: Mapping[str, Any]
+) -> list[str]:
+    """Train/eval lengths, model counts, alpha, and the evidence list."""
+    errors: list[str] = []
+    for key in ("n_train", "n_eval"):
+        if drill.get(key) != params.get(key) or not _positive_int(drill.get(key)):
+            errors.append(f"{key}_not_echoed")
+    if not _positive_int(payload.get("n_models")) or not _positive_int(payload.get("n_shards")):
+        errors.append("counts_not_positive_int")
+    alpha = _as_finite_float(params.get("alpha"))
+    if alpha is None or not 0.0 < alpha <= 1.0:
+        errors.append("alpha_not_in_unit_interval")
+    evidence = payload.get("evidence")
+    evidence_ok = isinstance(evidence, list) and bool(evidence)
+    if evidence_ok and any(not isinstance(item, str) or not item for item in evidence):
+        evidence_ok = False
+    if not evidence_ok:
+        errors.append("evidence_bad")
+    return errors
+
+
 #: The wave-21b tape/sim measurement lanes emit ``schema``-tagged receipts
 #: with a shared envelope; each registers the measurement contract so no
 #: committed receipt verifies on its seal alone.
@@ -543,13 +771,22 @@ SCRIPT_RECEIPT_CONTRACTS: dict[str, Any] = {
     "fx1.dip_bench/v1": dip_bench_contract_errors,
     "deps_hygiene.v1": deps_hygiene_contract_errors,
     "joint_tune.v2": joint_tune_v2_contract_errors,
+    "lobster_replay.v1": lobster_replay_contract_errors,
+    "queue_priority.v1": queue_priority_contract_errors,
+    "calibration_audit.drill.v1": calibration_audit_drill_contract_errors,
     **{s: measurement_receipt_contract_errors for s in _MEASUREMENT_SCHEMAS},
 }
 
 
 def script_receipt_contract_errors(schema: object, payload: Mapping[str, Any]) -> list[str]:
-    """Re-derive a script receipt's headline claims; ``[]`` when unknown schema."""
-    check = SCRIPT_RECEIPT_CONTRACTS.get(str(schema))
+    """Re-derive a script receipt's headline claims; ``[]`` when unknown schema.
+
+    A numeric ``schema`` is a format version (the three ``schema: 1`` tape
+    receipts). Those dispatch on ``kind``, which is the lane id the writer
+    actually stamped.
+    """
+    key: object = schema if isinstance(schema, str) and schema else payload.get("kind")
+    check = SCRIPT_RECEIPT_CONTRACTS.get(str(key))
     if check is None:
         return []
     try:

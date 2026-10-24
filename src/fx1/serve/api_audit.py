@@ -103,13 +103,23 @@ def _client(
                 os.environ[k] = v
 
 
-def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
+def api_audit() -> dict[str, Any]:
+    _clk = {"t": 1_000_000.0}
+    from fx1.serve.api import _RateLimiter
+
+    _RateLimiter._clock_box = _clk
+    try:
+        return _api_audit_impl(_clk)
+    finally:
+        _RateLimiter._clock_box = None
+
+
+def _api_audit_impl(_clk: dict[str, float]) -> dict[str, Any]:  # noqa: C901
     out: dict[str, Any] = {}
 
     client, api_mod = _client()
     from fx1.harness import HARNESS_REGISTRY
 
-    # --- registry parity ---------------------------------------------------
     resp = client.get("/harness/commands")
     names = {c["name"] for c in resp.json()["items"]}
     out["commands_all_listed"] = resp.status_code == 200 and names == {
@@ -123,7 +133,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         client.get("/harness/commands", params={"role": "bogus"}).status_code == 422
     )
 
-    # --- execution surface ---------------------------------------------------
     resp = client.post("/harness/runs", json={"command": "doctor"})
     body = resp.json()
     out["run_executes"] = (
@@ -147,7 +156,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
     out["run_method_shape"] = client.get("/harness/runs").status_code == 405
     out["run_timeout_pinned"] = resp.json()["timeout_s"] > 0 if resp.status_code == 200 else False
 
-    # --- containment parity ------------------------------------------------
     out["config_escape_422"] = (
         client.post(
             "/harness/runs",
@@ -170,7 +178,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         == 422
     )
 
-    # --- completion surface --------------------------------------------------
     for name in _BYOK_ENVS:
         os.environ.pop(name, None)
     os.environ.pop("MOONSHOT_API_KEY", None)
@@ -230,7 +237,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         == 422
     )
 
-    # --- complete idempotency: retried submits must not re-bill the model ---
     from fastapi.testclient import TestClient as _IdemTC  # noqa: PLC0415
 
     class _IdemBackend:
@@ -282,7 +288,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
     )
     out["complete_replay_reuses_latency_ms"] = c2.json()["latency_ms"] == c1.json()["latency_ms"]
 
-    # --- local weights surface: card'd checkpoint + engine attach ----------
     import json as _json
     import tempfile
     from pathlib import Path
@@ -409,7 +414,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         == 502
     )
 
-    # --- batch completions ----------------------------------------------------
     # One backend instance serves the whole batch; per-item verdicts.
     class _CleanBackend:
         def __init__(self) -> None:
@@ -509,7 +513,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         and rj[1]["error_class"] == "honesty_refusal"
     )
 
-    # --- SSE streaming ---------------------------------------------------------
     class _StreamBackend(_CleanBackend):
         def stream(
             self, messages: list[dict[str, str]], *, sampling: SamplingParams | None = None
@@ -597,7 +600,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         == 501
     )
 
-    # --- SSE keepalive (grace window → comment frames → in-band errors) ----
     class _SlowStreamBackend(_CleanBackend):
         def stream(
             self, messages: list[dict[str, str]], *, sampling: SamplingParams | None = None
@@ -716,7 +718,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         else:
             os.environ["FX1_API_SSE_KEEPALIVE_S"] = keep_env
 
-    # --- drain: one-way latch, gated routes refuse, ops routes stay up ----
     from fx1.harness import Harness as _Harness  # noqa: PLC0415
 
     drain_app = api_mod.create_app(
@@ -790,7 +791,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
     finally:
         drain_app.state.metrics.release()
 
-    # --- drain wait_s: server-side wait for the in-flight pool --------------
     import time as _time  # noqa: PLC0415
 
     def _slow_runner(a: list[str], t: float) -> tuple[int, str, str]:
@@ -1277,7 +1277,6 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         else:
             os.environ["FX1_WEBHOOK_ALLOW_PRIVATE_NETWORKS"] = saved_webhook_env
 
-    # --- rate limiting: per-client-host token bucket ----------------------------
     out["rate_limit_default_off"] = all(client.get("/health").status_code == 200 for _ in range(8))
     try:
         api_mod.create_app(rate_limit_rps=-1)
@@ -1299,7 +1298,7 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         and denied.headers.get("retry-after") is not None
         and int(denied.headers["retry-after"]) >= 1
     )
-    time.sleep(0.3)
+    _clk["t"] += 1.0
     out["rate_limit_recovers"] = lc.get("/harness/version").status_code == 200
     # X-RateLimit-* headers on every response while the limiter is active
     limited3 = api_mod.create_app(
@@ -1318,8 +1317,9 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
         and int(first.headers["x-ratelimit-reset"]) >= 0
         and int(second.headers["x-ratelimit-remaining"]) == 7
     )
-    while lc3.get("/harness/version").status_code == 200:
-        pass
+    for _ in range(16):
+        if lc3.get("/harness/version").status_code != 200:
+            break
     denied3 = lc3.get("/harness/version")
     out["rate_limit_headers_on_429"] = (
         denied3.status_code == 429
@@ -2063,7 +2063,7 @@ def api_audit() -> dict[str, Any]:  # noqa: C901 — probe accumulator
     )
     lc2 = _TC2(limited2)
     statuses = [lc2.get("/harness/version").status_code for _ in range(23)]
-    time.sleep(0.15)
+    _clk["t"] += 1.0
     m = lc2.get("/metrics")
     out["rate_limit_metrics_counts"] = (
         statuses.count(429) >= 2

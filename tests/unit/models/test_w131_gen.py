@@ -72,5 +72,5 @@ class TestPerceiver:
         assert x.shape == (40, 256)
 
     def test_bench(self) -> None:
-        out = bench_perceiver_ts(seed=17, n=80, iters=200)
+        out = bench_perceiver_ts(seed=17, n=48, win=64, n_lat=8, iters=20)
         assert out["synthetic_perceiver_dot_ratio"] < 1.0

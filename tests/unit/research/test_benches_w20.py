@@ -125,16 +125,17 @@ def test_hidden_markov_equilibrium_calibration(
     # the affine risk-free range matches the paper's band, and the
     # closed-form vs MC pricing gaps are within MC error.
     blob = hidden_markov_equilibrium
-    assert blob["ode_residual_max"] < 1e-6
-    assert blob["bc_residual_max"] < 1e-6
-    assert blob["phi_min"] > 0.0 and blob["phi_min"] < blob["phi_max"]
-    assert 0.0 < blob["p_star"] < 1.0
-    assert blob["sigmaS_max"] > blob["sigmaS_endpoint"]
-    assert 0.0 < blob["rf_min"] < blob["rf_max"] < 0.25
-    assert blob["skew_rel_err"] < 0.10
-    assert blob["option_rel_err"] < 0.10
-    assert 0.0 <= blob["filter_state_corr"] <= 1.0
-    assert 0.35 < blob["pit_mean"] < 0.65
+    # The lane bench prefixes every diagnostic with synthetic_.
+    assert blob["synthetic_ode_residual_max"] < 1e-6
+    assert blob["synthetic_bc_residual_max"] < 1e-6
+    assert blob["synthetic_phi_min"] > 0.0 and blob["synthetic_phi_min"] < blob["synthetic_phi_max"]
+    assert 0.0 < blob["synthetic_p_star"] < 1.0
+    assert blob["synthetic_sigmaS_max"] > blob["synthetic_sigmaS_endpoint"]
+    assert 0.0 < blob["synthetic_rf_min"] < blob["synthetic_rf_max"] < 0.25
+    assert blob["synthetic_skew_rel_err"] < 0.10
+    assert blob["synthetic_option_rel_err"] < 0.10
+    assert 0.0 <= blob["synthetic_filter_state_corr"] <= 1.0
+    assert 0.35 < blob["synthetic_pit_mean"] < 0.65
 
 
 def test_gaussian_normalized_coords_arb_cycle(

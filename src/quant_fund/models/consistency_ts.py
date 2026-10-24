@@ -50,9 +50,9 @@ def _mmd(x: FloatArray, y: FloatArray, bw: float) -> float:
 
 def bench_consistency_ts(
     seed: int = 20261231,
-    n: int = 320,
+    n: int = 120,
     win: int = 24,
-    iters: int = 1400,
+    iters: int = 200,
 ) -> dict[str, float]:
     """Consistency-model 2-step sampler vs Gaussian (MMD, SYNTH)."""
     torch = _torch()

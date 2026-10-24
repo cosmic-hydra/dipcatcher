@@ -270,7 +270,13 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 
 # Tool-local state with no security surface — deliberately NOT corpora.
 # data/ is absent from this list only because data/metadata IS a corpus.
-NON_CORPUS_TOP_DIRS = frozenset({".freebuff", ".serena"})
+# .mavis: agent plan-run notes, same class as .serena / .freebuff.
+# attic: quarantine of non-qualifying template copies. attic/README.md
+# states nothing there is imported, tested, packaged, or evidence.
+# packaging: homebrew tap stub (sha256 FILL_AT_RELEASE). It is not an
+# install path this repo executes; docker/ and deploy/ remain the
+# supply-chain corpora.
+NON_CORPUS_TOP_DIRS = frozenset({".freebuff", ".serena", ".mavis", "attic", "packaging"})
 
 # The pinned set of tracked root-level files. Root files sit above every
 # corpus dir, so the epoch chains can't see them — a new root file lands

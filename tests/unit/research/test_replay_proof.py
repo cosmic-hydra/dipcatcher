@@ -316,14 +316,15 @@ def _mirror_lane_run_inputs(root: Path) -> None:
     """Mirror the repo inputs every lane argv reads: ``configs/`` wholesale
     (research.yaml composes base.yaml; fleet/vol-bench/verdict/fleet-monitor
     resolve it relative to cwd) — lanes that do not read it are unaffected."""
+    import shutil
+
     src_dir = REPO_ROOT / "configs"
     if not src_dir.is_dir():
         return
     dst_dir = root / "configs"
-    dst_dir.mkdir(parents=True, exist_ok=True)
-    for src in src_dir.iterdir():
-        if src.is_file():
-            (dst_dir / src.name).write_bytes(src.read_bytes())
+    if dst_dir.exists():
+        shutil.rmtree(dst_dir)
+    shutil.copytree(src_dir, dst_dir)
 
 
 @pytest.mark.parametrize(

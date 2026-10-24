@@ -37,7 +37,7 @@
   "n_eval": 64,
   "n_rows": 10,
   "n_train": 128,
-  "receipt_sha256": "5e907be710811a448c7268f805138bf0e59efffecdb21b7a467678681f85c9e4",
+  "receipt_sha256": "cee9aaee0a0f0f362fe9d12c4eb8297aecfa1d06bad8c034945fb40abf23ac61",
   "replay": {
     "argv": [
       "dipcatcher",
@@ -57,8 +57,8 @@
     ],
     "artifacts": [
       {
-        "path": "data/metadata/replay/fleet_eval_9418dee658765f89.json",
-        "sha256": "1904079220e70c8076b7149d3340dffa3ca457627873764f16c0f29d3db36f6c"
+        "path": "data/metadata/replay/fleet_eval_80b6bfaaba13b04a.json",
+        "sha256": "94ec2898d42f69ce7a1f29b4f63254cbf4c16032ae8a5f4a5f0aed94241f6c11"
       }
     ]
   },
@@ -66,7 +66,7 @@
     {
       "coverage_80": 0.75,
       "coverage_90": 0.90625,
-      "crps": 0.009466660066469929,
+      "crps": 0.00946666006646993,
       "error": null,
       "family": "distribution",
       "model": "empirical",
@@ -80,7 +80,7 @@
       "pinball_0.9": 0.0032023020990120735,
       "pinball_0.95": 0.0016780920934117566,
       "pit_ks": 0.09861788199866184,
-      "pit_ks_p": 0.5298376418958527,
+      "pit_ks_p": 0.5298376418958533,
       "seed": 7,
       "shard": "iid_gaussian",
       "status": "ok"
@@ -88,7 +88,7 @@
     {
       "coverage_80": 0.765625,
       "coverage_90": 0.90625,
-      "crps": 0.009413058212869852,
+      "crps": 0.009413058212869854,
       "error": null,
       "family": "distribution",
       "model": "gaussian",
@@ -122,9 +122,9 @@
       "pinball_0.5": 0.006712071030714845,
       "pinball_0.75": 0.006213295101327136,
       "pinball_0.9": 0.003225665682499545,
-      "pinball_0.95": 0.0018395848036675845,
+      "pinball_0.95": 0.0018395848036675852,
       "pit_ks": 0.09952680663843394,
-      "pit_ks_p": 0.5181371984963417,
+      "pit_ks_p": 0.5181371984963419,
       "seed": 7,
       "shard": "iid_gaussian",
       "status": "ok"
@@ -132,7 +132,7 @@
     {
       "coverage_80": 0.75,
       "coverage_90": 0.90625,
-      "crps": 0.00941428508499235,
+      "crps": 0.009414285084992348,
       "error": null,
       "family": "distribution",
       "model": "hstep_t",
@@ -142,7 +142,7 @@
       "pinball_0.1": 0.002769856378425242,
       "pinball_0.25": 0.005177740163532663,
       "pinball_0.5": 0.006750982884428852,
-      "pinball_0.75": 0.0058905528928857006,
+      "pinball_0.75": 0.0058905528928857,
       "pinball_0.9": 0.003140699593415551,
       "pinball_0.95": 0.0016486355107766097,
       "pit_ks": 0.08770862981301075,
@@ -154,7 +154,7 @@
     {
       "coverage_80": 0.75,
       "coverage_90": 0.90625,
-      "crps": 0.009466660066469929,
+      "crps": 0.00946666006646993,
       "error": null,
       "family": "distribution",
       "model": "hstep_emp",
@@ -167,8 +167,8 @@
       "pinball_0.75": 0.005899595616393209,
       "pinball_0.9": 0.0032023020990120743,
       "pinball_0.95": 0.0016780920934117568,
-      "pit_ks": 0.09861788199866217,
-      "pit_ks_p": 0.5298376418958487,
+      "pit_ks": 0.09861788199866228,
+      "pit_ks_p": 0.5298376418958473,
       "seed": 7,
       "shard": "iid_gaussian",
       "status": "ok"
@@ -176,7 +176,7 @@
     {
       "coverage_80": 0.96875,
       "coverage_90": 1.0,
-      "crps": 0.009603513524494758,
+      "crps": 0.009603513524494756,
       "error": null,
       "family": "distribution",
       "model": "empirical",
@@ -242,19 +242,19 @@
     {
       "coverage_80": 0.96875,
       "coverage_90": 1.0,
-      "crps": 0.009544535748182773,
+      "crps": 0.009544535748182774,
       "error": null,
       "family": "distribution",
       "model": "hstep_t",
       "n_eval": 64,
       "n_train": 128,
-      "pinball_0.05": 0.0029057463744273054,
-      "pinball_0.1": 0.004733329242586955,
-      "pinball_0.25": 0.007099679022316869,
+      "pinball_0.05": 0.002905746374427305,
+      "pinball_0.1": 0.004733329242586957,
+      "pinball_0.25": 0.00709967902231687,
       "pinball_0.5": 0.005104440669116631,
       "pinball_0.75": 0.0052870019485251555,
       "pinball_0.9": 0.003977290671391971,
-      "pinball_0.95": 0.0026181596954780286,
+      "pinball_0.95": 0.0026181596954780277,
       "pit_ks": 0.30047499040043485,
       "pit_ks_p": null,
       "seed": 8,
@@ -264,7 +264,7 @@
     {
       "coverage_80": 0.96875,
       "coverage_90": 1.0,
-      "crps": 0.009603513524494758,
+      "crps": 0.009603513524494756,
       "error": null,
       "family": "distribution",
       "model": "hstep_emp",

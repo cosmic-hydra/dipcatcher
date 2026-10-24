@@ -79,20 +79,27 @@ def git_worktree_sha256() -> str:
 
 
 def git_revision() -> str:
-    """Return the checked-out revision, or an explicit unknown marker."""
+    """Return the checked-out revision, or an explicit unknown marker.
+
+    A loaded runner can miss a short ``git rev-parse`` budget while the
+    index lock is held. Retry so two seals of the same tree do not disagree
+    by one call landing on ``UNKNOWN``.
+    """
     git = shutil.which("git")
     if git is None:
         return "UNKNOWN"
-    try:
-        return subprocess.run(
-            [git, "rev-parse", "HEAD"],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=2,
-        ).stdout.strip()
-    except (OSError, subprocess.SubprocessError):
-        return "UNKNOWN"
+    for _attempt in range(3):
+        try:
+            return subprocess.run(
+                [git, "rev-parse", "HEAD"],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=10,
+            ).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            continue
+    return "UNKNOWN"
 
 
 def _parse_name_status(raw: bytes) -> list[tuple[bytes, bytes]]:

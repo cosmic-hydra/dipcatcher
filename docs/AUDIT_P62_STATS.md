@@ -1,5 +1,9 @@
 # P6.2 statistical-core audit — `src/quant_fund/metrics/`
 
+Census: 108 modules (`quality/audit_coverage.json` directory `metrics`).
+`_bootstrap_kernels.py` is the numba stationary-bootstrap fill, bit-identical
+to the NumPy reference and covered by `tests/unit/metrics/test_hotpath_floors.py`.
+
 Scope: `inference.py`, `snooping.py`, `bootstrap.py`, `scoring.py`,
 `calibration_tests.py`. Each function was checked against the method cited in
 its docstring (formula, degrees of freedom, multiple-testing correction, block

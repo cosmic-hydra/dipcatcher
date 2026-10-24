@@ -17,7 +17,6 @@ from quant_fund.models.alpha import HistoricalMeanAlpha
 from quant_fund.models.base import artifact_identity, load_joblib_artifact
 from quant_fund.models.deep_rl import PolicyGradientRanker, run_policy_gradient_panel
 from quant_fund.models.quantile_bandit import QuantileThompson
-from quant_fund.models.ranking import available_features
 from quant_fund.models.regime import GaussianHMMRegime, SingleStateRegime, VolThresholdRegime
 from quant_fund.models.rl import (
     LinearThompsonRanker,
@@ -481,6 +480,7 @@ def train_robinhood_plus(
     """Persist the robinhood+ engine card. The tokenizer is unsupervised."""
     _require_model(model_name, {"hierarchical_markov", "transformer"}, "robinhood_plus")
     from quant_fund.models.robinhood_plus.bench import bench_robinhood_plus
+    from quant_fund.models.robinhood_plus.constants import KLINE_FEATURE_NAMES
     from quant_fund.models.robinhood_plus.engine import RobinhoodPlusEngine
 
     engine = RobinhoodPlusEngine(
@@ -495,7 +495,10 @@ def train_robinhood_plus(
     engine.fit(np.zeros((2, 1)), np.zeros(2))
     path = Path(config.data.root) / "metadata" / f"robinhood_plus_{model_name}.joblib"
     df = panel(config)
-    engine_features = available_features(list(df.columns), None)
+    # The card is an unsupervised K-line tokenizer, not a tabular ranker.
+    # Ranking-zoo columns are often absent on a price panel and must not be
+    # what the artifact claims it was fit on.
+    engine_features = [str(name) for name in KLINE_FEATURE_NAMES]
     save_training_artifact(
         engine,
         path,

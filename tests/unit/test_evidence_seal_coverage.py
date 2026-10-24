@@ -36,12 +36,20 @@ UNSEALED_WRITERS: dict[str, str] = {
     "data/ingest.py": "sealed on PR #261 (data_manifest receipt_sha256)",
     "data/sources/storage.py": "sealed on PR #261 (per-parquet provenance sidecar)",
     "hedge_lab/gated_race.py": "sealed on PR #257",
+    "live/bridge.py": (
+        "fail-closed drop tickets (live_pnl_claim and would_promote_live forced false); "
+        "operator transport envelopes, not research receipts"
+    ),
     "hedge_lab/lightspeed_book.py": "sealed on PR #257",
     "hedge_lab/mirror.py": "sealed on PR #257",
     "hedge_lab/runner.py": "sealed on PR #257",
     "hedge_lab/target_hunt.py": "sealed on PR #257",
     "hedge_lab/v2_slate.py": "sealed on PR #257",
     "market_sim/__main__.py": "payload echoes to stdout — CLI report output, not a receipt writer",
+    "paper/broker_adapter.py": (
+        "paper-broker runtime checkpoint (paper_broker_state.v1); honesty stamps are inline "
+        "and seam_report is the integrity check, not a research receipt"
+    ),
     "paper/sim_live.py": "sealed on PR #258",
     "research/auditor_bundle.py": "bundle writer self-digests — files_sha256 map + auditor_self_sha256 cover every emitted artifact",
     "research/evidence_export.py": "export manifest carries gate_pins_sig_sha256 — the digest of the signature pins it exports",

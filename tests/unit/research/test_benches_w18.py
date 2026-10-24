@@ -218,11 +218,14 @@ def test_gslice_beats_prior_and_trains(gslice: dict[str, float]) -> None:
     # GP-prior baseline on the strictly proper energy score (pinned seed 7;
     # +0.15 measured margin, asserted directionally), and flow-matching
     # training reduced the loss.
-    assert gslice["gslice_synth_energy_score_gain"] > 0.0
-    assert gslice["gslice_synth_energy_score_mean"] < gslice["gslice_synth_energy_score_prior"]
+    assert gslice["synthetic_gslice_synth_energy_score_gain"] > 0.0
+    assert (
+        gslice["gslice_synth_energy_score_mean"]
+        < gslice["synthetic_gslice_synth_energy_score_prior"]
+    )
     assert gslice["gslice_synth_energy_score_mean"] > 0.0
-    assert gslice["gslice_synth_loss_drop"] > 0.0
-    assert gslice["gslice_synth_final_loss"] > 0.0
+    assert gslice["synthetic_gslice_synth_loss_drop"] > 0.0
+    assert gslice["synthetic_gslice_synth_final_loss"] > 0.0
     # Marginal band coverage is monotone in the level with positive widths.
     assert 0.0 < gslice["gslice_synth_coverage_50"] < gslice["gslice_synth_coverage_80"]
     assert gslice["gslice_synth_coverage_80"] < gslice["gslice_synth_coverage_95"] <= 1.0

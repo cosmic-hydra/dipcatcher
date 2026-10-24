@@ -881,6 +881,45 @@ def _extend_custody_release_errors(errors: list[str], payload: Mapping[str, Any]
         errors.extend(release_contract_errors(payload))
 
 
+def _prereg_document_lanes(payload: Mapping[str, Any]) -> tuple[bool, bool]:
+    """Classify a body as a forward preregistration and/or a sidecar lane."""
+    schema = payload.get("schema")
+    embedded = payload.get("_seal")
+    is_forward = schema == "forward_record_preregistration.v1" or (
+        isinstance(embedded, Mapping)
+        and embedded.get("schema") == "prereg_seal.v1"
+        and schema != "prereg_seal.v1"
+    )
+    is_sidecar_lane = schema == "lane_receipt.v1" and not _is_sha256(payload.get("receipt_sha256"))
+    return bool(is_forward), bool(is_sidecar_lane)
+
+
+def _sidecar_lane_honesty_errors(payload: Mapping[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if payload.get("research_only") is not True:
+        errors.append("research_only_not_true")
+    if payload.get("live_pnl_claim") is not False:
+        errors.append("live_pnl_claim_not_false")
+    return errors
+
+
+def _sealed_bytes_match_errors(path: Path, payload: Mapping[str, Any]) -> list[str]:
+    """Reject a mutated object presented with the committed file's path.
+
+    File seals bind bytes on disk. The mutation fuzz passes the mutated
+    payload with the original path, so the object must equal the file.
+    Forward records embed the content hash inside ``_seal``, which excludes
+    the seal block, so a seal-metadata edit still matches the untouched sidecar.
+    """
+    try:
+        on_disk = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return ["sealed_file_unreadable"]
+    if on_disk != payload:
+        return ["payload_file_mismatch"]
+    return []
+
+
 def _prereg_documented_errors(path: Path, payload: Mapping[str, Any]) -> list[str] | None:
     """Errors for documents sealed by ``prereg_seal.v1`` rather than ``receipt_sha256``.
 
@@ -892,14 +931,7 @@ def _prereg_documented_errors(path: Path, payload: Mapping[str, Any]) -> list[st
     receipt and returns ``None`` so scanners that skip ``*.seal.json`` stay
     the only callers that should see one.
     """
-    schema = payload.get("schema")
-    embedded = payload.get("_seal")
-    is_forward = schema == "forward_record_preregistration.v1" or (
-        isinstance(embedded, Mapping)
-        and embedded.get("schema") == "prereg_seal.v1"
-        and schema != "prereg_seal.v1"
-    )
-    is_sidecar_lane = schema == "lane_receipt.v1" and not _is_sha256(payload.get("receipt_sha256"))
+    is_forward, is_sidecar_lane = _prereg_document_lanes(payload)
     if not is_forward and not is_sidecar_lane:
         return None
 
@@ -913,14 +945,12 @@ def _prereg_documented_errors(path: Path, payload: Mapping[str, Any]) -> list[st
         errors.extend(str(item) for item in checked.get("errors", []))
         errors.extend(_forward_prereg_honesty_errors(payload))
     else:
-        if payload.get("research_only") is not True:
-            errors.append("research_only_not_true")
-        if payload.get("live_pnl_claim") is not False:
-            errors.append("live_pnl_claim_not_false")
+        errors.extend(_sidecar_lane_honesty_errors(payload))
 
     if path.is_file():
         side = verify_seal(path)
         errors.extend(str(item) for item in side.get("errors", []))
+        errors.extend(_sealed_bytes_match_errors(path, payload))
     elif is_sidecar_lane:
         errors.append("seal_sidecar_missing")
     return errors

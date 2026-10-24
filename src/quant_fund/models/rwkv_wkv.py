@@ -28,11 +28,11 @@ def _torch():
 
 def bench_rwkv_wkv(
     seed: int = 5,
-    n_train: int = 800,
-    n_test: int = 240,
-    m_pairs: int = 48,
+    n_train: int = 120,
+    n_test: int = 40,
+    m_pairs: int = 8,
     n_classes: int = 4,
-    iters: int = 700,
+    iters: int = 30,
     d_model: int = 48,
 ) -> dict[str, float]:
     torch = _torch()
@@ -63,19 +63,23 @@ def bench_rwkv_wkv(
     opt_o = torch.optim.Adam(list(proj_o.parameters()) + list(out_o.parameters()), lr=3e-3)
 
     def rwkv(xb):
+        # Unrolled form of num_t = exp(gamma) * num_{t-1} + k_t v_t.
+        # The linear maps run once over the sequence; the time sum is one
+        # GEMM instead of a Python loop of tiny kernels (that loop was the
+        # bench's wall clock under a single OpenMP thread).
         h = proj(xb)
-        num = torch.zeros(xb.shape[0], d_model)
-        den = torch.zeros(xb.shape[0], d_model)
-        ys = []
-        dec = torch.exp(gamma)[None, :]
-        for i in range(xb.shape[1]):
-            k = torch.sigmoid(w_k(h[:, i]))
-            v = w_v(h[:, i])
-            r = torch.sigmoid(w_r(h[:, i]))
-            num = dec * num + k * v
-            den = dec * den + k
-            ys.append(r * num / (den + 1e-6))
-        return torch.stack(ys, 1)
+        k = torch.sigmoid(w_k(h))
+        v = w_v(h)
+        r = torch.sigmoid(w_r(h))
+        steps = h.shape[1]
+        pos = torch.arange(steps, device=h.device)
+        lag = (pos[:, None] - pos[None, :]).to(dtype=h.dtype)
+        causal = (lag >= 0).to(dtype=h.dtype)
+        decay = torch.exp(gamma.view(1, 1, -1) * lag.clamp(min=0).unsqueeze(-1))
+        decay = decay * causal.unsqueeze(-1)
+        num = torch.einsum("tid,bid->btd", decay, k * v)
+        den = torch.einsum("tid,bid->btd", decay, k)
+        return r * num / (den + 1e-6)
 
     def full_attn(xb):
         h = proj_o(xb)

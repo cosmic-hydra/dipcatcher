@@ -31,7 +31,7 @@ from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from tempfile import NamedTemporaryFile
-from typing import Any, Protocol
+from typing import Any, Protocol, cast
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -175,7 +175,11 @@ def _artifact_identity_checked(
             "artifact manifest is absent or unverified (dataset identity "
             f"cannot be established); promotion is blocked: {exc}"
         ) from exc
-    _require_dataset_identity(identity)
+    # ArtifactIdentity satisfies this view at runtime. Its pydantic
+    # model_dump signature is wider than the Protocol, so the cast is the
+    # type boundary; the checks below still run on the live object.
+    checked = cast(_IdentityView, identity)
+    _require_dataset_identity(checked)
     artifact_sha = hash_file(artifact_path)
     manifest_file = manifest_path(artifact_path)
     manifest_sha = hash_file(manifest_file)
@@ -186,7 +190,7 @@ def _artifact_identity_checked(
             f"artifact manifest is unreadable: {manifest_file}"
         ) from exc
     artifact_class = manifest_record.get("class") if isinstance(manifest_record, dict) else None
-    return identity, artifact_path, manifest_file, artifact_sha, manifest_sha, artifact_class
+    return checked, artifact_path, manifest_file, artifact_sha, manifest_sha, artifact_class
 
 
 def _decision_checked(decision: Mapping[str, Any], artifact_sha: str) -> str:

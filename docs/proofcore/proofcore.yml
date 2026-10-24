@@ -176,7 +176,19 @@ jobs:
   # (not in fx1.yml, which this wave does not edit) as a ratchet floor.
   fx1-coverage:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Audit probes are multi-thousand-line functions. Serial coverage tracing
+    # of tests/unit/fx1_serve hit this job's old 30 minute limit at 66%.
+    # The 80% floor is unchanged; the longer limit lets that measurement finish.
+    timeout-minutes: 90
+    # Same thread pin as fx1.yml / ci.yml. -n auto in the make target forks.
+    env:
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+      KMP_INIT_AT_FORK: "FALSE"
+      PYTHONFAULTHANDLER: "1"
+      TOKENIZERS_PARALLELISM: "false"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
@@ -185,9 +197,12 @@ jobs:
           enable-cache: true
           cache-dependency-glob: uv.lock
       - name: Sync
-        run: uv sync --frozen --all-groups
+        # tiny_lm and the weight loader import torch / safetensors. Those
+        # live in the nn extra; without it the coverage lane fails closed
+        # before it can measure the package.
+        run: uv sync --frozen --all-groups --extra nn
       - name: fx1 coverage ratchet
-        # Ratcheted 2026-09-28: suite measures 88% locally. Floor 80 keeps
-        # ~4pp headroom under the expected (lower) CI reading while closing
-        # most of the drift window. Raise, never lower.
-        run: uv run pytest tests/fx1 -q --cov=fx1 --cov-fail-under=80 --cov-report=term-missing
+        # The 80% floor covers the whole fx1 package. tests/unit/fx1_serve
+        # holds the audit probes; tests/fx1 alone leaves those modules at 0%.
+        # make fx1-coverage splits those files across workers. Floor unchanged.
+        run: make fx1-coverage

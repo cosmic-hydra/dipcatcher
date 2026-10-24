@@ -10,6 +10,7 @@ across processes are the property under test.
 from __future__ import annotations
 
 import json
+import multiprocessing
 import threading
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
@@ -21,6 +22,11 @@ from quant_fund.audit.verify import verify_ledger
 
 _WRITERS = 4
 _APPENDS_PER_WRITER = 20
+# fork copies xdist/coverage thread locks into children that never run those
+# threads, so a child can block forever on a lock the parent still holds.
+# The worker is module-level and picklable; spawn is the context this file
+# was written for.
+_POOL = multiprocessing.get_context("spawn")
 
 
 def _append_worker(root: str, writer: int, count: int) -> int:
@@ -55,7 +61,7 @@ def _prefix_chain_errors(entries: list[dict[str, object]]) -> list[str]:
 def test_concurrent_process_appends_preserve_the_hash_chain(tmp_path: Path) -> None:
     """N processes × M appends -> exactly N*M entries, one index each, clean chain."""
     root = tmp_path / "ledger"
-    with ProcessPoolExecutor(max_workers=_WRITERS) as pool:
+    with ProcessPoolExecutor(max_workers=_WRITERS, mp_context=_POOL) as pool:
         futures = [
             pool.submit(_append_worker, str(root), writer, _APPENDS_PER_WRITER)
             for writer in range(_WRITERS)
@@ -121,7 +127,7 @@ def test_concurrent_locked_reads_always_observe_a_valid_prefix(tmp_path: Path) -
 def test_checkpoint_after_concurrent_appends_signs_the_full_tree(tmp_path: Path) -> None:
     """A signer attached post-hoc checkpoints exactly the committed tree."""
     root = tmp_path / "ledger"
-    with ProcessPoolExecutor(max_workers=_WRITERS) as pool:
+    with ProcessPoolExecutor(max_workers=_WRITERS, mp_context=_POOL) as pool:
         list(
             pool.map(
                 _append_worker,
@@ -147,7 +153,7 @@ def test_checkpoint_after_concurrent_appends_signs_the_full_tree(tmp_path: Path)
 def test_append_to_missing_root_creates_layout_under_the_lock(tmp_path: Path) -> None:
     """First writers racing on a fresh root must not corrupt the layout."""
     root = tmp_path / "fresh-ledger"
-    with ProcessPoolExecutor(max_workers=_WRITERS) as pool:
+    with ProcessPoolExecutor(max_workers=_WRITERS, mp_context=_POOL) as pool:
         futures = [pool.submit(_append_worker, str(root), writer, 5) for writer in range(_WRITERS)]
         for future in futures:
             future.result()

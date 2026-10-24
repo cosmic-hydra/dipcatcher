@@ -8,7 +8,7 @@
     "lazy_lane_resolution",
     "proper_score_only"
   ],
-  "inputs_sha256": "b1a31d66d88e2934bb13c29f4161d1f51ebaa0afaa3de2b135c73fbb44521b0b",
+  "inputs_sha256": "b9859c5255c17708ab5588eb88bd13ffa2eac4ff25f339b0268c67932d722db6",
   "kind": "monitor_run",
   "lanes_available": {
     "calibration": true,
@@ -46,7 +46,7 @@
       0.1
     ]
   },
-  "receipt_sha256": "13d20aef00774027a9772ced8a4a118c875cec064b33ed826e7b78311b411e83",
+  "receipt_sha256": "85aece35e89b5b12ddd19560e9d6b32b5c23e6222f56e95cc18095a954b1bd2b",
   "replay": {
     "argv": [
       "dipcatcher",
@@ -66,8 +66,8 @@
     ],
     "artifacts": [
       {
-        "path": "data/metadata/replay/monitor_run_5a2fdb39470f5feb.json",
-        "sha256": "a57dca296b0cab9b3128f67956fe36150eebfdb0a026cc3db51a8a8728f231e4"
+        "path": "data/metadata/replay/monitor_run_2c9ce71fd88970e0.json",
+        "sha256": "fa219c937355ec05a205d8959e61b886ca6892533000ce840872b152e33fd059"
       }
     ]
   },

@@ -355,6 +355,39 @@ def _check_horizons(horizons: Sequence[int]) -> tuple[int, ...]:
     return resolved
 
 
+def _stable_metric(value: float) -> float:
+    from quant_fund.utils.numeric import stable_decimal
+
+    # Eight significant figures match the committed vol-bench replay carrier.
+    # The in-memory frame keeps full precision for the closed-form check;
+    # only the sealed results use this round.
+    return stable_decimal(value)
+
+
+_SEALED_METRIC_KEYS = (
+    "qlike",
+    "mse",
+    "dm_qlike_mean",
+    "dm_qlike_se",
+    "dm_qlike_t",
+    "epromotion_evalue",
+    "epromotion_anytime_p",
+)
+
+
+def _sealed_result_rows(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Copy result rows with libm-sensitive metrics rounded for the seal."""
+    sealed: list[dict[str, Any]] = []
+    for row in rows:
+        copy = dict(row)
+        for key in _SEALED_METRIC_KEYS:
+            value = copy.get(key)
+            if isinstance(value, float):
+                copy[key] = _stable_metric(value)
+        sealed.append(copy)
+    return sealed
+
+
 def _validate_shard(shard: VolShard, shard_name: str, n_bars: int) -> VolShard:
     if not isinstance(shard, VolShard):
         raise ValueError(f"shard {shard_name!r} did not return a VolShard")
@@ -372,7 +405,16 @@ def _validate_shard(shard: VolShard, shard_name: str, n_bars: int) -> VolShard:
             raise ValueError(f"shard {shard_name!r} produced non-finite {label}")
     if (rv <= 0.0).any() or (parkinson <= 0.0).any():
         raise ValueError(f"shard {shard_name!r} produced non-positive rv/parkinson")
-    return VolShard(shard.name, returns, rv, parkinson, dict(shard.config))
+    from quant_fund.utils.numeric import stable_decimal_array
+
+    # Hashing uses tobytes(); collapse libm ulps before the seal and the fit.
+    return VolShard(
+        shard.name,
+        stable_decimal_array(returns),
+        stable_decimal_array(rv),
+        stable_decimal_array(parkinson),
+        dict(shard.config),
+    )
 
 
 def _eval_shard_model(
@@ -622,7 +664,10 @@ def run_vol_bench(
         "dataset_sha256": dataset_sha256,
         "n_rows": len(rows),
         "n_error_rows": sum(1 for row in rows if row["status"] != "ok"),
-        "results": rows,
+        # The frame keeps full precision for the closed-form QLIKE check.
+        # The sealed results are decimal-stable so the replay hash does not
+        # follow libm.
+        "results": _sealed_result_rows(rows),
     }
     return frame, receipt
 

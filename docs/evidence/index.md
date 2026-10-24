@@ -4306,22 +4306,22 @@ counted. Prose that contains such a token is quoted verbatim.
 - `research_only`: true
 - `schema`: capability_audit.v1
 
-### `receipts/capacity_eval_3622d0c059d42009.json`
+### `receipts/capacity_eval_bdf234110827cd1f.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/capacity_eval_3622d0c059d42009.json | 57ad3394513fe58e48127141858a990580fade56ae4755ad0a3b868aa2568f2b | 3622d0c059d42009e9870101afb35c232ac27d58456fa915dc482db6679c3116 | not_checked | absent | inputs_sha256=c077426959f2bafc71eecbe4c8507d337fcbc842a84c574ff1a4a7eebc4ac9a3 | unspecified | absent | absent | false |
+| receipts/capacity_eval_bdf234110827cd1f.json | 6bbb890de032973d300d44584c8f250ef8b8172ad1b687e876295986fb676742 | bdf234110827cd1f1a5646e2222af03c131e2923d9b67d0e8fe19667fdfa6dd6 | not_checked | absent | inputs_sha256=dad71e6a0005e2117e5f5625a2d3f7d10687ce77a5e0cd7e6830f7507a6bc20e | unspecified | absent | absent | false |
 
 - `books`:
   - [0]
-    - `adv_sha256`: 8ecaf67526c80a674e9fd3b972398e12d551a8391e381a39b829e5de918eb790
+    - `adv_sha256`: c479f6242d8aadabdc7399e3ea08d3dd2b5c421a17c5723c2c89a6c833316f66
     - `data_label`: SYNTHETIC
     - `n_dates`: 60
     - `n_names`: 8
     - `name`: uniform
     - `weights_sha256`: 5f939a795d092e615b019dcadf28e4eed6bbb1c67021d9b7f07c3f0a8d61fbeb
   - [1]
-    - `adv_sha256`: bbda34e4c6f87974736f20d0826f529b29ffd62104d2e07f3a61207f43583ceb
+    - `adv_sha256`: 5e5e564b370d6f6d09eb3911c7418509f9322377323edb9abbbcecdbd6cd06fc
     - `data_label`: SYNTHETIC
     - `n_dates`: 60
     - `n_names`: 8
@@ -4331,7 +4331,7 @@ counted. Prose that contains such a token is quoted verbatim.
 - `dev_only`: true
 - `kind`: capacity_overlay_eval
 - `n_rows`: 4
-- `receipt_sha256`: 3622d0c059d42009e9870101afb35c232ac27d58456fa915dc482db6679c3116
+- `receipt_sha256`: bdf234110827cd1f1a5646e2222af03c131e2923d9b67d0e8fe19667fdfa6dd6
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -4351,47 +4351,47 @@ counted. Prose that contains such a token is quoted verbatim.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/capacity_eval_ad7dd6aef6c94d20.json
-      - `sha256`: 044638ce5091d330368059531cd2ce3d0001c8694a915750af9a56a6c928b4d8
+      - `path`: data/metadata/replay/capacity_eval_b7bc2bfc87aa6be2.json
+      - `sha256`: 0ea9ff505e24f4bb3d843aa8e8eb8caf4e7460072b43fb10a2d9ffa6fe544b34
 - `results`:
   - [0]
     - `aum`: 1000000.0
     - `book`: uniform
-    - `days_to_trade`: 0.10643505246394389
+    - `days_to_trade`: 0.10643505
     - `feasible`: 1
-    - `impact_bps`: 58.62177950726087
-    - `max_participation`: 0.010643505246394389
-    - `mean_participation`: 0.004054086569775791
+    - `impact_bps`: 58.621779
+    - `max_participation`: 0.010643505
+    - `mean_participation`: 0.0040540866
     - `participation_cap`: 0.1
     - `status`: ok
   - [1]
     - `aum`: 10000000.0
     - `book`: uniform
-    - `days_to_trade`: 1.064350524639439
+    - `days_to_trade`: 1.0643505
     - `feasible`: 0
-    - `impact_bps`: 185.37834373512757
-    - `max_participation`: 0.10643505246394389
-    - `mean_participation`: 0.0405408656977579
+    - `impact_bps`: 185.37834
+    - `max_participation`: 0.10643505
+    - `mean_participation`: 0.040540866
     - `participation_cap`: 0.1
     - `status`: ok
   - [2]
     - `aum`: 1000000.0
     - `book`: concentrated
-    - `days_to_trade`: 0.24473014809391208
+    - `days_to_trade`: 0.24473015
     - `feasible`: 1
-    - `impact_bps`: 36.2896332221317
-    - `max_participation`: 0.02447301480939121
-    - `mean_participation`: 0.003480376246735458
+    - `impact_bps`: 36.289633
+    - `max_participation`: 0.024473015
+    - `mean_participation`: 0.0034803763
     - `participation_cap`: 0.1
     - `status`: ok
   - [3]
     - `aum`: 10000000.0
     - `book`: concentrated
-    - `days_to_trade`: 2.447301480939121
+    - `days_to_trade`: 2.4473015
     - `feasible`: 0
-    - `impact_bps`: 114.7578964340513
-    - `max_participation`: 0.2447301480939121
-    - `mean_participation`: 0.03480376246735458
+    - `impact_bps`: 114.7579
+    - `max_participation`: 0.24473015
+    - `mean_participation`: 0.034803763
     - `participation_cap`: 0.1
     - `status`: ok
 - `schema`: capacity_overlay.v1
@@ -11452,6 +11452,1250 @@ counted. Prose that contains such a token is quoted verbatim.
 - `simulated_only`: false
 - `verdict`: advancing
 
+### `receipts/corpus_epoch_45e7c79ed405a79c.json`
+
+| source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| receipts/corpus_epoch_45e7c79ed405a79c.json | de2b063864c615d4b09f6df671523c9ba52328427f7e94839f8f3fcef8997949 | 45e7c79ed405a79cc12287a37cfa761a04afe84de01c19d16f3a422dbb8ee507 | not_checked | absent | inputs_sha256=d23289bc5460ee9635d163efd1df7e32b757005aabd6dbfaa9646326d2ee6947 | unspecified | absent | true | false |
+
+- `data_label`: CORPUS
+- `epoch_root_sha256`: 3bdfee4dff06980d107881f2263d1d2435af87705a09754ecfaffc0fcc6a2f83
+- `kind`: corpus_epoch.v1
+- `member_tree_root`: 23c08a0f76174e60b6c1ee90cff7ade62397758d1e9ee5a27bdd2dff938a4965
+- `members`:
+  - [0]
+    - `name`: abc_calibrate_amzn.json
+    - `sha256`: 31aedff635330e6727b42bfa6b0c406c24aa305825c41cb09ae6aac33dca65f1
+  - [1]
+    - `name`: aftermath_flow_amzn.json
+    - `sha256`: 229bfe14cfd239f30786ef89c8aa0f2b2775800e00cd85a6a9d3239265604da8
+  - [2]
+    - `name`: alert_budget.json
+    - `sha256`: 04e96f138a830001cb130a3b4758f684627588bccc648f4efd35a72bdb2111e7
+  - [3]
+    - `name`: anchor_scan_amzn.json
+    - `sha256`: 65c11ec3e7f771bbedf4cde31b63bbe9576e97a9de55f7ab030d3c8c34c28c8a
+  - [4]
+    - `name`: api_audit.json
+    - `sha256`: 2957d91704d025c08f5d7ece51f037827539d9254246091d8499fb1fde4a3177
+  - [5]
+    - `name`: api_fuzz.json
+    - `sha256`: c403f16743569dd1a6b7aa0711a58a42ca8bdd26abc5b0645bf5ab19952e792e
+  - [6]
+    - `name`: asof_audit.json
+    - `sha256`: 436c3737e93cd19673ae6e6127e69f47498efbeacdfc25e8447a9abdc1b7512a
+  - [7]
+    - `name`: attestation_audit.json
+    - `sha256`: 5b44675be81133eb52a25feb2553c487bf6392ec297bf390fde875085ae46ee4
+  - [8]
+    - `name`: attribution.json
+    - `sha256`: b9a8d0e5e42087e034ca2551afedaadd6f82eeee74666794dff88fdbaeb00b4c
+  - [9]
+    - `name`: backend_parity.json
+    - `sha256`: 9b2b2433e4106a88b1f2583bca0816a738370635046254267a50f83e50b3ac5c
+  - [10]
+    - `name`: band_occupancy.json
+    - `sha256`: 98635a72af8ee0b3f395cefb81bc3be5018d39b7f9cdd8a359007c50780e70da
+  - [11]
+    - `name`: band_shape.json
+    - `sha256`: 1e0d626f6a4b69a5761dc498a5b1bcd7d446b7a0d6c5439bf6c3beb048eafcbc
+  - [12]
+    - `name`: bank_audit.json
+    - `sha256`: 07d92059b00305ba6b5880edc4152180d0fd31bd9f0829bbea3052b0ceb075fc
+  - [13]
+    - `name`: basis_carry_dd7705fc0f2f1c25.json
+    - `sha256`: 852f56a1e2aeb3654d406fbb14a4a2baa7cd20949d45153a98c5a99a2248f741
+  - [14]
+    - `name`: boundary_audit.json
+    - `sha256`: f958b32b0d6bedbd542c105d7b530431c4356dda768d2bb90fb8055db56b6cdf
+  - [15]
+    - `name`: byok_audit.json
+    - `sha256`: 0dda10232d681aecd75835b70382ecab3f0698f91e5a371e171968a73ba23406
+  - [16]
+    - `name`: cache_audit.json
+    - `sha256`: 248835c82eeba8f0ef65fc30345da462bcea7180374008d5aa56c526f4bd5f61
+  - [17]
+    - `name`: calibration_audit.json
+    - `sha256`: c9f800216f05073fed4da606f04823cc71bb37909d4242492f5e280cdb64964f
+  - [18]
+    - `name`: calibration_audit_drill.json
+    - `sha256`: 2a3300764a5b916130f64db8c29b05c0a48e2212b43730f75f4970bff2eae354
+  - [19]
+    - `name`: cancel_cluster_amzn.json
+    - `sha256`: d6554e87ef5ca20ee1df623ac0b6f08fba4b91f2c00bce68bfa949767691abf1
+  - [20]
+    - `name`: cancel_gradient_amzn.json
+    - `sha256`: b140be66a1d4467c73f104a992ab9f692ed83b959a7918461b3951fd091bff04
+  - [21]
+    - `name`: cancel_gradient_bench.json
+    - `sha256`: d01943ba6fa197eb7b8f259b796acc28a6cde10a2bee9995dd47a98b0535a91e
+  - [22]
+    - `name`: cancel_lead_amzn.json
+    - `sha256`: 8151e7dc1cbbedb112d8fdc3cd3e0f52aca58ef4d23ad698d2229a02060a705e
+  - [23]
+    - `name`: capability_audit.json
+    - `sha256`: 787b45652557c719c5beffef50ad571f773d3253f28ddc0e0a406e0cdc75399c
+  - [24]
+    - `name`: capacity_eval_bdf234110827cd1f.json
+    - `sha256`: 6bbb890de032973d300d44584c8f250ef8b8172ad1b687e876295986fb676742
+  - [25]
+    - `name`: capacity_eval_cd0854242ed8a9ec.json
+    - `sha256`: e0a6c8250891cd5065edfc3bb385e6fdd640e5ca376cac496420815ab16881ed
+  - [26]
+    - `name`: causality_scan.json
+    - `sha256`: 2d7b2e0963fe468305afbbbe190b22b356ad7bdf8cc4f47c279fc25855d61161
+  - [27]
+    - `name`: churn_reseed.json
+    - `sha256`: 3a444c77bfef84e0e070d4611368569639ee6a551ed30cbdc6a107202ccbff7d
+  - [28]
+    - `name`: churn_stability.json
+    - `sha256`: 7ab02a6f41f6c626d79bca729a02300d4c79dae243758a460b57a636604fdcc4
+  - [29]
+    - `name`: cli_audit.json
+    - `sha256`: 16b8a95f44d73964a6578cee9c7cc4aeae2d74770d1b2891422b859feb01d597
+  - [30]
+    - `name`: closure_fit_amzn.json
+    - `sha256`: ff6d30e8251032109ace27be9dd1e488206be1eeb81d5fa1f9c5d8f56eb29294
+  - [31]
+    - `name`: closure_stack_amzn.json
+    - `sha256`: 994f8f2cf89faaace83e6e3f7441d3361e111c0d2b9e05cf123c2c602c2389cd
+  - [32]
+    - `name`: coherence_2dd641ab766a536a.json
+    - `sha256`: dcaf457766306077f90249a7154302297b30fc63417e2fc9a46517c71e4265fd
+  - [33]
+    - `name`: concordance_df424fa2f6b1c4e9.json
+    - `sha256`: d35b4d196b598847e2bcb69e7b3d5536bbab0e654f94ec9a32f17554d0a7e81c
+  - [34]
+    - `name`: conformal_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 48b240ea495b7ab633a4ec61c7da34f82c414f2370220f60894612ceef8b3dc9
+  - [35]
+    - `name`: conformal_real_drill_gaussian_pit.json
+    - `sha256`: 94de7928be51179c7119d751d1812dbd91c2b7992aba08528d094d8101eff21e
+  - [36]
+    - `name`: contamination_audit.json
+    - `sha256`: bce466d9ffb4b6144cf78590caa1bb1c48f59ac06ad94a7141d1796013ab53fe
+  - [37]
+    - `name`: continuation_attr_amzn.json
+    - `sha256`: e2340d411b4af81d839dc85ad7326835fe7a8c97c834432c861664c773f0cbbc
+  - [38]
+    - `name`: contract_audit.json
+    - `sha256`: f5ccc9f01e32b707526d4fb684e45d9e7d3b64af7b3b647c12223d72764d1e64
+  - [39]
+    - `name`: contract_probe.json
+    - `sha256`: 9cd19ecff9d41c85487e6991e0bfd67eff42a9ed154b6759f4f9f1c8b49178ec
+  - [40]
+    - `name`: corpus_absence_exemplar.json
+    - `sha256`: 611ad72af3e3734f34e39d3310e502444d2ede665018b7ffb7223ee0f7c19b02
+  - [41]
+    - `name`: corpus_audit.json
+    - `sha256`: 374807979a66c7dc455ee3f1236eff03be43e1b7f9f550b4e97789b1807b3552
+  - [42]
+    - `name`: corpus_epoch_0a2e8964712cfb0a.json
+    - `sha256`: 9bce499b8f5be69b1a1fd0ea8b173d12fd475e7a2cafaf9d925882b2744bb25c
+  - [43]
+    - `name`: corpus_epoch_0af2a2d5723b14ae.json
+    - `sha256`: 2ea2708eba01500e54f3cfa8fd669339d14b5d3de22ddc9417b113e595bbec72
+  - [44]
+    - `name`: corpus_epoch_1384f0d99dac82aa.json
+    - `sha256`: d8d10fb9b46df573923a41cb0a04e4637dc9b6dde39e57dbfc74494e7ff33258
+  - [45]
+    - `name`: corpus_epoch_2b5db388ddee23aa.json
+    - `sha256`: f3e2af4492471296a33ae47fc3222e7ac17a96251082aa960b373edcfb6d558f
+  - [46]
+    - `name`: corpus_epoch_2ca91405e468cc6b.json
+    - `sha256`: cdd1cf1d0d82cd939f723248c57a0393de947baba1ca1e720c64d605bcb2fd3b
+  - [47]
+    - `name`: corpus_epoch_2ddb4fe7154677d3.json
+    - `sha256`: f70e4a3c361b81ba920e32ccd3f9375204e2fb6965b9733573563e2b5b881c7c
+  - [48]
+    - `name`: corpus_epoch_2ecce33392960d8d.json
+    - `sha256`: c7d13f38ed66bc3864f6f711c46ca13852bd11d70886236d74eb7f137e322dd8
+  - [49]
+    - `name`: corpus_epoch_404d16a7af1d3862.json
+    - `sha256`: 24ba29424ef385c4916dc96e4ae775496ec1bde9ebc95e4e126d8b44e36ff8d2
+  - [50]
+    - `name`: corpus_epoch_4a75066db56e52fd.json
+    - `sha256`: 7c4a99be100698d78b8c7e5c1d920e3bd6370ba6e774662dd6ed3a4c8c1f3e5e
+  - [51]
+    - `name`: corpus_epoch_4a79ac4ed05777f5.json
+    - `sha256`: 2e4829b29e316fcbcf0ab9a307278595da57925e1aa0659c6b64db44c1e8759d
+  - [52]
+    - `name`: corpus_epoch_52f80a0cc915f58d.json
+    - `sha256`: 3f98624499677af6306c90bcaa7cd706090b10060b3168fc35f88a876f24ffe3
+  - [53]
+    - `name`: corpus_epoch_54c82d2a8bcb86ed.json
+    - `sha256`: 8711f308401f12c3556d870a282b58aaffb136ad526febd661f181c0742a2870
+  - [54]
+    - `name`: corpus_epoch_568c538fcf4b21cd.json
+    - `sha256`: c07b4cf5af660d253623550ddab94334b599c325f3615465ad16ae53b8f98996
+  - [55]
+    - `name`: corpus_epoch_574953afdf88a0f6.json
+    - `sha256`: 7cb5d3159f82ae71efa2347fb1d419912fb7033c48d808b514176230a93d09f1
+  - [56]
+    - `name`: corpus_epoch_5a8dac905c9cc22d.json
+    - `sha256`: 50b853da7d6c07efc3e4c533e5a4a6beae5295da68c696f2656491b28fbf6b18
+  - [57]
+    - `name`: corpus_epoch_5c9754ab2a9408a1.json
+    - `sha256`: a1f5903b80cc593f69fbc3a1fcf8db1f4a97d40bf1c0f0f505b2ff66b71d02a2
+  - [58]
+    - `name`: corpus_epoch_62bfa90c28254f19.json
+    - `sha256`: 631316e97a0a2184262517d25d6ffea4934a56e3a02c084335b1b637c0b9cd75
+  - [59]
+    - `name`: corpus_epoch_6340cdebc9a6efe1.json
+    - `sha256`: 3e3473c359007fb425361a8a618d1e7b3de5edc23e1a0937ab241d2831c95dc0
+  - [60]
+    - `name`: corpus_epoch_63761c8b4e63992b.json
+    - `sha256`: 917d1b4033f1c20d56156b2a5c83c95c800ec74dfe3aa6fd26805d226cff6c57
+  - [61]
+    - `name`: corpus_epoch_6cf185cfb5466dd7.json
+    - `sha256`: 256d5692208eda60d80880dee77a6124f3c5b5f13a1ddb1e62c6521552639416
+  - [62]
+    - `name`: corpus_epoch_6f8420fc2959f4e7.json
+    - `sha256`: 7050675439b29e8874da291387c39c16d5ca38a9287ff7535364c1fc1392aac5
+  - [63]
+    - `name`: corpus_epoch_6fb596b0230e9f17.json
+    - `sha256`: a879e4cf4813e82a1e885c053797417b9b5daadbf980a8afa9da1d48852bc380
+  - [64]
+    - `name`: corpus_epoch_721e9b4fb855e1a1.json
+    - `sha256`: b29b736a0234ce82b4af23a973f7ec6cb4486fbb9b071be14e30319a4bfabd30
+  - [65]
+    - `name`: corpus_epoch_7d6b1f5442b13ea1.json
+    - `sha256`: 29bb1eae00b9d91e5833450631d74c3aaff4aa7c42230e89a074c94df626c5c9
+  - [66]
+    - `name`: corpus_epoch_84384f73f7d8e9d6.json
+    - `sha256`: 8a23be1760a52130b342ecdc107cff3c3369b74d02497365316f65b498eb52db
+  - [67]
+    - `name`: corpus_epoch_959513b12d66742b.json
+    - `sha256`: b557f12c51d23d9873d829aa683eec9d55dd998d0f7d12f1d0f7286f885a7eed
+  - [68]
+    - `name`: corpus_epoch_96ba030697ddf0ff.json
+    - `sha256`: d58f0f036520565d076e26b9830c8a8ac49d47595cd4c1af1e7b6160c547394f
+  - [69]
+    - `name`: corpus_epoch_9d41d1d7410eb02d.json
+    - `sha256`: 074b9c2ab74e8e6deaf636d60f50cd81ccb9652311a4872726e2012dc4f2c328
+  - [70]
+    - `name`: corpus_epoch_9fd864d30fda3c69.json
+    - `sha256`: 20177c26b20ac749d4d02be185fc05ce22d645bfafbf8d4782f22b2a3e5b2aa9
+  - [71]
+    - `name`: corpus_epoch_a0e901c74a5f29c4.json
+    - `sha256`: 7d91fe4f8f725e4c87b5ef9334b2da7a6fce29496041bf7d48e9523acccce828
+  - [72]
+    - `name`: corpus_epoch_a1a8323db3be4842.json
+    - `sha256`: 3ceb9374251d3e50f65edb6424915c17bb11fbad2b846fca7f42c3ebd3cfc901
+  - [73]
+    - `name`: corpus_epoch_a4cb68008a317f90.json
+    - `sha256`: 66894e231d5029cd138f613c62447e58700a44d7def29bc1a16da44146dc69f2
+  - [74]
+    - `name`: corpus_epoch_a5d113f0994c74b5.json
+    - `sha256`: 8a0128b9d8b208e67022ffa25e040d8ae10d244758ace48207e16770f700a493
+  - [75]
+    - `name`: corpus_epoch_a83ba798e9abd892.json
+    - `sha256`: 9913a8a80d7232d5af2f1b6864389ea666b8fd81582ea55ce9dbdc835394385d
+  - [76]
+    - `name`: corpus_epoch_ab1470227e387e4d.json
+    - `sha256`: cba4e5507591d625b134e82278581e57b9c800ad717cd65f563e0a3bece3377e
+  - [77]
+    - `name`: corpus_epoch_ac21f22e90c58c53.json
+    - `sha256`: a19be18489e84cd007ab22b4e412c6014c90f6102f9f857da52476734e8b4fd9
+  - [78]
+    - `name`: corpus_epoch_ac2e4ae4bcae4dd8.json
+    - `sha256`: 4e97881c7c558ad93674533f102ea582de60bd109c178a1c7489b30f027f8a93
+  - [79]
+    - `name`: corpus_epoch_c5a45fd1b73737dc.json
+    - `sha256`: c10f124084371e6c9902e8e77d807d6f71d622deffd19ecd4c7026ef3b35d850
+  - [80]
+    - `name`: corpus_epoch_cb39a076f3287171.json
+    - `sha256`: 8680427690c0709412501f39953f9bc845932a2e3f1875c32d12a2067d39f695
+  - [81]
+    - `name`: corpus_epoch_cb415a040387f7b0.json
+    - `sha256`: f7a80fdf1eb8820d00f4c26faf536113a11948a437d4637acb191b35b6dfa050
+  - [82]
+    - `name`: corpus_epoch_d1e7bb2567019bf7.json
+    - `sha256`: f4bc01f2646d3fb0561ecd19b3b64fb58d7bc0828e486464401484a3d9ed3530
+  - [83]
+    - `name`: corpus_epoch_d479e96760271bba.json
+    - `sha256`: 5dda9f2bb065fcb3172d1b3aa4f7bbb4b0c3158a3120d520e974ed36fd7e4d23
+  - [84]
+    - `name`: corpus_epoch_e0f905c031ef39b1.json
+    - `sha256`: 4af585b31592271ea26116b814f285f4c661240af21a78f915750591e87e8cc8
+  - [85]
+    - `name`: corpus_epoch_f8d91d9a3266ce89.json
+    - `sha256`: 70fa6a342b9197ea10d1ba2b763ef1042e65c1595c0f4690512efd676ebf9c04
+  - [86]
+    - `name`: corpus_epoch_fbb352a23e62d321.json
+    - `sha256`: d985ae89f15e953f062d3677e32a0f83566932ddc0dde0853491f8341ba660d5
+  - [87]
+    - `name`: corpus_epoch_fbbcd3c1e840e14d.json
+    - `sha256`: 0275c647da2c2abe18c798cfd61d52813cae12702505e22da2aa18032214f21d
+  - [88]
+    - `name`: corpus_epoch_ff585b9d7c8badaa.json
+    - `sha256`: 3f1533c16f51153d03996f7253c79dc68816d8df89d214c8b37ca8ee17b27500
+  - [89]
+    - `name`: corpus_history_absence_a5753b57fab08b0f.json
+    - `sha256`: 3904f2838779802fcad32a15b13d82eb6860a0fafecc2feb9437af93a7360f8f
+  - [90]
+    - `name`: corpus_inference_2ee42848a1d51937.json
+    - `sha256`: 25230923d07164342facbe10ec0520975ee04c0ef690b3661f5daaf9d69f250e
+  - [91]
+    - `name`: corpus_proof_a56dff22d5b4931c.json
+    - `sha256`: 0a281b87338f47e861be233984f7f4cf171856f4201e403f4a84d2d69c0e809c
+  - [92]
+    - `name`: corpus_proof_exemplar.json
+    - `sha256`: 49c13a28dcbc992e9830264d01670d4ffb2460e8c1abd3613d8d54d0f4c8bb1c
+  - [93]
+    - `name`: corpus_real_drill.json
+    - `sha256`: 082f16234bae90433c9f699d575a57b2ef5f1bf826fdb61ccba838e936f9f119
+  - [94]
+    - `name`: cost_aware_rerun_20261007.json
+    - `sha256`: 618fadcd1cfa507b2a31f7671f55368c5e80c554647e238996af60759b020f7f
+  - [95]
+    - `name`: cost_aware_rerun_20261007.json.seal.json
+    - `sha256`: 62cf7f39349bde7690af5f2c15d385a5f2aef910de152eb46bc92b63578b8df1
+  - [96]
+    - `name`: cost_calibration_eval_df9b8d7068bf709b.json
+    - `sha256`: 6c8a3677f6a72ea8b9790126779d5b0c67838c3c4461dbd1f9fc1ef62fc0509b
+  - [97]
+    - `name`: cost_calibration_eval_f130c7e871e9aa64.json
+    - `sha256`: da4f8269942b5c87bebed33e422d6326cb73d327f48648d97b02e6e6b36dd1e9
+  - [98]
+    - `name`: coverage_cs_real_drill.json
+    - `sha256`: 9dfc169e6c3cb41c803c92114a4b33004d407295fc69c7a7de3dab3141a624b7
+  - [99]
+    - `name`: coverage_real_drill.json
+    - `sha256`: 2521152de17c0974039cb4f4867cda6f2ad1299e3f00135fc0764e32fd17759a
+  - [100]
+    - `name`: cp_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 64a38aba74a56b44aa64dfd68ca1859d4d142c9dc2f4e0a657b447a041e434b7
+  - [101]
+    - `name`: cp_real_drill_gaussian_pit.json
+    - `sha256`: 6deaa336ee288e28ea35f93caa5d8b8b8436c99fd47efb97ceed792f6d3b8a62
+  - [102]
+    - `name`: crossvenue_basis_3f4ff76f517655a7.json
+    - `sha256`: 14ce799a46e282849e8e7852ff74489ed4747274c164040fcc52974bbb72a087
+  - [103]
+    - `name`: crown_behind.json
+    - `sha256`: 1ae02ca68d023ddd18c2b0023b240d1cf729b0a2b04597954548402afbe769c6
+  - [104]
+    - `name`: crown_density_amzn.json
+    - `sha256`: 4945e95537a122d7d13c12d84fe59e518e3051eb8ddd9ca8db66f3218a0c6268
+  - [105]
+    - `name`: crown_join.json
+    - `sha256`: df42ab245b4f82d535fb52d4a4068414b4b11537e152ec63b0e3ab6823e40af9
+  - [106]
+    - `name`: crown_size.json
+    - `sha256`: 751a7c4351d1639d547330d7b8f8251fb6341f500f099304a13945810a560fe0
+  - [107]
+    - `name`: cxl_shield_amzn.json
+    - `sha256`: 16cac426d34c9af016963a251e9fef5422babd2ced8be9795a7413e9c6b84e40
+  - [108]
+    - `name`: decay_watch_synth.json
+    - `sha256`: 8f37ccea904fe09557819f36a60d5dcb2d99467db21301111b5c7d9836ccf6d4
+  - [109]
+    - `name`: deep_book_bench.json
+    - `sha256`: 9410e500ad2602dc085c5146640d7bf7219a9626c8bccd32ea47a71829f03392
+  - [110]
+    - `name`: deep_microprice_amzn.json
+    - `sha256`: a9fddf27e4c26bc144ced56ca35856411f8a6220d91100872170b60411738acd
+  - [111]
+    - `name`: deps_security_hygiene_f3b4e6fd22e439b7.json
+    - `sha256`: 66176b021f554077ceca2ed34a87b1de89e50fb905aee26f14a232c52d4a59e7
+  - [112]
+    - `name`: depth_consumption_amzn.json
+    - `sha256`: 1bd84264cd6b886a28c16ff5246ec2c4467f81d0a656589c534dad34d8754846
+  - [113]
+    - `name`: depth_tilt_amzn.json
+    - `sha256`: a42581086e0846cbc71a272b6cb39e018031176fd7414ebc57dc95ba7415d2b2
+  - [114]
+    - `name`: dip_audit.json
+    - `sha256`: 085f0a461518911bd57e27e12c0c01f4f0f2134254f7b240ab4066d95cc8233f
+  - [115]
+    - `name`: dip_run_audit.json
+    - `sha256`: e0498594b7ae8e371c24761c7e5f7b3a97fb24e708e645d4abcfbfcda71bab86
+  - [116]
+    - `name`: disclosure_audit.json
+    - `sha256`: 79f2a55cc0ba899cbdb8a26e7e103e3e008acc554890ef21d63d1d3bf48d0538
+  - [117]
+    - `name`: dispatch_audit.json
+    - `sha256`: 19bba277befd9b88272175e899a962822a40a3bd8757c750882d56d92513d8dc
+  - [118]
+    - `name`: diversity_bench.json
+    - `sha256`: f9c48ad14bff833f98ae5b56aea24192b9815f1e5acbc86a0a8fd61a7c27325c
+  - [119]
+    - `name`: doctor_audit.json
+    - `sha256`: 0c0e69fb4cf225577f2b67144e306034a28ffdf64acf3dc4f315588159c2aa13
+  - [120]
+    - `name`: drift_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 732ca9cc14ab246e90c1dcb28002e014cf5ad0b03a0e2e6f56c7a787577d801b
+  - [121]
+    - `name`: drift_real_drill_gaussian_pit.json
+    - `sha256`: 295b0855243a56848751ec6b8f51eaa6698d8c683a4276b11d6c3e7645d80f64
+  - [122]
+    - `name`: ds_audit.json
+    - `sha256`: 67a0e581ad6876ffca1e43b82b9bfd9dc7f91531e6b926af1751eaec4d727a8d
+  - [123]
+    - `name`: duration_check.json
+    - `sha256`: 12188ad90369774c642fb7f516f14dd7b20c4ec7367434c75b24aa1a5ba5e6ab
+  - [124]
+    - `name`: em_audit.json
+    - `sha256`: 69735454a8da7e781be4e56dc4d9eb83c56f05bbd51ce6e3a4db47e2bb547e00
+  - [125]
+    - `name`: emerge_real_drill.json
+    - `sha256`: a06f8d2a40795ff00601716908a168232e5ecd9d42af62ea230d849c7e5baa3d
+  - [126]
+    - `name`: empirical_flow_bench.json
+    - `sha256`: e12abc02ca462ff660e4aaa39fe5182508ab5896c1bdab180c5bb6caaf4c9c99
+  - [127]
+    - `name`: engine_fuzz.json
+    - `sha256`: 5fe71d9e05862d39cdaf2aaf153f508d992a2bc6132bc882f45d86da64f54396
+  - [128]
+    - `name`: epoch_delta_44955f3515007971.json
+    - `sha256`: 8c4823fcd372f927ada7ef5d08fff5457bd25db3ea5d7f42c49679236616da6e
+  - [129]
+    - `name`: epoch_position_2e120d21df5a400d.json
+    - `sha256`: 9c1bf6a2af75b9d2035688e89a872e45dfd166eef7b557aa58efc53aedadbfc6
+  - [130]
+    - `name`: error_shape.json
+    - `sha256`: a9b29bff34f219cab4fb4375d56560b392097906df05d87d69bb526d591d2284
+  - [131]
+    - `name`: eval_core_audit.json
+    - `sha256`: fb50b648b07af58fcaf0e9b8837ef946fd9b4b04e18cb48d991c264154da3e96
+  - [132]
+    - `name`: event_burst_amzn.json
+    - `sha256`: 4c8872dc6f781544ef15cbace7537df2876d0320410570283e558306a9c5b019
+  - [133]
+    - `name`: event_granger_amzn.json
+    - `sha256`: 628431d7b7099ac23e9e0c40a0b99de811952a701333949202e2ea0696256362
+  - [134]
+    - `name`: event_matrix_amzn.json
+    - `sha256`: e1a8e84ffc8b0ac08a7e8a821bc0650cb56bd10c924318e8c0be4a74587710d1
+  - [135]
+    - `name`: evidence_audit_3464d8f8197bf737.json
+    - `sha256`: 77c38c8edc534276ad901f4c64c5024f8e79c99c5ece43b001b003f362584a5d
+  - [136]
+    - `name`: evidence_audit_5c9f07c823727701.json
+    - `sha256`: 6124e972cc182ef134a5c411f2794c4f2e3fcea205f6a0bfc0a05f4ec912cd23
+  - [137]
+    - `name`: evidence_audit_d449e1ca0cc119a6.json
+    - `sha256`: deb75d4ab1744617a0032397524891613c50282581f913d344e4acda9c6cd9d1
+  - [138]
+    - `name`: evidence_audit_f45ae8d6bc7cd677.json
+    - `sha256`: 04128fa07fd2ca3650981d0cad06d07f921a525b301945b2c539ddd8c7447989
+  - [139]
+    - `name`: exec_cost_real_amzn.json
+    - `sha256`: 297d59df884a80c0503cad9c511579193cf77504fd5313492b732b4297993788
+  - [140]
+    - `name`: exec_cost_split.json
+    - `sha256`: 53ef2528042134aeb7bd8c20d6c94f7e4ab3391fafd9851531f84df3fe3ae9f5
+  - [141]
+    - `name`: ext_bench_audit.json
+    - `sha256`: 324025ce928acda2167ecaa25bca6bcf16373400eb8ddb657e348483010c6ec3
+  - [142]
+    - `name`: fast_replay_p42_conformance_20260928.json
+    - `sha256`: e8fd3b17e82fc21f39ecd184025c69b336f7be0ea18005d132a9c234e85acec6
+  - [143]
+    - `name`: fbm_circulant.json
+    - `sha256`: 8a8fcbcd46b58942852e9c79603d854aaddf1e5ea3c35b5dc9d42978005f5802
+  - [144]
+    - `name`: fifo_priority_amzn.json
+    - `sha256`: f180b99da62d936a31bf9df79f637141a9b7bd4c4679fc3782739455dafd7e30
+  - [145]
+    - `name`: flee_wide.json
+    - `sha256`: 186fec1776108a9051fbe02f47f411279a710999045cc97028fcf5a9f9482e77
+  - [146]
+    - `name`: fleet_eval_5ddf15b0dc7d3ca1.json
+    - `sha256`: 67713fe534eb3c4a508e4c0211836026af4f9efe8c27cd2cc7d69118a9cd1b98
+  - [147]
+    - `name`: fleet_eval_cee9aaee0a0f0f36.json
+    - `sha256`: 4709607074c51beb277a3b3721f7aa8cf1609f4997a7266edc0a9708d5def667
+  - [148]
+    - `name`: fleet_race_real_drill.json
+    - `sha256`: 0530bbc98903f8ee2944d468f6124fae0c0034da0956d8c22ece140295ad4def
+  - [149]
+    - `name`: floor_compose.json
+    - `sha256`: 53d4493e5009a0da44acdab958fb3bf8df5dcc01fd5bc76d5d24fe04d07692f1
+  - [150]
+    - `name`: floor_pins.json
+    - `sha256`: a38bb073ef069de28dff2ada970c05f2ac57a19433df20a19dfab727e9a0a5a0
+  - [151]
+    - `name`: floor_rate.json
+    - `sha256`: 632d421666dcd4ea2e7d4acd798ef82cab735054aeaa7d719eaacda91fea35f3
+  - [152]
+    - `name`: floor_reseed.json
+    - `sha256`: 2c02b255e4506593755d30d448e15bdc8f242e81ecbf380056b3a8c32698060a
+  - [153]
+    - `name`: floor_stability.json
+    - `sha256`: fbd9860771b933e799ee938c90ba3ea43620ead6dd99f0f44231c7c5d9916ce9
+  - [154]
+    - `name`: flow_couple.json
+    - `sha256`: 5dc9e98c044ada0edef8fc7f0be4ec7efabdc5d52781d9cacbd327549fb9f992
+  - [155]
+    - `name`: forecast_core_audit.json
+    - `sha256`: fb5960935d5182ae83223cf1e0645c0f3812abe37dacacf9f211ee920e2f0c18
+  - [156]
+    - `name`: forecast_data_audit.json
+    - `sha256`: 3174e1b32201a37b02fe225f469781f58e9470c9aa971ad259624bbbda2ee224
+  - [157]
+    - `name`: forecast_infra_audit.json
+    - `sha256`: 57d88d8385893260ddb771942ecdbb889e6e9aea1ee53c9660ef4f3a7350f9b3
+  - [158]
+    - `name`: forecast_pipeline_audit.json
+    - `sha256`: bd9b0903ffd6f40e3b237f4bbe46557ef345cfd547ec9e045dadc0ee806084c2
+  - [159]
+    - `name`: forward_record_preregistration_v1.json
+    - `sha256`: d1f0022744261fbc52aa1296e8f4d859ae1d56705bf4920bbee7d4a75281cad3
+  - [160]
+    - `name`: forward_record_preregistration_v1.json.seal.json
+    - `sha256`: afc88d0767169ff88e22920d492ddc3c2db25c9dbdd00cb391504e81bb29fbcc
+  - [161]
+    - `name`: full_impact.json
+    - `sha256`: 29a1b45e52fca254985f19c30d096eb6b2de14a406494282206e1092b3ea905e
+  - [162]
+    - `name`: full_stack.json
+    - `sha256`: 2048f94b0d052bf5ebfa38c6786d60b900b37468a814ec46e9b25262d6c9d1fc
+  - [163]
+    - `name`: fx1_anthropic_sdk_audit.json
+    - `sha256`: 03fd468413780b70daebbd231a925c4289faf62c6f0327fbdd0572f83764d01b
+  - [164]
+    - `name`: fx1_api_audit.json
+    - `sha256`: 3d94c3ed069123be4b774613a3e35d114698ab6000ce195fa97187e2a5596bb1
+  - [165]
+    - `name`: fx1_auth_audit.json
+    - `sha256`: fb7e0783ffa11fb79b7c4a1fceedb0b9e3f5eb836db4cda2b195b000128d8044
+  - [166]
+    - `name`: fx1_cap_audit.json
+    - `sha256`: 99737d09622533bad5f5793cd7fef198e211b235251bb79455c9a5e8643547b3
+  - [167]
+    - `name`: fx1_cli_audit.json
+    - `sha256`: 19a95549bfb8e5f3143474a94bfaa24ccc593f634237b3e8f33e811481dd0add
+  - [168]
+    - `name`: fx1_client_audit.json
+    - `sha256`: 3c83b261c8966f3ae7d63bb5bb18371adddb1b3ca2c21795223b8d3ceab3acc4
+  - [169]
+    - `name`: fx1_contract_audit.json
+    - `sha256`: 913e276befeaecd002582c8125ebddc96c85996764b57b91a956b5f7b32173e0
+  - [170]
+    - `name`: fx1_drain_audit.json
+    - `sha256`: f864d2a9cff6e6c396045afa8105c337362a769e491d6fc002af7dcff29e454b
+  - [171]
+    - `name`: fx1_e2e_audit.json
+    - `sha256`: e4671f251df3cf35c7ec50adbc59803a8d733f1759380edea714a532c6ec49ac
+  - [172]
+    - `name`: fx1_eval_lifecycle_audit.json
+    - `sha256`: 16c6e3969091a825443712614b1dd31b0c1224c8196d1fa35596f6fafb4872dd
+  - [173]
+    - `name`: fx1_fault_audit.json
+    - `sha256`: 43c78649e2f8246708940e27e83038f69f2e7aa36fe758d442fac9f6bea04205
+  - [174]
+    - `name`: fx1_jobs_audit.json
+    - `sha256`: c952e24df7c07978437e3ed7f36aadf0cd13103980588013f3677e371f9775bf
+  - [175]
+    - `name`: fx1_oai_sdk_audit.json
+    - `sha256`: 2e1421dd4e7b06191da9ee4c537d10ecd0fcb5e8a13a32608820f295e81fd0fb
+  - [176]
+    - `name`: fx1_ops_audit.json
+    - `sha256`: 6362b090bd931070e3f1a12caec01d2dc0df14db98c71658c29b58bf10fb8d08
+  - [177]
+    - `name`: fx1_parity_audit.json
+    - `sha256`: e71e77a4d8169d731bdc48c27765c24c3db59f1240437e55fc1f9edb928c90af
+  - [178]
+    - `name`: fx1_perf_audit.json
+    - `sha256`: 7f0fe1b11dca4412cb54b8dc3f40ad929016ac1e59788b3b3dd2857907b32148
+  - [179]
+    - `name`: fx1_quota2_audit.json
+    - `sha256`: 6e135a43144e89e3fab4b7d4473d89db1d98ae6f888f7611d2e9433ac00cadca
+  - [180]
+    - `name`: fx1_replay_audit.json
+    - `sha256`: d3cbeaa2e484021f6a1524df38d01c42cf19db7ad0de0aa78b4a44e750dcbacf
+  - [181]
+    - `name`: fx1_retrieval_audit.json
+    - `sha256`: c2edb7a020d4ecd07358915c28df2a54e33986faef25f35ecc566e2883ee5a29
+  - [182]
+    - `name`: fx1_sdk_audit.json
+    - `sha256`: 1556d7498e4618e386f891777e820fd3b2f08b4bde0ff7a9ad6e3d4689ef60d1
+  - [183]
+    - `name`: fx1_spec_audit.json
+    - `sha256`: e86dc5bffb1267539df5876ed3487bb0154512d5b9fbbcc83223d4a5db05fdb8
+  - [184]
+    - `name`: fx1_tail_audit.json
+    - `sha256`: 8874bc452c43fd807a7c7525c5105663a01f4406c05ea6a37ad5a361e5d8add6
+  - [185]
+    - `name`: fx1_usage_audit.json
+    - `sha256`: e728655fa53df38114d91ad618c9e278cbc1ab0391ef8beec3b89cc4693787e1
+  - [186]
+    - `name`: fx1_vs_audit.json
+    - `sha256`: ee0a91338bcd0ae61416ccea0c83165548f67a39df58b05c981216afde8f6102
+  - [187]
+    - `name`: fx1_webhook_audit.json
+    - `sha256`: 0b262022d1bed02812e22e5c5558fdff740eae4e178609eb4d7ca0aca9f6c525
+  - [188]
+    - `name`: gap_close.json
+    - `sha256`: c405793974f1ca9c88feb19c56e341185c68d87809dd755eee6cc604c65a85e7
+  - [189]
+    - `name`: glft_bench_synth.json
+    - `sha256`: 4efd3a9a814d245873371a8f09c2d2502fca71393dbf738496e59cb4dc369467
+  - [190]
+    - `name`: grad_fidelity.json
+    - `sha256`: e86ebeeae2bae5736b2bca3089d8e415b41ce901bc23df5d2f515bda12bae660
+  - [191]
+    - `name`: grammar_map.json
+    - `sha256`: f8ee1c31439b03bbe14989ee0cebb7b0917f5186326cc91c2d81d7705686198a
+  - [192]
+    - `name`: harness_audit.json
+    - `sha256`: 0292862d23f09133aa7b11437b2e543d1740aa0d5ba6170f2069ea18808c6208
+  - [193]
+    - `name`: hawkes_clock_bench.json
+    - `sha256`: 816f8bd60cab106505a1adb153803ee48579ce6615a85ccd3e5d27785f2f3b77
+  - [194]
+    - `name`: hawkes_mv.json
+    - `sha256`: 5f386d77d237a6bbdc12fad5d794184508548fad474b1cb258f48bded96d7431
+  - [195]
+    - `name`: hawkes_real_amzn.json
+    - `sha256`: 9d398acb03bfc6bfd9f965d5d6115b5ca4d64244d312e90993ea11e7bd8a80ea
+  - [196]
+    - `name`: hidden_depth_amzn.json
+    - `sha256`: 24b6c5ca511ec6211f79115fdac3eac85f52d393738a5a88adebad8c46575ea2
+  - [197]
+    - `name`: hidden_depth_bench.json
+    - `sha256`: 4e18ea2564f675b351bfdd93ce9c1541af0638ef07e43728cfb48a83b3912330
+  - [198]
+    - `name`: hit_flee_amzn.json
+    - `sha256`: 72765463da5af6990d81e3026dd7d23ecf83265407fb0b0b43d14a5d2690a6d0
+  - [199]
+    - `name`: hit_starve_amzn.json
+    - `sha256`: 3d98298e540b6ab7fa14c9b8452feb06c7b5c28a2b09a55ea8a9c4b6710acb39
+  - [200]
+    - `name`: hmm_stability.json
+    - `sha256`: 5d06bc292b14e6a4de8d6fbd640e76c66b6ad82e4705e27ae068c2ef5a88c040
+  - [201]
+    - `name`: hmm_verify.json
+    - `sha256`: 269ee7b7e767d0388ab285e3257a5de62f4a631ada045aa83577b2b7786a51f2
+  - [202]
+    - `name`: honest_verdict_d5d9bf60e0d5e1a4.json
+    - `sha256`: 600a4532ac34b11a39508838c609bbc03c9bbfc6ffad8551835f2d2083a05595
+  - [203]
+    - `name`: honest_verdict_real_drill.json
+    - `sha256`: f9badb4a33ec9c0a35a10131cfca24d6f8caa531d5a9882c8f6d59da4073abca
+  - [204]
+    - `name`: honesty_audit.json
+    - `sha256`: 63d79882e619905c0d45fc094d08c67cce9be60c98e43ca846b677c3337370de
+  - [205]
+    - `name`: hypotheses_audit.json
+    - `sha256`: bd65b431cfc36ce9ec54bd7262002eeb735025e2dc71995e983df73924bceb4b
+  - [206]
+    - `name`: ice_budget.json
+    - `sha256`: b0be60f820caea3783400f5f7eaff399c68d243ee11508a95212d64907789642
+  - [207]
+    - `name`: ice_crown.json
+    - `sha256`: a57b172d4c2d0f528461fd35dbcaafefc1af9b3b08c9cb2cd690d7e76053665c
+  - [208]
+    - `name`: iceberg_bench.json
+    - `sha256`: da07cac898aadafc9bb434319334d0fc72d504fb5fe4c9ff5d0031b09499e7cc
+  - [209]
+    - `name`: iid_floor.json
+    - `sha256`: cd2d6153b177482f1df86f78f6c795d03e93a17046a897c58874dc14fcde2753
+  - [210]
+    - `name`: imbalance_predict_amzn.json
+    - `sha256`: d467e13e158dddf59e0ec2dd6b0941aeae37237f491757705418f7420c789655
+  - [211]
+    - `name`: impact_instant_amzn.json
+    - `sha256`: e6d80527e2bb993d7450087db961d6229561fe1a87c0e8b68d3920ca50315c4b
+  - [212]
+    - `name`: impact_persist_amzn.json
+    - `sha256`: 58bcb731c697074949a3705ee2270181d9f2df5e5d2c8f08fbf04b020f3200dc
+  - [213]
+    - `name`: improve_flow_bench.json
+    - `sha256`: ec0836e7b4d24834d0b68a43c5676ea213049fce8200966dc15d98d30a0a4488
+  - [214]
+    - `name`: inherit_audit.json
+    - `sha256`: 718adc7b101c76e503cc475cbedcd086fb0f696a14968d977f4ce5de7dc32a07
+  - [215]
+    - `name`: initiative_fade_bench.json
+    - `sha256`: f9a3f118c2fd37a308bd691633c7e7a9668e770d959535ca16bc2c583e4db867
+  - [216]
+    - `name`: instant_decomp_amzn.json
+    - `sha256`: e9fcb9c72331341fe60237cb457fa8456dcbdb340e87060fbb9318a7265b4df0
+  - [217]
+    - `name`: intraday_exec_amzn.json
+    - `sha256`: 04803c1f783145e75ccf403990146768490e123bc82c26dbdcef3901eb59fa0a
+  - [218]
+    - `name`: intraday_shape_amzn.json
+    - `sha256`: 7e831325e8e77d61360d07100a35234c210f79b99825d6d4040d5d903470cd1d
+  - [219]
+    - `name`: joint_fit_amzn.json
+    - `sha256`: 1041b3196b85319688e89a359401fadef29a4ff14a7371e389668b0c2d6175bf
+  - [220]
+    - `name`: joint_stability.json
+    - `sha256`: cd43e7ec5f39ddbb3ff5c6ea9acce41191bcd250cff7e986c20637c8719c9e84
+  - [221]
+    - `name`: joint_tune.json
+    - `sha256`: 27aea6f04b845ae84445bcd97dbf31c6eb68cb85053af2d568fafe51027f38f6
+  - [222]
+    - `name`: journal_audit.json
+    - `sha256`: 04fa04a533738617f528b94d0c819e1bf0b8d0ee71b653142136ed8fdb8e6942
+  - [223]
+    - `name`: kill_audit.json
+    - `sha256`: bd65e84d2037d452282b5fba052b6be102fef2e50995a14cb2a381405d8d2565
+  - [224]
+    - `name`: label_horizon_map.json
+    - `sha256`: facf0481adaaf3cb55b307b27c9259423b0ff6d13363b9a24e68b2b86a8cb955
+  - [225]
+    - `name`: label_stability.json
+    - `sha256`: bda24271b910cd2d912104d445d81c50f9f8fd61824b2c10e8a18f5c042c96dc
+  - [226]
+    - `name`: lane_power_drill.json
+    - `sha256`: f0d9effae801a0ab06dfad9cbd222c55a45c71128f01b27b060c20e5624e273e
+  - [227]
+    - `name`: lattice_drill_verdict.json
+    - `sha256`: 1268fa068051b57089c454f4f750dc5c8db833b56e52fe0378f91480525fc978
+  - [228]
+    - `name`: lattice_drill_vol_bench_a.json
+    - `sha256`: 33f9defac50df4f692db60eacc585c3a93eb06b7039e3be866984cee02c28481
+  - [229]
+    - `name`: lattice_drill_vol_bench_b.json
+    - `sha256`: 49651398e997ff6685e1ef31a1686e3799cb20c12595a8234b47c1a187990988
+  - [230]
+    - `name`: ledger_audit.json
+    - `sha256`: ce5203012f63807d82146868ab26fd44cc23019364feadfdbffb03cda064f522
+  - [231]
+    - `name`: legacy-unsealed/adaptive_mix_20asset_1d_20260922.json
+    - `sha256`: b59422415e556f674ea03fb8e9a3b867408bf6d163cf7c11c64feeb7e33b4313
+  - [232]
+    - `name`: legacy-unsealed/adaptive_mix_band_search_20asset_1d_20260922.json
+    - `sha256`: 5e02918850944a68d1d45815b5928f1eed462d456eac4723ac9290514e7b97f4
+  - [233]
+    - `name`: legacy-unsealed/basis_pair_candidate_20asset_1d_20260922.json
+    - `sha256`: d021801c94e33d8720f9084762138893978a61e36ef670b4c0140edeaf37c1ec
+  - [234]
+    - `name`: legacy-unsealed/basis_reversion_screen_20asset_1d_20260922.json
+    - `sha256`: 61c9c8f5b3e502f0c5218dd743ad030ecbb962d6822bb7b81a2b962445aa378f
+  - [235]
+    - `name`: legacy-unsealed/dip_bench_crypto_1d_20260925.json
+    - `sha256`: 584eb681dcd18fc65835c1573360b4b5fc9ebb72aa662bcbb9e7c101b06e2f03
+  - [236]
+    - `name`: legacy-unsealed/fast_replay_p42_conformance_20260927.json
+    - `sha256`: 8236a26489e9253dfcc1f3d879a2fd276c0023fb4d167c764c5330406ce950d8
+  - [237]
+    - `name`: legacy-unsealed/incumbent_bench_qlib.json
+    - `sha256`: f455123351b44151d68876d1a93fa3a2dc449c51d280ee83926f22cd9861984f
+  - [238]
+    - `name`: level_gap_amzn.json
+    - `sha256`: 3c1b21418c1b617164a629f45f039f341ce9bab5321c81d77831a339222cde9d
+  - [239]
+    - `name`: lineage_dag.json
+    - `sha256`: e00ad05cbcc7e60916ebd9c9e12b704b29de788acbd82ee544be3df2375e66da
+  - [240]
+    - `name`: lo_response_amzn.json
+    - `sha256`: df91141443b114f39d4dba23cb499de6c4c8961eb6d1d6b1b60ca6d751dd66c2
+  - [241]
+    - `name`: lob_exec_amzn.json
+    - `sha256`: e334cb33cf73a06b99bbfc834825e409e849ec860b8533a093dfefbdac2e0932
+  - [242]
+    - `name`: lob_invariants_amzn.json
+    - `sha256`: 8a890214de32880ca3043d8ebb863992b938708828aeb3639fa79fd90e7948e0
+  - [243]
+    - `name`: lob_resilience_amzn.json
+    - `sha256`: b8728dbb705d8ae62e1339a4d7482070f7f827209c20c342b31ce6a9980a585d
+  - [244]
+    - `name`: lobster_replay_amzn_2012-06-21.json
+    - `sha256`: 44f53ca3f6e42bad9617d284fc37542ca64d3b4373642fe54deae83302a9dd10
+  - [245]
+    - `name`: loss_cs_real_drill_conf_t_vs_empirical.json
+    - `sha256`: 1859b044469b2c4ca7f0db5ed195aeb56868ef9aea0f46b5f763cf8301591763
+  - [246]
+    - `name`: loss_cs_real_drill_gaussian_vs_conf_t.json
+    - `sha256`: 60e68e2af9cd2544458a8ac821e1468b47b322798cb498a3e116d3f0ce0964de
+  - [247]
+    - `name`: maker_age_bench.json
+    - `sha256`: 743ba4eb58ce5575b1334ea8a1731ae39ebeab7789ea43733256e1458c8f5c49
+  - [248]
+    - `name`: map_parity.json
+    - `sha256`: 4dff84d32892f41c5d10b30c4c55ab5ba9a072affe9f67d2c3e4c50cc39330f6
+  - [249]
+    - `name`: marketable_limit_amzn.json
+    - `sha256`: 0e231a062d7253b3cdce1acd4a6ca72c75890e7b19fbbc47c76cc6815448c932
+  - [250]
+    - `name`: markout_amzn.json
+    - `sha256`: 70730f6f3bd4e398497f1e302f3b375c739a548b856b68f2282f4fa18b3de864
+  - [251]
+    - `name`: masking_audit.json
+    - `sha256`: 331d20547c6fec39fce38951b75d0b9d653f4d0cc37dff3908ba06e15b7950c7
+  - [252]
+    - `name`: mcs_real_drill.json
+    - `sha256`: 047c2d4e487c7f3ff8571cb456fbf75c3ca1419b100fe2a77c3c5c4832d60a53
+  - [253]
+    - `name`: mcs_vol_drill.json
+    - `sha256`: 9d2b8e91aa81a8c1f2527135680f13ee4c8c71de6daa01f752fe1a4d9abd59c0
+  - [254]
+    - `name`: meta_model_synth.json
+    - `sha256`: 351b5285fcd9f08a8dcfa478db62ed1dfd407c9bda7065efdf2cc2fcf4e3b0e2
+  - [255]
+    - `name`: metaorder_detect_amzn.json
+    - `sha256`: c2bfd7554d2aba52493daa287850c08aced9893f7beb8f0aa976e9b0c791ec8d
+  - [256]
+    - `name`: mid_dark_amzn.json
+    - `sha256`: e12eaa45923bc159ae83d6a62ce9fc3e09e6f80eb47d04d3b27a43adfe550624
+  - [257]
+    - `name`: mid_jump_amzn.json
+    - `sha256`: b4afddf6927e2254d1e0362517bdd14ec3dd07d1dcebcfbb2da40384a1585d17
+  - [258]
+    - `name`: middleware_audit.json
+    - `sha256`: 559ace707af811672313127e2c1ef1758c5f90abce890f91054efc81deb332da
+  - [259]
+    - `name`: modelcard_audit.json
+    - `sha256`: ea042e48135698a878772ae2388c88d86ac11c666d385fe91e9f7ae52ddf84d2
+  - [260]
+    - `name`: monitor_run_85aece35e89b5b12.json
+    - `sha256`: ae2c1dec2a6718452e5d591ac736ce8ebe09ed37352619199e9190516211c266
+  - [261]
+    - `name`: monitor_run_drill_clean.json
+    - `sha256`: 6baa7552e7954a8c081b94f02f1034bf0430b77eee57d4d852952e057aede65c
+  - [262]
+    - `name`: monitor_run_drill_defect.json
+    - `sha256`: e5a8b3d2432a2c2a60969286a54cbabeb7a05ef6ea8d1cecf9410beca77033df
+  - [263]
+    - `name`: monitor_run_real_drill.json
+    - `sha256`: 409a097a1fae3128d9a1100e78ac4a42dcfbfd405a2a9b6bef63fbd42caee3c1
+  - [264]
+    - `name`: mortal_repost.json
+    - `sha256`: c351dc60be497d864fc2cea3a06acfe8fcf3c9ef019836f3af0a0a6d58cbffd7
+  - [265]
+    - `name`: mrm_audit.json
+    - `sha256`: 58eb74524b8e5e97f5a07109503b2c4d350f3c316c53bd44177bf280a13978ae
+  - [266]
+    - `name`: multih_fleet_eval_5db1cab214e291d7.json
+    - `sha256`: 07cd44dd6a795bc0b93e21824b5a963f9c89902f405f91ce6c991e38cbdd4516
+  - [267]
+    - `name`: native_conformance.json
+    - `sha256`: 6754767a42cdff244d3ff4d59b2366ff8655990087cf42957147e0890fbdc5ad
+  - [268]
+    - `name`: nautilus_conformance_7bf19a08c147547b.json
+    - `sha256`: 3a10fca306535858496b88890cab846c2bcffa9e7408980315162a6a5451f960
+  - [269]
+    - `name`: options_audit.json
+    - `sha256`: 80c4ce7b746b194f0e7dc78edc123768654a8db6e99d79398943822ac951e0f5
+  - [270]
+    - `name`: order_lifetime_amzn.json
+    - `sha256`: 57d744ba5f963aed36a2fef198015643bf4be0855f610ab32dcc21bc83941e01
+  - [271]
+    - `name`: order_revision_amzn.json
+    - `sha256`: dbb7239f51f26e176f62493fea10a2e921b1a97945eb251eae5e3432badab3ce
+  - [272]
+    - `name`: p0_evidence_inventory_v1.json
+    - `sha256`: 14ec1043293364e48787bc29446dbfb51b0fb55d69e20d0ba1328c905269cab4
+  - [273]
+    - `name`: panel_audit_real_drill.json
+    - `sha256`: 0da1154c057ee11386df9fe306cf03d63cfaee1a7915df4e51e51b570e2a35de
+  - [274]
+    - `name`: parity_audit.json
+    - `sha256`: a3f63f1bc2c5a8a1eda080ce56e6e4a14994b9b0a5fa40fa26d77a326b720163
+  - [275]
+    - `name`: parity_leak_audit.json
+    - `sha256`: 2e0cb6046a0cd26672101b4e3739d929e0e91fbfc360ceae94638287b83d451a
+  - [276]
+    - `name`: pin_stability.json
+    - `sha256`: cb002632c4d286eb8d3a1c9597f86b16d05bca58d12e3b06f472b25627bd61f1
+  - [277]
+    - `name`: pipeline_audit.json
+    - `sha256`: 728186040bc8ffa34264155cb8a54d1d6123c71968edcadbf7bac0b8cee90077
+  - [278]
+    - `name`: pipeline_flat_audit.json
+    - `sha256`: d849f5c4e74db12eaf84ed3161170c4151bfd05682aab9ffbf476e0478e1c37f
+  - [279]
+    - `name`: place_law_amzn.json
+    - `sha256`: a85ba039fc645e0455f7fa969be74bd40838b5c06b8893737d13352b68aef901
+  - [280]
+    - `name`: place_mix_amzn.json
+    - `sha256`: b496d4d2cdab3e254968926073316a3e74167d24734a226aa22146565996a994
+  - [281]
+    - `name`: post_trade_drift_amzn.json
+    - `sha256`: 83ad54e2add374fc7fa0333072c4ef745f6a1ed4112f36d14cefb9b23262192d
+  - [282]
+    - `name`: price_clustering_synth.json
+    - `sha256`: adfab5e558bdaa8b54abb8376b1d4f33c11f605d9215146ccea3b82d163b0c7f
+  - [283]
+    - `name`: price_improvement_amzn.json
+    - `sha256`: 870ef7c83529dc34f22ea1a7555abbbbed92f84d6d498096ae6159a4b4ef93f1
+  - [284]
+    - `name`: promotion_gate_conf_t.json
+    - `sha256`: a353477ea44ae58d507ff43f5be735937b0e0f3b2f84ef10d2d7f29e846f3506
+  - [285]
+    - `name`: propagator_real_amzn.json
+    - `sha256`: 4c7a02f864596c226f78948ee5d4ae227a2323a5aee8e1efd6b9f492f3d3089d
+  - [286]
+    - `name`: quality_audit.json
+    - `sha256`: 60c619c630ec06fd0384bdf08f11b6940e06c914bc89fe75b7c62a4817aa06bc
+  - [287]
+    - `name`: queue_class_bench.json
+    - `sha256`: d3941977a98261a06825573ad173a9b5d21e1515ea7a3dd48430e61779dc341d
+  - [288]
+    - `name`: queue_fate_amzn.json
+    - `sha256`: 54ce63133d050866a22b42879797e56d076c3f9de8f646902e2090287acedf55
+  - [289]
+    - `name`: queue_jump_amzn.json
+    - `sha256`: 467134b64f8e9b397acd3f221e716b735ee62a5e70e2a533875be62b5d42924a
+  - [290]
+    - `name`: queue_occupancy_amzn.json
+    - `sha256`: c2f2b5caf9a82f3066a34abab1b0529acf44948abd7e61d7b3e1a35e20efbe23
+  - [291]
+    - `name`: queue_priority.json
+    - `sha256`: c03de3a987fe19ee42eadf2f5ac6e97e61da5d55bf89f3a81493e0abf399e7d4
+  - [292]
+    - `name`: quote_floor.json
+    - `sha256`: 20fe58eafd0338916ce1f2872ae0279f079f399ab211c61122e0be68294e1e48
+  - [293]
+    - `name`: quote_place_amzn.json
+    - `sha256`: 493540278637dde9c9500d180d3651a9a34efa279eda7278da2a6655f5e1d4df
+  - [294]
+    - `name`: rankic_eval_9ebdad7da83e7348.json
+    - `sha256`: ff139132f80998e336918077dffacfe6d7a660305d025ca635cdcbe7837251d4
+  - [295]
+    - `name`: rankic_eval_b0f9818dfe2b3663.json
+    - `sha256`: 784cc633b6d9e6abff52b6b391e7056c863a0b322acae173aa38196439ed11d8
+  - [296]
+    - `name`: real_benchmark_us_wide_manifest.json
+    - `sha256`: b6e858a81744c40d82a119027400b70b46974444019913e1ea4dc15fc288fb69
+  - [297]
+    - `name`: real_benchmark_us_wide_test.json
+    - `sha256`: df39bc572dd89e636fd56346687a2de7dfed873a9e4b3c51e2d87dbcc62d955a
+  - [298]
+    - `name`: real_benchmark_us_wide_validation.json
+    - `sha256`: 8c4d8dd4b5af7419dfdf11f5f15f87b437d94db7f33d1b3719842be79b22a0a3
+  - [299]
+    - `name`: receipt_admission_529da640b520a49d.json
+    - `sha256`: 597c5aeecd2c1b57f0908fa6fdf05890fece05e541a42be5a662ba235ff67f03
+  - [300]
+    - `name`: receipts_audit.json
+    - `sha256`: 5fdba4c796f2dff49486c62bd3c501e3053657231d6c45bfdd5bdb04ba2bb1cb
+  - [301]
+    - `name`: refill_hazard_amzn.json
+    - `sha256`: 195c5461c91d8d5faa684d1c3b179292e1ad717fcdabe1a61f0a851dea7e016f
+  - [302]
+    - `name`: regime_clock_bench.json
+    - `sha256`: 55c7d545b7f2e62b50ed135b63920effa0811d198cdc2c84fe0c035157626619
+  - [303]
+    - `name`: release_chase_amzn.json
+    - `sha256`: 8305fd598f154fe8c465ad718ece1fffe297c47471096a86543b69adfd02709d
+  - [304]
+    - `name`: reload_gate.json
+    - `sha256`: 98590cf3583cb8e138ee24c43324da205e4bf04df29a91467b0f69ac5fc8deda
+  - [305]
+    - `name`: replay_coverage_5e5e7ff56ee42196.json
+    - `sha256`: 5dd7d736d1be3a13b977b79901fc9dfef5fdc0d841c489f5848cd7c0839e521e
+  - [306]
+    - `name`: replay_coverage_e72b56ffaf7abe4b.json
+    - `sha256`: aa201319a975a4a347405a1e824db3a47084b4b8a140b0d087a46d85593ad02f
+  - [307]
+    - `name`: replay_proof_0de5fa4e0c739037.json
+    - `sha256`: 4a870f4bb735b8ebf2c87ae3dde8994dfe2220d55ead2f10871ed2c893cf70c2
+  - [308]
+    - `name`: replay_proof_6d266ef51218e3e7.json
+    - `sha256`: 4f20eb438da29c42f4bc54f38a643590f149458db80a8c86196e72477551ecd6
+  - [309]
+    - `name`: replay_proof_701ae84c3d9813e0.json
+    - `sha256`: 4f49bb965f299970c04f1d01673142e0b6e5df77004c5d034b6bb6028760ad18
+  - [310]
+    - `name`: replay_proof_73137fe1a97c3538.json
+    - `sha256`: 74fbc282a7a1d5eb53bcfa17e44a460f8235f5950c463233abf70099e1a5c91a
+  - [311]
+    - `name`: replay_proof_7e1d9b632f022f5a.json
+    - `sha256`: a3a21f8a745cb80cac90f8e53f9512294c297e0caf5d3a4665d5f07214de4517
+  - [312]
+    - `name`: replay_proof_b23a176a5c91e210.json
+    - `sha256`: 1f4a8bd88480f4ddd2f07791b2f00deaa39c83a2151cd9395d395f1e20a4a7ad
+  - [313]
+    - `name`: replay_proof_cbbad2b0389750e5.json
+    - `sha256`: a320cc68307ecffe319ee675feaefa837472ff8a41f07416ac7208e1e98e1667
+  - [314]
+    - `name`: replay_proof_e1fa8dd41197ef11.json
+    - `sha256`: b7f6dc1c01a736a198ec1b10d2aa4e645eaa12c42aba06d749e210f612bc9f6b
+  - [315]
+    - `name`: replay_proof_f5fe541481bbf231.json
+    - `sha256`: bf65017c57348aed947123163223ef59ebf385c9907052b2497016d3753ae2ce
+  - [316]
+    - `name`: report_audit.json
+    - `sha256`: 90dbdda1d64beab2bd4b82cfcfecd207d0aa2ecce9906fe7c333c9ca3ac2b9f5
+  - [317]
+    - `name`: repost_frontier.json
+    - `sha256`: e946c2b132bb9334ace262e6731f96c13e14ce613f68537acf7e6d207fda2dbf
+  - [318]
+    - `name`: repost_latency.json
+    - `sha256`: 5afe00ca1d7db9a0c2dbbbc604b5e661b139609856fa479e035e0c158c675e8a
+  - [319]
+    - `name`: reseed_hazard.json
+    - `sha256`: 0edfaeeea62f26b073232904ea7417de7373e31214cda255219d1c23c81a5054
+  - [320]
+    - `name`: reward_audit.json
+    - `sha256`: 89fd58aa04e5efccd68045bca4c6f263b78e2823a91e8aa50c70f331a0c06822
+  - [321]
+    - `name`: rough_vol.json
+    - `sha256`: a7a0dc640fe0c45b08e3a686dbc341f24e2ede115bd0777ce8d7ceb946bea648
+  - [322]
+    - `name`: round_lot_amzn.json
+    - `sha256`: 84c474210f467bd43f8285361cb93bc840b0a6821185a64d7fad0d0036198d6c
+  - [323]
+    - `name`: rt_audit.json
+    - `sha256`: 5cf3b9efba744325443e6dc9599ccf9dd651332ee7a1fd3eec5b45c7d03ccd7a
+  - [324]
+    - `name`: rubric_audit.json
+    - `sha256`: 2f6945fda3c5d3357a29f723a5e6eeac530d6de70909b108c4e7a04095ec239b
+  - [325]
+    - `name`: run_audit.json
+    - `sha256`: 05db03bc5b9474bee5eb68e1d3d5b2dca1a8ac239c01348f86f53e6ec1db237e
+  - [326]
+    - `name`: sbom_audit.json
+    - `sha256`: aea10d964151ed5af028e1f308b42c23378dfe6da86bcb5d6392174bb21d4bc7
+  - [327]
+    - `name`: schema_drift.json
+    - `sha256`: 739cdc3d79a415c89a28a696e7e98fd5aaea52a774ac0c621f2c721342999bc8
+  - [328]
+    - `name`: schema_fingerprint.json
+    - `sha256`: f02529f36e47efbd95c9d9c328517ec18cf1660ef6c3f14f33254af94898975b
+  - [329]
+    - `name`: seed_audit.json
+    - `sha256`: be653f889a4ca02a62b230bbeb0e4c7bc863c282369d365a691b234eb9d32fa7
+  - [330]
+    - `name`: seed_sweep_demo_amzn.json
+    - `sha256`: 7f5be12dde7fe0a377100dd6a2623ecd9b34a9d6d95cd68954c80f5068b9539f
+  - [331]
+    - `name`: serial_watch_140b073ea589b0c7.json
+    - `sha256`: b761d0a7b5f73b711c1ba02accbfca5c09206f071fca8a9520860c865de4a20e
+  - [332]
+    - `name`: serial_watch_1e8e1446e506fce1.json
+    - `sha256`: 30cb78079cb4baf19f22d8ac459eb03f157f49eff2250499a936c87bcd976976
+  - [333]
+    - `name`: serial_watch_2c14615c26efd19b.json
+    - `sha256`: b90d2efaa694eb46c93cae795b121fe7019fceb4ea37d52e5242eeb417a6519e
+  - [334]
+    - `name`: serial_watch_46445c3b227aa15e.json
+    - `sha256`: 46017d116935aa1bbd6392afc8359960e2f47ec46306b6fc67bb4b8e6182e4c0
+  - [335]
+    - `name`: serial_watch_47297eff3cb55178.json
+    - `sha256`: a416331d122d804237117f8d89cbd445bb7f0442b28fba198d35714f8106dcc7
+  - [336]
+    - `name`: serial_watch_4f4a495b59d022fb.json
+    - `sha256`: 6479f6806cc7b9cfb8f0c0f2fb292011d9a6293305c316232621c03fa6f748b9
+  - [337]
+    - `name`: serial_watch_771602cd1580476c.json
+    - `sha256`: 52d8269ee60d1f98c119d5fc179c4a6176445c837ee05900a5ef54044c815866
+  - [338]
+    - `name`: serial_watch_78dd891261e2aae9.json
+    - `sha256`: cafb78f75257cff2a338fe26021e82a4eae4b8049feeb02c7256ccfef805db0f
+  - [339]
+    - `name`: serial_watch_85db152db863d25d.json
+    - `sha256`: 4cc2079dbbfd83e0ae07fcba82e8319e18dd33aaf9589f8e11387433c88caad1
+  - [340]
+    - `name`: serial_watch_8977244ef78bfd2f.json
+    - `sha256`: 7f6c4e9d74a471019bba9fd44fc3193eb1a0f4ab7c1e6e0cc6f35cd8ebc5d57f
+  - [341]
+    - `name`: serial_watch_a6fd40311ce0fa04.json
+    - `sha256`: dcb4c9013319c21e5af8dbdc53f65b93656e5679ea4ca46ac8a335529fbad490
+  - [342]
+    - `name`: serial_watch_d311f5ea367a66a9.json
+    - `sha256`: 4b748b61f2cb5a6e7a4eb58fd58cd9fd98247520129c27f904138c2f1d2c3c7f
+  - [343]
+    - `name`: serial_watch_dbd21a6c99c81e00.json
+    - `sha256`: 072bbfebb6ed9a089476aa711cf717ab8cf7347644c63281b8c34875a3a4a36f
+  - [344]
+    - `name`: serve_audit.json
+    - `sha256`: 37ce4766e87a0a7200ba38e20f49fd5a5fe734640ab9ff43a4aa18ccea7b2113
+  - [345]
+    - `name`: shield_decay_amzn.json
+    - `sha256`: 2e88cdc4707a8890a0dea647749561eff8fda0d0b7711ff07bd42549e15319b2
+  - [346]
+    - `name`: side_imbalance_amzn.json
+    - `sha256`: fdce661d9fd73f5bd47f17dfbec526e3c4079ed0ea97dd6c59f2cb2a07791a76
+  - [347]
+    - `name`: sigkernel_mmd.json
+    - `sha256`: f56d3a4e991a23592af3e4406f64b2fecbd4abf8dddcec96f03e89934779358a
+  - [348]
+    - `name`: sign_autocorr_real_amzn.json
+    - `sha256`: d2b4dce996ab14b7e2e16112862b073e87294c06fe07b755942230c65ed65438
+  - [349]
+    - `name`: sign_predict_amzn.json
+    - `sha256`: fbbe98aec24936c1b3a0dff0c922a660fdb2e2419e402bf35ba30f923a7cf13f
+  - [350]
+    - `name`: sim_real_ledger_amzn.json
+    - `sha256`: 814b4853c24bd668b2c2fdb66f6fd4eb8b9854fcc335edc0ea22dbc6d3271622
+  - [351]
+    - `name`: sim_sensitivity.json
+    - `sha256`: cb33e655209b155f557770674a45d14a77e523f4d964f8cea6c69644048ca140
+  - [352]
+    - `name`: sources_audit.json
+    - `sha256`: 1819d4b627eb9bc9589978a0c16b7b38452bf72747f81641478bd4b64bc2af03
+  - [353]
+    - `name`: split_flow_bench.json
+    - `sha256`: 37c6fe8de4fab801aa4dbb5eff23c326ecbf8d471e869d500be9451d9fb6e73f
+  - [354]
+    - `name`: spread_dynamics_amzn.json
+    - `sha256`: 13bb86c5bbf5f826279c0af371790259cfdb202c8bf85c4f09155199cdd3bdce
+  - [355]
+    - `name`: spread_floor_bench.json
+    - `sha256`: 37861b395d98f358141ada1962c698679c80c24632baa50e7c08b32873930a6f
+  - [356]
+    - `name`: spread_reopen.json
+    - `sha256`: d22bb5a384368a0d383a9cf6df4f38b40e148830e700784a96ae446354aed406
+  - [357]
+    - `name`: spread_response_amzn.json
+    - `sha256`: ab2a078fc13c3bebf659ea962fb21ab18e826508f0abad2fc83e1210ba3c8463
+  - [358]
+    - `name`: spread_response_bench.json
+    - `sha256`: df3253be3c3a3f43bc4e4cccbda6d72f2a627d95ba99a683117cd9d19e9d5352
+  - [359]
+    - `name`: stack_invariance.json
+    - `sha256`: 4f3a5c2449d4192a248d17b06b05e6a5818d8671719af69bd37f216ddef0f1c6
+  - [360]
+    - `name`: stack_watch_synth.json
+    - `sha256`: d90dfbd42266b54ddeb8e237e12d674ecbb24359287166f074d6241ad61a7dba
+  - [361]
+    - `name`: stale_quote_amzn.json
+    - `sha256`: 91bfc70fb7cd64be078a327fae0df159395301ce2d42d954157c6749628bf6ce
+  - [362]
+    - `name`: streak_calibrate_bench.json
+    - `sha256`: 684c6584fc9d7d18d8e6801934e63a1ced7249321e13bc8f06f7868e60a2b86f
+  - [363]
+    - `name`: streak_stats_amzn.json
+    - `sha256`: d51d2a74e86e484183fa2af0405ad38af8273f38fb3621f2bcd39e6029556129
+  - [364]
+    - `name`: suite_health_drill.json
+    - `sha256`: 5a7d32e1da6c12cd23d1d713f996f242cf6dec95b22923b0264ec96818734de4
+  - [365]
+    - `name`: sweep_bound.json
+    - `sha256`: 87670d4022ace1a09b1eec2e2c142bfb3a3cbd33e4b983a3369e6b7421ef1791
+  - [366]
+    - `name`: sweep_crown.json
+    - `sha256`: d42626eead90475119af14f9c8d60d0ca5b94f62ad14c24ff157b4505f264b13
+  - [367]
+    - `name`: sweep_width_amzn.json
+    - `sha256`: ed310e546e4b4f2c2544f99c24cf010197ae78d3fa753bede0af328dde59ccdd
+  - [368]
+    - `name`: sweep_width_bench.json
+    - `sha256`: 67f57afee23c89322c27d64070da7731ba292703388bb68768afc34019f69431
+  - [369]
+    - `name`: tail_quota.json
+    - `sha256`: 307c022496df278307301b62207cdaf7c5fc3078cea9151fd486e088d60bafed
+  - [370]
+    - `name`: tail_real_drill.json
+    - `sha256`: 9b36d560170c53b02f873de648f4c9ea83d7e30e61ab0ad598a2ea4d05b477e4
+  - [371]
+    - `name`: tape_digest_amzn.json
+    - `sha256`: 4915ad1bb6cf3c0857a09020ca27f3c7e6685a9f64681c2fefd8f2e91a8b15cd
+  - [372]
+    - `name`: tape_surgery_amzn.json
+    - `sha256`: 4696227f39dac4b343da3dc5f9a708069d44b64db94a7f5ca12e6455c54629b5
+  - [373]
+    - `name`: tick_rule_amzn.json
+    - `sha256`: d69bc89702def00c3abee7c06e071378f18f0996a186a296a68ba16d676e3840
+  - [374]
+    - `name`: timepart_audit.json
+    - `sha256`: afe622b75c555ba7c810a074205287ba12588cdba90388876d9aea438fad95c5
+  - [375]
+    - `name`: touch_empty.json
+    - `sha256`: 909b434110fae047594dfa08b7342959281df4102e3ee8ba4d65d9c547319c95
+  - [376]
+    - `name`: touch_follow_amzn.json
+    - `sha256`: 8dc68233094f788f38f52a8e32fc5a04a25c27c35806b73d5b677f7160033bdb
+  - [377]
+    - `name`: trade_decomp_amzn.json
+    - `sha256`: af272bd9ef0a1845d901080caa9c3a27257a3ae341848cdffadd8f03475c0427
+  - [378]
+    - `name`: train_infra_audit.json
+    - `sha256`: 31319d104c42dee087fe7d24b42c92af5a99bba75587ebcb3336d9ea81d1e90b
+  - [379]
+    - `name`: train_receipt_audit.json
+    - `sha256`: e31a42fa72953f9b740dde1e2179b8525b6dd49c00c28fec4ebc8e160687c25a
+  - [380]
+    - `name`: trust_step.json
+    - `sha256`: 39f62ffed6cce8684bdb43ba62406bf2ecf12eede96e68d11f4d06ca50de59a8
+  - [381]
+    - `name`: ts_reasoning_audit.json
+    - `sha256`: fba6cce35080058c5eabcc308541cac27bdc27b3538596c1856755cdbdee8591
+  - [382]
+    - `name`: unhit_chase_amzn.json
+    - `sha256`: a7c9de93641c46d2853515894aa636286ba5d49bc12833aa936cc4c056080081
+  - [383]
+    - `name`: vac_chase_amzn.json
+    - `sha256`: 371db4e5f9b635abc95f30ea5e6e0b135202c998322124897d35b26f9a130b1c
+  - [384]
+    - `name`: validator_fuzz.json
+    - `sha256`: 524d611ec21c3688ec7b8af92b4eda6bd7f70fc23c7a558215fb5ec3d22d4ae2
+  - [385]
+    - `name`: verdict_real_drill.json
+    - `sha256`: 63e4fcfcd616f08ad740b2be0fe3163eaaae8243bdfbbdb8d196cafd19d790e7
+  - [386]
+    - `name`: vine_audit.json
+    - `sha256`: 86febce575e975c471715538d9ae242a5e56522d10afb46ff11e2e462c180962
+  - [387]
+    - `name`: vine_dominance.json
+    - `sha256`: 2c555910f452082daebc5ad1ee719d515725d1a6c1350932cb4d860ae7e230ce
+  - [388]
+    - `name`: vine_panel.json
+    - `sha256`: 4ed248f50d9977ef333f1456a947c01e6d01687eff3f93082e9afa2cc0d9484f
+  - [389]
+    - `name`: vol_bench_860a3412278105ca.json
+    - `sha256`: 9a7dac094aaae3d1c11ce853d8951ae816f263816c56703536c2ddd337532d90
+  - [390]
+    - `name`: vol_of_vol.json
+    - `sha256`: 8a46d4ec9cf6574f032ebc0041b4cb4466ebddfb53d16ac217fc6954d8f707e2
+  - [391]
+    - `name`: vol_signature_amzn.json
+    - `sha256`: 66c853a1efbe2fe0a41535ef9e191eee310e5346e7057fd157a8832b3b1e3eb8
+  - [392]
+    - `name`: vpin_amzn.json
+    - `sha256`: feed66eda5cf279af3d12224eeeb7cae7ff47a998dcc767249d185f78bcd27db
+  - [393]
+    - `name`: warmup_spec.json
+    - `sha256`: 01b3b622ed4e6d6852fd56f2122d257e1b9f31d100ae850cbea38921a38bafd6
+  - [394]
+    - `name`: wave23_map_amzn.json
+    - `sha256`: ad949f2ebda26df715cc45e1d6efef08c10e6deeac503580bc6668b61bf10ee6
+  - [395]
+    - `name`: wave24_map.json
+    - `sha256`: 5c765aa1b4d50ddd0fb2f3645de5edc6c60465ae6b6c936b7133507e3a0069aa
+  - [396]
+    - `name`: zone_card.json
+    - `sha256`: 751e3497d28c9a1f6e50d5040ec6b80a416194b0ea1b0ab2b05462c897b219d3
+  - [397]
+    - `name`: zone_churn.json
+    - `sha256`: 7f4b68803588fe0ddc3ee3c45698a7a2ea367f8c2bf5cad7e542fd56e91441f5
+  - [398]
+    - `name`: zone_embargo.json
+    - `sha256`: ee556605f12d88c494b6ead3a02099f569dfef7875cc21ca7ea5657983aea180
+  - [399]
+    - `name`: zone_map.json
+    - `sha256`: 43753aa2492ac472d22f2e221fa155d2c1393ed13201a1d9028231e15a4d68f7
+  - [400]
+    - `name`: zone_stability.json
+    - `sha256`: bd695896930494a0d8da307b9088744b98abe575a6574369d929ba7ffc8a4b2f
+  - [401]
+    - `name`: zone_ttl.json
+    - `sha256`: b5987b6ac2dfd8484a15f89fbbfa7dd8d6009df8dd1d4ec1098b4efe9580d722
+- `members_added`:
+  - capacity_eval_bdf234110827cd1f.json
+  - corpus_epoch_ff585b9d7c8badaa.json
+  - fleet_eval_cee9aaee0a0f0f36.json
+  - honest_verdict_d5d9bf60e0d5e1a4.json
+  - monitor_run_85aece35e89b5b12.json
+  - rankic_eval_b0f9818dfe2b3663.json
+  - vol_bench_860a3412278105ca.json
+- `members_removed`:
+  - capacity_eval_3622d0c059d42009.json
+  - fleet_eval_5e907be710811a44.json
+  - honest_verdict_b133e8b3992af893.json
+  - monitor_run_13d20aef00774027.json
+  - rankic_eval_8d740c0ddf6d5c54.json
+  - vol_bench_f3bf2afc2f159ace.json
+- `n_members`: 402
+- `params`:
+  - `head_sha`: a65f3a8ad27555bd196a1fc680c32f6349cec875
+  - `pattern`: *.json
+- `prev_epoch_receipt`: corpus_epoch_ff585b9d7c8badaa.json
+- `prev_epoch_sha256`: 2dfbecae84f07c55d10d15fbd52fdda2d5d4636b69843495bffaa2401d2c108f
+- `receipt_sha256`: 45e7c79ed405a79cc12287a37cfa761a04afe84de01c19d16f3a422dbb8ee507
+- `research_only`: true
+- `schema`: corpus_epoch.v1
+- `simulated_only`: false
+- `verdict`: shrinking
+
 ### `receipts/corpus_epoch_4a75066db56e52fd.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
@@ -11975,6 +13219,1229 @@ counted. Prose that contains such a token is quoted verbatim.
 - `prev_epoch_receipt`: corpus_epoch_ab1470227e387e4d.json
 - `prev_epoch_sha256`: cb966de72bec251b9138a00947bb380b5eaba346b11d68238d908805df8d5678
 - `receipt_sha256`: 4a79ac4ed05777f52ed4778deee758450f26536f826c9b0fc1bef0e04b6237a8
+- `research_only`: true
+- `schema`: corpus_epoch.v1
+- `simulated_only`: false
+- `verdict`: advancing
+
+### `receipts/corpus_epoch_52f80a0cc915f58d.json`
+
+| source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| receipts/corpus_epoch_52f80a0cc915f58d.json | 3f98624499677af6306c90bcaa7cd706090b10060b3168fc35f88a876f24ffe3 | 52f80a0cc915f58d4e79d600db5ae2b1aef14d79f731c611da83598bab7135f5 | not_checked | absent | inputs_sha256=d23289bc5460ee9635d163efd1df7e32b757005aabd6dbfaa9646326d2ee6947 | unspecified | absent | true | false |
+
+- `data_label`: CORPUS
+- `epoch_root_sha256`: 5fecd8d12c54881d2a86d42245d5f85fd22b19cd01d2b233b92aa5f56315dcd2
+- `kind`: corpus_epoch.v1
+- `member_tree_root`: cb503731f0bbbfcdb65725594416348b8006d1106cc85030d054543e61ceae8c
+- `members`:
+  - [0]
+    - `name`: abc_calibrate_amzn.json
+    - `sha256`: 31aedff635330e6727b42bfa6b0c406c24aa305825c41cb09ae6aac33dca65f1
+  - [1]
+    - `name`: aftermath_flow_amzn.json
+    - `sha256`: 229bfe14cfd239f30786ef89c8aa0f2b2775800e00cd85a6a9d3239265604da8
+  - [2]
+    - `name`: alert_budget.json
+    - `sha256`: 04e96f138a830001cb130a3b4758f684627588bccc648f4efd35a72bdb2111e7
+  - [3]
+    - `name`: anchor_scan_amzn.json
+    - `sha256`: 65c11ec3e7f771bbedf4cde31b63bbe9576e97a9de55f7ab030d3c8c34c28c8a
+  - [4]
+    - `name`: api_audit.json
+    - `sha256`: 2957d91704d025c08f5d7ece51f037827539d9254246091d8499fb1fde4a3177
+  - [5]
+    - `name`: api_fuzz.json
+    - `sha256`: c403f16743569dd1a6b7aa0711a58a42ca8bdd26abc5b0645bf5ab19952e792e
+  - [6]
+    - `name`: asof_audit.json
+    - `sha256`: 436c3737e93cd19673ae6e6127e69f47498efbeacdfc25e8447a9abdc1b7512a
+  - [7]
+    - `name`: attestation_audit.json
+    - `sha256`: 5b44675be81133eb52a25feb2553c487bf6392ec297bf390fde875085ae46ee4
+  - [8]
+    - `name`: attribution.json
+    - `sha256`: b9a8d0e5e42087e034ca2551afedaadd6f82eeee74666794dff88fdbaeb00b4c
+  - [9]
+    - `name`: backend_parity.json
+    - `sha256`: 9b2b2433e4106a88b1f2583bca0816a738370635046254267a50f83e50b3ac5c
+  - [10]
+    - `name`: band_occupancy.json
+    - `sha256`: 98635a72af8ee0b3f395cefb81bc3be5018d39b7f9cdd8a359007c50780e70da
+  - [11]
+    - `name`: band_shape.json
+    - `sha256`: 1e0d626f6a4b69a5761dc498a5b1bcd7d446b7a0d6c5439bf6c3beb048eafcbc
+  - [12]
+    - `name`: bank_audit.json
+    - `sha256`: 07d92059b00305ba6b5880edc4152180d0fd31bd9f0829bbea3052b0ceb075fc
+  - [13]
+    - `name`: basis_carry_dd7705fc0f2f1c25.json
+    - `sha256`: 852f56a1e2aeb3654d406fbb14a4a2baa7cd20949d45153a98c5a99a2248f741
+  - [14]
+    - `name`: boundary_audit.json
+    - `sha256`: f958b32b0d6bedbd542c105d7b530431c4356dda768d2bb90fb8055db56b6cdf
+  - [15]
+    - `name`: byok_audit.json
+    - `sha256`: 0dda10232d681aecd75835b70382ecab3f0698f91e5a371e171968a73ba23406
+  - [16]
+    - `name`: cache_audit.json
+    - `sha256`: 248835c82eeba8f0ef65fc30345da462bcea7180374008d5aa56c526f4bd5f61
+  - [17]
+    - `name`: calibration_audit.json
+    - `sha256`: c9f800216f05073fed4da606f04823cc71bb37909d4242492f5e280cdb64964f
+  - [18]
+    - `name`: calibration_audit_drill.json
+    - `sha256`: 2a3300764a5b916130f64db8c29b05c0a48e2212b43730f75f4970bff2eae354
+  - [19]
+    - `name`: cancel_cluster_amzn.json
+    - `sha256`: d6554e87ef5ca20ee1df623ac0b6f08fba4b91f2c00bce68bfa949767691abf1
+  - [20]
+    - `name`: cancel_gradient_amzn.json
+    - `sha256`: b140be66a1d4467c73f104a992ab9f692ed83b959a7918461b3951fd091bff04
+  - [21]
+    - `name`: cancel_gradient_bench.json
+    - `sha256`: d01943ba6fa197eb7b8f259b796acc28a6cde10a2bee9995dd47a98b0535a91e
+  - [22]
+    - `name`: cancel_lead_amzn.json
+    - `sha256`: 8151e7dc1cbbedb112d8fdc3cd3e0f52aca58ef4d23ad698d2229a02060a705e
+  - [23]
+    - `name`: capability_audit.json
+    - `sha256`: 787b45652557c719c5beffef50ad571f773d3253f28ddc0e0a406e0cdc75399c
+  - [24]
+    - `name`: capacity_eval_3622d0c059d42009.json
+    - `sha256`: 57ad3394513fe58e48127141858a990580fade56ae4755ad0a3b868aa2568f2b
+  - [25]
+    - `name`: capacity_eval_cd0854242ed8a9ec.json
+    - `sha256`: e0a6c8250891cd5065edfc3bb385e6fdd640e5ca376cac496420815ab16881ed
+  - [26]
+    - `name`: causality_scan.json
+    - `sha256`: 2d7b2e0963fe468305afbbbe190b22b356ad7bdf8cc4f47c279fc25855d61161
+  - [27]
+    - `name`: churn_reseed.json
+    - `sha256`: 3a444c77bfef84e0e070d4611368569639ee6a551ed30cbdc6a107202ccbff7d
+  - [28]
+    - `name`: churn_stability.json
+    - `sha256`: 7ab02a6f41f6c626d79bca729a02300d4c79dae243758a460b57a636604fdcc4
+  - [29]
+    - `name`: cli_audit.json
+    - `sha256`: 16b8a95f44d73964a6578cee9c7cc4aeae2d74770d1b2891422b859feb01d597
+  - [30]
+    - `name`: closure_fit_amzn.json
+    - `sha256`: ff6d30e8251032109ace27be9dd1e488206be1eeb81d5fa1f9c5d8f56eb29294
+  - [31]
+    - `name`: closure_stack_amzn.json
+    - `sha256`: 994f8f2cf89faaace83e6e3f7441d3361e111c0d2b9e05cf123c2c602c2389cd
+  - [32]
+    - `name`: coherence_2dd641ab766a536a.json
+    - `sha256`: dcaf457766306077f90249a7154302297b30fc63417e2fc9a46517c71e4265fd
+  - [33]
+    - `name`: concordance_df424fa2f6b1c4e9.json
+    - `sha256`: d35b4d196b598847e2bcb69e7b3d5536bbab0e654f94ec9a32f17554d0a7e81c
+  - [34]
+    - `name`: conformal_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 48b240ea495b7ab633a4ec61c7da34f82c414f2370220f60894612ceef8b3dc9
+  - [35]
+    - `name`: conformal_real_drill_gaussian_pit.json
+    - `sha256`: 94de7928be51179c7119d751d1812dbd91c2b7992aba08528d094d8101eff21e
+  - [36]
+    - `name`: contamination_audit.json
+    - `sha256`: bce466d9ffb4b6144cf78590caa1bb1c48f59ac06ad94a7141d1796013ab53fe
+  - [37]
+    - `name`: continuation_attr_amzn.json
+    - `sha256`: e2340d411b4af81d839dc85ad7326835fe7a8c97c834432c861664c773f0cbbc
+  - [38]
+    - `name`: contract_audit.json
+    - `sha256`: f5ccc9f01e32b707526d4fb684e45d9e7d3b64af7b3b647c12223d72764d1e64
+  - [39]
+    - `name`: contract_probe.json
+    - `sha256`: 9cd19ecff9d41c85487e6991e0bfd67eff42a9ed154b6759f4f9f1c8b49178ec
+  - [40]
+    - `name`: corpus_absence_exemplar.json
+    - `sha256`: 611ad72af3e3734f34e39d3310e502444d2ede665018b7ffb7223ee0f7c19b02
+  - [41]
+    - `name`: corpus_audit.json
+    - `sha256`: 374807979a66c7dc455ee3f1236eff03be43e1b7f9f550b4e97789b1807b3552
+  - [42]
+    - `name`: corpus_epoch_0a2e8964712cfb0a.json
+    - `sha256`: 9bce499b8f5be69b1a1fd0ea8b173d12fd475e7a2cafaf9d925882b2744bb25c
+  - [43]
+    - `name`: corpus_epoch_0af2a2d5723b14ae.json
+    - `sha256`: 2ea2708eba01500e54f3cfa8fd669339d14b5d3de22ddc9417b113e595bbec72
+  - [44]
+    - `name`: corpus_epoch_1384f0d99dac82aa.json
+    - `sha256`: d8d10fb9b46df573923a41cb0a04e4637dc9b6dde39e57dbfc74494e7ff33258
+  - [45]
+    - `name`: corpus_epoch_2b5db388ddee23aa.json
+    - `sha256`: f3e2af4492471296a33ae47fc3222e7ac17a96251082aa960b373edcfb6d558f
+  - [46]
+    - `name`: corpus_epoch_2ca91405e468cc6b.json
+    - `sha256`: cdd1cf1d0d82cd939f723248c57a0393de947baba1ca1e720c64d605bcb2fd3b
+  - [47]
+    - `name`: corpus_epoch_2ddb4fe7154677d3.json
+    - `sha256`: f70e4a3c361b81ba920e32ccd3f9375204e2fb6965b9733573563e2b5b881c7c
+  - [48]
+    - `name`: corpus_epoch_2ecce33392960d8d.json
+    - `sha256`: c7d13f38ed66bc3864f6f711c46ca13852bd11d70886236d74eb7f137e322dd8
+  - [49]
+    - `name`: corpus_epoch_404d16a7af1d3862.json
+    - `sha256`: 24ba29424ef385c4916dc96e4ae775496ec1bde9ebc95e4e126d8b44e36ff8d2
+  - [50]
+    - `name`: corpus_epoch_4a75066db56e52fd.json
+    - `sha256`: 7c4a99be100698d78b8c7e5c1d920e3bd6370ba6e774662dd6ed3a4c8c1f3e5e
+  - [51]
+    - `name`: corpus_epoch_4a79ac4ed05777f5.json
+    - `sha256`: 2e4829b29e316fcbcf0ab9a307278595da57925e1aa0659c6b64db44c1e8759d
+  - [52]
+    - `name`: corpus_epoch_54c82d2a8bcb86ed.json
+    - `sha256`: 8711f308401f12c3556d870a282b58aaffb136ad526febd661f181c0742a2870
+  - [53]
+    - `name`: corpus_epoch_568c538fcf4b21cd.json
+    - `sha256`: c07b4cf5af660d253623550ddab94334b599c325f3615465ad16ae53b8f98996
+  - [54]
+    - `name`: corpus_epoch_574953afdf88a0f6.json
+    - `sha256`: 7cb5d3159f82ae71efa2347fb1d419912fb7033c48d808b514176230a93d09f1
+  - [55]
+    - `name`: corpus_epoch_5a8dac905c9cc22d.json
+    - `sha256`: 50b853da7d6c07efc3e4c533e5a4a6beae5295da68c696f2656491b28fbf6b18
+  - [56]
+    - `name`: corpus_epoch_5c9754ab2a9408a1.json
+    - `sha256`: a1f5903b80cc593f69fbc3a1fcf8db1f4a97d40bf1c0f0f505b2ff66b71d02a2
+  - [57]
+    - `name`: corpus_epoch_62bfa90c28254f19.json
+    - `sha256`: 631316e97a0a2184262517d25d6ffea4934a56e3a02c084335b1b637c0b9cd75
+  - [58]
+    - `name`: corpus_epoch_6340cdebc9a6efe1.json
+    - `sha256`: 3e3473c359007fb425361a8a618d1e7b3de5edc23e1a0937ab241d2831c95dc0
+  - [59]
+    - `name`: corpus_epoch_63761c8b4e63992b.json
+    - `sha256`: 917d1b4033f1c20d56156b2a5c83c95c800ec74dfe3aa6fd26805d226cff6c57
+  - [60]
+    - `name`: corpus_epoch_6cf185cfb5466dd7.json
+    - `sha256`: 256d5692208eda60d80880dee77a6124f3c5b5f13a1ddb1e62c6521552639416
+  - [61]
+    - `name`: corpus_epoch_6f8420fc2959f4e7.json
+    - `sha256`: 7050675439b29e8874da291387c39c16d5ca38a9287ff7535364c1fc1392aac5
+  - [62]
+    - `name`: corpus_epoch_6fb596b0230e9f17.json
+    - `sha256`: a879e4cf4813e82a1e885c053797417b9b5daadbf980a8afa9da1d48852bc380
+  - [63]
+    - `name`: corpus_epoch_721e9b4fb855e1a1.json
+    - `sha256`: b29b736a0234ce82b4af23a973f7ec6cb4486fbb9b071be14e30319a4bfabd30
+  - [64]
+    - `name`: corpus_epoch_7d6b1f5442b13ea1.json
+    - `sha256`: 29bb1eae00b9d91e5833450631d74c3aaff4aa7c42230e89a074c94df626c5c9
+  - [65]
+    - `name`: corpus_epoch_84384f73f7d8e9d6.json
+    - `sha256`: 8a23be1760a52130b342ecdc107cff3c3369b74d02497365316f65b498eb52db
+  - [66]
+    - `name`: corpus_epoch_959513b12d66742b.json
+    - `sha256`: b557f12c51d23d9873d829aa683eec9d55dd998d0f7d12f1d0f7286f885a7eed
+  - [67]
+    - `name`: corpus_epoch_96ba030697ddf0ff.json
+    - `sha256`: d58f0f036520565d076e26b9830c8a8ac49d47595cd4c1af1e7b6160c547394f
+  - [68]
+    - `name`: corpus_epoch_9d41d1d7410eb02d.json
+    - `sha256`: 074b9c2ab74e8e6deaf636d60f50cd81ccb9652311a4872726e2012dc4f2c328
+  - [69]
+    - `name`: corpus_epoch_9fd864d30fda3c69.json
+    - `sha256`: 20177c26b20ac749d4d02be185fc05ce22d645bfafbf8d4782f22b2a3e5b2aa9
+  - [70]
+    - `name`: corpus_epoch_a0e901c74a5f29c4.json
+    - `sha256`: 7d91fe4f8f725e4c87b5ef9334b2da7a6fce29496041bf7d48e9523acccce828
+  - [71]
+    - `name`: corpus_epoch_a1a8323db3be4842.json
+    - `sha256`: 3ceb9374251d3e50f65edb6424915c17bb11fbad2b846fca7f42c3ebd3cfc901
+  - [72]
+    - `name`: corpus_epoch_a4cb68008a317f90.json
+    - `sha256`: 66894e231d5029cd138f613c62447e58700a44d7def29bc1a16da44146dc69f2
+  - [73]
+    - `name`: corpus_epoch_a5d113f0994c74b5.json
+    - `sha256`: 8a0128b9d8b208e67022ffa25e040d8ae10d244758ace48207e16770f700a493
+  - [74]
+    - `name`: corpus_epoch_a83ba798e9abd892.json
+    - `sha256`: 9913a8a80d7232d5af2f1b6864389ea666b8fd81582ea55ce9dbdc835394385d
+  - [75]
+    - `name`: corpus_epoch_ab1470227e387e4d.json
+    - `sha256`: cba4e5507591d625b134e82278581e57b9c800ad717cd65f563e0a3bece3377e
+  - [76]
+    - `name`: corpus_epoch_ac21f22e90c58c53.json
+    - `sha256`: a19be18489e84cd007ab22b4e412c6014c90f6102f9f857da52476734e8b4fd9
+  - [77]
+    - `name`: corpus_epoch_ac2e4ae4bcae4dd8.json
+    - `sha256`: 4e97881c7c558ad93674533f102ea582de60bd109c178a1c7489b30f027f8a93
+  - [78]
+    - `name`: corpus_epoch_c5a45fd1b73737dc.json
+    - `sha256`: c10f124084371e6c9902e8e77d807d6f71d622deffd19ecd4c7026ef3b35d850
+  - [79]
+    - `name`: corpus_epoch_cb39a076f3287171.json
+    - `sha256`: 8680427690c0709412501f39953f9bc845932a2e3f1875c32d12a2067d39f695
+  - [80]
+    - `name`: corpus_epoch_cb415a040387f7b0.json
+    - `sha256`: f7a80fdf1eb8820d00f4c26faf536113a11948a437d4637acb191b35b6dfa050
+  - [81]
+    - `name`: corpus_epoch_d1e7bb2567019bf7.json
+    - `sha256`: f4bc01f2646d3fb0561ecd19b3b64fb58d7bc0828e486464401484a3d9ed3530
+  - [82]
+    - `name`: corpus_epoch_d479e96760271bba.json
+    - `sha256`: 5dda9f2bb065fcb3172d1b3aa4f7bbb4b0c3158a3120d520e974ed36fd7e4d23
+  - [83]
+    - `name`: corpus_epoch_e0f905c031ef39b1.json
+    - `sha256`: 4af585b31592271ea26116b814f285f4c661240af21a78f915750591e87e8cc8
+  - [84]
+    - `name`: corpus_epoch_fbb352a23e62d321.json
+    - `sha256`: d985ae89f15e953f062d3677e32a0f83566932ddc0dde0853491f8341ba660d5
+  - [85]
+    - `name`: corpus_epoch_fbbcd3c1e840e14d.json
+    - `sha256`: 0275c647da2c2abe18c798cfd61d52813cae12702505e22da2aa18032214f21d
+  - [86]
+    - `name`: corpus_history_absence_a5753b57fab08b0f.json
+    - `sha256`: 3904f2838779802fcad32a15b13d82eb6860a0fafecc2feb9437af93a7360f8f
+  - [87]
+    - `name`: corpus_inference_2ee42848a1d51937.json
+    - `sha256`: 25230923d07164342facbe10ec0520975ee04c0ef690b3661f5daaf9d69f250e
+  - [88]
+    - `name`: corpus_proof_a56dff22d5b4931c.json
+    - `sha256`: 0a281b87338f47e861be233984f7f4cf171856f4201e403f4a84d2d69c0e809c
+  - [89]
+    - `name`: corpus_proof_exemplar.json
+    - `sha256`: 49c13a28dcbc992e9830264d01670d4ffb2460e8c1abd3613d8d54d0f4c8bb1c
+  - [90]
+    - `name`: corpus_real_drill.json
+    - `sha256`: 082f16234bae90433c9f699d575a57b2ef5f1bf826fdb61ccba838e936f9f119
+  - [91]
+    - `name`: cost_aware_rerun_20261007.json
+    - `sha256`: 618fadcd1cfa507b2a31f7671f55368c5e80c554647e238996af60759b020f7f
+  - [92]
+    - `name`: cost_aware_rerun_20261007.json.seal.json
+    - `sha256`: 62cf7f39349bde7690af5f2c15d385a5f2aef910de152eb46bc92b63578b8df1
+  - [93]
+    - `name`: cost_calibration_eval_df9b8d7068bf709b.json
+    - `sha256`: 6c8a3677f6a72ea8b9790126779d5b0c67838c3c4461dbd1f9fc1ef62fc0509b
+  - [94]
+    - `name`: cost_calibration_eval_f130c7e871e9aa64.json
+    - `sha256`: da4f8269942b5c87bebed33e422d6326cb73d327f48648d97b02e6e6b36dd1e9
+  - [95]
+    - `name`: coverage_cs_real_drill.json
+    - `sha256`: 9dfc169e6c3cb41c803c92114a4b33004d407295fc69c7a7de3dab3141a624b7
+  - [96]
+    - `name`: coverage_real_drill.json
+    - `sha256`: 2521152de17c0974039cb4f4867cda6f2ad1299e3f00135fc0764e32fd17759a
+  - [97]
+    - `name`: cp_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 64a38aba74a56b44aa64dfd68ca1859d4d142c9dc2f4e0a657b447a041e434b7
+  - [98]
+    - `name`: cp_real_drill_gaussian_pit.json
+    - `sha256`: 6deaa336ee288e28ea35f93caa5d8b8b8436c99fd47efb97ceed792f6d3b8a62
+  - [99]
+    - `name`: crossvenue_basis_3f4ff76f517655a7.json
+    - `sha256`: 14ce799a46e282849e8e7852ff74489ed4747274c164040fcc52974bbb72a087
+  - [100]
+    - `name`: crown_behind.json
+    - `sha256`: 1ae02ca68d023ddd18c2b0023b240d1cf729b0a2b04597954548402afbe769c6
+  - [101]
+    - `name`: crown_density_amzn.json
+    - `sha256`: 4945e95537a122d7d13c12d84fe59e518e3051eb8ddd9ca8db66f3218a0c6268
+  - [102]
+    - `name`: crown_join.json
+    - `sha256`: df42ab245b4f82d535fb52d4a4068414b4b11537e152ec63b0e3ab6823e40af9
+  - [103]
+    - `name`: crown_size.json
+    - `sha256`: 751a7c4351d1639d547330d7b8f8251fb6341f500f099304a13945810a560fe0
+  - [104]
+    - `name`: cxl_shield_amzn.json
+    - `sha256`: 16cac426d34c9af016963a251e9fef5422babd2ced8be9795a7413e9c6b84e40
+  - [105]
+    - `name`: decay_watch_synth.json
+    - `sha256`: 8f37ccea904fe09557819f36a60d5dcb2d99467db21301111b5c7d9836ccf6d4
+  - [106]
+    - `name`: deep_book_bench.json
+    - `sha256`: 9410e500ad2602dc085c5146640d7bf7219a9626c8bccd32ea47a71829f03392
+  - [107]
+    - `name`: deep_microprice_amzn.json
+    - `sha256`: a9fddf27e4c26bc144ced56ca35856411f8a6220d91100872170b60411738acd
+  - [108]
+    - `name`: deps_security_hygiene_f3b4e6fd22e439b7.json
+    - `sha256`: 66176b021f554077ceca2ed34a87b1de89e50fb905aee26f14a232c52d4a59e7
+  - [109]
+    - `name`: depth_consumption_amzn.json
+    - `sha256`: 1bd84264cd6b886a28c16ff5246ec2c4467f81d0a656589c534dad34d8754846
+  - [110]
+    - `name`: depth_tilt_amzn.json
+    - `sha256`: a42581086e0846cbc71a272b6cb39e018031176fd7414ebc57dc95ba7415d2b2
+  - [111]
+    - `name`: dip_audit.json
+    - `sha256`: 085f0a461518911bd57e27e12c0c01f4f0f2134254f7b240ab4066d95cc8233f
+  - [112]
+    - `name`: dip_run_audit.json
+    - `sha256`: e0498594b7ae8e371c24761c7e5f7b3a97fb24e708e645d4abcfbfcda71bab86
+  - [113]
+    - `name`: disclosure_audit.json
+    - `sha256`: 79f2a55cc0ba899cbdb8a26e7e103e3e008acc554890ef21d63d1d3bf48d0538
+  - [114]
+    - `name`: dispatch_audit.json
+    - `sha256`: 19bba277befd9b88272175e899a962822a40a3bd8757c750882d56d92513d8dc
+  - [115]
+    - `name`: diversity_bench.json
+    - `sha256`: f9c48ad14bff833f98ae5b56aea24192b9815f1e5acbc86a0a8fd61a7c27325c
+  - [116]
+    - `name`: doctor_audit.json
+    - `sha256`: 0c0e69fb4cf225577f2b67144e306034a28ffdf64acf3dc4f315588159c2aa13
+  - [117]
+    - `name`: drift_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 732ca9cc14ab246e90c1dcb28002e014cf5ad0b03a0e2e6f56c7a787577d801b
+  - [118]
+    - `name`: drift_real_drill_gaussian_pit.json
+    - `sha256`: 295b0855243a56848751ec6b8f51eaa6698d8c683a4276b11d6c3e7645d80f64
+  - [119]
+    - `name`: ds_audit.json
+    - `sha256`: 67a0e581ad6876ffca1e43b82b9bfd9dc7f91531e6b926af1751eaec4d727a8d
+  - [120]
+    - `name`: duration_check.json
+    - `sha256`: 12188ad90369774c642fb7f516f14dd7b20c4ec7367434c75b24aa1a5ba5e6ab
+  - [121]
+    - `name`: em_audit.json
+    - `sha256`: 69735454a8da7e781be4e56dc4d9eb83c56f05bbd51ce6e3a4db47e2bb547e00
+  - [122]
+    - `name`: emerge_real_drill.json
+    - `sha256`: a06f8d2a40795ff00601716908a168232e5ecd9d42af62ea230d849c7e5baa3d
+  - [123]
+    - `name`: empirical_flow_bench.json
+    - `sha256`: e12abc02ca462ff660e4aaa39fe5182508ab5896c1bdab180c5bb6caaf4c9c99
+  - [124]
+    - `name`: engine_fuzz.json
+    - `sha256`: 5fe71d9e05862d39cdaf2aaf153f508d992a2bc6132bc882f45d86da64f54396
+  - [125]
+    - `name`: epoch_delta_44955f3515007971.json
+    - `sha256`: 8c4823fcd372f927ada7ef5d08fff5457bd25db3ea5d7f42c49679236616da6e
+  - [126]
+    - `name`: epoch_position_2e120d21df5a400d.json
+    - `sha256`: 9c1bf6a2af75b9d2035688e89a872e45dfd166eef7b557aa58efc53aedadbfc6
+  - [127]
+    - `name`: error_shape.json
+    - `sha256`: a9b29bff34f219cab4fb4375d56560b392097906df05d87d69bb526d591d2284
+  - [128]
+    - `name`: eval_core_audit.json
+    - `sha256`: fb50b648b07af58fcaf0e9b8837ef946fd9b4b04e18cb48d991c264154da3e96
+  - [129]
+    - `name`: event_burst_amzn.json
+    - `sha256`: 4c8872dc6f781544ef15cbace7537df2876d0320410570283e558306a9c5b019
+  - [130]
+    - `name`: event_granger_amzn.json
+    - `sha256`: 628431d7b7099ac23e9e0c40a0b99de811952a701333949202e2ea0696256362
+  - [131]
+    - `name`: event_matrix_amzn.json
+    - `sha256`: e1a8e84ffc8b0ac08a7e8a821bc0650cb56bd10c924318e8c0be4a74587710d1
+  - [132]
+    - `name`: evidence_audit_3464d8f8197bf737.json
+    - `sha256`: 77c38c8edc534276ad901f4c64c5024f8e79c99c5ece43b001b003f362584a5d
+  - [133]
+    - `name`: evidence_audit_5c9f07c823727701.json
+    - `sha256`: 6124e972cc182ef134a5c411f2794c4f2e3fcea205f6a0bfc0a05f4ec912cd23
+  - [134]
+    - `name`: evidence_audit_d449e1ca0cc119a6.json
+    - `sha256`: deb75d4ab1744617a0032397524891613c50282581f913d344e4acda9c6cd9d1
+  - [135]
+    - `name`: evidence_audit_f45ae8d6bc7cd677.json
+    - `sha256`: 04128fa07fd2ca3650981d0cad06d07f921a525b301945b2c539ddd8c7447989
+  - [136]
+    - `name`: exec_cost_real_amzn.json
+    - `sha256`: 297d59df884a80c0503cad9c511579193cf77504fd5313492b732b4297993788
+  - [137]
+    - `name`: exec_cost_split.json
+    - `sha256`: 53ef2528042134aeb7bd8c20d6c94f7e4ab3391fafd9851531f84df3fe3ae9f5
+  - [138]
+    - `name`: ext_bench_audit.json
+    - `sha256`: 324025ce928acda2167ecaa25bca6bcf16373400eb8ddb657e348483010c6ec3
+  - [139]
+    - `name`: fast_replay_p42_conformance_20260928.json
+    - `sha256`: e8fd3b17e82fc21f39ecd184025c69b336f7be0ea18005d132a9c234e85acec6
+  - [140]
+    - `name`: fbm_circulant.json
+    - `sha256`: 8a8fcbcd46b58942852e9c79603d854aaddf1e5ea3c35b5dc9d42978005f5802
+  - [141]
+    - `name`: fifo_priority_amzn.json
+    - `sha256`: f180b99da62d936a31bf9df79f637141a9b7bd4c4679fc3782739455dafd7e30
+  - [142]
+    - `name`: flee_wide.json
+    - `sha256`: 186fec1776108a9051fbe02f47f411279a710999045cc97028fcf5a9f9482e77
+  - [143]
+    - `name`: fleet_eval_5ddf15b0dc7d3ca1.json
+    - `sha256`: 67713fe534eb3c4a508e4c0211836026af4f9efe8c27cd2cc7d69118a9cd1b98
+  - [144]
+    - `name`: fleet_eval_5e907be710811a44.json
+    - `sha256`: c95ce361609bdb00912147e0f87548fdbd2c0221ad27b8c1a4d0ba558b9330e1
+  - [145]
+    - `name`: fleet_race_real_drill.json
+    - `sha256`: 0530bbc98903f8ee2944d468f6124fae0c0034da0956d8c22ece140295ad4def
+  - [146]
+    - `name`: floor_compose.json
+    - `sha256`: 53d4493e5009a0da44acdab958fb3bf8df5dcc01fd5bc76d5d24fe04d07692f1
+  - [147]
+    - `name`: floor_pins.json
+    - `sha256`: a38bb073ef069de28dff2ada970c05f2ac57a19433df20a19dfab727e9a0a5a0
+  - [148]
+    - `name`: floor_rate.json
+    - `sha256`: 632d421666dcd4ea2e7d4acd798ef82cab735054aeaa7d719eaacda91fea35f3
+  - [149]
+    - `name`: floor_reseed.json
+    - `sha256`: 2c02b255e4506593755d30d448e15bdc8f242e81ecbf380056b3a8c32698060a
+  - [150]
+    - `name`: floor_stability.json
+    - `sha256`: fbd9860771b933e799ee938c90ba3ea43620ead6dd99f0f44231c7c5d9916ce9
+  - [151]
+    - `name`: flow_couple.json
+    - `sha256`: 5dc9e98c044ada0edef8fc7f0be4ec7efabdc5d52781d9cacbd327549fb9f992
+  - [152]
+    - `name`: forecast_core_audit.json
+    - `sha256`: fb5960935d5182ae83223cf1e0645c0f3812abe37dacacf9f211ee920e2f0c18
+  - [153]
+    - `name`: forecast_data_audit.json
+    - `sha256`: 3174e1b32201a37b02fe225f469781f58e9470c9aa971ad259624bbbda2ee224
+  - [154]
+    - `name`: forecast_infra_audit.json
+    - `sha256`: 57d88d8385893260ddb771942ecdbb889e6e9aea1ee53c9660ef4f3a7350f9b3
+  - [155]
+    - `name`: forecast_pipeline_audit.json
+    - `sha256`: bd9b0903ffd6f40e3b237f4bbe46557ef345cfd547ec9e045dadc0ee806084c2
+  - [156]
+    - `name`: forward_record_preregistration_v1.json
+    - `sha256`: d1f0022744261fbc52aa1296e8f4d859ae1d56705bf4920bbee7d4a75281cad3
+  - [157]
+    - `name`: forward_record_preregistration_v1.json.seal.json
+    - `sha256`: afc88d0767169ff88e22920d492ddc3c2db25c9dbdd00cb391504e81bb29fbcc
+  - [158]
+    - `name`: full_impact.json
+    - `sha256`: 29a1b45e52fca254985f19c30d096eb6b2de14a406494282206e1092b3ea905e
+  - [159]
+    - `name`: full_stack.json
+    - `sha256`: 2048f94b0d052bf5ebfa38c6786d60b900b37468a814ec46e9b25262d6c9d1fc
+  - [160]
+    - `name`: fx1_anthropic_sdk_audit.json
+    - `sha256`: 03fd468413780b70daebbd231a925c4289faf62c6f0327fbdd0572f83764d01b
+  - [161]
+    - `name`: fx1_api_audit.json
+    - `sha256`: 3d94c3ed069123be4b774613a3e35d114698ab6000ce195fa97187e2a5596bb1
+  - [162]
+    - `name`: fx1_auth_audit.json
+    - `sha256`: fb7e0783ffa11fb79b7c4a1fceedb0b9e3f5eb836db4cda2b195b000128d8044
+  - [163]
+    - `name`: fx1_cap_audit.json
+    - `sha256`: 99737d09622533bad5f5793cd7fef198e211b235251bb79455c9a5e8643547b3
+  - [164]
+    - `name`: fx1_cli_audit.json
+    - `sha256`: 19a95549bfb8e5f3143474a94bfaa24ccc593f634237b3e8f33e811481dd0add
+  - [165]
+    - `name`: fx1_client_audit.json
+    - `sha256`: 3c83b261c8966f3ae7d63bb5bb18371adddb1b3ca2c21795223b8d3ceab3acc4
+  - [166]
+    - `name`: fx1_contract_audit.json
+    - `sha256`: 913e276befeaecd002582c8125ebddc96c85996764b57b91a956b5f7b32173e0
+  - [167]
+    - `name`: fx1_drain_audit.json
+    - `sha256`: f864d2a9cff6e6c396045afa8105c337362a769e491d6fc002af7dcff29e454b
+  - [168]
+    - `name`: fx1_e2e_audit.json
+    - `sha256`: e4671f251df3cf35c7ec50adbc59803a8d733f1759380edea714a532c6ec49ac
+  - [169]
+    - `name`: fx1_eval_lifecycle_audit.json
+    - `sha256`: 16c6e3969091a825443712614b1dd31b0c1224c8196d1fa35596f6fafb4872dd
+  - [170]
+    - `name`: fx1_fault_audit.json
+    - `sha256`: 43c78649e2f8246708940e27e83038f69f2e7aa36fe758d442fac9f6bea04205
+  - [171]
+    - `name`: fx1_jobs_audit.json
+    - `sha256`: c952e24df7c07978437e3ed7f36aadf0cd13103980588013f3677e371f9775bf
+  - [172]
+    - `name`: fx1_oai_sdk_audit.json
+    - `sha256`: 2e1421dd4e7b06191da9ee4c537d10ecd0fcb5e8a13a32608820f295e81fd0fb
+  - [173]
+    - `name`: fx1_ops_audit.json
+    - `sha256`: 6362b090bd931070e3f1a12caec01d2dc0df14db98c71658c29b58bf10fb8d08
+  - [174]
+    - `name`: fx1_parity_audit.json
+    - `sha256`: e71e77a4d8169d731bdc48c27765c24c3db59f1240437e55fc1f9edb928c90af
+  - [175]
+    - `name`: fx1_perf_audit.json
+    - `sha256`: 7f0fe1b11dca4412cb54b8dc3f40ad929016ac1e59788b3b3dd2857907b32148
+  - [176]
+    - `name`: fx1_quota2_audit.json
+    - `sha256`: 6e135a43144e89e3fab4b7d4473d89db1d98ae6f888f7611d2e9433ac00cadca
+  - [177]
+    - `name`: fx1_replay_audit.json
+    - `sha256`: d3cbeaa2e484021f6a1524df38d01c42cf19db7ad0de0aa78b4a44e750dcbacf
+  - [178]
+    - `name`: fx1_retrieval_audit.json
+    - `sha256`: c2edb7a020d4ecd07358915c28df2a54e33986faef25f35ecc566e2883ee5a29
+  - [179]
+    - `name`: fx1_sdk_audit.json
+    - `sha256`: 1556d7498e4618e386f891777e820fd3b2f08b4bde0ff7a9ad6e3d4689ef60d1
+  - [180]
+    - `name`: fx1_spec_audit.json
+    - `sha256`: e86dc5bffb1267539df5876ed3487bb0154512d5b9fbbcc83223d4a5db05fdb8
+  - [181]
+    - `name`: fx1_tail_audit.json
+    - `sha256`: 8874bc452c43fd807a7c7525c5105663a01f4406c05ea6a37ad5a361e5d8add6
+  - [182]
+    - `name`: fx1_usage_audit.json
+    - `sha256`: e728655fa53df38114d91ad618c9e278cbc1ab0391ef8beec3b89cc4693787e1
+  - [183]
+    - `name`: fx1_vs_audit.json
+    - `sha256`: ee0a91338bcd0ae61416ccea0c83165548f67a39df58b05c981216afde8f6102
+  - [184]
+    - `name`: fx1_webhook_audit.json
+    - `sha256`: 0b262022d1bed02812e22e5c5558fdff740eae4e178609eb4d7ca0aca9f6c525
+  - [185]
+    - `name`: gap_close.json
+    - `sha256`: c405793974f1ca9c88feb19c56e341185c68d87809dd755eee6cc604c65a85e7
+  - [186]
+    - `name`: glft_bench_synth.json
+    - `sha256`: 4efd3a9a814d245873371a8f09c2d2502fca71393dbf738496e59cb4dc369467
+  - [187]
+    - `name`: grad_fidelity.json
+    - `sha256`: e86ebeeae2bae5736b2bca3089d8e415b41ce901bc23df5d2f515bda12bae660
+  - [188]
+    - `name`: grammar_map.json
+    - `sha256`: f8ee1c31439b03bbe14989ee0cebb7b0917f5186326cc91c2d81d7705686198a
+  - [189]
+    - `name`: harness_audit.json
+    - `sha256`: 0292862d23f09133aa7b11437b2e543d1740aa0d5ba6170f2069ea18808c6208
+  - [190]
+    - `name`: hawkes_clock_bench.json
+    - `sha256`: 816f8bd60cab106505a1adb153803ee48579ce6615a85ccd3e5d27785f2f3b77
+  - [191]
+    - `name`: hawkes_mv.json
+    - `sha256`: 5f386d77d237a6bbdc12fad5d794184508548fad474b1cb258f48bded96d7431
+  - [192]
+    - `name`: hawkes_real_amzn.json
+    - `sha256`: 9d398acb03bfc6bfd9f965d5d6115b5ca4d64244d312e90993ea11e7bd8a80ea
+  - [193]
+    - `name`: hidden_depth_amzn.json
+    - `sha256`: 24b6c5ca511ec6211f79115fdac3eac85f52d393738a5a88adebad8c46575ea2
+  - [194]
+    - `name`: hidden_depth_bench.json
+    - `sha256`: 4e18ea2564f675b351bfdd93ce9c1541af0638ef07e43728cfb48a83b3912330
+  - [195]
+    - `name`: hit_flee_amzn.json
+    - `sha256`: 72765463da5af6990d81e3026dd7d23ecf83265407fb0b0b43d14a5d2690a6d0
+  - [196]
+    - `name`: hit_starve_amzn.json
+    - `sha256`: 3d98298e540b6ab7fa14c9b8452feb06c7b5c28a2b09a55ea8a9c4b6710acb39
+  - [197]
+    - `name`: hmm_stability.json
+    - `sha256`: 5d06bc292b14e6a4de8d6fbd640e76c66b6ad82e4705e27ae068c2ef5a88c040
+  - [198]
+    - `name`: hmm_verify.json
+    - `sha256`: 269ee7b7e767d0388ab285e3257a5de62f4a631ada045aa83577b2b7786a51f2
+  - [199]
+    - `name`: honest_verdict_b133e8b3992af893.json
+    - `sha256`: 1a003a670945452a5c86d033900bc33429f2981422c8938b1b8e2469fc764f3a
+  - [200]
+    - `name`: honest_verdict_real_drill.json
+    - `sha256`: f9badb4a33ec9c0a35a10131cfca24d6f8caa531d5a9882c8f6d59da4073abca
+  - [201]
+    - `name`: honesty_audit.json
+    - `sha256`: 63d79882e619905c0d45fc094d08c67cce9be60c98e43ca846b677c3337370de
+  - [202]
+    - `name`: hypotheses_audit.json
+    - `sha256`: bd65b431cfc36ce9ec54bd7262002eeb735025e2dc71995e983df73924bceb4b
+  - [203]
+    - `name`: ice_budget.json
+    - `sha256`: b0be60f820caea3783400f5f7eaff399c68d243ee11508a95212d64907789642
+  - [204]
+    - `name`: ice_crown.json
+    - `sha256`: a57b172d4c2d0f528461fd35dbcaafefc1af9b3b08c9cb2cd690d7e76053665c
+  - [205]
+    - `name`: iceberg_bench.json
+    - `sha256`: da07cac898aadafc9bb434319334d0fc72d504fb5fe4c9ff5d0031b09499e7cc
+  - [206]
+    - `name`: iid_floor.json
+    - `sha256`: cd2d6153b177482f1df86f78f6c795d03e93a17046a897c58874dc14fcde2753
+  - [207]
+    - `name`: imbalance_predict_amzn.json
+    - `sha256`: d467e13e158dddf59e0ec2dd6b0941aeae37237f491757705418f7420c789655
+  - [208]
+    - `name`: impact_instant_amzn.json
+    - `sha256`: e6d80527e2bb993d7450087db961d6229561fe1a87c0e8b68d3920ca50315c4b
+  - [209]
+    - `name`: impact_persist_amzn.json
+    - `sha256`: 58bcb731c697074949a3705ee2270181d9f2df5e5d2c8f08fbf04b020f3200dc
+  - [210]
+    - `name`: improve_flow_bench.json
+    - `sha256`: ec0836e7b4d24834d0b68a43c5676ea213049fce8200966dc15d98d30a0a4488
+  - [211]
+    - `name`: inherit_audit.json
+    - `sha256`: 718adc7b101c76e503cc475cbedcd086fb0f696a14968d977f4ce5de7dc32a07
+  - [212]
+    - `name`: initiative_fade_bench.json
+    - `sha256`: f9a3f118c2fd37a308bd691633c7e7a9668e770d959535ca16bc2c583e4db867
+  - [213]
+    - `name`: instant_decomp_amzn.json
+    - `sha256`: e9fcb9c72331341fe60237cb457fa8456dcbdb340e87060fbb9318a7265b4df0
+  - [214]
+    - `name`: intraday_exec_amzn.json
+    - `sha256`: 04803c1f783145e75ccf403990146768490e123bc82c26dbdcef3901eb59fa0a
+  - [215]
+    - `name`: intraday_shape_amzn.json
+    - `sha256`: 7e831325e8e77d61360d07100a35234c210f79b99825d6d4040d5d903470cd1d
+  - [216]
+    - `name`: joint_fit_amzn.json
+    - `sha256`: 1041b3196b85319688e89a359401fadef29a4ff14a7371e389668b0c2d6175bf
+  - [217]
+    - `name`: joint_stability.json
+    - `sha256`: cd43e7ec5f39ddbb3ff5c6ea9acce41191bcd250cff7e986c20637c8719c9e84
+  - [218]
+    - `name`: joint_tune.json
+    - `sha256`: 27aea6f04b845ae84445bcd97dbf31c6eb68cb85053af2d568fafe51027f38f6
+  - [219]
+    - `name`: journal_audit.json
+    - `sha256`: 04fa04a533738617f528b94d0c819e1bf0b8d0ee71b653142136ed8fdb8e6942
+  - [220]
+    - `name`: kill_audit.json
+    - `sha256`: bd65e84d2037d452282b5fba052b6be102fef2e50995a14cb2a381405d8d2565
+  - [221]
+    - `name`: label_horizon_map.json
+    - `sha256`: facf0481adaaf3cb55b307b27c9259423b0ff6d13363b9a24e68b2b86a8cb955
+  - [222]
+    - `name`: label_stability.json
+    - `sha256`: bda24271b910cd2d912104d445d81c50f9f8fd61824b2c10e8a18f5c042c96dc
+  - [223]
+    - `name`: lane_power_drill.json
+    - `sha256`: f0d9effae801a0ab06dfad9cbd222c55a45c71128f01b27b060c20e5624e273e
+  - [224]
+    - `name`: lattice_drill_verdict.json
+    - `sha256`: 1268fa068051b57089c454f4f750dc5c8db833b56e52fe0378f91480525fc978
+  - [225]
+    - `name`: lattice_drill_vol_bench_a.json
+    - `sha256`: 33f9defac50df4f692db60eacc585c3a93eb06b7039e3be866984cee02c28481
+  - [226]
+    - `name`: lattice_drill_vol_bench_b.json
+    - `sha256`: 49651398e997ff6685e1ef31a1686e3799cb20c12595a8234b47c1a187990988
+  - [227]
+    - `name`: ledger_audit.json
+    - `sha256`: ce5203012f63807d82146868ab26fd44cc23019364feadfdbffb03cda064f522
+  - [228]
+    - `name`: legacy-unsealed/adaptive_mix_20asset_1d_20260922.json
+    - `sha256`: b59422415e556f674ea03fb8e9a3b867408bf6d163cf7c11c64feeb7e33b4313
+  - [229]
+    - `name`: legacy-unsealed/adaptive_mix_band_search_20asset_1d_20260922.json
+    - `sha256`: 5e02918850944a68d1d45815b5928f1eed462d456eac4723ac9290514e7b97f4
+  - [230]
+    - `name`: legacy-unsealed/basis_pair_candidate_20asset_1d_20260922.json
+    - `sha256`: d021801c94e33d8720f9084762138893978a61e36ef670b4c0140edeaf37c1ec
+  - [231]
+    - `name`: legacy-unsealed/basis_reversion_screen_20asset_1d_20260922.json
+    - `sha256`: 61c9c8f5b3e502f0c5218dd743ad030ecbb962d6822bb7b81a2b962445aa378f
+  - [232]
+    - `name`: legacy-unsealed/dip_bench_crypto_1d_20260925.json
+    - `sha256`: 584eb681dcd18fc65835c1573360b4b5fc9ebb72aa662bcbb9e7c101b06e2f03
+  - [233]
+    - `name`: legacy-unsealed/fast_replay_p42_conformance_20260927.json
+    - `sha256`: 8236a26489e9253dfcc1f3d879a2fd276c0023fb4d167c764c5330406ce950d8
+  - [234]
+    - `name`: legacy-unsealed/incumbent_bench_qlib.json
+    - `sha256`: f455123351b44151d68876d1a93fa3a2dc449c51d280ee83926f22cd9861984f
+  - [235]
+    - `name`: level_gap_amzn.json
+    - `sha256`: 3c1b21418c1b617164a629f45f039f341ce9bab5321c81d77831a339222cde9d
+  - [236]
+    - `name`: lineage_dag.json
+    - `sha256`: e00ad05cbcc7e60916ebd9c9e12b704b29de788acbd82ee544be3df2375e66da
+  - [237]
+    - `name`: lo_response_amzn.json
+    - `sha256`: df91141443b114f39d4dba23cb499de6c4c8961eb6d1d6b1b60ca6d751dd66c2
+  - [238]
+    - `name`: lob_exec_amzn.json
+    - `sha256`: e334cb33cf73a06b99bbfc834825e409e849ec860b8533a093dfefbdac2e0932
+  - [239]
+    - `name`: lob_invariants_amzn.json
+    - `sha256`: 8a890214de32880ca3043d8ebb863992b938708828aeb3639fa79fd90e7948e0
+  - [240]
+    - `name`: lob_resilience_amzn.json
+    - `sha256`: b8728dbb705d8ae62e1339a4d7482070f7f827209c20c342b31ce6a9980a585d
+  - [241]
+    - `name`: lobster_replay_amzn_2012-06-21.json
+    - `sha256`: 44f53ca3f6e42bad9617d284fc37542ca64d3b4373642fe54deae83302a9dd10
+  - [242]
+    - `name`: loss_cs_real_drill_conf_t_vs_empirical.json
+    - `sha256`: 1859b044469b2c4ca7f0db5ed195aeb56868ef9aea0f46b5f763cf8301591763
+  - [243]
+    - `name`: loss_cs_real_drill_gaussian_vs_conf_t.json
+    - `sha256`: 60e68e2af9cd2544458a8ac821e1468b47b322798cb498a3e116d3f0ce0964de
+  - [244]
+    - `name`: maker_age_bench.json
+    - `sha256`: 743ba4eb58ce5575b1334ea8a1731ae39ebeab7789ea43733256e1458c8f5c49
+  - [245]
+    - `name`: map_parity.json
+    - `sha256`: 4dff84d32892f41c5d10b30c4c55ab5ba9a072affe9f67d2c3e4c50cc39330f6
+  - [246]
+    - `name`: marketable_limit_amzn.json
+    - `sha256`: 0e231a062d7253b3cdce1acd4a6ca72c75890e7b19fbbc47c76cc6815448c932
+  - [247]
+    - `name`: markout_amzn.json
+    - `sha256`: 70730f6f3bd4e398497f1e302f3b375c739a548b856b68f2282f4fa18b3de864
+  - [248]
+    - `name`: masking_audit.json
+    - `sha256`: 331d20547c6fec39fce38951b75d0b9d653f4d0cc37dff3908ba06e15b7950c7
+  - [249]
+    - `name`: mcs_real_drill.json
+    - `sha256`: 047c2d4e487c7f3ff8571cb456fbf75c3ca1419b100fe2a77c3c5c4832d60a53
+  - [250]
+    - `name`: mcs_vol_drill.json
+    - `sha256`: 9d2b8e91aa81a8c1f2527135680f13ee4c8c71de6daa01f752fe1a4d9abd59c0
+  - [251]
+    - `name`: meta_model_synth.json
+    - `sha256`: 351b5285fcd9f08a8dcfa478db62ed1dfd407c9bda7065efdf2cc2fcf4e3b0e2
+  - [252]
+    - `name`: metaorder_detect_amzn.json
+    - `sha256`: c2bfd7554d2aba52493daa287850c08aced9893f7beb8f0aa976e9b0c791ec8d
+  - [253]
+    - `name`: mid_dark_amzn.json
+    - `sha256`: e12eaa45923bc159ae83d6a62ce9fc3e09e6f80eb47d04d3b27a43adfe550624
+  - [254]
+    - `name`: mid_jump_amzn.json
+    - `sha256`: b4afddf6927e2254d1e0362517bdd14ec3dd07d1dcebcfbb2da40384a1585d17
+  - [255]
+    - `name`: middleware_audit.json
+    - `sha256`: 559ace707af811672313127e2c1ef1758c5f90abce890f91054efc81deb332da
+  - [256]
+    - `name`: modelcard_audit.json
+    - `sha256`: ea042e48135698a878772ae2388c88d86ac11c666d385fe91e9f7ae52ddf84d2
+  - [257]
+    - `name`: monitor_run_13d20aef00774027.json
+    - `sha256`: 3ce1cd7f59c301be6b4710326ab905313725317bee3669ae8e755f6d422bc12d
+  - [258]
+    - `name`: monitor_run_drill_clean.json
+    - `sha256`: 6baa7552e7954a8c081b94f02f1034bf0430b77eee57d4d852952e057aede65c
+  - [259]
+    - `name`: monitor_run_drill_defect.json
+    - `sha256`: e5a8b3d2432a2c2a60969286a54cbabeb7a05ef6ea8d1cecf9410beca77033df
+  - [260]
+    - `name`: monitor_run_real_drill.json
+    - `sha256`: 409a097a1fae3128d9a1100e78ac4a42dcfbfd405a2a9b6bef63fbd42caee3c1
+  - [261]
+    - `name`: mortal_repost.json
+    - `sha256`: c351dc60be497d864fc2cea3a06acfe8fcf3c9ef019836f3af0a0a6d58cbffd7
+  - [262]
+    - `name`: mrm_audit.json
+    - `sha256`: 58eb74524b8e5e97f5a07109503b2c4d350f3c316c53bd44177bf280a13978ae
+  - [263]
+    - `name`: multih_fleet_eval_5db1cab214e291d7.json
+    - `sha256`: 07cd44dd6a795bc0b93e21824b5a963f9c89902f405f91ce6c991e38cbdd4516
+  - [264]
+    - `name`: native_conformance.json
+    - `sha256`: 6754767a42cdff244d3ff4d59b2366ff8655990087cf42957147e0890fbdc5ad
+  - [265]
+    - `name`: nautilus_conformance_7bf19a08c147547b.json
+    - `sha256`: 3a10fca306535858496b88890cab846c2bcffa9e7408980315162a6a5451f960
+  - [266]
+    - `name`: options_audit.json
+    - `sha256`: 80c4ce7b746b194f0e7dc78edc123768654a8db6e99d79398943822ac951e0f5
+  - [267]
+    - `name`: order_lifetime_amzn.json
+    - `sha256`: 57d744ba5f963aed36a2fef198015643bf4be0855f610ab32dcc21bc83941e01
+  - [268]
+    - `name`: order_revision_amzn.json
+    - `sha256`: dbb7239f51f26e176f62493fea10a2e921b1a97945eb251eae5e3432badab3ce
+  - [269]
+    - `name`: p0_evidence_inventory_v1.json
+    - `sha256`: 14ec1043293364e48787bc29446dbfb51b0fb55d69e20d0ba1328c905269cab4
+  - [270]
+    - `name`: panel_audit_real_drill.json
+    - `sha256`: 0da1154c057ee11386df9fe306cf03d63cfaee1a7915df4e51e51b570e2a35de
+  - [271]
+    - `name`: parity_audit.json
+    - `sha256`: a3f63f1bc2c5a8a1eda080ce56e6e4a14994b9b0a5fa40fa26d77a326b720163
+  - [272]
+    - `name`: parity_leak_audit.json
+    - `sha256`: 2e0cb6046a0cd26672101b4e3739d929e0e91fbfc360ceae94638287b83d451a
+  - [273]
+    - `name`: pin_stability.json
+    - `sha256`: cb002632c4d286eb8d3a1c9597f86b16d05bca58d12e3b06f472b25627bd61f1
+  - [274]
+    - `name`: pipeline_audit.json
+    - `sha256`: 728186040bc8ffa34264155cb8a54d1d6123c71968edcadbf7bac0b8cee90077
+  - [275]
+    - `name`: pipeline_flat_audit.json
+    - `sha256`: d849f5c4e74db12eaf84ed3161170c4151bfd05682aab9ffbf476e0478e1c37f
+  - [276]
+    - `name`: place_law_amzn.json
+    - `sha256`: a85ba039fc645e0455f7fa969be74bd40838b5c06b8893737d13352b68aef901
+  - [277]
+    - `name`: place_mix_amzn.json
+    - `sha256`: b496d4d2cdab3e254968926073316a3e74167d24734a226aa22146565996a994
+  - [278]
+    - `name`: post_trade_drift_amzn.json
+    - `sha256`: 83ad54e2add374fc7fa0333072c4ef745f6a1ed4112f36d14cefb9b23262192d
+  - [279]
+    - `name`: price_clustering_synth.json
+    - `sha256`: adfab5e558bdaa8b54abb8376b1d4f33c11f605d9215146ccea3b82d163b0c7f
+  - [280]
+    - `name`: price_improvement_amzn.json
+    - `sha256`: 870ef7c83529dc34f22ea1a7555abbbbed92f84d6d498096ae6159a4b4ef93f1
+  - [281]
+    - `name`: promotion_gate_conf_t.json
+    - `sha256`: a353477ea44ae58d507ff43f5be735937b0e0f3b2f84ef10d2d7f29e846f3506
+  - [282]
+    - `name`: propagator_real_amzn.json
+    - `sha256`: 4c7a02f864596c226f78948ee5d4ae227a2323a5aee8e1efd6b9f492f3d3089d
+  - [283]
+    - `name`: quality_audit.json
+    - `sha256`: 60c619c630ec06fd0384bdf08f11b6940e06c914bc89fe75b7c62a4817aa06bc
+  - [284]
+    - `name`: queue_class_bench.json
+    - `sha256`: d3941977a98261a06825573ad173a9b5d21e1515ea7a3dd48430e61779dc341d
+  - [285]
+    - `name`: queue_fate_amzn.json
+    - `sha256`: 54ce63133d050866a22b42879797e56d076c3f9de8f646902e2090287acedf55
+  - [286]
+    - `name`: queue_jump_amzn.json
+    - `sha256`: 467134b64f8e9b397acd3f221e716b735ee62a5e70e2a533875be62b5d42924a
+  - [287]
+    - `name`: queue_occupancy_amzn.json
+    - `sha256`: c2f2b5caf9a82f3066a34abab1b0529acf44948abd7e61d7b3e1a35e20efbe23
+  - [288]
+    - `name`: queue_priority.json
+    - `sha256`: c03de3a987fe19ee42eadf2f5ac6e97e61da5d55bf89f3a81493e0abf399e7d4
+  - [289]
+    - `name`: quote_floor.json
+    - `sha256`: 20fe58eafd0338916ce1f2872ae0279f079f399ab211c61122e0be68294e1e48
+  - [290]
+    - `name`: quote_place_amzn.json
+    - `sha256`: 493540278637dde9c9500d180d3651a9a34efa279eda7278da2a6655f5e1d4df
+  - [291]
+    - `name`: rankic_eval_8d740c0ddf6d5c54.json
+    - `sha256`: e48fce1ae4cebf94e417773bdef20c9ed7b0822397505c6a51e8843a8da06c81
+  - [292]
+    - `name`: rankic_eval_9ebdad7da83e7348.json
+    - `sha256`: ff139132f80998e336918077dffacfe6d7a660305d025ca635cdcbe7837251d4
+  - [293]
+    - `name`: real_benchmark_us_wide_manifest.json
+    - `sha256`: b6e858a81744c40d82a119027400b70b46974444019913e1ea4dc15fc288fb69
+  - [294]
+    - `name`: real_benchmark_us_wide_test.json
+    - `sha256`: df39bc572dd89e636fd56346687a2de7dfed873a9e4b3c51e2d87dbcc62d955a
+  - [295]
+    - `name`: real_benchmark_us_wide_validation.json
+    - `sha256`: 8c4d8dd4b5af7419dfdf11f5f15f87b437d94db7f33d1b3719842be79b22a0a3
+  - [296]
+    - `name`: receipt_admission_529da640b520a49d.json
+    - `sha256`: 597c5aeecd2c1b57f0908fa6fdf05890fece05e541a42be5a662ba235ff67f03
+  - [297]
+    - `name`: receipts_audit.json
+    - `sha256`: 5fdba4c796f2dff49486c62bd3c501e3053657231d6c45bfdd5bdb04ba2bb1cb
+  - [298]
+    - `name`: refill_hazard_amzn.json
+    - `sha256`: 195c5461c91d8d5faa684d1c3b179292e1ad717fcdabe1a61f0a851dea7e016f
+  - [299]
+    - `name`: regime_clock_bench.json
+    - `sha256`: 55c7d545b7f2e62b50ed135b63920effa0811d198cdc2c84fe0c035157626619
+  - [300]
+    - `name`: release_chase_amzn.json
+    - `sha256`: 8305fd598f154fe8c465ad718ece1fffe297c47471096a86543b69adfd02709d
+  - [301]
+    - `name`: reload_gate.json
+    - `sha256`: 98590cf3583cb8e138ee24c43324da205e4bf04df29a91467b0f69ac5fc8deda
+  - [302]
+    - `name`: replay_coverage_5e5e7ff56ee42196.json
+    - `sha256`: 5dd7d736d1be3a13b977b79901fc9dfef5fdc0d841c489f5848cd7c0839e521e
+  - [303]
+    - `name`: replay_coverage_e72b56ffaf7abe4b.json
+    - `sha256`: aa201319a975a4a347405a1e824db3a47084b4b8a140b0d087a46d85593ad02f
+  - [304]
+    - `name`: replay_proof_0de5fa4e0c739037.json
+    - `sha256`: 4a870f4bb735b8ebf2c87ae3dde8994dfe2220d55ead2f10871ed2c893cf70c2
+  - [305]
+    - `name`: replay_proof_6d266ef51218e3e7.json
+    - `sha256`: 4f20eb438da29c42f4bc54f38a643590f149458db80a8c86196e72477551ecd6
+  - [306]
+    - `name`: replay_proof_701ae84c3d9813e0.json
+    - `sha256`: 4f49bb965f299970c04f1d01673142e0b6e5df77004c5d034b6bb6028760ad18
+  - [307]
+    - `name`: replay_proof_73137fe1a97c3538.json
+    - `sha256`: 74fbc282a7a1d5eb53bcfa17e44a460f8235f5950c463233abf70099e1a5c91a
+  - [308]
+    - `name`: replay_proof_7e1d9b632f022f5a.json
+    - `sha256`: a3a21f8a745cb80cac90f8e53f9512294c297e0caf5d3a4665d5f07214de4517
+  - [309]
+    - `name`: replay_proof_b23a176a5c91e210.json
+    - `sha256`: 1f4a8bd88480f4ddd2f07791b2f00deaa39c83a2151cd9395d395f1e20a4a7ad
+  - [310]
+    - `name`: replay_proof_cbbad2b0389750e5.json
+    - `sha256`: a320cc68307ecffe319ee675feaefa837472ff8a41f07416ac7208e1e98e1667
+  - [311]
+    - `name`: replay_proof_e1fa8dd41197ef11.json
+    - `sha256`: b7f6dc1c01a736a198ec1b10d2aa4e645eaa12c42aba06d749e210f612bc9f6b
+  - [312]
+    - `name`: replay_proof_f5fe541481bbf231.json
+    - `sha256`: bf65017c57348aed947123163223ef59ebf385c9907052b2497016d3753ae2ce
+  - [313]
+    - `name`: report_audit.json
+    - `sha256`: 90dbdda1d64beab2bd4b82cfcfecd207d0aa2ecce9906fe7c333c9ca3ac2b9f5
+  - [314]
+    - `name`: repost_frontier.json
+    - `sha256`: e946c2b132bb9334ace262e6731f96c13e14ce613f68537acf7e6d207fda2dbf
+  - [315]
+    - `name`: repost_latency.json
+    - `sha256`: 5afe00ca1d7db9a0c2dbbbc604b5e661b139609856fa479e035e0c158c675e8a
+  - [316]
+    - `name`: reseed_hazard.json
+    - `sha256`: 0edfaeeea62f26b073232904ea7417de7373e31214cda255219d1c23c81a5054
+  - [317]
+    - `name`: reward_audit.json
+    - `sha256`: 89fd58aa04e5efccd68045bca4c6f263b78e2823a91e8aa50c70f331a0c06822
+  - [318]
+    - `name`: rough_vol.json
+    - `sha256`: a7a0dc640fe0c45b08e3a686dbc341f24e2ede115bd0777ce8d7ceb946bea648
+  - [319]
+    - `name`: round_lot_amzn.json
+    - `sha256`: 84c474210f467bd43f8285361cb93bc840b0a6821185a64d7fad0d0036198d6c
+  - [320]
+    - `name`: rt_audit.json
+    - `sha256`: 5cf3b9efba744325443e6dc9599ccf9dd651332ee7a1fd3eec5b45c7d03ccd7a
+  - [321]
+    - `name`: rubric_audit.json
+    - `sha256`: 2f6945fda3c5d3357a29f723a5e6eeac530d6de70909b108c4e7a04095ec239b
+  - [322]
+    - `name`: run_audit.json
+    - `sha256`: 05db03bc5b9474bee5eb68e1d3d5b2dca1a8ac239c01348f86f53e6ec1db237e
+  - [323]
+    - `name`: sbom_audit.json
+    - `sha256`: aea10d964151ed5af028e1f308b42c23378dfe6da86bcb5d6392174bb21d4bc7
+  - [324]
+    - `name`: schema_drift.json
+    - `sha256`: 739cdc3d79a415c89a28a696e7e98fd5aaea52a774ac0c621f2c721342999bc8
+  - [325]
+    - `name`: schema_fingerprint.json
+    - `sha256`: f02529f36e47efbd95c9d9c328517ec18cf1660ef6c3f14f33254af94898975b
+  - [326]
+    - `name`: seed_audit.json
+    - `sha256`: be653f889a4ca02a62b230bbeb0e4c7bc863c282369d365a691b234eb9d32fa7
+  - [327]
+    - `name`: seed_sweep_demo_amzn.json
+    - `sha256`: 7f5be12dde7fe0a377100dd6a2623ecd9b34a9d6d95cd68954c80f5068b9539f
+  - [328]
+    - `name`: serial_watch_140b073ea589b0c7.json
+    - `sha256`: b761d0a7b5f73b711c1ba02accbfca5c09206f071fca8a9520860c865de4a20e
+  - [329]
+    - `name`: serial_watch_1e8e1446e506fce1.json
+    - `sha256`: 30cb78079cb4baf19f22d8ac459eb03f157f49eff2250499a936c87bcd976976
+  - [330]
+    - `name`: serial_watch_2c14615c26efd19b.json
+    - `sha256`: b90d2efaa694eb46c93cae795b121fe7019fceb4ea37d52e5242eeb417a6519e
+  - [331]
+    - `name`: serial_watch_46445c3b227aa15e.json
+    - `sha256`: 46017d116935aa1bbd6392afc8359960e2f47ec46306b6fc67bb4b8e6182e4c0
+  - [332]
+    - `name`: serial_watch_47297eff3cb55178.json
+    - `sha256`: a416331d122d804237117f8d89cbd445bb7f0442b28fba198d35714f8106dcc7
+  - [333]
+    - `name`: serial_watch_4f4a495b59d022fb.json
+    - `sha256`: 6479f6806cc7b9cfb8f0c0f2fb292011d9a6293305c316232621c03fa6f748b9
+  - [334]
+    - `name`: serial_watch_771602cd1580476c.json
+    - `sha256`: 52d8269ee60d1f98c119d5fc179c4a6176445c837ee05900a5ef54044c815866
+  - [335]
+    - `name`: serial_watch_78dd891261e2aae9.json
+    - `sha256`: cafb78f75257cff2a338fe26021e82a4eae4b8049feeb02c7256ccfef805db0f
+  - [336]
+    - `name`: serial_watch_85db152db863d25d.json
+    - `sha256`: 4cc2079dbbfd83e0ae07fcba82e8319e18dd33aaf9589f8e11387433c88caad1
+  - [337]
+    - `name`: serial_watch_8977244ef78bfd2f.json
+    - `sha256`: 7f6c4e9d74a471019bba9fd44fc3193eb1a0f4ab7c1e6e0cc6f35cd8ebc5d57f
+  - [338]
+    - `name`: serial_watch_a6fd40311ce0fa04.json
+    - `sha256`: dcb4c9013319c21e5af8dbdc53f65b93656e5679ea4ca46ac8a335529fbad490
+  - [339]
+    - `name`: serial_watch_d311f5ea367a66a9.json
+    - `sha256`: 4b748b61f2cb5a6e7a4eb58fd58cd9fd98247520129c27f904138c2f1d2c3c7f
+  - [340]
+    - `name`: serial_watch_dbd21a6c99c81e00.json
+    - `sha256`: 072bbfebb6ed9a089476aa711cf717ab8cf7347644c63281b8c34875a3a4a36f
+  - [341]
+    - `name`: serve_audit.json
+    - `sha256`: 37ce4766e87a0a7200ba38e20f49fd5a5fe734640ab9ff43a4aa18ccea7b2113
+  - [342]
+    - `name`: shield_decay_amzn.json
+    - `sha256`: 2e88cdc4707a8890a0dea647749561eff8fda0d0b7711ff07bd42549e15319b2
+  - [343]
+    - `name`: side_imbalance_amzn.json
+    - `sha256`: fdce661d9fd73f5bd47f17dfbec526e3c4079ed0ea97dd6c59f2cb2a07791a76
+  - [344]
+    - `name`: sigkernel_mmd.json
+    - `sha256`: f56d3a4e991a23592af3e4406f64b2fecbd4abf8dddcec96f03e89934779358a
+  - [345]
+    - `name`: sign_autocorr_real_amzn.json
+    - `sha256`: d2b4dce996ab14b7e2e16112862b073e87294c06fe07b755942230c65ed65438
+  - [346]
+    - `name`: sign_predict_amzn.json
+    - `sha256`: fbbe98aec24936c1b3a0dff0c922a660fdb2e2419e402bf35ba30f923a7cf13f
+  - [347]
+    - `name`: sim_real_ledger_amzn.json
+    - `sha256`: 814b4853c24bd668b2c2fdb66f6fd4eb8b9854fcc335edc0ea22dbc6d3271622
+  - [348]
+    - `name`: sim_sensitivity.json
+    - `sha256`: cb33e655209b155f557770674a45d14a77e523f4d964f8cea6c69644048ca140
+  - [349]
+    - `name`: sources_audit.json
+    - `sha256`: 1819d4b627eb9bc9589978a0c16b7b38452bf72747f81641478bd4b64bc2af03
+  - [350]
+    - `name`: split_flow_bench.json
+    - `sha256`: 37c6fe8de4fab801aa4dbb5eff23c326ecbf8d471e869d500be9451d9fb6e73f
+  - [351]
+    - `name`: spread_dynamics_amzn.json
+    - `sha256`: 13bb86c5bbf5f826279c0af371790259cfdb202c8bf85c4f09155199cdd3bdce
+  - [352]
+    - `name`: spread_floor_bench.json
+    - `sha256`: 37861b395d98f358141ada1962c698679c80c24632baa50e7c08b32873930a6f
+  - [353]
+    - `name`: spread_reopen.json
+    - `sha256`: d22bb5a384368a0d383a9cf6df4f38b40e148830e700784a96ae446354aed406
+  - [354]
+    - `name`: spread_response_amzn.json
+    - `sha256`: ab2a078fc13c3bebf659ea962fb21ab18e826508f0abad2fc83e1210ba3c8463
+  - [355]
+    - `name`: spread_response_bench.json
+    - `sha256`: df3253be3c3a3f43bc4e4cccbda6d72f2a627d95ba99a683117cd9d19e9d5352
+  - [356]
+    - `name`: stack_invariance.json
+    - `sha256`: 4f3a5c2449d4192a248d17b06b05e6a5818d8671719af69bd37f216ddef0f1c6
+  - [357]
+    - `name`: stack_watch_synth.json
+    - `sha256`: d90dfbd42266b54ddeb8e237e12d674ecbb24359287166f074d6241ad61a7dba
+  - [358]
+    - `name`: stale_quote_amzn.json
+    - `sha256`: 91bfc70fb7cd64be078a327fae0df159395301ce2d42d954157c6749628bf6ce
+  - [359]
+    - `name`: streak_calibrate_bench.json
+    - `sha256`: 684c6584fc9d7d18d8e6801934e63a1ced7249321e13bc8f06f7868e60a2b86f
+  - [360]
+    - `name`: streak_stats_amzn.json
+    - `sha256`: d51d2a74e86e484183fa2af0405ad38af8273f38fb3621f2bcd39e6029556129
+  - [361]
+    - `name`: suite_health_drill.json
+    - `sha256`: 5a7d32e1da6c12cd23d1d713f996f242cf6dec95b22923b0264ec96818734de4
+  - [362]
+    - `name`: sweep_bound.json
+    - `sha256`: 87670d4022ace1a09b1eec2e2c142bfb3a3cbd33e4b983a3369e6b7421ef1791
+  - [363]
+    - `name`: sweep_crown.json
+    - `sha256`: d42626eead90475119af14f9c8d60d0ca5b94f62ad14c24ff157b4505f264b13
+  - [364]
+    - `name`: sweep_width_amzn.json
+    - `sha256`: ed310e546e4b4f2c2544f99c24cf010197ae78d3fa753bede0af328dde59ccdd
+  - [365]
+    - `name`: sweep_width_bench.json
+    - `sha256`: 67f57afee23c89322c27d64070da7731ba292703388bb68768afc34019f69431
+  - [366]
+    - `name`: tail_quota.json
+    - `sha256`: 307c022496df278307301b62207cdaf7c5fc3078cea9151fd486e088d60bafed
+  - [367]
+    - `name`: tail_real_drill.json
+    - `sha256`: 9b36d560170c53b02f873de648f4c9ea83d7e30e61ab0ad598a2ea4d05b477e4
+  - [368]
+    - `name`: tape_digest_amzn.json
+    - `sha256`: 4915ad1bb6cf3c0857a09020ca27f3c7e6685a9f64681c2fefd8f2e91a8b15cd
+  - [369]
+    - `name`: tape_surgery_amzn.json
+    - `sha256`: 4696227f39dac4b343da3dc5f9a708069d44b64db94a7f5ca12e6455c54629b5
+  - [370]
+    - `name`: tick_rule_amzn.json
+    - `sha256`: d69bc89702def00c3abee7c06e071378f18f0996a186a296a68ba16d676e3840
+  - [371]
+    - `name`: timepart_audit.json
+    - `sha256`: afe622b75c555ba7c810a074205287ba12588cdba90388876d9aea438fad95c5
+  - [372]
+    - `name`: touch_empty.json
+    - `sha256`: 909b434110fae047594dfa08b7342959281df4102e3ee8ba4d65d9c547319c95
+  - [373]
+    - `name`: touch_follow_amzn.json
+    - `sha256`: 8dc68233094f788f38f52a8e32fc5a04a25c27c35806b73d5b677f7160033bdb
+  - [374]
+    - `name`: trade_decomp_amzn.json
+    - `sha256`: af272bd9ef0a1845d901080caa9c3a27257a3ae341848cdffadd8f03475c0427
+  - [375]
+    - `name`: train_infra_audit.json
+    - `sha256`: 31319d104c42dee087fe7d24b42c92af5a99bba75587ebcb3336d9ea81d1e90b
+  - [376]
+    - `name`: train_receipt_audit.json
+    - `sha256`: e31a42fa72953f9b740dde1e2179b8525b6dd49c00c28fec4ebc8e160687c25a
+  - [377]
+    - `name`: trust_step.json
+    - `sha256`: 39f62ffed6cce8684bdb43ba62406bf2ecf12eede96e68d11f4d06ca50de59a8
+  - [378]
+    - `name`: ts_reasoning_audit.json
+    - `sha256`: fba6cce35080058c5eabcc308541cac27bdc27b3538596c1856755cdbdee8591
+  - [379]
+    - `name`: unhit_chase_amzn.json
+    - `sha256`: a7c9de93641c46d2853515894aa636286ba5d49bc12833aa936cc4c056080081
+  - [380]
+    - `name`: vac_chase_amzn.json
+    - `sha256`: 371db4e5f9b635abc95f30ea5e6e0b135202c998322124897d35b26f9a130b1c
+  - [381]
+    - `name`: validator_fuzz.json
+    - `sha256`: 524d611ec21c3688ec7b8af92b4eda6bd7f70fc23c7a558215fb5ec3d22d4ae2
+  - [382]
+    - `name`: verdict_real_drill.json
+    - `sha256`: 63e4fcfcd616f08ad740b2be0fe3163eaaae8243bdfbbdb8d196cafd19d790e7
+  - [383]
+    - `name`: vine_audit.json
+    - `sha256`: 86febce575e975c471715538d9ae242a5e56522d10afb46ff11e2e462c180962
+  - [384]
+    - `name`: vine_dominance.json
+    - `sha256`: 2c555910f452082daebc5ad1ee719d515725d1a6c1350932cb4d860ae7e230ce
+  - [385]
+    - `name`: vine_panel.json
+    - `sha256`: 4ed248f50d9977ef333f1456a947c01e6d01687eff3f93082e9afa2cc0d9484f
+  - [386]
+    - `name`: vol_bench_f3bf2afc2f159ace.json
+    - `sha256`: b9b70f7186d75054e91ee734b87b8aeeba22d66af713806a8d5410a9bc603ee3
+  - [387]
+    - `name`: vol_of_vol.json
+    - `sha256`: 8a46d4ec9cf6574f032ebc0041b4cb4466ebddfb53d16ac217fc6954d8f707e2
+  - [388]
+    - `name`: vol_signature_amzn.json
+    - `sha256`: 66c853a1efbe2fe0a41535ef9e191eee310e5346e7057fd157a8832b3b1e3eb8
+  - [389]
+    - `name`: vpin_amzn.json
+    - `sha256`: feed66eda5cf279af3d12224eeeb7cae7ff47a998dcc767249d185f78bcd27db
+  - [390]
+    - `name`: warmup_spec.json
+    - `sha256`: 01b3b622ed4e6d6852fd56f2122d257e1b9f31d100ae850cbea38921a38bafd6
+  - [391]
+    - `name`: wave23_map_amzn.json
+    - `sha256`: ad949f2ebda26df715cc45e1d6efef08c10e6deeac503580bc6668b61bf10ee6
+  - [392]
+    - `name`: wave24_map.json
+    - `sha256`: 5c765aa1b4d50ddd0fb2f3645de5edc6c60465ae6b6c936b7133507e3a0069aa
+  - [393]
+    - `name`: zone_card.json
+    - `sha256`: 751e3497d28c9a1f6e50d5040ec6b80a416194b0ea1b0ab2b05462c897b219d3
+  - [394]
+    - `name`: zone_churn.json
+    - `sha256`: 7f4b68803588fe0ddc3ee3c45698a7a2ea367f8c2bf5cad7e542fd56e91441f5
+  - [395]
+    - `name`: zone_embargo.json
+    - `sha256`: ee556605f12d88c494b6ead3a02099f569dfef7875cc21ca7ea5657983aea180
+  - [396]
+    - `name`: zone_map.json
+    - `sha256`: 43753aa2492ac472d22f2e221fa155d2c1393ed13201a1d9028231e15a4d68f7
+  - [397]
+    - `name`: zone_stability.json
+    - `sha256`: bd695896930494a0d8da307b9088744b98abe575a6574369d929ba7ffc8a4b2f
+  - [398]
+    - `name`: zone_ttl.json
+    - `sha256`: b5987b6ac2dfd8484a15f89fbbfa7dd8d6009df8dd1d4ec1098b4efe9580d722
+- `members_added`:
+  - corpus_epoch_62bfa90c28254f19.json
+- `members_removed`:
+- `n_members`: 399
+- `params`:
+  - `head_sha`: 6418f4f8d7e6bf8903e7fb9558120624c6327f68
+  - `pattern`: *.json
+- `prev_epoch_receipt`: corpus_epoch_62bfa90c28254f19.json
+- `prev_epoch_sha256`: c6368f7ac2c3d8af941bb91a62b9a880a2d70e4aecf0ddad0e865a168c59c1da
+- `receipt_sha256`: 52f80a0cc915f58d4e79d600db5ae2b1aef14d79f731c611da83598bab7135f5
 - `research_only`: true
 - `schema`: corpus_epoch.v1
 - `simulated_only`: false
@@ -22322,6 +24789,1230 @@ counted. Prose that contains such a token is quoted verbatim.
 - `simulated_only`: false
 - `verdict`: advancing
 
+### `receipts/corpus_epoch_f8d91d9a3266ce89.json`
+
+| source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| receipts/corpus_epoch_f8d91d9a3266ce89.json | 70fa6a342b9197ea10d1ba2b763ef1042e65c1595c0f4690512efd676ebf9c04 | f8d91d9a3266ce897888f3db12206703fcffeebe772d90dfe9f638c856321ff4 | not_checked | absent | inputs_sha256=d23289bc5460ee9635d163efd1df7e32b757005aabd6dbfaa9646326d2ee6947 | unspecified | absent | true | false |
+
+- `data_label`: CORPUS
+- `epoch_root_sha256`: e2df7ce0b6f1d691cbe89f032aedf05477e5f0bd382e6e32b564eeb027e69f54
+- `kind`: corpus_epoch.v1
+- `member_tree_root`: 069713a0a65e75735847e37336e0e81741184853e02d1662ceab1079f196556d
+- `members`:
+  - [0]
+    - `name`: abc_calibrate_amzn.json
+    - `sha256`: 31aedff635330e6727b42bfa6b0c406c24aa305825c41cb09ae6aac33dca65f1
+  - [1]
+    - `name`: aftermath_flow_amzn.json
+    - `sha256`: 229bfe14cfd239f30786ef89c8aa0f2b2775800e00cd85a6a9d3239265604da8
+  - [2]
+    - `name`: alert_budget.json
+    - `sha256`: 04e96f138a830001cb130a3b4758f684627588bccc648f4efd35a72bdb2111e7
+  - [3]
+    - `name`: anchor_scan_amzn.json
+    - `sha256`: 65c11ec3e7f771bbedf4cde31b63bbe9576e97a9de55f7ab030d3c8c34c28c8a
+  - [4]
+    - `name`: api_audit.json
+    - `sha256`: 2957d91704d025c08f5d7ece51f037827539d9254246091d8499fb1fde4a3177
+  - [5]
+    - `name`: api_fuzz.json
+    - `sha256`: c403f16743569dd1a6b7aa0711a58a42ca8bdd26abc5b0645bf5ab19952e792e
+  - [6]
+    - `name`: asof_audit.json
+    - `sha256`: 436c3737e93cd19673ae6e6127e69f47498efbeacdfc25e8447a9abdc1b7512a
+  - [7]
+    - `name`: attestation_audit.json
+    - `sha256`: 5b44675be81133eb52a25feb2553c487bf6392ec297bf390fde875085ae46ee4
+  - [8]
+    - `name`: attribution.json
+    - `sha256`: b9a8d0e5e42087e034ca2551afedaadd6f82eeee74666794dff88fdbaeb00b4c
+  - [9]
+    - `name`: backend_parity.json
+    - `sha256`: 9b2b2433e4106a88b1f2583bca0816a738370635046254267a50f83e50b3ac5c
+  - [10]
+    - `name`: band_occupancy.json
+    - `sha256`: 98635a72af8ee0b3f395cefb81bc3be5018d39b7f9cdd8a359007c50780e70da
+  - [11]
+    - `name`: band_shape.json
+    - `sha256`: 1e0d626f6a4b69a5761dc498a5b1bcd7d446b7a0d6c5439bf6c3beb048eafcbc
+  - [12]
+    - `name`: bank_audit.json
+    - `sha256`: 07d92059b00305ba6b5880edc4152180d0fd31bd9f0829bbea3052b0ceb075fc
+  - [13]
+    - `name`: basis_carry_dd7705fc0f2f1c25.json
+    - `sha256`: 852f56a1e2aeb3654d406fbb14a4a2baa7cd20949d45153a98c5a99a2248f741
+  - [14]
+    - `name`: boundary_audit.json
+    - `sha256`: f958b32b0d6bedbd542c105d7b530431c4356dda768d2bb90fb8055db56b6cdf
+  - [15]
+    - `name`: byok_audit.json
+    - `sha256`: 0dda10232d681aecd75835b70382ecab3f0698f91e5a371e171968a73ba23406
+  - [16]
+    - `name`: cache_audit.json
+    - `sha256`: 248835c82eeba8f0ef65fc30345da462bcea7180374008d5aa56c526f4bd5f61
+  - [17]
+    - `name`: calibration_audit.json
+    - `sha256`: c9f800216f05073fed4da606f04823cc71bb37909d4242492f5e280cdb64964f
+  - [18]
+    - `name`: calibration_audit_drill.json
+    - `sha256`: 2a3300764a5b916130f64db8c29b05c0a48e2212b43730f75f4970bff2eae354
+  - [19]
+    - `name`: cancel_cluster_amzn.json
+    - `sha256`: d6554e87ef5ca20ee1df623ac0b6f08fba4b91f2c00bce68bfa949767691abf1
+  - [20]
+    - `name`: cancel_gradient_amzn.json
+    - `sha256`: b140be66a1d4467c73f104a992ab9f692ed83b959a7918461b3951fd091bff04
+  - [21]
+    - `name`: cancel_gradient_bench.json
+    - `sha256`: d01943ba6fa197eb7b8f259b796acc28a6cde10a2bee9995dd47a98b0535a91e
+  - [22]
+    - `name`: cancel_lead_amzn.json
+    - `sha256`: 8151e7dc1cbbedb112d8fdc3cd3e0f52aca58ef4d23ad698d2229a02060a705e
+  - [23]
+    - `name`: capability_audit.json
+    - `sha256`: 787b45652557c719c5beffef50ad571f773d3253f28ddc0e0a406e0cdc75399c
+  - [24]
+    - `name`: capacity_eval_3622d0c059d42009.json
+    - `sha256`: 57ad3394513fe58e48127141858a990580fade56ae4755ad0a3b868aa2568f2b
+  - [25]
+    - `name`: capacity_eval_cd0854242ed8a9ec.json
+    - `sha256`: e0a6c8250891cd5065edfc3bb385e6fdd640e5ca376cac496420815ab16881ed
+  - [26]
+    - `name`: causality_scan.json
+    - `sha256`: 2d7b2e0963fe468305afbbbe190b22b356ad7bdf8cc4f47c279fc25855d61161
+  - [27]
+    - `name`: churn_reseed.json
+    - `sha256`: 3a444c77bfef84e0e070d4611368569639ee6a551ed30cbdc6a107202ccbff7d
+  - [28]
+    - `name`: churn_stability.json
+    - `sha256`: 7ab02a6f41f6c626d79bca729a02300d4c79dae243758a460b57a636604fdcc4
+  - [29]
+    - `name`: cli_audit.json
+    - `sha256`: 16b8a95f44d73964a6578cee9c7cc4aeae2d74770d1b2891422b859feb01d597
+  - [30]
+    - `name`: closure_fit_amzn.json
+    - `sha256`: ff6d30e8251032109ace27be9dd1e488206be1eeb81d5fa1f9c5d8f56eb29294
+  - [31]
+    - `name`: closure_stack_amzn.json
+    - `sha256`: 994f8f2cf89faaace83e6e3f7441d3361e111c0d2b9e05cf123c2c602c2389cd
+  - [32]
+    - `name`: coherence_2dd641ab766a536a.json
+    - `sha256`: dcaf457766306077f90249a7154302297b30fc63417e2fc9a46517c71e4265fd
+  - [33]
+    - `name`: concordance_df424fa2f6b1c4e9.json
+    - `sha256`: d35b4d196b598847e2bcb69e7b3d5536bbab0e654f94ec9a32f17554d0a7e81c
+  - [34]
+    - `name`: conformal_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 48b240ea495b7ab633a4ec61c7da34f82c414f2370220f60894612ceef8b3dc9
+  - [35]
+    - `name`: conformal_real_drill_gaussian_pit.json
+    - `sha256`: 94de7928be51179c7119d751d1812dbd91c2b7992aba08528d094d8101eff21e
+  - [36]
+    - `name`: contamination_audit.json
+    - `sha256`: bce466d9ffb4b6144cf78590caa1bb1c48f59ac06ad94a7141d1796013ab53fe
+  - [37]
+    - `name`: continuation_attr_amzn.json
+    - `sha256`: e2340d411b4af81d839dc85ad7326835fe7a8c97c834432c861664c773f0cbbc
+  - [38]
+    - `name`: contract_audit.json
+    - `sha256`: f5ccc9f01e32b707526d4fb684e45d9e7d3b64af7b3b647c12223d72764d1e64
+  - [39]
+    - `name`: contract_probe.json
+    - `sha256`: 9cd19ecff9d41c85487e6991e0bfd67eff42a9ed154b6759f4f9f1c8b49178ec
+  - [40]
+    - `name`: corpus_absence_exemplar.json
+    - `sha256`: 611ad72af3e3734f34e39d3310e502444d2ede665018b7ffb7223ee0f7c19b02
+  - [41]
+    - `name`: corpus_audit.json
+    - `sha256`: 374807979a66c7dc455ee3f1236eff03be43e1b7f9f550b4e97789b1807b3552
+  - [42]
+    - `name`: corpus_epoch_0a2e8964712cfb0a.json
+    - `sha256`: 9bce499b8f5be69b1a1fd0ea8b173d12fd475e7a2cafaf9d925882b2744bb25c
+  - [43]
+    - `name`: corpus_epoch_0af2a2d5723b14ae.json
+    - `sha256`: 2ea2708eba01500e54f3cfa8fd669339d14b5d3de22ddc9417b113e595bbec72
+  - [44]
+    - `name`: corpus_epoch_1384f0d99dac82aa.json
+    - `sha256`: d8d10fb9b46df573923a41cb0a04e4637dc9b6dde39e57dbfc74494e7ff33258
+  - [45]
+    - `name`: corpus_epoch_2b5db388ddee23aa.json
+    - `sha256`: f3e2af4492471296a33ae47fc3222e7ac17a96251082aa960b373edcfb6d558f
+  - [46]
+    - `name`: corpus_epoch_2ca91405e468cc6b.json
+    - `sha256`: cdd1cf1d0d82cd939f723248c57a0393de947baba1ca1e720c64d605bcb2fd3b
+  - [47]
+    - `name`: corpus_epoch_2ddb4fe7154677d3.json
+    - `sha256`: f70e4a3c361b81ba920e32ccd3f9375204e2fb6965b9733573563e2b5b881c7c
+  - [48]
+    - `name`: corpus_epoch_2ecce33392960d8d.json
+    - `sha256`: c7d13f38ed66bc3864f6f711c46ca13852bd11d70886236d74eb7f137e322dd8
+  - [49]
+    - `name`: corpus_epoch_404d16a7af1d3862.json
+    - `sha256`: 24ba29424ef385c4916dc96e4ae775496ec1bde9ebc95e4e126d8b44e36ff8d2
+  - [50]
+    - `name`: corpus_epoch_4a75066db56e52fd.json
+    - `sha256`: 7c4a99be100698d78b8c7e5c1d920e3bd6370ba6e774662dd6ed3a4c8c1f3e5e
+  - [51]
+    - `name`: corpus_epoch_4a79ac4ed05777f5.json
+    - `sha256`: 2e4829b29e316fcbcf0ab9a307278595da57925e1aa0659c6b64db44c1e8759d
+  - [52]
+    - `name`: corpus_epoch_52f80a0cc915f58d.json
+    - `sha256`: 3f98624499677af6306c90bcaa7cd706090b10060b3168fc35f88a876f24ffe3
+  - [53]
+    - `name`: corpus_epoch_54c82d2a8bcb86ed.json
+    - `sha256`: 8711f308401f12c3556d870a282b58aaffb136ad526febd661f181c0742a2870
+  - [54]
+    - `name`: corpus_epoch_568c538fcf4b21cd.json
+    - `sha256`: c07b4cf5af660d253623550ddab94334b599c325f3615465ad16ae53b8f98996
+  - [55]
+    - `name`: corpus_epoch_574953afdf88a0f6.json
+    - `sha256`: 7cb5d3159f82ae71efa2347fb1d419912fb7033c48d808b514176230a93d09f1
+  - [56]
+    - `name`: corpus_epoch_5a8dac905c9cc22d.json
+    - `sha256`: 50b853da7d6c07efc3e4c533e5a4a6beae5295da68c696f2656491b28fbf6b18
+  - [57]
+    - `name`: corpus_epoch_5c9754ab2a9408a1.json
+    - `sha256`: a1f5903b80cc593f69fbc3a1fcf8db1f4a97d40bf1c0f0f505b2ff66b71d02a2
+  - [58]
+    - `name`: corpus_epoch_62bfa90c28254f19.json
+    - `sha256`: 631316e97a0a2184262517d25d6ffea4934a56e3a02c084335b1b637c0b9cd75
+  - [59]
+    - `name`: corpus_epoch_6340cdebc9a6efe1.json
+    - `sha256`: 3e3473c359007fb425361a8a618d1e7b3de5edc23e1a0937ab241d2831c95dc0
+  - [60]
+    - `name`: corpus_epoch_63761c8b4e63992b.json
+    - `sha256`: 917d1b4033f1c20d56156b2a5c83c95c800ec74dfe3aa6fd26805d226cff6c57
+  - [61]
+    - `name`: corpus_epoch_6cf185cfb5466dd7.json
+    - `sha256`: 256d5692208eda60d80880dee77a6124f3c5b5f13a1ddb1e62c6521552639416
+  - [62]
+    - `name`: corpus_epoch_6f8420fc2959f4e7.json
+    - `sha256`: 7050675439b29e8874da291387c39c16d5ca38a9287ff7535364c1fc1392aac5
+  - [63]
+    - `name`: corpus_epoch_6fb596b0230e9f17.json
+    - `sha256`: a879e4cf4813e82a1e885c053797417b9b5daadbf980a8afa9da1d48852bc380
+  - [64]
+    - `name`: corpus_epoch_721e9b4fb855e1a1.json
+    - `sha256`: b29b736a0234ce82b4af23a973f7ec6cb4486fbb9b071be14e30319a4bfabd30
+  - [65]
+    - `name`: corpus_epoch_7d6b1f5442b13ea1.json
+    - `sha256`: 29bb1eae00b9d91e5833450631d74c3aaff4aa7c42230e89a074c94df626c5c9
+  - [66]
+    - `name`: corpus_epoch_84384f73f7d8e9d6.json
+    - `sha256`: 8a23be1760a52130b342ecdc107cff3c3369b74d02497365316f65b498eb52db
+  - [67]
+    - `name`: corpus_epoch_959513b12d66742b.json
+    - `sha256`: b557f12c51d23d9873d829aa683eec9d55dd998d0f7d12f1d0f7286f885a7eed
+  - [68]
+    - `name`: corpus_epoch_96ba030697ddf0ff.json
+    - `sha256`: d58f0f036520565d076e26b9830c8a8ac49d47595cd4c1af1e7b6160c547394f
+  - [69]
+    - `name`: corpus_epoch_9d41d1d7410eb02d.json
+    - `sha256`: 074b9c2ab74e8e6deaf636d60f50cd81ccb9652311a4872726e2012dc4f2c328
+  - [70]
+    - `name`: corpus_epoch_9fd864d30fda3c69.json
+    - `sha256`: 20177c26b20ac749d4d02be185fc05ce22d645bfafbf8d4782f22b2a3e5b2aa9
+  - [71]
+    - `name`: corpus_epoch_a0e901c74a5f29c4.json
+    - `sha256`: 7d91fe4f8f725e4c87b5ef9334b2da7a6fce29496041bf7d48e9523acccce828
+  - [72]
+    - `name`: corpus_epoch_a1a8323db3be4842.json
+    - `sha256`: 3ceb9374251d3e50f65edb6424915c17bb11fbad2b846fca7f42c3ebd3cfc901
+  - [73]
+    - `name`: corpus_epoch_a4cb68008a317f90.json
+    - `sha256`: 66894e231d5029cd138f613c62447e58700a44d7def29bc1a16da44146dc69f2
+  - [74]
+    - `name`: corpus_epoch_a5d113f0994c74b5.json
+    - `sha256`: 8a0128b9d8b208e67022ffa25e040d8ae10d244758ace48207e16770f700a493
+  - [75]
+    - `name`: corpus_epoch_a83ba798e9abd892.json
+    - `sha256`: 9913a8a80d7232d5af2f1b6864389ea666b8fd81582ea55ce9dbdc835394385d
+  - [76]
+    - `name`: corpus_epoch_ab1470227e387e4d.json
+    - `sha256`: cba4e5507591d625b134e82278581e57b9c800ad717cd65f563e0a3bece3377e
+  - [77]
+    - `name`: corpus_epoch_ac21f22e90c58c53.json
+    - `sha256`: a19be18489e84cd007ab22b4e412c6014c90f6102f9f857da52476734e8b4fd9
+  - [78]
+    - `name`: corpus_epoch_ac2e4ae4bcae4dd8.json
+    - `sha256`: 4e97881c7c558ad93674533f102ea582de60bd109c178a1c7489b30f027f8a93
+  - [79]
+    - `name`: corpus_epoch_c5a45fd1b73737dc.json
+    - `sha256`: c10f124084371e6c9902e8e77d807d6f71d622deffd19ecd4c7026ef3b35d850
+  - [80]
+    - `name`: corpus_epoch_cb39a076f3287171.json
+    - `sha256`: 8680427690c0709412501f39953f9bc845932a2e3f1875c32d12a2067d39f695
+  - [81]
+    - `name`: corpus_epoch_cb415a040387f7b0.json
+    - `sha256`: f7a80fdf1eb8820d00f4c26faf536113a11948a437d4637acb191b35b6dfa050
+  - [82]
+    - `name`: corpus_epoch_d1e7bb2567019bf7.json
+    - `sha256`: f4bc01f2646d3fb0561ecd19b3b64fb58d7bc0828e486464401484a3d9ed3530
+  - [83]
+    - `name`: corpus_epoch_d479e96760271bba.json
+    - `sha256`: 5dda9f2bb065fcb3172d1b3aa4f7bbb4b0c3158a3120d520e974ed36fd7e4d23
+  - [84]
+    - `name`: corpus_epoch_e0f905c031ef39b1.json
+    - `sha256`: 4af585b31592271ea26116b814f285f4c661240af21a78f915750591e87e8cc8
+  - [85]
+    - `name`: corpus_epoch_fbb352a23e62d321.json
+    - `sha256`: d985ae89f15e953f062d3677e32a0f83566932ddc0dde0853491f8341ba660d5
+  - [86]
+    - `name`: corpus_epoch_fbbcd3c1e840e14d.json
+    - `sha256`: 0275c647da2c2abe18c798cfd61d52813cae12702505e22da2aa18032214f21d
+  - [87]
+    - `name`: corpus_history_absence_a5753b57fab08b0f.json
+    - `sha256`: 3904f2838779802fcad32a15b13d82eb6860a0fafecc2feb9437af93a7360f8f
+  - [88]
+    - `name`: corpus_inference_2ee42848a1d51937.json
+    - `sha256`: 25230923d07164342facbe10ec0520975ee04c0ef690b3661f5daaf9d69f250e
+  - [89]
+    - `name`: corpus_proof_a56dff22d5b4931c.json
+    - `sha256`: 0a281b87338f47e861be233984f7f4cf171856f4201e403f4a84d2d69c0e809c
+  - [90]
+    - `name`: corpus_proof_exemplar.json
+    - `sha256`: 49c13a28dcbc992e9830264d01670d4ffb2460e8c1abd3613d8d54d0f4c8bb1c
+  - [91]
+    - `name`: corpus_real_drill.json
+    - `sha256`: 082f16234bae90433c9f699d575a57b2ef5f1bf826fdb61ccba838e936f9f119
+  - [92]
+    - `name`: cost_aware_rerun_20261007.json
+    - `sha256`: 618fadcd1cfa507b2a31f7671f55368c5e80c554647e238996af60759b020f7f
+  - [93]
+    - `name`: cost_aware_rerun_20261007.json.seal.json
+    - `sha256`: 62cf7f39349bde7690af5f2c15d385a5f2aef910de152eb46bc92b63578b8df1
+  - [94]
+    - `name`: cost_calibration_eval_df9b8d7068bf709b.json
+    - `sha256`: 6c8a3677f6a72ea8b9790126779d5b0c67838c3c4461dbd1f9fc1ef62fc0509b
+  - [95]
+    - `name`: cost_calibration_eval_f130c7e871e9aa64.json
+    - `sha256`: da4f8269942b5c87bebed33e422d6326cb73d327f48648d97b02e6e6b36dd1e9
+  - [96]
+    - `name`: coverage_cs_real_drill.json
+    - `sha256`: 9dfc169e6c3cb41c803c92114a4b33004d407295fc69c7a7de3dab3141a624b7
+  - [97]
+    - `name`: coverage_real_drill.json
+    - `sha256`: 2521152de17c0974039cb4f4867cda6f2ad1299e3f00135fc0764e32fd17759a
+  - [98]
+    - `name`: cp_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 64a38aba74a56b44aa64dfd68ca1859d4d142c9dc2f4e0a657b447a041e434b7
+  - [99]
+    - `name`: cp_real_drill_gaussian_pit.json
+    - `sha256`: 6deaa336ee288e28ea35f93caa5d8b8b8436c99fd47efb97ceed792f6d3b8a62
+  - [100]
+    - `name`: crossvenue_basis_3f4ff76f517655a7.json
+    - `sha256`: 14ce799a46e282849e8e7852ff74489ed4747274c164040fcc52974bbb72a087
+  - [101]
+    - `name`: crown_behind.json
+    - `sha256`: 1ae02ca68d023ddd18c2b0023b240d1cf729b0a2b04597954548402afbe769c6
+  - [102]
+    - `name`: crown_density_amzn.json
+    - `sha256`: 4945e95537a122d7d13c12d84fe59e518e3051eb8ddd9ca8db66f3218a0c6268
+  - [103]
+    - `name`: crown_join.json
+    - `sha256`: df42ab245b4f82d535fb52d4a4068414b4b11537e152ec63b0e3ab6823e40af9
+  - [104]
+    - `name`: crown_size.json
+    - `sha256`: 751a7c4351d1639d547330d7b8f8251fb6341f500f099304a13945810a560fe0
+  - [105]
+    - `name`: cxl_shield_amzn.json
+    - `sha256`: 16cac426d34c9af016963a251e9fef5422babd2ced8be9795a7413e9c6b84e40
+  - [106]
+    - `name`: decay_watch_synth.json
+    - `sha256`: 8f37ccea904fe09557819f36a60d5dcb2d99467db21301111b5c7d9836ccf6d4
+  - [107]
+    - `name`: deep_book_bench.json
+    - `sha256`: 9410e500ad2602dc085c5146640d7bf7219a9626c8bccd32ea47a71829f03392
+  - [108]
+    - `name`: deep_microprice_amzn.json
+    - `sha256`: a9fddf27e4c26bc144ced56ca35856411f8a6220d91100872170b60411738acd
+  - [109]
+    - `name`: deps_security_hygiene_f3b4e6fd22e439b7.json
+    - `sha256`: 66176b021f554077ceca2ed34a87b1de89e50fb905aee26f14a232c52d4a59e7
+  - [110]
+    - `name`: depth_consumption_amzn.json
+    - `sha256`: 1bd84264cd6b886a28c16ff5246ec2c4467f81d0a656589c534dad34d8754846
+  - [111]
+    - `name`: depth_tilt_amzn.json
+    - `sha256`: a42581086e0846cbc71a272b6cb39e018031176fd7414ebc57dc95ba7415d2b2
+  - [112]
+    - `name`: dip_audit.json
+    - `sha256`: 085f0a461518911bd57e27e12c0c01f4f0f2134254f7b240ab4066d95cc8233f
+  - [113]
+    - `name`: dip_run_audit.json
+    - `sha256`: e0498594b7ae8e371c24761c7e5f7b3a97fb24e708e645d4abcfbfcda71bab86
+  - [114]
+    - `name`: disclosure_audit.json
+    - `sha256`: 79f2a55cc0ba899cbdb8a26e7e103e3e008acc554890ef21d63d1d3bf48d0538
+  - [115]
+    - `name`: dispatch_audit.json
+    - `sha256`: 19bba277befd9b88272175e899a962822a40a3bd8757c750882d56d92513d8dc
+  - [116]
+    - `name`: diversity_bench.json
+    - `sha256`: f9c48ad14bff833f98ae5b56aea24192b9815f1e5acbc86a0a8fd61a7c27325c
+  - [117]
+    - `name`: doctor_audit.json
+    - `sha256`: 0c0e69fb4cf225577f2b67144e306034a28ffdf64acf3dc4f315588159c2aa13
+  - [118]
+    - `name`: drift_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 732ca9cc14ab246e90c1dcb28002e014cf5ad0b03a0e2e6f56c7a787577d801b
+  - [119]
+    - `name`: drift_real_drill_gaussian_pit.json
+    - `sha256`: 295b0855243a56848751ec6b8f51eaa6698d8c683a4276b11d6c3e7645d80f64
+  - [120]
+    - `name`: ds_audit.json
+    - `sha256`: 67a0e581ad6876ffca1e43b82b9bfd9dc7f91531e6b926af1751eaec4d727a8d
+  - [121]
+    - `name`: duration_check.json
+    - `sha256`: 12188ad90369774c642fb7f516f14dd7b20c4ec7367434c75b24aa1a5ba5e6ab
+  - [122]
+    - `name`: em_audit.json
+    - `sha256`: 69735454a8da7e781be4e56dc4d9eb83c56f05bbd51ce6e3a4db47e2bb547e00
+  - [123]
+    - `name`: emerge_real_drill.json
+    - `sha256`: a06f8d2a40795ff00601716908a168232e5ecd9d42af62ea230d849c7e5baa3d
+  - [124]
+    - `name`: empirical_flow_bench.json
+    - `sha256`: e12abc02ca462ff660e4aaa39fe5182508ab5896c1bdab180c5bb6caaf4c9c99
+  - [125]
+    - `name`: engine_fuzz.json
+    - `sha256`: 5fe71d9e05862d39cdaf2aaf153f508d992a2bc6132bc882f45d86da64f54396
+  - [126]
+    - `name`: epoch_delta_44955f3515007971.json
+    - `sha256`: 8c4823fcd372f927ada7ef5d08fff5457bd25db3ea5d7f42c49679236616da6e
+  - [127]
+    - `name`: epoch_position_2e120d21df5a400d.json
+    - `sha256`: 9c1bf6a2af75b9d2035688e89a872e45dfd166eef7b557aa58efc53aedadbfc6
+  - [128]
+    - `name`: error_shape.json
+    - `sha256`: a9b29bff34f219cab4fb4375d56560b392097906df05d87d69bb526d591d2284
+  - [129]
+    - `name`: eval_core_audit.json
+    - `sha256`: fb50b648b07af58fcaf0e9b8837ef946fd9b4b04e18cb48d991c264154da3e96
+  - [130]
+    - `name`: event_burst_amzn.json
+    - `sha256`: 4c8872dc6f781544ef15cbace7537df2876d0320410570283e558306a9c5b019
+  - [131]
+    - `name`: event_granger_amzn.json
+    - `sha256`: 628431d7b7099ac23e9e0c40a0b99de811952a701333949202e2ea0696256362
+  - [132]
+    - `name`: event_matrix_amzn.json
+    - `sha256`: e1a8e84ffc8b0ac08a7e8a821bc0650cb56bd10c924318e8c0be4a74587710d1
+  - [133]
+    - `name`: evidence_audit_3464d8f8197bf737.json
+    - `sha256`: 77c38c8edc534276ad901f4c64c5024f8e79c99c5ece43b001b003f362584a5d
+  - [134]
+    - `name`: evidence_audit_5c9f07c823727701.json
+    - `sha256`: 6124e972cc182ef134a5c411f2794c4f2e3fcea205f6a0bfc0a05f4ec912cd23
+  - [135]
+    - `name`: evidence_audit_d449e1ca0cc119a6.json
+    - `sha256`: deb75d4ab1744617a0032397524891613c50282581f913d344e4acda9c6cd9d1
+  - [136]
+    - `name`: evidence_audit_f45ae8d6bc7cd677.json
+    - `sha256`: 04128fa07fd2ca3650981d0cad06d07f921a525b301945b2c539ddd8c7447989
+  - [137]
+    - `name`: exec_cost_real_amzn.json
+    - `sha256`: 297d59df884a80c0503cad9c511579193cf77504fd5313492b732b4297993788
+  - [138]
+    - `name`: exec_cost_split.json
+    - `sha256`: 53ef2528042134aeb7bd8c20d6c94f7e4ab3391fafd9851531f84df3fe3ae9f5
+  - [139]
+    - `name`: ext_bench_audit.json
+    - `sha256`: 324025ce928acda2167ecaa25bca6bcf16373400eb8ddb657e348483010c6ec3
+  - [140]
+    - `name`: fast_replay_p42_conformance_20260928.json
+    - `sha256`: e8fd3b17e82fc21f39ecd184025c69b336f7be0ea18005d132a9c234e85acec6
+  - [141]
+    - `name`: fbm_circulant.json
+    - `sha256`: 8a8fcbcd46b58942852e9c79603d854aaddf1e5ea3c35b5dc9d42978005f5802
+  - [142]
+    - `name`: fifo_priority_amzn.json
+    - `sha256`: f180b99da62d936a31bf9df79f637141a9b7bd4c4679fc3782739455dafd7e30
+  - [143]
+    - `name`: flee_wide.json
+    - `sha256`: 186fec1776108a9051fbe02f47f411279a710999045cc97028fcf5a9f9482e77
+  - [144]
+    - `name`: fleet_eval_5ddf15b0dc7d3ca1.json
+    - `sha256`: 67713fe534eb3c4a508e4c0211836026af4f9efe8c27cd2cc7d69118a9cd1b98
+  - [145]
+    - `name`: fleet_eval_5e907be710811a44.json
+    - `sha256`: c95ce361609bdb00912147e0f87548fdbd2c0221ad27b8c1a4d0ba558b9330e1
+  - [146]
+    - `name`: fleet_race_real_drill.json
+    - `sha256`: 0530bbc98903f8ee2944d468f6124fae0c0034da0956d8c22ece140295ad4def
+  - [147]
+    - `name`: floor_compose.json
+    - `sha256`: 53d4493e5009a0da44acdab958fb3bf8df5dcc01fd5bc76d5d24fe04d07692f1
+  - [148]
+    - `name`: floor_pins.json
+    - `sha256`: a38bb073ef069de28dff2ada970c05f2ac57a19433df20a19dfab727e9a0a5a0
+  - [149]
+    - `name`: floor_rate.json
+    - `sha256`: 632d421666dcd4ea2e7d4acd798ef82cab735054aeaa7d719eaacda91fea35f3
+  - [150]
+    - `name`: floor_reseed.json
+    - `sha256`: 2c02b255e4506593755d30d448e15bdc8f242e81ecbf380056b3a8c32698060a
+  - [151]
+    - `name`: floor_stability.json
+    - `sha256`: fbd9860771b933e799ee938c90ba3ea43620ead6dd99f0f44231c7c5d9916ce9
+  - [152]
+    - `name`: flow_couple.json
+    - `sha256`: 5dc9e98c044ada0edef8fc7f0be4ec7efabdc5d52781d9cacbd327549fb9f992
+  - [153]
+    - `name`: forecast_core_audit.json
+    - `sha256`: fb5960935d5182ae83223cf1e0645c0f3812abe37dacacf9f211ee920e2f0c18
+  - [154]
+    - `name`: forecast_data_audit.json
+    - `sha256`: 3174e1b32201a37b02fe225f469781f58e9470c9aa971ad259624bbbda2ee224
+  - [155]
+    - `name`: forecast_infra_audit.json
+    - `sha256`: 57d88d8385893260ddb771942ecdbb889e6e9aea1ee53c9660ef4f3a7350f9b3
+  - [156]
+    - `name`: forecast_pipeline_audit.json
+    - `sha256`: bd9b0903ffd6f40e3b237f4bbe46557ef345cfd547ec9e045dadc0ee806084c2
+  - [157]
+    - `name`: forward_record_preregistration_v1.json
+    - `sha256`: d1f0022744261fbc52aa1296e8f4d859ae1d56705bf4920bbee7d4a75281cad3
+  - [158]
+    - `name`: forward_record_preregistration_v1.json.seal.json
+    - `sha256`: afc88d0767169ff88e22920d492ddc3c2db25c9dbdd00cb391504e81bb29fbcc
+  - [159]
+    - `name`: full_impact.json
+    - `sha256`: 29a1b45e52fca254985f19c30d096eb6b2de14a406494282206e1092b3ea905e
+  - [160]
+    - `name`: full_stack.json
+    - `sha256`: 2048f94b0d052bf5ebfa38c6786d60b900b37468a814ec46e9b25262d6c9d1fc
+  - [161]
+    - `name`: fx1_anthropic_sdk_audit.json
+    - `sha256`: 03fd468413780b70daebbd231a925c4289faf62c6f0327fbdd0572f83764d01b
+  - [162]
+    - `name`: fx1_api_audit.json
+    - `sha256`: 3d94c3ed069123be4b774613a3e35d114698ab6000ce195fa97187e2a5596bb1
+  - [163]
+    - `name`: fx1_auth_audit.json
+    - `sha256`: fb7e0783ffa11fb79b7c4a1fceedb0b9e3f5eb836db4cda2b195b000128d8044
+  - [164]
+    - `name`: fx1_cap_audit.json
+    - `sha256`: 99737d09622533bad5f5793cd7fef198e211b235251bb79455c9a5e8643547b3
+  - [165]
+    - `name`: fx1_cli_audit.json
+    - `sha256`: 19a95549bfb8e5f3143474a94bfaa24ccc593f634237b3e8f33e811481dd0add
+  - [166]
+    - `name`: fx1_client_audit.json
+    - `sha256`: 3c83b261c8966f3ae7d63bb5bb18371adddb1b3ca2c21795223b8d3ceab3acc4
+  - [167]
+    - `name`: fx1_contract_audit.json
+    - `sha256`: 913e276befeaecd002582c8125ebddc96c85996764b57b91a956b5f7b32173e0
+  - [168]
+    - `name`: fx1_drain_audit.json
+    - `sha256`: f864d2a9cff6e6c396045afa8105c337362a769e491d6fc002af7dcff29e454b
+  - [169]
+    - `name`: fx1_e2e_audit.json
+    - `sha256`: e4671f251df3cf35c7ec50adbc59803a8d733f1759380edea714a532c6ec49ac
+  - [170]
+    - `name`: fx1_eval_lifecycle_audit.json
+    - `sha256`: 16c6e3969091a825443712614b1dd31b0c1224c8196d1fa35596f6fafb4872dd
+  - [171]
+    - `name`: fx1_fault_audit.json
+    - `sha256`: 43c78649e2f8246708940e27e83038f69f2e7aa36fe758d442fac9f6bea04205
+  - [172]
+    - `name`: fx1_jobs_audit.json
+    - `sha256`: c952e24df7c07978437e3ed7f36aadf0cd13103980588013f3677e371f9775bf
+  - [173]
+    - `name`: fx1_oai_sdk_audit.json
+    - `sha256`: 2e1421dd4e7b06191da9ee4c537d10ecd0fcb5e8a13a32608820f295e81fd0fb
+  - [174]
+    - `name`: fx1_ops_audit.json
+    - `sha256`: 6362b090bd931070e3f1a12caec01d2dc0df14db98c71658c29b58bf10fb8d08
+  - [175]
+    - `name`: fx1_parity_audit.json
+    - `sha256`: e71e77a4d8169d731bdc48c27765c24c3db59f1240437e55fc1f9edb928c90af
+  - [176]
+    - `name`: fx1_perf_audit.json
+    - `sha256`: 7f0fe1b11dca4412cb54b8dc3f40ad929016ac1e59788b3b3dd2857907b32148
+  - [177]
+    - `name`: fx1_quota2_audit.json
+    - `sha256`: 6e135a43144e89e3fab4b7d4473d89db1d98ae6f888f7611d2e9433ac00cadca
+  - [178]
+    - `name`: fx1_replay_audit.json
+    - `sha256`: d3cbeaa2e484021f6a1524df38d01c42cf19db7ad0de0aa78b4a44e750dcbacf
+  - [179]
+    - `name`: fx1_retrieval_audit.json
+    - `sha256`: c2edb7a020d4ecd07358915c28df2a54e33986faef25f35ecc566e2883ee5a29
+  - [180]
+    - `name`: fx1_sdk_audit.json
+    - `sha256`: 1556d7498e4618e386f891777e820fd3b2f08b4bde0ff7a9ad6e3d4689ef60d1
+  - [181]
+    - `name`: fx1_spec_audit.json
+    - `sha256`: e86dc5bffb1267539df5876ed3487bb0154512d5b9fbbcc83223d4a5db05fdb8
+  - [182]
+    - `name`: fx1_tail_audit.json
+    - `sha256`: 8874bc452c43fd807a7c7525c5105663a01f4406c05ea6a37ad5a361e5d8add6
+  - [183]
+    - `name`: fx1_usage_audit.json
+    - `sha256`: e728655fa53df38114d91ad618c9e278cbc1ab0391ef8beec3b89cc4693787e1
+  - [184]
+    - `name`: fx1_vs_audit.json
+    - `sha256`: ee0a91338bcd0ae61416ccea0c83165548f67a39df58b05c981216afde8f6102
+  - [185]
+    - `name`: fx1_webhook_audit.json
+    - `sha256`: 0b262022d1bed02812e22e5c5558fdff740eae4e178609eb4d7ca0aca9f6c525
+  - [186]
+    - `name`: gap_close.json
+    - `sha256`: c405793974f1ca9c88feb19c56e341185c68d87809dd755eee6cc604c65a85e7
+  - [187]
+    - `name`: glft_bench_synth.json
+    - `sha256`: 4efd3a9a814d245873371a8f09c2d2502fca71393dbf738496e59cb4dc369467
+  - [188]
+    - `name`: grad_fidelity.json
+    - `sha256`: e86ebeeae2bae5736b2bca3089d8e415b41ce901bc23df5d2f515bda12bae660
+  - [189]
+    - `name`: grammar_map.json
+    - `sha256`: f8ee1c31439b03bbe14989ee0cebb7b0917f5186326cc91c2d81d7705686198a
+  - [190]
+    - `name`: harness_audit.json
+    - `sha256`: 0292862d23f09133aa7b11437b2e543d1740aa0d5ba6170f2069ea18808c6208
+  - [191]
+    - `name`: hawkes_clock_bench.json
+    - `sha256`: 816f8bd60cab106505a1adb153803ee48579ce6615a85ccd3e5d27785f2f3b77
+  - [192]
+    - `name`: hawkes_mv.json
+    - `sha256`: 5f386d77d237a6bbdc12fad5d794184508548fad474b1cb258f48bded96d7431
+  - [193]
+    - `name`: hawkes_real_amzn.json
+    - `sha256`: 9d398acb03bfc6bfd9f965d5d6115b5ca4d64244d312e90993ea11e7bd8a80ea
+  - [194]
+    - `name`: hidden_depth_amzn.json
+    - `sha256`: 24b6c5ca511ec6211f79115fdac3eac85f52d393738a5a88adebad8c46575ea2
+  - [195]
+    - `name`: hidden_depth_bench.json
+    - `sha256`: 4e18ea2564f675b351bfdd93ce9c1541af0638ef07e43728cfb48a83b3912330
+  - [196]
+    - `name`: hit_flee_amzn.json
+    - `sha256`: 72765463da5af6990d81e3026dd7d23ecf83265407fb0b0b43d14a5d2690a6d0
+  - [197]
+    - `name`: hit_starve_amzn.json
+    - `sha256`: 3d98298e540b6ab7fa14c9b8452feb06c7b5c28a2b09a55ea8a9c4b6710acb39
+  - [198]
+    - `name`: hmm_stability.json
+    - `sha256`: 5d06bc292b14e6a4de8d6fbd640e76c66b6ad82e4705e27ae068c2ef5a88c040
+  - [199]
+    - `name`: hmm_verify.json
+    - `sha256`: 269ee7b7e767d0388ab285e3257a5de62f4a631ada045aa83577b2b7786a51f2
+  - [200]
+    - `name`: honest_verdict_b133e8b3992af893.json
+    - `sha256`: 1a003a670945452a5c86d033900bc33429f2981422c8938b1b8e2469fc764f3a
+  - [201]
+    - `name`: honest_verdict_real_drill.json
+    - `sha256`: f9badb4a33ec9c0a35a10131cfca24d6f8caa531d5a9882c8f6d59da4073abca
+  - [202]
+    - `name`: honesty_audit.json
+    - `sha256`: 63d79882e619905c0d45fc094d08c67cce9be60c98e43ca846b677c3337370de
+  - [203]
+    - `name`: hypotheses_audit.json
+    - `sha256`: bd65b431cfc36ce9ec54bd7262002eeb735025e2dc71995e983df73924bceb4b
+  - [204]
+    - `name`: ice_budget.json
+    - `sha256`: b0be60f820caea3783400f5f7eaff399c68d243ee11508a95212d64907789642
+  - [205]
+    - `name`: ice_crown.json
+    - `sha256`: a57b172d4c2d0f528461fd35dbcaafefc1af9b3b08c9cb2cd690d7e76053665c
+  - [206]
+    - `name`: iceberg_bench.json
+    - `sha256`: da07cac898aadafc9bb434319334d0fc72d504fb5fe4c9ff5d0031b09499e7cc
+  - [207]
+    - `name`: iid_floor.json
+    - `sha256`: cd2d6153b177482f1df86f78f6c795d03e93a17046a897c58874dc14fcde2753
+  - [208]
+    - `name`: imbalance_predict_amzn.json
+    - `sha256`: d467e13e158dddf59e0ec2dd6b0941aeae37237f491757705418f7420c789655
+  - [209]
+    - `name`: impact_instant_amzn.json
+    - `sha256`: e6d80527e2bb993d7450087db961d6229561fe1a87c0e8b68d3920ca50315c4b
+  - [210]
+    - `name`: impact_persist_amzn.json
+    - `sha256`: 58bcb731c697074949a3705ee2270181d9f2df5e5d2c8f08fbf04b020f3200dc
+  - [211]
+    - `name`: improve_flow_bench.json
+    - `sha256`: ec0836e7b4d24834d0b68a43c5676ea213049fce8200966dc15d98d30a0a4488
+  - [212]
+    - `name`: inherit_audit.json
+    - `sha256`: 718adc7b101c76e503cc475cbedcd086fb0f696a14968d977f4ce5de7dc32a07
+  - [213]
+    - `name`: initiative_fade_bench.json
+    - `sha256`: f9a3f118c2fd37a308bd691633c7e7a9668e770d959535ca16bc2c583e4db867
+  - [214]
+    - `name`: instant_decomp_amzn.json
+    - `sha256`: e9fcb9c72331341fe60237cb457fa8456dcbdb340e87060fbb9318a7265b4df0
+  - [215]
+    - `name`: intraday_exec_amzn.json
+    - `sha256`: 04803c1f783145e75ccf403990146768490e123bc82c26dbdcef3901eb59fa0a
+  - [216]
+    - `name`: intraday_shape_amzn.json
+    - `sha256`: 7e831325e8e77d61360d07100a35234c210f79b99825d6d4040d5d903470cd1d
+  - [217]
+    - `name`: joint_fit_amzn.json
+    - `sha256`: 1041b3196b85319688e89a359401fadef29a4ff14a7371e389668b0c2d6175bf
+  - [218]
+    - `name`: joint_stability.json
+    - `sha256`: cd43e7ec5f39ddbb3ff5c6ea9acce41191bcd250cff7e986c20637c8719c9e84
+  - [219]
+    - `name`: joint_tune.json
+    - `sha256`: 27aea6f04b845ae84445bcd97dbf31c6eb68cb85053af2d568fafe51027f38f6
+  - [220]
+    - `name`: journal_audit.json
+    - `sha256`: 04fa04a533738617f528b94d0c819e1bf0b8d0ee71b653142136ed8fdb8e6942
+  - [221]
+    - `name`: kill_audit.json
+    - `sha256`: bd65e84d2037d452282b5fba052b6be102fef2e50995a14cb2a381405d8d2565
+  - [222]
+    - `name`: label_horizon_map.json
+    - `sha256`: facf0481adaaf3cb55b307b27c9259423b0ff6d13363b9a24e68b2b86a8cb955
+  - [223]
+    - `name`: label_stability.json
+    - `sha256`: bda24271b910cd2d912104d445d81c50f9f8fd61824b2c10e8a18f5c042c96dc
+  - [224]
+    - `name`: lane_power_drill.json
+    - `sha256`: f0d9effae801a0ab06dfad9cbd222c55a45c71128f01b27b060c20e5624e273e
+  - [225]
+    - `name`: lattice_drill_verdict.json
+    - `sha256`: 1268fa068051b57089c454f4f750dc5c8db833b56e52fe0378f91480525fc978
+  - [226]
+    - `name`: lattice_drill_vol_bench_a.json
+    - `sha256`: 33f9defac50df4f692db60eacc585c3a93eb06b7039e3be866984cee02c28481
+  - [227]
+    - `name`: lattice_drill_vol_bench_b.json
+    - `sha256`: 49651398e997ff6685e1ef31a1686e3799cb20c12595a8234b47c1a187990988
+  - [228]
+    - `name`: ledger_audit.json
+    - `sha256`: ce5203012f63807d82146868ab26fd44cc23019364feadfdbffb03cda064f522
+  - [229]
+    - `name`: legacy-unsealed/adaptive_mix_20asset_1d_20260922.json
+    - `sha256`: b59422415e556f674ea03fb8e9a3b867408bf6d163cf7c11c64feeb7e33b4313
+  - [230]
+    - `name`: legacy-unsealed/adaptive_mix_band_search_20asset_1d_20260922.json
+    - `sha256`: 5e02918850944a68d1d45815b5928f1eed462d456eac4723ac9290514e7b97f4
+  - [231]
+    - `name`: legacy-unsealed/basis_pair_candidate_20asset_1d_20260922.json
+    - `sha256`: d021801c94e33d8720f9084762138893978a61e36ef670b4c0140edeaf37c1ec
+  - [232]
+    - `name`: legacy-unsealed/basis_reversion_screen_20asset_1d_20260922.json
+    - `sha256`: 61c9c8f5b3e502f0c5218dd743ad030ecbb962d6822bb7b81a2b962445aa378f
+  - [233]
+    - `name`: legacy-unsealed/dip_bench_crypto_1d_20260925.json
+    - `sha256`: 584eb681dcd18fc65835c1573360b4b5fc9ebb72aa662bcbb9e7c101b06e2f03
+  - [234]
+    - `name`: legacy-unsealed/fast_replay_p42_conformance_20260927.json
+    - `sha256`: 8236a26489e9253dfcc1f3d879a2fd276c0023fb4d167c764c5330406ce950d8
+  - [235]
+    - `name`: legacy-unsealed/incumbent_bench_qlib.json
+    - `sha256`: f455123351b44151d68876d1a93fa3a2dc449c51d280ee83926f22cd9861984f
+  - [236]
+    - `name`: level_gap_amzn.json
+    - `sha256`: 3c1b21418c1b617164a629f45f039f341ce9bab5321c81d77831a339222cde9d
+  - [237]
+    - `name`: lineage_dag.json
+    - `sha256`: e00ad05cbcc7e60916ebd9c9e12b704b29de788acbd82ee544be3df2375e66da
+  - [238]
+    - `name`: lo_response_amzn.json
+    - `sha256`: df91141443b114f39d4dba23cb499de6c4c8961eb6d1d6b1b60ca6d751dd66c2
+  - [239]
+    - `name`: lob_exec_amzn.json
+    - `sha256`: e334cb33cf73a06b99bbfc834825e409e849ec860b8533a093dfefbdac2e0932
+  - [240]
+    - `name`: lob_invariants_amzn.json
+    - `sha256`: 8a890214de32880ca3043d8ebb863992b938708828aeb3639fa79fd90e7948e0
+  - [241]
+    - `name`: lob_resilience_amzn.json
+    - `sha256`: b8728dbb705d8ae62e1339a4d7482070f7f827209c20c342b31ce6a9980a585d
+  - [242]
+    - `name`: lobster_replay_amzn_2012-06-21.json
+    - `sha256`: 44f53ca3f6e42bad9617d284fc37542ca64d3b4373642fe54deae83302a9dd10
+  - [243]
+    - `name`: loss_cs_real_drill_conf_t_vs_empirical.json
+    - `sha256`: 1859b044469b2c4ca7f0db5ed195aeb56868ef9aea0f46b5f763cf8301591763
+  - [244]
+    - `name`: loss_cs_real_drill_gaussian_vs_conf_t.json
+    - `sha256`: 60e68e2af9cd2544458a8ac821e1468b47b322798cb498a3e116d3f0ce0964de
+  - [245]
+    - `name`: maker_age_bench.json
+    - `sha256`: 743ba4eb58ce5575b1334ea8a1731ae39ebeab7789ea43733256e1458c8f5c49
+  - [246]
+    - `name`: map_parity.json
+    - `sha256`: 4dff84d32892f41c5d10b30c4c55ab5ba9a072affe9f67d2c3e4c50cc39330f6
+  - [247]
+    - `name`: marketable_limit_amzn.json
+    - `sha256`: 0e231a062d7253b3cdce1acd4a6ca72c75890e7b19fbbc47c76cc6815448c932
+  - [248]
+    - `name`: markout_amzn.json
+    - `sha256`: 70730f6f3bd4e398497f1e302f3b375c739a548b856b68f2282f4fa18b3de864
+  - [249]
+    - `name`: masking_audit.json
+    - `sha256`: 331d20547c6fec39fce38951b75d0b9d653f4d0cc37dff3908ba06e15b7950c7
+  - [250]
+    - `name`: mcs_real_drill.json
+    - `sha256`: 047c2d4e487c7f3ff8571cb456fbf75c3ca1419b100fe2a77c3c5c4832d60a53
+  - [251]
+    - `name`: mcs_vol_drill.json
+    - `sha256`: 9d2b8e91aa81a8c1f2527135680f13ee4c8c71de6daa01f752fe1a4d9abd59c0
+  - [252]
+    - `name`: meta_model_synth.json
+    - `sha256`: 351b5285fcd9f08a8dcfa478db62ed1dfd407c9bda7065efdf2cc2fcf4e3b0e2
+  - [253]
+    - `name`: metaorder_detect_amzn.json
+    - `sha256`: c2bfd7554d2aba52493daa287850c08aced9893f7beb8f0aa976e9b0c791ec8d
+  - [254]
+    - `name`: mid_dark_amzn.json
+    - `sha256`: e12eaa45923bc159ae83d6a62ce9fc3e09e6f80eb47d04d3b27a43adfe550624
+  - [255]
+    - `name`: mid_jump_amzn.json
+    - `sha256`: b4afddf6927e2254d1e0362517bdd14ec3dd07d1dcebcfbb2da40384a1585d17
+  - [256]
+    - `name`: middleware_audit.json
+    - `sha256`: 559ace707af811672313127e2c1ef1758c5f90abce890f91054efc81deb332da
+  - [257]
+    - `name`: modelcard_audit.json
+    - `sha256`: ea042e48135698a878772ae2388c88d86ac11c666d385fe91e9f7ae52ddf84d2
+  - [258]
+    - `name`: monitor_run_13d20aef00774027.json
+    - `sha256`: 3ce1cd7f59c301be6b4710326ab905313725317bee3669ae8e755f6d422bc12d
+  - [259]
+    - `name`: monitor_run_drill_clean.json
+    - `sha256`: 6baa7552e7954a8c081b94f02f1034bf0430b77eee57d4d852952e057aede65c
+  - [260]
+    - `name`: monitor_run_drill_defect.json
+    - `sha256`: e5a8b3d2432a2c2a60969286a54cbabeb7a05ef6ea8d1cecf9410beca77033df
+  - [261]
+    - `name`: monitor_run_real_drill.json
+    - `sha256`: 409a097a1fae3128d9a1100e78ac4a42dcfbfd405a2a9b6bef63fbd42caee3c1
+  - [262]
+    - `name`: mortal_repost.json
+    - `sha256`: c351dc60be497d864fc2cea3a06acfe8fcf3c9ef019836f3af0a0a6d58cbffd7
+  - [263]
+    - `name`: mrm_audit.json
+    - `sha256`: 58eb74524b8e5e97f5a07109503b2c4d350f3c316c53bd44177bf280a13978ae
+  - [264]
+    - `name`: multih_fleet_eval_5db1cab214e291d7.json
+    - `sha256`: 07cd44dd6a795bc0b93e21824b5a963f9c89902f405f91ce6c991e38cbdd4516
+  - [265]
+    - `name`: native_conformance.json
+    - `sha256`: 6754767a42cdff244d3ff4d59b2366ff8655990087cf42957147e0890fbdc5ad
+  - [266]
+    - `name`: nautilus_conformance_7bf19a08c147547b.json
+    - `sha256`: 3a10fca306535858496b88890cab846c2bcffa9e7408980315162a6a5451f960
+  - [267]
+    - `name`: options_audit.json
+    - `sha256`: 80c4ce7b746b194f0e7dc78edc123768654a8db6e99d79398943822ac951e0f5
+  - [268]
+    - `name`: order_lifetime_amzn.json
+    - `sha256`: 57d744ba5f963aed36a2fef198015643bf4be0855f610ab32dcc21bc83941e01
+  - [269]
+    - `name`: order_revision_amzn.json
+    - `sha256`: dbb7239f51f26e176f62493fea10a2e921b1a97945eb251eae5e3432badab3ce
+  - [270]
+    - `name`: p0_evidence_inventory_v1.json
+    - `sha256`: 14ec1043293364e48787bc29446dbfb51b0fb55d69e20d0ba1328c905269cab4
+  - [271]
+    - `name`: panel_audit_real_drill.json
+    - `sha256`: 0da1154c057ee11386df9fe306cf03d63cfaee1a7915df4e51e51b570e2a35de
+  - [272]
+    - `name`: parity_audit.json
+    - `sha256`: a3f63f1bc2c5a8a1eda080ce56e6e4a14994b9b0a5fa40fa26d77a326b720163
+  - [273]
+    - `name`: parity_leak_audit.json
+    - `sha256`: 2e0cb6046a0cd26672101b4e3739d929e0e91fbfc360ceae94638287b83d451a
+  - [274]
+    - `name`: pin_stability.json
+    - `sha256`: cb002632c4d286eb8d3a1c9597f86b16d05bca58d12e3b06f472b25627bd61f1
+  - [275]
+    - `name`: pipeline_audit.json
+    - `sha256`: 728186040bc8ffa34264155cb8a54d1d6123c71968edcadbf7bac0b8cee90077
+  - [276]
+    - `name`: pipeline_flat_audit.json
+    - `sha256`: d849f5c4e74db12eaf84ed3161170c4151bfd05682aab9ffbf476e0478e1c37f
+  - [277]
+    - `name`: place_law_amzn.json
+    - `sha256`: a85ba039fc645e0455f7fa969be74bd40838b5c06b8893737d13352b68aef901
+  - [278]
+    - `name`: place_mix_amzn.json
+    - `sha256`: b496d4d2cdab3e254968926073316a3e74167d24734a226aa22146565996a994
+  - [279]
+    - `name`: post_trade_drift_amzn.json
+    - `sha256`: 83ad54e2add374fc7fa0333072c4ef745f6a1ed4112f36d14cefb9b23262192d
+  - [280]
+    - `name`: price_clustering_synth.json
+    - `sha256`: adfab5e558bdaa8b54abb8376b1d4f33c11f605d9215146ccea3b82d163b0c7f
+  - [281]
+    - `name`: price_improvement_amzn.json
+    - `sha256`: 870ef7c83529dc34f22ea1a7555abbbbed92f84d6d498096ae6159a4b4ef93f1
+  - [282]
+    - `name`: promotion_gate_conf_t.json
+    - `sha256`: a353477ea44ae58d507ff43f5be735937b0e0f3b2f84ef10d2d7f29e846f3506
+  - [283]
+    - `name`: propagator_real_amzn.json
+    - `sha256`: 4c7a02f864596c226f78948ee5d4ae227a2323a5aee8e1efd6b9f492f3d3089d
+  - [284]
+    - `name`: quality_audit.json
+    - `sha256`: 60c619c630ec06fd0384bdf08f11b6940e06c914bc89fe75b7c62a4817aa06bc
+  - [285]
+    - `name`: queue_class_bench.json
+    - `sha256`: d3941977a98261a06825573ad173a9b5d21e1515ea7a3dd48430e61779dc341d
+  - [286]
+    - `name`: queue_fate_amzn.json
+    - `sha256`: 54ce63133d050866a22b42879797e56d076c3f9de8f646902e2090287acedf55
+  - [287]
+    - `name`: queue_jump_amzn.json
+    - `sha256`: 467134b64f8e9b397acd3f221e716b735ee62a5e70e2a533875be62b5d42924a
+  - [288]
+    - `name`: queue_occupancy_amzn.json
+    - `sha256`: c2f2b5caf9a82f3066a34abab1b0529acf44948abd7e61d7b3e1a35e20efbe23
+  - [289]
+    - `name`: queue_priority.json
+    - `sha256`: c03de3a987fe19ee42eadf2f5ac6e97e61da5d55bf89f3a81493e0abf399e7d4
+  - [290]
+    - `name`: quote_floor.json
+    - `sha256`: 20fe58eafd0338916ce1f2872ae0279f079f399ab211c61122e0be68294e1e48
+  - [291]
+    - `name`: quote_place_amzn.json
+    - `sha256`: 493540278637dde9c9500d180d3651a9a34efa279eda7278da2a6655f5e1d4df
+  - [292]
+    - `name`: rankic_eval_8d740c0ddf6d5c54.json
+    - `sha256`: e48fce1ae4cebf94e417773bdef20c9ed7b0822397505c6a51e8843a8da06c81
+  - [293]
+    - `name`: rankic_eval_9ebdad7da83e7348.json
+    - `sha256`: ff139132f80998e336918077dffacfe6d7a660305d025ca635cdcbe7837251d4
+  - [294]
+    - `name`: real_benchmark_us_wide_manifest.json
+    - `sha256`: b6e858a81744c40d82a119027400b70b46974444019913e1ea4dc15fc288fb69
+  - [295]
+    - `name`: real_benchmark_us_wide_test.json
+    - `sha256`: df39bc572dd89e636fd56346687a2de7dfed873a9e4b3c51e2d87dbcc62d955a
+  - [296]
+    - `name`: real_benchmark_us_wide_validation.json
+    - `sha256`: 8c4d8dd4b5af7419dfdf11f5f15f87b437d94db7f33d1b3719842be79b22a0a3
+  - [297]
+    - `name`: receipt_admission_529da640b520a49d.json
+    - `sha256`: 597c5aeecd2c1b57f0908fa6fdf05890fece05e541a42be5a662ba235ff67f03
+  - [298]
+    - `name`: receipts_audit.json
+    - `sha256`: 5fdba4c796f2dff49486c62bd3c501e3053657231d6c45bfdd5bdb04ba2bb1cb
+  - [299]
+    - `name`: refill_hazard_amzn.json
+    - `sha256`: 195c5461c91d8d5faa684d1c3b179292e1ad717fcdabe1a61f0a851dea7e016f
+  - [300]
+    - `name`: regime_clock_bench.json
+    - `sha256`: 55c7d545b7f2e62b50ed135b63920effa0811d198cdc2c84fe0c035157626619
+  - [301]
+    - `name`: release_chase_amzn.json
+    - `sha256`: 8305fd598f154fe8c465ad718ece1fffe297c47471096a86543b69adfd02709d
+  - [302]
+    - `name`: reload_gate.json
+    - `sha256`: 98590cf3583cb8e138ee24c43324da205e4bf04df29a91467b0f69ac5fc8deda
+  - [303]
+    - `name`: replay_coverage_5e5e7ff56ee42196.json
+    - `sha256`: 5dd7d736d1be3a13b977b79901fc9dfef5fdc0d841c489f5848cd7c0839e521e
+  - [304]
+    - `name`: replay_coverage_e72b56ffaf7abe4b.json
+    - `sha256`: aa201319a975a4a347405a1e824db3a47084b4b8a140b0d087a46d85593ad02f
+  - [305]
+    - `name`: replay_proof_0de5fa4e0c739037.json
+    - `sha256`: 4a870f4bb735b8ebf2c87ae3dde8994dfe2220d55ead2f10871ed2c893cf70c2
+  - [306]
+    - `name`: replay_proof_6d266ef51218e3e7.json
+    - `sha256`: 4f20eb438da29c42f4bc54f38a643590f149458db80a8c86196e72477551ecd6
+  - [307]
+    - `name`: replay_proof_701ae84c3d9813e0.json
+    - `sha256`: 4f49bb965f299970c04f1d01673142e0b6e5df77004c5d034b6bb6028760ad18
+  - [308]
+    - `name`: replay_proof_73137fe1a97c3538.json
+    - `sha256`: 74fbc282a7a1d5eb53bcfa17e44a460f8235f5950c463233abf70099e1a5c91a
+  - [309]
+    - `name`: replay_proof_7e1d9b632f022f5a.json
+    - `sha256`: a3a21f8a745cb80cac90f8e53f9512294c297e0caf5d3a4665d5f07214de4517
+  - [310]
+    - `name`: replay_proof_b23a176a5c91e210.json
+    - `sha256`: 1f4a8bd88480f4ddd2f07791b2f00deaa39c83a2151cd9395d395f1e20a4a7ad
+  - [311]
+    - `name`: replay_proof_cbbad2b0389750e5.json
+    - `sha256`: a320cc68307ecffe319ee675feaefa837472ff8a41f07416ac7208e1e98e1667
+  - [312]
+    - `name`: replay_proof_e1fa8dd41197ef11.json
+    - `sha256`: b7f6dc1c01a736a198ec1b10d2aa4e645eaa12c42aba06d749e210f612bc9f6b
+  - [313]
+    - `name`: replay_proof_f5fe541481bbf231.json
+    - `sha256`: bf65017c57348aed947123163223ef59ebf385c9907052b2497016d3753ae2ce
+  - [314]
+    - `name`: report_audit.json
+    - `sha256`: 90dbdda1d64beab2bd4b82cfcfecd207d0aa2ecce9906fe7c333c9ca3ac2b9f5
+  - [315]
+    - `name`: repost_frontier.json
+    - `sha256`: e946c2b132bb9334ace262e6731f96c13e14ce613f68537acf7e6d207fda2dbf
+  - [316]
+    - `name`: repost_latency.json
+    - `sha256`: 5afe00ca1d7db9a0c2dbbbc604b5e661b139609856fa479e035e0c158c675e8a
+  - [317]
+    - `name`: reseed_hazard.json
+    - `sha256`: 0edfaeeea62f26b073232904ea7417de7373e31214cda255219d1c23c81a5054
+  - [318]
+    - `name`: reward_audit.json
+    - `sha256`: 89fd58aa04e5efccd68045bca4c6f263b78e2823a91e8aa50c70f331a0c06822
+  - [319]
+    - `name`: rough_vol.json
+    - `sha256`: a7a0dc640fe0c45b08e3a686dbc341f24e2ede115bd0777ce8d7ceb946bea648
+  - [320]
+    - `name`: round_lot_amzn.json
+    - `sha256`: 84c474210f467bd43f8285361cb93bc840b0a6821185a64d7fad0d0036198d6c
+  - [321]
+    - `name`: rt_audit.json
+    - `sha256`: 5cf3b9efba744325443e6dc9599ccf9dd651332ee7a1fd3eec5b45c7d03ccd7a
+  - [322]
+    - `name`: rubric_audit.json
+    - `sha256`: 2f6945fda3c5d3357a29f723a5e6eeac530d6de70909b108c4e7a04095ec239b
+  - [323]
+    - `name`: run_audit.json
+    - `sha256`: 05db03bc5b9474bee5eb68e1d3d5b2dca1a8ac239c01348f86f53e6ec1db237e
+  - [324]
+    - `name`: sbom_audit.json
+    - `sha256`: aea10d964151ed5af028e1f308b42c23378dfe6da86bcb5d6392174bb21d4bc7
+  - [325]
+    - `name`: schema_drift.json
+    - `sha256`: 739cdc3d79a415c89a28a696e7e98fd5aaea52a774ac0c621f2c721342999bc8
+  - [326]
+    - `name`: schema_fingerprint.json
+    - `sha256`: f02529f36e47efbd95c9d9c328517ec18cf1660ef6c3f14f33254af94898975b
+  - [327]
+    - `name`: seed_audit.json
+    - `sha256`: be653f889a4ca02a62b230bbeb0e4c7bc863c282369d365a691b234eb9d32fa7
+  - [328]
+    - `name`: seed_sweep_demo_amzn.json
+    - `sha256`: 7f5be12dde7fe0a377100dd6a2623ecd9b34a9d6d95cd68954c80f5068b9539f
+  - [329]
+    - `name`: serial_watch_140b073ea589b0c7.json
+    - `sha256`: b761d0a7b5f73b711c1ba02accbfca5c09206f071fca8a9520860c865de4a20e
+  - [330]
+    - `name`: serial_watch_1e8e1446e506fce1.json
+    - `sha256`: 30cb78079cb4baf19f22d8ac459eb03f157f49eff2250499a936c87bcd976976
+  - [331]
+    - `name`: serial_watch_2c14615c26efd19b.json
+    - `sha256`: b90d2efaa694eb46c93cae795b121fe7019fceb4ea37d52e5242eeb417a6519e
+  - [332]
+    - `name`: serial_watch_46445c3b227aa15e.json
+    - `sha256`: 46017d116935aa1bbd6392afc8359960e2f47ec46306b6fc67bb4b8e6182e4c0
+  - [333]
+    - `name`: serial_watch_47297eff3cb55178.json
+    - `sha256`: a416331d122d804237117f8d89cbd445bb7f0442b28fba198d35714f8106dcc7
+  - [334]
+    - `name`: serial_watch_4f4a495b59d022fb.json
+    - `sha256`: 6479f6806cc7b9cfb8f0c0f2fb292011d9a6293305c316232621c03fa6f748b9
+  - [335]
+    - `name`: serial_watch_771602cd1580476c.json
+    - `sha256`: 52d8269ee60d1f98c119d5fc179c4a6176445c837ee05900a5ef54044c815866
+  - [336]
+    - `name`: serial_watch_78dd891261e2aae9.json
+    - `sha256`: cafb78f75257cff2a338fe26021e82a4eae4b8049feeb02c7256ccfef805db0f
+  - [337]
+    - `name`: serial_watch_85db152db863d25d.json
+    - `sha256`: 4cc2079dbbfd83e0ae07fcba82e8319e18dd33aaf9589f8e11387433c88caad1
+  - [338]
+    - `name`: serial_watch_8977244ef78bfd2f.json
+    - `sha256`: 7f6c4e9d74a471019bba9fd44fc3193eb1a0f4ab7c1e6e0cc6f35cd8ebc5d57f
+  - [339]
+    - `name`: serial_watch_a6fd40311ce0fa04.json
+    - `sha256`: dcb4c9013319c21e5af8dbdc53f65b93656e5679ea4ca46ac8a335529fbad490
+  - [340]
+    - `name`: serial_watch_d311f5ea367a66a9.json
+    - `sha256`: 4b748b61f2cb5a6e7a4eb58fd58cd9fd98247520129c27f904138c2f1d2c3c7f
+  - [341]
+    - `name`: serial_watch_dbd21a6c99c81e00.json
+    - `sha256`: 072bbfebb6ed9a089476aa711cf717ab8cf7347644c63281b8c34875a3a4a36f
+  - [342]
+    - `name`: serve_audit.json
+    - `sha256`: 37ce4766e87a0a7200ba38e20f49fd5a5fe734640ab9ff43a4aa18ccea7b2113
+  - [343]
+    - `name`: shield_decay_amzn.json
+    - `sha256`: 2e88cdc4707a8890a0dea647749561eff8fda0d0b7711ff07bd42549e15319b2
+  - [344]
+    - `name`: side_imbalance_amzn.json
+    - `sha256`: fdce661d9fd73f5bd47f17dfbec526e3c4079ed0ea97dd6c59f2cb2a07791a76
+  - [345]
+    - `name`: sigkernel_mmd.json
+    - `sha256`: f56d3a4e991a23592af3e4406f64b2fecbd4abf8dddcec96f03e89934779358a
+  - [346]
+    - `name`: sign_autocorr_real_amzn.json
+    - `sha256`: d2b4dce996ab14b7e2e16112862b073e87294c06fe07b755942230c65ed65438
+  - [347]
+    - `name`: sign_predict_amzn.json
+    - `sha256`: fbbe98aec24936c1b3a0dff0c922a660fdb2e2419e402bf35ba30f923a7cf13f
+  - [348]
+    - `name`: sim_real_ledger_amzn.json
+    - `sha256`: 814b4853c24bd668b2c2fdb66f6fd4eb8b9854fcc335edc0ea22dbc6d3271622
+  - [349]
+    - `name`: sim_sensitivity.json
+    - `sha256`: cb33e655209b155f557770674a45d14a77e523f4d964f8cea6c69644048ca140
+  - [350]
+    - `name`: sources_audit.json
+    - `sha256`: 1819d4b627eb9bc9589978a0c16b7b38452bf72747f81641478bd4b64bc2af03
+  - [351]
+    - `name`: split_flow_bench.json
+    - `sha256`: 37c6fe8de4fab801aa4dbb5eff23c326ecbf8d471e869d500be9451d9fb6e73f
+  - [352]
+    - `name`: spread_dynamics_amzn.json
+    - `sha256`: 13bb86c5bbf5f826279c0af371790259cfdb202c8bf85c4f09155199cdd3bdce
+  - [353]
+    - `name`: spread_floor_bench.json
+    - `sha256`: 37861b395d98f358141ada1962c698679c80c24632baa50e7c08b32873930a6f
+  - [354]
+    - `name`: spread_reopen.json
+    - `sha256`: d22bb5a384368a0d383a9cf6df4f38b40e148830e700784a96ae446354aed406
+  - [355]
+    - `name`: spread_response_amzn.json
+    - `sha256`: ab2a078fc13c3bebf659ea962fb21ab18e826508f0abad2fc83e1210ba3c8463
+  - [356]
+    - `name`: spread_response_bench.json
+    - `sha256`: df3253be3c3a3f43bc4e4cccbda6d72f2a627d95ba99a683117cd9d19e9d5352
+  - [357]
+    - `name`: stack_invariance.json
+    - `sha256`: 4f3a5c2449d4192a248d17b06b05e6a5818d8671719af69bd37f216ddef0f1c6
+  - [358]
+    - `name`: stack_watch_synth.json
+    - `sha256`: d90dfbd42266b54ddeb8e237e12d674ecbb24359287166f074d6241ad61a7dba
+  - [359]
+    - `name`: stale_quote_amzn.json
+    - `sha256`: 91bfc70fb7cd64be078a327fae0df159395301ce2d42d954157c6749628bf6ce
+  - [360]
+    - `name`: streak_calibrate_bench.json
+    - `sha256`: 684c6584fc9d7d18d8e6801934e63a1ced7249321e13bc8f06f7868e60a2b86f
+  - [361]
+    - `name`: streak_stats_amzn.json
+    - `sha256`: d51d2a74e86e484183fa2af0405ad38af8273f38fb3621f2bcd39e6029556129
+  - [362]
+    - `name`: sweep_bound.json
+    - `sha256`: 87670d4022ace1a09b1eec2e2c142bfb3a3cbd33e4b983a3369e6b7421ef1791
+  - [363]
+    - `name`: sweep_crown.json
+    - `sha256`: d42626eead90475119af14f9c8d60d0ca5b94f62ad14c24ff157b4505f264b13
+  - [364]
+    - `name`: sweep_width_amzn.json
+    - `sha256`: ed310e546e4b4f2c2544f99c24cf010197ae78d3fa753bede0af328dde59ccdd
+  - [365]
+    - `name`: sweep_width_bench.json
+    - `sha256`: 67f57afee23c89322c27d64070da7731ba292703388bb68768afc34019f69431
+  - [366]
+    - `name`: tail_quota.json
+    - `sha256`: 307c022496df278307301b62207cdaf7c5fc3078cea9151fd486e088d60bafed
+  - [367]
+    - `name`: tail_real_drill.json
+    - `sha256`: 9b36d560170c53b02f873de648f4c9ea83d7e30e61ab0ad598a2ea4d05b477e4
+  - [368]
+    - `name`: tape_digest_amzn.json
+    - `sha256`: 4915ad1bb6cf3c0857a09020ca27f3c7e6685a9f64681c2fefd8f2e91a8b15cd
+  - [369]
+    - `name`: tape_surgery_amzn.json
+    - `sha256`: 4696227f39dac4b343da3dc5f9a708069d44b64db94a7f5ca12e6455c54629b5
+  - [370]
+    - `name`: tick_rule_amzn.json
+    - `sha256`: d69bc89702def00c3abee7c06e071378f18f0996a186a296a68ba16d676e3840
+  - [371]
+    - `name`: timepart_audit.json
+    - `sha256`: afe622b75c555ba7c810a074205287ba12588cdba90388876d9aea438fad95c5
+  - [372]
+    - `name`: touch_empty.json
+    - `sha256`: 909b434110fae047594dfa08b7342959281df4102e3ee8ba4d65d9c547319c95
+  - [373]
+    - `name`: touch_follow_amzn.json
+    - `sha256`: 8dc68233094f788f38f52a8e32fc5a04a25c27c35806b73d5b677f7160033bdb
+  - [374]
+    - `name`: trade_decomp_amzn.json
+    - `sha256`: af272bd9ef0a1845d901080caa9c3a27257a3ae341848cdffadd8f03475c0427
+  - [375]
+    - `name`: train_infra_audit.json
+    - `sha256`: 31319d104c42dee087fe7d24b42c92af5a99bba75587ebcb3336d9ea81d1e90b
+  - [376]
+    - `name`: train_receipt_audit.json
+    - `sha256`: e31a42fa72953f9b740dde1e2179b8525b6dd49c00c28fec4ebc8e160687c25a
+  - [377]
+    - `name`: trust_step.json
+    - `sha256`: 39f62ffed6cce8684bdb43ba62406bf2ecf12eede96e68d11f4d06ca50de59a8
+  - [378]
+    - `name`: ts_reasoning_audit.json
+    - `sha256`: fba6cce35080058c5eabcc308541cac27bdc27b3538596c1856755cdbdee8591
+  - [379]
+    - `name`: unhit_chase_amzn.json
+    - `sha256`: a7c9de93641c46d2853515894aa636286ba5d49bc12833aa936cc4c056080081
+  - [380]
+    - `name`: vac_chase_amzn.json
+    - `sha256`: 371db4e5f9b635abc95f30ea5e6e0b135202c998322124897d35b26f9a130b1c
+  - [381]
+    - `name`: validator_fuzz.json
+    - `sha256`: 524d611ec21c3688ec7b8af92b4eda6bd7f70fc23c7a558215fb5ec3d22d4ae2
+  - [382]
+    - `name`: verdict_real_drill.json
+    - `sha256`: 63e4fcfcd616f08ad740b2be0fe3163eaaae8243bdfbbdb8d196cafd19d790e7
+  - [383]
+    - `name`: vine_audit.json
+    - `sha256`: 86febce575e975c471715538d9ae242a5e56522d10afb46ff11e2e462c180962
+  - [384]
+    - `name`: vine_dominance.json
+    - `sha256`: 2c555910f452082daebc5ad1ee719d515725d1a6c1350932cb4d860ae7e230ce
+  - [385]
+    - `name`: vine_panel.json
+    - `sha256`: 4ed248f50d9977ef333f1456a947c01e6d01687eff3f93082e9afa2cc0d9484f
+  - [386]
+    - `name`: vol_bench_f3bf2afc2f159ace.json
+    - `sha256`: b9b70f7186d75054e91ee734b87b8aeeba22d66af713806a8d5410a9bc603ee3
+  - [387]
+    - `name`: vol_of_vol.json
+    - `sha256`: 8a46d4ec9cf6574f032ebc0041b4cb4466ebddfb53d16ac217fc6954d8f707e2
+  - [388]
+    - `name`: vol_signature_amzn.json
+    - `sha256`: 66c853a1efbe2fe0a41535ef9e191eee310e5346e7057fd157a8832b3b1e3eb8
+  - [389]
+    - `name`: vpin_amzn.json
+    - `sha256`: feed66eda5cf279af3d12224eeeb7cae7ff47a998dcc767249d185f78bcd27db
+  - [390]
+    - `name`: warmup_spec.json
+    - `sha256`: 01b3b622ed4e6d6852fd56f2122d257e1b9f31d100ae850cbea38921a38bafd6
+  - [391]
+    - `name`: wave23_map_amzn.json
+    - `sha256`: ad949f2ebda26df715cc45e1d6efef08c10e6deeac503580bc6668b61bf10ee6
+  - [392]
+    - `name`: wave24_map.json
+    - `sha256`: 5c765aa1b4d50ddd0fb2f3645de5edc6c60465ae6b6c936b7133507e3a0069aa
+  - [393]
+    - `name`: zone_card.json
+    - `sha256`: 751e3497d28c9a1f6e50d5040ec6b80a416194b0ea1b0ab2b05462c897b219d3
+  - [394]
+    - `name`: zone_churn.json
+    - `sha256`: 7f4b68803588fe0ddc3ee3c45698a7a2ea367f8c2bf5cad7e542fd56e91441f5
+  - [395]
+    - `name`: zone_embargo.json
+    - `sha256`: ee556605f12d88c494b6ead3a02099f569dfef7875cc21ca7ea5657983aea180
+  - [396]
+    - `name`: zone_map.json
+    - `sha256`: 43753aa2492ac472d22f2e221fa155d2c1393ed13201a1d9028231e15a4d68f7
+  - [397]
+    - `name`: zone_stability.json
+    - `sha256`: bd695896930494a0d8da307b9088744b98abe575a6574369d929ba7ffc8a4b2f
+  - [398]
+    - `name`: zone_ttl.json
+    - `sha256`: b5987b6ac2dfd8484a15f89fbbfa7dd8d6009df8dd1d4ec1098b4efe9580d722
+- `members_added`:
+  - corpus_epoch_52f80a0cc915f58d.json
+- `members_removed`:
+  - suite_health_drill.json
+- `n_members`: 399
+- `params`:
+  - `head_sha`: 69e3b67e9aa7ef4dac50240fcb029550ed9b025b
+  - `pattern`: *.json
+- `prev_epoch_receipt`: corpus_epoch_52f80a0cc915f58d.json
+- `prev_epoch_sha256`: 5fecd8d12c54881d2a86d42245d5f85fd22b19cd01d2b233b92aa5f56315dcd2
+- `receipt_sha256`: f8d91d9a3266ce897888f3db12206703fcffeebe772d90dfe9f638c856321ff4
+- `research_only`: true
+- `schema`: corpus_epoch.v1
+- `simulated_only`: false
+- `verdict`: shrinking
+
 ### `receipts/corpus_epoch_fbb352a23e62d321.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
@@ -22812,6 +26503,1236 @@ counted. Prose that contains such a token is quoted verbatim.
 - `prev_epoch_receipt`: corpus_epoch_6f8420fc2959f4e7.json
 - `prev_epoch_sha256`: d8260040b7bd5488f2317ccc7ec5f36810695e25307e3b140fe09d79798c712a
 - `receipt_sha256`: fbbcd3c1e840e14d6b485a31bb1519babc111b5d7fa41755c3f99c1261399584
+- `research_only`: true
+- `schema`: corpus_epoch.v1
+- `simulated_only`: false
+- `verdict`: advancing
+
+### `receipts/corpus_epoch_ff585b9d7c8badaa.json`
+
+| source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| receipts/corpus_epoch_ff585b9d7c8badaa.json | 3f1533c16f51153d03996f7253c79dc68816d8df89d214c8b37ca8ee17b27500 | ff585b9d7c8badaa185e893bbce1107c1761f6d4212f129acbaa993761c6487b | not_checked | absent | inputs_sha256=d23289bc5460ee9635d163efd1df7e32b757005aabd6dbfaa9646326d2ee6947 | unspecified | absent | true | false |
+
+- `data_label`: CORPUS
+- `epoch_root_sha256`: 2dfbecae84f07c55d10d15fbd52fdda2d5d4636b69843495bffaa2401d2c108f
+- `kind`: corpus_epoch.v1
+- `member_tree_root`: 89ca513634eb0b25414253feb8110e61c84aa5e7c0254a972b30e4f1da172f93
+- `members`:
+  - [0]
+    - `name`: abc_calibrate_amzn.json
+    - `sha256`: 31aedff635330e6727b42bfa6b0c406c24aa305825c41cb09ae6aac33dca65f1
+  - [1]
+    - `name`: aftermath_flow_amzn.json
+    - `sha256`: 229bfe14cfd239f30786ef89c8aa0f2b2775800e00cd85a6a9d3239265604da8
+  - [2]
+    - `name`: alert_budget.json
+    - `sha256`: 04e96f138a830001cb130a3b4758f684627588bccc648f4efd35a72bdb2111e7
+  - [3]
+    - `name`: anchor_scan_amzn.json
+    - `sha256`: 65c11ec3e7f771bbedf4cde31b63bbe9576e97a9de55f7ab030d3c8c34c28c8a
+  - [4]
+    - `name`: api_audit.json
+    - `sha256`: 2957d91704d025c08f5d7ece51f037827539d9254246091d8499fb1fde4a3177
+  - [5]
+    - `name`: api_fuzz.json
+    - `sha256`: c403f16743569dd1a6b7aa0711a58a42ca8bdd26abc5b0645bf5ab19952e792e
+  - [6]
+    - `name`: asof_audit.json
+    - `sha256`: 436c3737e93cd19673ae6e6127e69f47498efbeacdfc25e8447a9abdc1b7512a
+  - [7]
+    - `name`: attestation_audit.json
+    - `sha256`: 5b44675be81133eb52a25feb2553c487bf6392ec297bf390fde875085ae46ee4
+  - [8]
+    - `name`: attribution.json
+    - `sha256`: b9a8d0e5e42087e034ca2551afedaadd6f82eeee74666794dff88fdbaeb00b4c
+  - [9]
+    - `name`: backend_parity.json
+    - `sha256`: 9b2b2433e4106a88b1f2583bca0816a738370635046254267a50f83e50b3ac5c
+  - [10]
+    - `name`: band_occupancy.json
+    - `sha256`: 98635a72af8ee0b3f395cefb81bc3be5018d39b7f9cdd8a359007c50780e70da
+  - [11]
+    - `name`: band_shape.json
+    - `sha256`: 1e0d626f6a4b69a5761dc498a5b1bcd7d446b7a0d6c5439bf6c3beb048eafcbc
+  - [12]
+    - `name`: bank_audit.json
+    - `sha256`: 07d92059b00305ba6b5880edc4152180d0fd31bd9f0829bbea3052b0ceb075fc
+  - [13]
+    - `name`: basis_carry_dd7705fc0f2f1c25.json
+    - `sha256`: 852f56a1e2aeb3654d406fbb14a4a2baa7cd20949d45153a98c5a99a2248f741
+  - [14]
+    - `name`: boundary_audit.json
+    - `sha256`: f958b32b0d6bedbd542c105d7b530431c4356dda768d2bb90fb8055db56b6cdf
+  - [15]
+    - `name`: byok_audit.json
+    - `sha256`: 0dda10232d681aecd75835b70382ecab3f0698f91e5a371e171968a73ba23406
+  - [16]
+    - `name`: cache_audit.json
+    - `sha256`: 248835c82eeba8f0ef65fc30345da462bcea7180374008d5aa56c526f4bd5f61
+  - [17]
+    - `name`: calibration_audit.json
+    - `sha256`: c9f800216f05073fed4da606f04823cc71bb37909d4242492f5e280cdb64964f
+  - [18]
+    - `name`: calibration_audit_drill.json
+    - `sha256`: 2a3300764a5b916130f64db8c29b05c0a48e2212b43730f75f4970bff2eae354
+  - [19]
+    - `name`: cancel_cluster_amzn.json
+    - `sha256`: d6554e87ef5ca20ee1df623ac0b6f08fba4b91f2c00bce68bfa949767691abf1
+  - [20]
+    - `name`: cancel_gradient_amzn.json
+    - `sha256`: b140be66a1d4467c73f104a992ab9f692ed83b959a7918461b3951fd091bff04
+  - [21]
+    - `name`: cancel_gradient_bench.json
+    - `sha256`: d01943ba6fa197eb7b8f259b796acc28a6cde10a2bee9995dd47a98b0535a91e
+  - [22]
+    - `name`: cancel_lead_amzn.json
+    - `sha256`: 8151e7dc1cbbedb112d8fdc3cd3e0f52aca58ef4d23ad698d2229a02060a705e
+  - [23]
+    - `name`: capability_audit.json
+    - `sha256`: 787b45652557c719c5beffef50ad571f773d3253f28ddc0e0a406e0cdc75399c
+  - [24]
+    - `name`: capacity_eval_3622d0c059d42009.json
+    - `sha256`: 57ad3394513fe58e48127141858a990580fade56ae4755ad0a3b868aa2568f2b
+  - [25]
+    - `name`: capacity_eval_cd0854242ed8a9ec.json
+    - `sha256`: e0a6c8250891cd5065edfc3bb385e6fdd640e5ca376cac496420815ab16881ed
+  - [26]
+    - `name`: causality_scan.json
+    - `sha256`: 2d7b2e0963fe468305afbbbe190b22b356ad7bdf8cc4f47c279fc25855d61161
+  - [27]
+    - `name`: churn_reseed.json
+    - `sha256`: 3a444c77bfef84e0e070d4611368569639ee6a551ed30cbdc6a107202ccbff7d
+  - [28]
+    - `name`: churn_stability.json
+    - `sha256`: 7ab02a6f41f6c626d79bca729a02300d4c79dae243758a460b57a636604fdcc4
+  - [29]
+    - `name`: cli_audit.json
+    - `sha256`: 16b8a95f44d73964a6578cee9c7cc4aeae2d74770d1b2891422b859feb01d597
+  - [30]
+    - `name`: closure_fit_amzn.json
+    - `sha256`: ff6d30e8251032109ace27be9dd1e488206be1eeb81d5fa1f9c5d8f56eb29294
+  - [31]
+    - `name`: closure_stack_amzn.json
+    - `sha256`: 994f8f2cf89faaace83e6e3f7441d3361e111c0d2b9e05cf123c2c602c2389cd
+  - [32]
+    - `name`: coherence_2dd641ab766a536a.json
+    - `sha256`: dcaf457766306077f90249a7154302297b30fc63417e2fc9a46517c71e4265fd
+  - [33]
+    - `name`: concordance_df424fa2f6b1c4e9.json
+    - `sha256`: d35b4d196b598847e2bcb69e7b3d5536bbab0e654f94ec9a32f17554d0a7e81c
+  - [34]
+    - `name`: conformal_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 48b240ea495b7ab633a4ec61c7da34f82c414f2370220f60894612ceef8b3dc9
+  - [35]
+    - `name`: conformal_real_drill_gaussian_pit.json
+    - `sha256`: 94de7928be51179c7119d751d1812dbd91c2b7992aba08528d094d8101eff21e
+  - [36]
+    - `name`: contamination_audit.json
+    - `sha256`: bce466d9ffb4b6144cf78590caa1bb1c48f59ac06ad94a7141d1796013ab53fe
+  - [37]
+    - `name`: continuation_attr_amzn.json
+    - `sha256`: e2340d411b4af81d839dc85ad7326835fe7a8c97c834432c861664c773f0cbbc
+  - [38]
+    - `name`: contract_audit.json
+    - `sha256`: f5ccc9f01e32b707526d4fb684e45d9e7d3b64af7b3b647c12223d72764d1e64
+  - [39]
+    - `name`: contract_probe.json
+    - `sha256`: 9cd19ecff9d41c85487e6991e0bfd67eff42a9ed154b6759f4f9f1c8b49178ec
+  - [40]
+    - `name`: corpus_absence_exemplar.json
+    - `sha256`: 611ad72af3e3734f34e39d3310e502444d2ede665018b7ffb7223ee0f7c19b02
+  - [41]
+    - `name`: corpus_audit.json
+    - `sha256`: 374807979a66c7dc455ee3f1236eff03be43e1b7f9f550b4e97789b1807b3552
+  - [42]
+    - `name`: corpus_epoch_0a2e8964712cfb0a.json
+    - `sha256`: 9bce499b8f5be69b1a1fd0ea8b173d12fd475e7a2cafaf9d925882b2744bb25c
+  - [43]
+    - `name`: corpus_epoch_0af2a2d5723b14ae.json
+    - `sha256`: 2ea2708eba01500e54f3cfa8fd669339d14b5d3de22ddc9417b113e595bbec72
+  - [44]
+    - `name`: corpus_epoch_1384f0d99dac82aa.json
+    - `sha256`: d8d10fb9b46df573923a41cb0a04e4637dc9b6dde39e57dbfc74494e7ff33258
+  - [45]
+    - `name`: corpus_epoch_2b5db388ddee23aa.json
+    - `sha256`: f3e2af4492471296a33ae47fc3222e7ac17a96251082aa960b373edcfb6d558f
+  - [46]
+    - `name`: corpus_epoch_2ca91405e468cc6b.json
+    - `sha256`: cdd1cf1d0d82cd939f723248c57a0393de947baba1ca1e720c64d605bcb2fd3b
+  - [47]
+    - `name`: corpus_epoch_2ddb4fe7154677d3.json
+    - `sha256`: f70e4a3c361b81ba920e32ccd3f9375204e2fb6965b9733573563e2b5b881c7c
+  - [48]
+    - `name`: corpus_epoch_2ecce33392960d8d.json
+    - `sha256`: c7d13f38ed66bc3864f6f711c46ca13852bd11d70886236d74eb7f137e322dd8
+  - [49]
+    - `name`: corpus_epoch_404d16a7af1d3862.json
+    - `sha256`: 24ba29424ef385c4916dc96e4ae775496ec1bde9ebc95e4e126d8b44e36ff8d2
+  - [50]
+    - `name`: corpus_epoch_4a75066db56e52fd.json
+    - `sha256`: 7c4a99be100698d78b8c7e5c1d920e3bd6370ba6e774662dd6ed3a4c8c1f3e5e
+  - [51]
+    - `name`: corpus_epoch_4a79ac4ed05777f5.json
+    - `sha256`: 2e4829b29e316fcbcf0ab9a307278595da57925e1aa0659c6b64db44c1e8759d
+  - [52]
+    - `name`: corpus_epoch_52f80a0cc915f58d.json
+    - `sha256`: 3f98624499677af6306c90bcaa7cd706090b10060b3168fc35f88a876f24ffe3
+  - [53]
+    - `name`: corpus_epoch_54c82d2a8bcb86ed.json
+    - `sha256`: 8711f308401f12c3556d870a282b58aaffb136ad526febd661f181c0742a2870
+  - [54]
+    - `name`: corpus_epoch_568c538fcf4b21cd.json
+    - `sha256`: c07b4cf5af660d253623550ddab94334b599c325f3615465ad16ae53b8f98996
+  - [55]
+    - `name`: corpus_epoch_574953afdf88a0f6.json
+    - `sha256`: 7cb5d3159f82ae71efa2347fb1d419912fb7033c48d808b514176230a93d09f1
+  - [56]
+    - `name`: corpus_epoch_5a8dac905c9cc22d.json
+    - `sha256`: 50b853da7d6c07efc3e4c533e5a4a6beae5295da68c696f2656491b28fbf6b18
+  - [57]
+    - `name`: corpus_epoch_5c9754ab2a9408a1.json
+    - `sha256`: a1f5903b80cc593f69fbc3a1fcf8db1f4a97d40bf1c0f0f505b2ff66b71d02a2
+  - [58]
+    - `name`: corpus_epoch_62bfa90c28254f19.json
+    - `sha256`: 631316e97a0a2184262517d25d6ffea4934a56e3a02c084335b1b637c0b9cd75
+  - [59]
+    - `name`: corpus_epoch_6340cdebc9a6efe1.json
+    - `sha256`: 3e3473c359007fb425361a8a618d1e7b3de5edc23e1a0937ab241d2831c95dc0
+  - [60]
+    - `name`: corpus_epoch_63761c8b4e63992b.json
+    - `sha256`: 917d1b4033f1c20d56156b2a5c83c95c800ec74dfe3aa6fd26805d226cff6c57
+  - [61]
+    - `name`: corpus_epoch_6cf185cfb5466dd7.json
+    - `sha256`: 256d5692208eda60d80880dee77a6124f3c5b5f13a1ddb1e62c6521552639416
+  - [62]
+    - `name`: corpus_epoch_6f8420fc2959f4e7.json
+    - `sha256`: 7050675439b29e8874da291387c39c16d5ca38a9287ff7535364c1fc1392aac5
+  - [63]
+    - `name`: corpus_epoch_6fb596b0230e9f17.json
+    - `sha256`: a879e4cf4813e82a1e885c053797417b9b5daadbf980a8afa9da1d48852bc380
+  - [64]
+    - `name`: corpus_epoch_721e9b4fb855e1a1.json
+    - `sha256`: b29b736a0234ce82b4af23a973f7ec6cb4486fbb9b071be14e30319a4bfabd30
+  - [65]
+    - `name`: corpus_epoch_7d6b1f5442b13ea1.json
+    - `sha256`: 29bb1eae00b9d91e5833450631d74c3aaff4aa7c42230e89a074c94df626c5c9
+  - [66]
+    - `name`: corpus_epoch_84384f73f7d8e9d6.json
+    - `sha256`: 8a23be1760a52130b342ecdc107cff3c3369b74d02497365316f65b498eb52db
+  - [67]
+    - `name`: corpus_epoch_959513b12d66742b.json
+    - `sha256`: b557f12c51d23d9873d829aa683eec9d55dd998d0f7d12f1d0f7286f885a7eed
+  - [68]
+    - `name`: corpus_epoch_96ba030697ddf0ff.json
+    - `sha256`: d58f0f036520565d076e26b9830c8a8ac49d47595cd4c1af1e7b6160c547394f
+  - [69]
+    - `name`: corpus_epoch_9d41d1d7410eb02d.json
+    - `sha256`: 074b9c2ab74e8e6deaf636d60f50cd81ccb9652311a4872726e2012dc4f2c328
+  - [70]
+    - `name`: corpus_epoch_9fd864d30fda3c69.json
+    - `sha256`: 20177c26b20ac749d4d02be185fc05ce22d645bfafbf8d4782f22b2a3e5b2aa9
+  - [71]
+    - `name`: corpus_epoch_a0e901c74a5f29c4.json
+    - `sha256`: 7d91fe4f8f725e4c87b5ef9334b2da7a6fce29496041bf7d48e9523acccce828
+  - [72]
+    - `name`: corpus_epoch_a1a8323db3be4842.json
+    - `sha256`: 3ceb9374251d3e50f65edb6424915c17bb11fbad2b846fca7f42c3ebd3cfc901
+  - [73]
+    - `name`: corpus_epoch_a4cb68008a317f90.json
+    - `sha256`: 66894e231d5029cd138f613c62447e58700a44d7def29bc1a16da44146dc69f2
+  - [74]
+    - `name`: corpus_epoch_a5d113f0994c74b5.json
+    - `sha256`: 8a0128b9d8b208e67022ffa25e040d8ae10d244758ace48207e16770f700a493
+  - [75]
+    - `name`: corpus_epoch_a83ba798e9abd892.json
+    - `sha256`: 9913a8a80d7232d5af2f1b6864389ea666b8fd81582ea55ce9dbdc835394385d
+  - [76]
+    - `name`: corpus_epoch_ab1470227e387e4d.json
+    - `sha256`: cba4e5507591d625b134e82278581e57b9c800ad717cd65f563e0a3bece3377e
+  - [77]
+    - `name`: corpus_epoch_ac21f22e90c58c53.json
+    - `sha256`: a19be18489e84cd007ab22b4e412c6014c90f6102f9f857da52476734e8b4fd9
+  - [78]
+    - `name`: corpus_epoch_ac2e4ae4bcae4dd8.json
+    - `sha256`: 4e97881c7c558ad93674533f102ea582de60bd109c178a1c7489b30f027f8a93
+  - [79]
+    - `name`: corpus_epoch_c5a45fd1b73737dc.json
+    - `sha256`: c10f124084371e6c9902e8e77d807d6f71d622deffd19ecd4c7026ef3b35d850
+  - [80]
+    - `name`: corpus_epoch_cb39a076f3287171.json
+    - `sha256`: 8680427690c0709412501f39953f9bc845932a2e3f1875c32d12a2067d39f695
+  - [81]
+    - `name`: corpus_epoch_cb415a040387f7b0.json
+    - `sha256`: f7a80fdf1eb8820d00f4c26faf536113a11948a437d4637acb191b35b6dfa050
+  - [82]
+    - `name`: corpus_epoch_d1e7bb2567019bf7.json
+    - `sha256`: f4bc01f2646d3fb0561ecd19b3b64fb58d7bc0828e486464401484a3d9ed3530
+  - [83]
+    - `name`: corpus_epoch_d479e96760271bba.json
+    - `sha256`: 5dda9f2bb065fcb3172d1b3aa4f7bbb4b0c3158a3120d520e974ed36fd7e4d23
+  - [84]
+    - `name`: corpus_epoch_e0f905c031ef39b1.json
+    - `sha256`: 4af585b31592271ea26116b814f285f4c661240af21a78f915750591e87e8cc8
+  - [85]
+    - `name`: corpus_epoch_f8d91d9a3266ce89.json
+    - `sha256`: 70fa6a342b9197ea10d1ba2b763ef1042e65c1595c0f4690512efd676ebf9c04
+  - [86]
+    - `name`: corpus_epoch_fbb352a23e62d321.json
+    - `sha256`: d985ae89f15e953f062d3677e32a0f83566932ddc0dde0853491f8341ba660d5
+  - [87]
+    - `name`: corpus_epoch_fbbcd3c1e840e14d.json
+    - `sha256`: 0275c647da2c2abe18c798cfd61d52813cae12702505e22da2aa18032214f21d
+  - [88]
+    - `name`: corpus_history_absence_a5753b57fab08b0f.json
+    - `sha256`: 3904f2838779802fcad32a15b13d82eb6860a0fafecc2feb9437af93a7360f8f
+  - [89]
+    - `name`: corpus_inference_2ee42848a1d51937.json
+    - `sha256`: 25230923d07164342facbe10ec0520975ee04c0ef690b3661f5daaf9d69f250e
+  - [90]
+    - `name`: corpus_proof_a56dff22d5b4931c.json
+    - `sha256`: 0a281b87338f47e861be233984f7f4cf171856f4201e403f4a84d2d69c0e809c
+  - [91]
+    - `name`: corpus_proof_exemplar.json
+    - `sha256`: 49c13a28dcbc992e9830264d01670d4ffb2460e8c1abd3613d8d54d0f4c8bb1c
+  - [92]
+    - `name`: corpus_real_drill.json
+    - `sha256`: 082f16234bae90433c9f699d575a57b2ef5f1bf826fdb61ccba838e936f9f119
+  - [93]
+    - `name`: cost_aware_rerun_20261007.json
+    - `sha256`: 618fadcd1cfa507b2a31f7671f55368c5e80c554647e238996af60759b020f7f
+  - [94]
+    - `name`: cost_aware_rerun_20261007.json.seal.json
+    - `sha256`: 62cf7f39349bde7690af5f2c15d385a5f2aef910de152eb46bc92b63578b8df1
+  - [95]
+    - `name`: cost_calibration_eval_df9b8d7068bf709b.json
+    - `sha256`: 6c8a3677f6a72ea8b9790126779d5b0c67838c3c4461dbd1f9fc1ef62fc0509b
+  - [96]
+    - `name`: cost_calibration_eval_f130c7e871e9aa64.json
+    - `sha256`: da4f8269942b5c87bebed33e422d6326cb73d327f48648d97b02e6e6b36dd1e9
+  - [97]
+    - `name`: coverage_cs_real_drill.json
+    - `sha256`: 9dfc169e6c3cb41c803c92114a4b33004d407295fc69c7a7de3dab3141a624b7
+  - [98]
+    - `name`: coverage_real_drill.json
+    - `sha256`: 2521152de17c0974039cb4f4867cda6f2ad1299e3f00135fc0764e32fd17759a
+  - [99]
+    - `name`: cp_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 64a38aba74a56b44aa64dfd68ca1859d4d142c9dc2f4e0a657b447a041e434b7
+  - [100]
+    - `name`: cp_real_drill_gaussian_pit.json
+    - `sha256`: 6deaa336ee288e28ea35f93caa5d8b8b8436c99fd47efb97ceed792f6d3b8a62
+  - [101]
+    - `name`: crossvenue_basis_3f4ff76f517655a7.json
+    - `sha256`: 14ce799a46e282849e8e7852ff74489ed4747274c164040fcc52974bbb72a087
+  - [102]
+    - `name`: crown_behind.json
+    - `sha256`: 1ae02ca68d023ddd18c2b0023b240d1cf729b0a2b04597954548402afbe769c6
+  - [103]
+    - `name`: crown_density_amzn.json
+    - `sha256`: 4945e95537a122d7d13c12d84fe59e518e3051eb8ddd9ca8db66f3218a0c6268
+  - [104]
+    - `name`: crown_join.json
+    - `sha256`: df42ab245b4f82d535fb52d4a4068414b4b11537e152ec63b0e3ab6823e40af9
+  - [105]
+    - `name`: crown_size.json
+    - `sha256`: 751a7c4351d1639d547330d7b8f8251fb6341f500f099304a13945810a560fe0
+  - [106]
+    - `name`: cxl_shield_amzn.json
+    - `sha256`: 16cac426d34c9af016963a251e9fef5422babd2ced8be9795a7413e9c6b84e40
+  - [107]
+    - `name`: decay_watch_synth.json
+    - `sha256`: 8f37ccea904fe09557819f36a60d5dcb2d99467db21301111b5c7d9836ccf6d4
+  - [108]
+    - `name`: deep_book_bench.json
+    - `sha256`: 9410e500ad2602dc085c5146640d7bf7219a9626c8bccd32ea47a71829f03392
+  - [109]
+    - `name`: deep_microprice_amzn.json
+    - `sha256`: a9fddf27e4c26bc144ced56ca35856411f8a6220d91100872170b60411738acd
+  - [110]
+    - `name`: deps_security_hygiene_f3b4e6fd22e439b7.json
+    - `sha256`: 66176b021f554077ceca2ed34a87b1de89e50fb905aee26f14a232c52d4a59e7
+  - [111]
+    - `name`: depth_consumption_amzn.json
+    - `sha256`: 1bd84264cd6b886a28c16ff5246ec2c4467f81d0a656589c534dad34d8754846
+  - [112]
+    - `name`: depth_tilt_amzn.json
+    - `sha256`: a42581086e0846cbc71a272b6cb39e018031176fd7414ebc57dc95ba7415d2b2
+  - [113]
+    - `name`: dip_audit.json
+    - `sha256`: 085f0a461518911bd57e27e12c0c01f4f0f2134254f7b240ab4066d95cc8233f
+  - [114]
+    - `name`: dip_run_audit.json
+    - `sha256`: e0498594b7ae8e371c24761c7e5f7b3a97fb24e708e645d4abcfbfcda71bab86
+  - [115]
+    - `name`: disclosure_audit.json
+    - `sha256`: 79f2a55cc0ba899cbdb8a26e7e103e3e008acc554890ef21d63d1d3bf48d0538
+  - [116]
+    - `name`: dispatch_audit.json
+    - `sha256`: 19bba277befd9b88272175e899a962822a40a3bd8757c750882d56d92513d8dc
+  - [117]
+    - `name`: diversity_bench.json
+    - `sha256`: f9c48ad14bff833f98ae5b56aea24192b9815f1e5acbc86a0a8fd61a7c27325c
+  - [118]
+    - `name`: doctor_audit.json
+    - `sha256`: 0c0e69fb4cf225577f2b67144e306034a28ffdf64acf3dc4f315588159c2aa13
+  - [119]
+    - `name`: drift_real_drill_gaussian_minus_conf_t_pinball.json
+    - `sha256`: 732ca9cc14ab246e90c1dcb28002e014cf5ad0b03a0e2e6f56c7a787577d801b
+  - [120]
+    - `name`: drift_real_drill_gaussian_pit.json
+    - `sha256`: 295b0855243a56848751ec6b8f51eaa6698d8c683a4276b11d6c3e7645d80f64
+  - [121]
+    - `name`: ds_audit.json
+    - `sha256`: 67a0e581ad6876ffca1e43b82b9bfd9dc7f91531e6b926af1751eaec4d727a8d
+  - [122]
+    - `name`: duration_check.json
+    - `sha256`: 12188ad90369774c642fb7f516f14dd7b20c4ec7367434c75b24aa1a5ba5e6ab
+  - [123]
+    - `name`: em_audit.json
+    - `sha256`: 69735454a8da7e781be4e56dc4d9eb83c56f05bbd51ce6e3a4db47e2bb547e00
+  - [124]
+    - `name`: emerge_real_drill.json
+    - `sha256`: a06f8d2a40795ff00601716908a168232e5ecd9d42af62ea230d849c7e5baa3d
+  - [125]
+    - `name`: empirical_flow_bench.json
+    - `sha256`: e12abc02ca462ff660e4aaa39fe5182508ab5896c1bdab180c5bb6caaf4c9c99
+  - [126]
+    - `name`: engine_fuzz.json
+    - `sha256`: 5fe71d9e05862d39cdaf2aaf153f508d992a2bc6132bc882f45d86da64f54396
+  - [127]
+    - `name`: epoch_delta_44955f3515007971.json
+    - `sha256`: 8c4823fcd372f927ada7ef5d08fff5457bd25db3ea5d7f42c49679236616da6e
+  - [128]
+    - `name`: epoch_position_2e120d21df5a400d.json
+    - `sha256`: 9c1bf6a2af75b9d2035688e89a872e45dfd166eef7b557aa58efc53aedadbfc6
+  - [129]
+    - `name`: error_shape.json
+    - `sha256`: a9b29bff34f219cab4fb4375d56560b392097906df05d87d69bb526d591d2284
+  - [130]
+    - `name`: eval_core_audit.json
+    - `sha256`: fb50b648b07af58fcaf0e9b8837ef946fd9b4b04e18cb48d991c264154da3e96
+  - [131]
+    - `name`: event_burst_amzn.json
+    - `sha256`: 4c8872dc6f781544ef15cbace7537df2876d0320410570283e558306a9c5b019
+  - [132]
+    - `name`: event_granger_amzn.json
+    - `sha256`: 628431d7b7099ac23e9e0c40a0b99de811952a701333949202e2ea0696256362
+  - [133]
+    - `name`: event_matrix_amzn.json
+    - `sha256`: e1a8e84ffc8b0ac08a7e8a821bc0650cb56bd10c924318e8c0be4a74587710d1
+  - [134]
+    - `name`: evidence_audit_3464d8f8197bf737.json
+    - `sha256`: 77c38c8edc534276ad901f4c64c5024f8e79c99c5ece43b001b003f362584a5d
+  - [135]
+    - `name`: evidence_audit_5c9f07c823727701.json
+    - `sha256`: 6124e972cc182ef134a5c411f2794c4f2e3fcea205f6a0bfc0a05f4ec912cd23
+  - [136]
+    - `name`: evidence_audit_d449e1ca0cc119a6.json
+    - `sha256`: deb75d4ab1744617a0032397524891613c50282581f913d344e4acda9c6cd9d1
+  - [137]
+    - `name`: evidence_audit_f45ae8d6bc7cd677.json
+    - `sha256`: 04128fa07fd2ca3650981d0cad06d07f921a525b301945b2c539ddd8c7447989
+  - [138]
+    - `name`: exec_cost_real_amzn.json
+    - `sha256`: 297d59df884a80c0503cad9c511579193cf77504fd5313492b732b4297993788
+  - [139]
+    - `name`: exec_cost_split.json
+    - `sha256`: 53ef2528042134aeb7bd8c20d6c94f7e4ab3391fafd9851531f84df3fe3ae9f5
+  - [140]
+    - `name`: ext_bench_audit.json
+    - `sha256`: 324025ce928acda2167ecaa25bca6bcf16373400eb8ddb657e348483010c6ec3
+  - [141]
+    - `name`: fast_replay_p42_conformance_20260928.json
+    - `sha256`: e8fd3b17e82fc21f39ecd184025c69b336f7be0ea18005d132a9c234e85acec6
+  - [142]
+    - `name`: fbm_circulant.json
+    - `sha256`: 8a8fcbcd46b58942852e9c79603d854aaddf1e5ea3c35b5dc9d42978005f5802
+  - [143]
+    - `name`: fifo_priority_amzn.json
+    - `sha256`: f180b99da62d936a31bf9df79f637141a9b7bd4c4679fc3782739455dafd7e30
+  - [144]
+    - `name`: flee_wide.json
+    - `sha256`: 186fec1776108a9051fbe02f47f411279a710999045cc97028fcf5a9f9482e77
+  - [145]
+    - `name`: fleet_eval_5ddf15b0dc7d3ca1.json
+    - `sha256`: 67713fe534eb3c4a508e4c0211836026af4f9efe8c27cd2cc7d69118a9cd1b98
+  - [146]
+    - `name`: fleet_eval_5e907be710811a44.json
+    - `sha256`: c95ce361609bdb00912147e0f87548fdbd2c0221ad27b8c1a4d0ba558b9330e1
+  - [147]
+    - `name`: fleet_race_real_drill.json
+    - `sha256`: 0530bbc98903f8ee2944d468f6124fae0c0034da0956d8c22ece140295ad4def
+  - [148]
+    - `name`: floor_compose.json
+    - `sha256`: 53d4493e5009a0da44acdab958fb3bf8df5dcc01fd5bc76d5d24fe04d07692f1
+  - [149]
+    - `name`: floor_pins.json
+    - `sha256`: a38bb073ef069de28dff2ada970c05f2ac57a19433df20a19dfab727e9a0a5a0
+  - [150]
+    - `name`: floor_rate.json
+    - `sha256`: 632d421666dcd4ea2e7d4acd798ef82cab735054aeaa7d719eaacda91fea35f3
+  - [151]
+    - `name`: floor_reseed.json
+    - `sha256`: 2c02b255e4506593755d30d448e15bdc8f242e81ecbf380056b3a8c32698060a
+  - [152]
+    - `name`: floor_stability.json
+    - `sha256`: fbd9860771b933e799ee938c90ba3ea43620ead6dd99f0f44231c7c5d9916ce9
+  - [153]
+    - `name`: flow_couple.json
+    - `sha256`: 5dc9e98c044ada0edef8fc7f0be4ec7efabdc5d52781d9cacbd327549fb9f992
+  - [154]
+    - `name`: forecast_core_audit.json
+    - `sha256`: fb5960935d5182ae83223cf1e0645c0f3812abe37dacacf9f211ee920e2f0c18
+  - [155]
+    - `name`: forecast_data_audit.json
+    - `sha256`: 3174e1b32201a37b02fe225f469781f58e9470c9aa971ad259624bbbda2ee224
+  - [156]
+    - `name`: forecast_infra_audit.json
+    - `sha256`: 57d88d8385893260ddb771942ecdbb889e6e9aea1ee53c9660ef4f3a7350f9b3
+  - [157]
+    - `name`: forecast_pipeline_audit.json
+    - `sha256`: bd9b0903ffd6f40e3b237f4bbe46557ef345cfd547ec9e045dadc0ee806084c2
+  - [158]
+    - `name`: forward_record_preregistration_v1.json
+    - `sha256`: d1f0022744261fbc52aa1296e8f4d859ae1d56705bf4920bbee7d4a75281cad3
+  - [159]
+    - `name`: forward_record_preregistration_v1.json.seal.json
+    - `sha256`: afc88d0767169ff88e22920d492ddc3c2db25c9dbdd00cb391504e81bb29fbcc
+  - [160]
+    - `name`: full_impact.json
+    - `sha256`: 29a1b45e52fca254985f19c30d096eb6b2de14a406494282206e1092b3ea905e
+  - [161]
+    - `name`: full_stack.json
+    - `sha256`: 2048f94b0d052bf5ebfa38c6786d60b900b37468a814ec46e9b25262d6c9d1fc
+  - [162]
+    - `name`: fx1_anthropic_sdk_audit.json
+    - `sha256`: 03fd468413780b70daebbd231a925c4289faf62c6f0327fbdd0572f83764d01b
+  - [163]
+    - `name`: fx1_api_audit.json
+    - `sha256`: 3d94c3ed069123be4b774613a3e35d114698ab6000ce195fa97187e2a5596bb1
+  - [164]
+    - `name`: fx1_auth_audit.json
+    - `sha256`: fb7e0783ffa11fb79b7c4a1fceedb0b9e3f5eb836db4cda2b195b000128d8044
+  - [165]
+    - `name`: fx1_cap_audit.json
+    - `sha256`: 99737d09622533bad5f5793cd7fef198e211b235251bb79455c9a5e8643547b3
+  - [166]
+    - `name`: fx1_cli_audit.json
+    - `sha256`: 19a95549bfb8e5f3143474a94bfaa24ccc593f634237b3e8f33e811481dd0add
+  - [167]
+    - `name`: fx1_client_audit.json
+    - `sha256`: 3c83b261c8966f3ae7d63bb5bb18371adddb1b3ca2c21795223b8d3ceab3acc4
+  - [168]
+    - `name`: fx1_contract_audit.json
+    - `sha256`: 913e276befeaecd002582c8125ebddc96c85996764b57b91a956b5f7b32173e0
+  - [169]
+    - `name`: fx1_drain_audit.json
+    - `sha256`: f864d2a9cff6e6c396045afa8105c337362a769e491d6fc002af7dcff29e454b
+  - [170]
+    - `name`: fx1_e2e_audit.json
+    - `sha256`: e4671f251df3cf35c7ec50adbc59803a8d733f1759380edea714a532c6ec49ac
+  - [171]
+    - `name`: fx1_eval_lifecycle_audit.json
+    - `sha256`: 16c6e3969091a825443712614b1dd31b0c1224c8196d1fa35596f6fafb4872dd
+  - [172]
+    - `name`: fx1_fault_audit.json
+    - `sha256`: 43c78649e2f8246708940e27e83038f69f2e7aa36fe758d442fac9f6bea04205
+  - [173]
+    - `name`: fx1_jobs_audit.json
+    - `sha256`: c952e24df7c07978437e3ed7f36aadf0cd13103980588013f3677e371f9775bf
+  - [174]
+    - `name`: fx1_oai_sdk_audit.json
+    - `sha256`: 2e1421dd4e7b06191da9ee4c537d10ecd0fcb5e8a13a32608820f295e81fd0fb
+  - [175]
+    - `name`: fx1_ops_audit.json
+    - `sha256`: 6362b090bd931070e3f1a12caec01d2dc0df14db98c71658c29b58bf10fb8d08
+  - [176]
+    - `name`: fx1_parity_audit.json
+    - `sha256`: e71e77a4d8169d731bdc48c27765c24c3db59f1240437e55fc1f9edb928c90af
+  - [177]
+    - `name`: fx1_perf_audit.json
+    - `sha256`: 7f0fe1b11dca4412cb54b8dc3f40ad929016ac1e59788b3b3dd2857907b32148
+  - [178]
+    - `name`: fx1_quota2_audit.json
+    - `sha256`: 6e135a43144e89e3fab4b7d4473d89db1d98ae6f888f7611d2e9433ac00cadca
+  - [179]
+    - `name`: fx1_replay_audit.json
+    - `sha256`: d3cbeaa2e484021f6a1524df38d01c42cf19db7ad0de0aa78b4a44e750dcbacf
+  - [180]
+    - `name`: fx1_retrieval_audit.json
+    - `sha256`: c2edb7a020d4ecd07358915c28df2a54e33986faef25f35ecc566e2883ee5a29
+  - [181]
+    - `name`: fx1_sdk_audit.json
+    - `sha256`: 1556d7498e4618e386f891777e820fd3b2f08b4bde0ff7a9ad6e3d4689ef60d1
+  - [182]
+    - `name`: fx1_spec_audit.json
+    - `sha256`: e86dc5bffb1267539df5876ed3487bb0154512d5b9fbbcc83223d4a5db05fdb8
+  - [183]
+    - `name`: fx1_tail_audit.json
+    - `sha256`: 8874bc452c43fd807a7c7525c5105663a01f4406c05ea6a37ad5a361e5d8add6
+  - [184]
+    - `name`: fx1_usage_audit.json
+    - `sha256`: e728655fa53df38114d91ad618c9e278cbc1ab0391ef8beec3b89cc4693787e1
+  - [185]
+    - `name`: fx1_vs_audit.json
+    - `sha256`: ee0a91338bcd0ae61416ccea0c83165548f67a39df58b05c981216afde8f6102
+  - [186]
+    - `name`: fx1_webhook_audit.json
+    - `sha256`: 0b262022d1bed02812e22e5c5558fdff740eae4e178609eb4d7ca0aca9f6c525
+  - [187]
+    - `name`: gap_close.json
+    - `sha256`: c405793974f1ca9c88feb19c56e341185c68d87809dd755eee6cc604c65a85e7
+  - [188]
+    - `name`: glft_bench_synth.json
+    - `sha256`: 4efd3a9a814d245873371a8f09c2d2502fca71393dbf738496e59cb4dc369467
+  - [189]
+    - `name`: grad_fidelity.json
+    - `sha256`: e86ebeeae2bae5736b2bca3089d8e415b41ce901bc23df5d2f515bda12bae660
+  - [190]
+    - `name`: grammar_map.json
+    - `sha256`: f8ee1c31439b03bbe14989ee0cebb7b0917f5186326cc91c2d81d7705686198a
+  - [191]
+    - `name`: harness_audit.json
+    - `sha256`: 0292862d23f09133aa7b11437b2e543d1740aa0d5ba6170f2069ea18808c6208
+  - [192]
+    - `name`: hawkes_clock_bench.json
+    - `sha256`: 816f8bd60cab106505a1adb153803ee48579ce6615a85ccd3e5d27785f2f3b77
+  - [193]
+    - `name`: hawkes_mv.json
+    - `sha256`: 5f386d77d237a6bbdc12fad5d794184508548fad474b1cb258f48bded96d7431
+  - [194]
+    - `name`: hawkes_real_amzn.json
+    - `sha256`: 9d398acb03bfc6bfd9f965d5d6115b5ca4d64244d312e90993ea11e7bd8a80ea
+  - [195]
+    - `name`: hidden_depth_amzn.json
+    - `sha256`: 24b6c5ca511ec6211f79115fdac3eac85f52d393738a5a88adebad8c46575ea2
+  - [196]
+    - `name`: hidden_depth_bench.json
+    - `sha256`: 4e18ea2564f675b351bfdd93ce9c1541af0638ef07e43728cfb48a83b3912330
+  - [197]
+    - `name`: hit_flee_amzn.json
+    - `sha256`: 72765463da5af6990d81e3026dd7d23ecf83265407fb0b0b43d14a5d2690a6d0
+  - [198]
+    - `name`: hit_starve_amzn.json
+    - `sha256`: 3d98298e540b6ab7fa14c9b8452feb06c7b5c28a2b09a55ea8a9c4b6710acb39
+  - [199]
+    - `name`: hmm_stability.json
+    - `sha256`: 5d06bc292b14e6a4de8d6fbd640e76c66b6ad82e4705e27ae068c2ef5a88c040
+  - [200]
+    - `name`: hmm_verify.json
+    - `sha256`: 269ee7b7e767d0388ab285e3257a5de62f4a631ada045aa83577b2b7786a51f2
+  - [201]
+    - `name`: honest_verdict_b133e8b3992af893.json
+    - `sha256`: 1a003a670945452a5c86d033900bc33429f2981422c8938b1b8e2469fc764f3a
+  - [202]
+    - `name`: honest_verdict_real_drill.json
+    - `sha256`: f9badb4a33ec9c0a35a10131cfca24d6f8caa531d5a9882c8f6d59da4073abca
+  - [203]
+    - `name`: honesty_audit.json
+    - `sha256`: 63d79882e619905c0d45fc094d08c67cce9be60c98e43ca846b677c3337370de
+  - [204]
+    - `name`: hypotheses_audit.json
+    - `sha256`: bd65b431cfc36ce9ec54bd7262002eeb735025e2dc71995e983df73924bceb4b
+  - [205]
+    - `name`: ice_budget.json
+    - `sha256`: b0be60f820caea3783400f5f7eaff399c68d243ee11508a95212d64907789642
+  - [206]
+    - `name`: ice_crown.json
+    - `sha256`: a57b172d4c2d0f528461fd35dbcaafefc1af9b3b08c9cb2cd690d7e76053665c
+  - [207]
+    - `name`: iceberg_bench.json
+    - `sha256`: da07cac898aadafc9bb434319334d0fc72d504fb5fe4c9ff5d0031b09499e7cc
+  - [208]
+    - `name`: iid_floor.json
+    - `sha256`: cd2d6153b177482f1df86f78f6c795d03e93a17046a897c58874dc14fcde2753
+  - [209]
+    - `name`: imbalance_predict_amzn.json
+    - `sha256`: d467e13e158dddf59e0ec2dd6b0941aeae37237f491757705418f7420c789655
+  - [210]
+    - `name`: impact_instant_amzn.json
+    - `sha256`: e6d80527e2bb993d7450087db961d6229561fe1a87c0e8b68d3920ca50315c4b
+  - [211]
+    - `name`: impact_persist_amzn.json
+    - `sha256`: 58bcb731c697074949a3705ee2270181d9f2df5e5d2c8f08fbf04b020f3200dc
+  - [212]
+    - `name`: improve_flow_bench.json
+    - `sha256`: ec0836e7b4d24834d0b68a43c5676ea213049fce8200966dc15d98d30a0a4488
+  - [213]
+    - `name`: inherit_audit.json
+    - `sha256`: 718adc7b101c76e503cc475cbedcd086fb0f696a14968d977f4ce5de7dc32a07
+  - [214]
+    - `name`: initiative_fade_bench.json
+    - `sha256`: f9a3f118c2fd37a308bd691633c7e7a9668e770d959535ca16bc2c583e4db867
+  - [215]
+    - `name`: instant_decomp_amzn.json
+    - `sha256`: e9fcb9c72331341fe60237cb457fa8456dcbdb340e87060fbb9318a7265b4df0
+  - [216]
+    - `name`: intraday_exec_amzn.json
+    - `sha256`: 04803c1f783145e75ccf403990146768490e123bc82c26dbdcef3901eb59fa0a
+  - [217]
+    - `name`: intraday_shape_amzn.json
+    - `sha256`: 7e831325e8e77d61360d07100a35234c210f79b99825d6d4040d5d903470cd1d
+  - [218]
+    - `name`: joint_fit_amzn.json
+    - `sha256`: 1041b3196b85319688e89a359401fadef29a4ff14a7371e389668b0c2d6175bf
+  - [219]
+    - `name`: joint_stability.json
+    - `sha256`: cd43e7ec5f39ddbb3ff5c6ea9acce41191bcd250cff7e986c20637c8719c9e84
+  - [220]
+    - `name`: joint_tune.json
+    - `sha256`: 27aea6f04b845ae84445bcd97dbf31c6eb68cb85053af2d568fafe51027f38f6
+  - [221]
+    - `name`: journal_audit.json
+    - `sha256`: 04fa04a533738617f528b94d0c819e1bf0b8d0ee71b653142136ed8fdb8e6942
+  - [222]
+    - `name`: kill_audit.json
+    - `sha256`: bd65e84d2037d452282b5fba052b6be102fef2e50995a14cb2a381405d8d2565
+  - [223]
+    - `name`: label_horizon_map.json
+    - `sha256`: facf0481adaaf3cb55b307b27c9259423b0ff6d13363b9a24e68b2b86a8cb955
+  - [224]
+    - `name`: label_stability.json
+    - `sha256`: bda24271b910cd2d912104d445d81c50f9f8fd61824b2c10e8a18f5c042c96dc
+  - [225]
+    - `name`: lane_power_drill.json
+    - `sha256`: f0d9effae801a0ab06dfad9cbd222c55a45c71128f01b27b060c20e5624e273e
+  - [226]
+    - `name`: lattice_drill_verdict.json
+    - `sha256`: 1268fa068051b57089c454f4f750dc5c8db833b56e52fe0378f91480525fc978
+  - [227]
+    - `name`: lattice_drill_vol_bench_a.json
+    - `sha256`: 33f9defac50df4f692db60eacc585c3a93eb06b7039e3be866984cee02c28481
+  - [228]
+    - `name`: lattice_drill_vol_bench_b.json
+    - `sha256`: 49651398e997ff6685e1ef31a1686e3799cb20c12595a8234b47c1a187990988
+  - [229]
+    - `name`: ledger_audit.json
+    - `sha256`: ce5203012f63807d82146868ab26fd44cc23019364feadfdbffb03cda064f522
+  - [230]
+    - `name`: legacy-unsealed/adaptive_mix_20asset_1d_20260922.json
+    - `sha256`: b59422415e556f674ea03fb8e9a3b867408bf6d163cf7c11c64feeb7e33b4313
+  - [231]
+    - `name`: legacy-unsealed/adaptive_mix_band_search_20asset_1d_20260922.json
+    - `sha256`: 5e02918850944a68d1d45815b5928f1eed462d456eac4723ac9290514e7b97f4
+  - [232]
+    - `name`: legacy-unsealed/basis_pair_candidate_20asset_1d_20260922.json
+    - `sha256`: d021801c94e33d8720f9084762138893978a61e36ef670b4c0140edeaf37c1ec
+  - [233]
+    - `name`: legacy-unsealed/basis_reversion_screen_20asset_1d_20260922.json
+    - `sha256`: 61c9c8f5b3e502f0c5218dd743ad030ecbb962d6822bb7b81a2b962445aa378f
+  - [234]
+    - `name`: legacy-unsealed/dip_bench_crypto_1d_20260925.json
+    - `sha256`: 584eb681dcd18fc65835c1573360b4b5fc9ebb72aa662bcbb9e7c101b06e2f03
+  - [235]
+    - `name`: legacy-unsealed/fast_replay_p42_conformance_20260927.json
+    - `sha256`: 8236a26489e9253dfcc1f3d879a2fd276c0023fb4d167c764c5330406ce950d8
+  - [236]
+    - `name`: legacy-unsealed/incumbent_bench_qlib.json
+    - `sha256`: f455123351b44151d68876d1a93fa3a2dc449c51d280ee83926f22cd9861984f
+  - [237]
+    - `name`: level_gap_amzn.json
+    - `sha256`: 3c1b21418c1b617164a629f45f039f341ce9bab5321c81d77831a339222cde9d
+  - [238]
+    - `name`: lineage_dag.json
+    - `sha256`: e00ad05cbcc7e60916ebd9c9e12b704b29de788acbd82ee544be3df2375e66da
+  - [239]
+    - `name`: lo_response_amzn.json
+    - `sha256`: df91141443b114f39d4dba23cb499de6c4c8961eb6d1d6b1b60ca6d751dd66c2
+  - [240]
+    - `name`: lob_exec_amzn.json
+    - `sha256`: e334cb33cf73a06b99bbfc834825e409e849ec860b8533a093dfefbdac2e0932
+  - [241]
+    - `name`: lob_invariants_amzn.json
+    - `sha256`: 8a890214de32880ca3043d8ebb863992b938708828aeb3639fa79fd90e7948e0
+  - [242]
+    - `name`: lob_resilience_amzn.json
+    - `sha256`: b8728dbb705d8ae62e1339a4d7482070f7f827209c20c342b31ce6a9980a585d
+  - [243]
+    - `name`: lobster_replay_amzn_2012-06-21.json
+    - `sha256`: 44f53ca3f6e42bad9617d284fc37542ca64d3b4373642fe54deae83302a9dd10
+  - [244]
+    - `name`: loss_cs_real_drill_conf_t_vs_empirical.json
+    - `sha256`: 1859b044469b2c4ca7f0db5ed195aeb56868ef9aea0f46b5f763cf8301591763
+  - [245]
+    - `name`: loss_cs_real_drill_gaussian_vs_conf_t.json
+    - `sha256`: 60e68e2af9cd2544458a8ac821e1468b47b322798cb498a3e116d3f0ce0964de
+  - [246]
+    - `name`: maker_age_bench.json
+    - `sha256`: 743ba4eb58ce5575b1334ea8a1731ae39ebeab7789ea43733256e1458c8f5c49
+  - [247]
+    - `name`: map_parity.json
+    - `sha256`: 4dff84d32892f41c5d10b30c4c55ab5ba9a072affe9f67d2c3e4c50cc39330f6
+  - [248]
+    - `name`: marketable_limit_amzn.json
+    - `sha256`: 0e231a062d7253b3cdce1acd4a6ca72c75890e7b19fbbc47c76cc6815448c932
+  - [249]
+    - `name`: markout_amzn.json
+    - `sha256`: 70730f6f3bd4e398497f1e302f3b375c739a548b856b68f2282f4fa18b3de864
+  - [250]
+    - `name`: masking_audit.json
+    - `sha256`: 331d20547c6fec39fce38951b75d0b9d653f4d0cc37dff3908ba06e15b7950c7
+  - [251]
+    - `name`: mcs_real_drill.json
+    - `sha256`: 047c2d4e487c7f3ff8571cb456fbf75c3ca1419b100fe2a77c3c5c4832d60a53
+  - [252]
+    - `name`: mcs_vol_drill.json
+    - `sha256`: 9d2b8e91aa81a8c1f2527135680f13ee4c8c71de6daa01f752fe1a4d9abd59c0
+  - [253]
+    - `name`: meta_model_synth.json
+    - `sha256`: 351b5285fcd9f08a8dcfa478db62ed1dfd407c9bda7065efdf2cc2fcf4e3b0e2
+  - [254]
+    - `name`: metaorder_detect_amzn.json
+    - `sha256`: c2bfd7554d2aba52493daa287850c08aced9893f7beb8f0aa976e9b0c791ec8d
+  - [255]
+    - `name`: mid_dark_amzn.json
+    - `sha256`: e12eaa45923bc159ae83d6a62ce9fc3e09e6f80eb47d04d3b27a43adfe550624
+  - [256]
+    - `name`: mid_jump_amzn.json
+    - `sha256`: b4afddf6927e2254d1e0362517bdd14ec3dd07d1dcebcfbb2da40384a1585d17
+  - [257]
+    - `name`: middleware_audit.json
+    - `sha256`: 559ace707af811672313127e2c1ef1758c5f90abce890f91054efc81deb332da
+  - [258]
+    - `name`: modelcard_audit.json
+    - `sha256`: ea042e48135698a878772ae2388c88d86ac11c666d385fe91e9f7ae52ddf84d2
+  - [259]
+    - `name`: monitor_run_13d20aef00774027.json
+    - `sha256`: 3ce1cd7f59c301be6b4710326ab905313725317bee3669ae8e755f6d422bc12d
+  - [260]
+    - `name`: monitor_run_drill_clean.json
+    - `sha256`: 6baa7552e7954a8c081b94f02f1034bf0430b77eee57d4d852952e057aede65c
+  - [261]
+    - `name`: monitor_run_drill_defect.json
+    - `sha256`: e5a8b3d2432a2c2a60969286a54cbabeb7a05ef6ea8d1cecf9410beca77033df
+  - [262]
+    - `name`: monitor_run_real_drill.json
+    - `sha256`: 409a097a1fae3128d9a1100e78ac4a42dcfbfd405a2a9b6bef63fbd42caee3c1
+  - [263]
+    - `name`: mortal_repost.json
+    - `sha256`: c351dc60be497d864fc2cea3a06acfe8fcf3c9ef019836f3af0a0a6d58cbffd7
+  - [264]
+    - `name`: mrm_audit.json
+    - `sha256`: 58eb74524b8e5e97f5a07109503b2c4d350f3c316c53bd44177bf280a13978ae
+  - [265]
+    - `name`: multih_fleet_eval_5db1cab214e291d7.json
+    - `sha256`: 07cd44dd6a795bc0b93e21824b5a963f9c89902f405f91ce6c991e38cbdd4516
+  - [266]
+    - `name`: native_conformance.json
+    - `sha256`: 6754767a42cdff244d3ff4d59b2366ff8655990087cf42957147e0890fbdc5ad
+  - [267]
+    - `name`: nautilus_conformance_7bf19a08c147547b.json
+    - `sha256`: 3a10fca306535858496b88890cab846c2bcffa9e7408980315162a6a5451f960
+  - [268]
+    - `name`: options_audit.json
+    - `sha256`: 80c4ce7b746b194f0e7dc78edc123768654a8db6e99d79398943822ac951e0f5
+  - [269]
+    - `name`: order_lifetime_amzn.json
+    - `sha256`: 57d744ba5f963aed36a2fef198015643bf4be0855f610ab32dcc21bc83941e01
+  - [270]
+    - `name`: order_revision_amzn.json
+    - `sha256`: dbb7239f51f26e176f62493fea10a2e921b1a97945eb251eae5e3432badab3ce
+  - [271]
+    - `name`: p0_evidence_inventory_v1.json
+    - `sha256`: 14ec1043293364e48787bc29446dbfb51b0fb55d69e20d0ba1328c905269cab4
+  - [272]
+    - `name`: panel_audit_real_drill.json
+    - `sha256`: 0da1154c057ee11386df9fe306cf03d63cfaee1a7915df4e51e51b570e2a35de
+  - [273]
+    - `name`: parity_audit.json
+    - `sha256`: a3f63f1bc2c5a8a1eda080ce56e6e4a14994b9b0a5fa40fa26d77a326b720163
+  - [274]
+    - `name`: parity_leak_audit.json
+    - `sha256`: 2e0cb6046a0cd26672101b4e3739d929e0e91fbfc360ceae94638287b83d451a
+  - [275]
+    - `name`: pin_stability.json
+    - `sha256`: cb002632c4d286eb8d3a1c9597f86b16d05bca58d12e3b06f472b25627bd61f1
+  - [276]
+    - `name`: pipeline_audit.json
+    - `sha256`: 728186040bc8ffa34264155cb8a54d1d6123c71968edcadbf7bac0b8cee90077
+  - [277]
+    - `name`: pipeline_flat_audit.json
+    - `sha256`: d849f5c4e74db12eaf84ed3161170c4151bfd05682aab9ffbf476e0478e1c37f
+  - [278]
+    - `name`: place_law_amzn.json
+    - `sha256`: a85ba039fc645e0455f7fa969be74bd40838b5c06b8893737d13352b68aef901
+  - [279]
+    - `name`: place_mix_amzn.json
+    - `sha256`: b496d4d2cdab3e254968926073316a3e74167d24734a226aa22146565996a994
+  - [280]
+    - `name`: post_trade_drift_amzn.json
+    - `sha256`: 83ad54e2add374fc7fa0333072c4ef745f6a1ed4112f36d14cefb9b23262192d
+  - [281]
+    - `name`: price_clustering_synth.json
+    - `sha256`: adfab5e558bdaa8b54abb8376b1d4f33c11f605d9215146ccea3b82d163b0c7f
+  - [282]
+    - `name`: price_improvement_amzn.json
+    - `sha256`: 870ef7c83529dc34f22ea1a7555abbbbed92f84d6d498096ae6159a4b4ef93f1
+  - [283]
+    - `name`: promotion_gate_conf_t.json
+    - `sha256`: a353477ea44ae58d507ff43f5be735937b0e0f3b2f84ef10d2d7f29e846f3506
+  - [284]
+    - `name`: propagator_real_amzn.json
+    - `sha256`: 4c7a02f864596c226f78948ee5d4ae227a2323a5aee8e1efd6b9f492f3d3089d
+  - [285]
+    - `name`: quality_audit.json
+    - `sha256`: 60c619c630ec06fd0384bdf08f11b6940e06c914bc89fe75b7c62a4817aa06bc
+  - [286]
+    - `name`: queue_class_bench.json
+    - `sha256`: d3941977a98261a06825573ad173a9b5d21e1515ea7a3dd48430e61779dc341d
+  - [287]
+    - `name`: queue_fate_amzn.json
+    - `sha256`: 54ce63133d050866a22b42879797e56d076c3f9de8f646902e2090287acedf55
+  - [288]
+    - `name`: queue_jump_amzn.json
+    - `sha256`: 467134b64f8e9b397acd3f221e716b735ee62a5e70e2a533875be62b5d42924a
+  - [289]
+    - `name`: queue_occupancy_amzn.json
+    - `sha256`: c2f2b5caf9a82f3066a34abab1b0529acf44948abd7e61d7b3e1a35e20efbe23
+  - [290]
+    - `name`: queue_priority.json
+    - `sha256`: c03de3a987fe19ee42eadf2f5ac6e97e61da5d55bf89f3a81493e0abf399e7d4
+  - [291]
+    - `name`: quote_floor.json
+    - `sha256`: 20fe58eafd0338916ce1f2872ae0279f079f399ab211c61122e0be68294e1e48
+  - [292]
+    - `name`: quote_place_amzn.json
+    - `sha256`: 493540278637dde9c9500d180d3651a9a34efa279eda7278da2a6655f5e1d4df
+  - [293]
+    - `name`: rankic_eval_8d740c0ddf6d5c54.json
+    - `sha256`: e48fce1ae4cebf94e417773bdef20c9ed7b0822397505c6a51e8843a8da06c81
+  - [294]
+    - `name`: rankic_eval_9ebdad7da83e7348.json
+    - `sha256`: ff139132f80998e336918077dffacfe6d7a660305d025ca635cdcbe7837251d4
+  - [295]
+    - `name`: real_benchmark_us_wide_manifest.json
+    - `sha256`: b6e858a81744c40d82a119027400b70b46974444019913e1ea4dc15fc288fb69
+  - [296]
+    - `name`: real_benchmark_us_wide_test.json
+    - `sha256`: df39bc572dd89e636fd56346687a2de7dfed873a9e4b3c51e2d87dbcc62d955a
+  - [297]
+    - `name`: real_benchmark_us_wide_validation.json
+    - `sha256`: 8c4d8dd4b5af7419dfdf11f5f15f87b437d94db7f33d1b3719842be79b22a0a3
+  - [298]
+    - `name`: receipt_admission_529da640b520a49d.json
+    - `sha256`: 597c5aeecd2c1b57f0908fa6fdf05890fece05e541a42be5a662ba235ff67f03
+  - [299]
+    - `name`: receipts_audit.json
+    - `sha256`: 5fdba4c796f2dff49486c62bd3c501e3053657231d6c45bfdd5bdb04ba2bb1cb
+  - [300]
+    - `name`: refill_hazard_amzn.json
+    - `sha256`: 195c5461c91d8d5faa684d1c3b179292e1ad717fcdabe1a61f0a851dea7e016f
+  - [301]
+    - `name`: regime_clock_bench.json
+    - `sha256`: 55c7d545b7f2e62b50ed135b63920effa0811d198cdc2c84fe0c035157626619
+  - [302]
+    - `name`: release_chase_amzn.json
+    - `sha256`: 8305fd598f154fe8c465ad718ece1fffe297c47471096a86543b69adfd02709d
+  - [303]
+    - `name`: reload_gate.json
+    - `sha256`: 98590cf3583cb8e138ee24c43324da205e4bf04df29a91467b0f69ac5fc8deda
+  - [304]
+    - `name`: replay_coverage_5e5e7ff56ee42196.json
+    - `sha256`: 5dd7d736d1be3a13b977b79901fc9dfef5fdc0d841c489f5848cd7c0839e521e
+  - [305]
+    - `name`: replay_coverage_e72b56ffaf7abe4b.json
+    - `sha256`: aa201319a975a4a347405a1e824db3a47084b4b8a140b0d087a46d85593ad02f
+  - [306]
+    - `name`: replay_proof_0de5fa4e0c739037.json
+    - `sha256`: 4a870f4bb735b8ebf2c87ae3dde8994dfe2220d55ead2f10871ed2c893cf70c2
+  - [307]
+    - `name`: replay_proof_6d266ef51218e3e7.json
+    - `sha256`: 4f20eb438da29c42f4bc54f38a643590f149458db80a8c86196e72477551ecd6
+  - [308]
+    - `name`: replay_proof_701ae84c3d9813e0.json
+    - `sha256`: 4f49bb965f299970c04f1d01673142e0b6e5df77004c5d034b6bb6028760ad18
+  - [309]
+    - `name`: replay_proof_73137fe1a97c3538.json
+    - `sha256`: 74fbc282a7a1d5eb53bcfa17e44a460f8235f5950c463233abf70099e1a5c91a
+  - [310]
+    - `name`: replay_proof_7e1d9b632f022f5a.json
+    - `sha256`: a3a21f8a745cb80cac90f8e53f9512294c297e0caf5d3a4665d5f07214de4517
+  - [311]
+    - `name`: replay_proof_b23a176a5c91e210.json
+    - `sha256`: 1f4a8bd88480f4ddd2f07791b2f00deaa39c83a2151cd9395d395f1e20a4a7ad
+  - [312]
+    - `name`: replay_proof_cbbad2b0389750e5.json
+    - `sha256`: a320cc68307ecffe319ee675feaefa837472ff8a41f07416ac7208e1e98e1667
+  - [313]
+    - `name`: replay_proof_e1fa8dd41197ef11.json
+    - `sha256`: b7f6dc1c01a736a198ec1b10d2aa4e645eaa12c42aba06d749e210f612bc9f6b
+  - [314]
+    - `name`: replay_proof_f5fe541481bbf231.json
+    - `sha256`: bf65017c57348aed947123163223ef59ebf385c9907052b2497016d3753ae2ce
+  - [315]
+    - `name`: report_audit.json
+    - `sha256`: 90dbdda1d64beab2bd4b82cfcfecd207d0aa2ecce9906fe7c333c9ca3ac2b9f5
+  - [316]
+    - `name`: repost_frontier.json
+    - `sha256`: e946c2b132bb9334ace262e6731f96c13e14ce613f68537acf7e6d207fda2dbf
+  - [317]
+    - `name`: repost_latency.json
+    - `sha256`: 5afe00ca1d7db9a0c2dbbbc604b5e661b139609856fa479e035e0c158c675e8a
+  - [318]
+    - `name`: reseed_hazard.json
+    - `sha256`: 0edfaeeea62f26b073232904ea7417de7373e31214cda255219d1c23c81a5054
+  - [319]
+    - `name`: reward_audit.json
+    - `sha256`: 89fd58aa04e5efccd68045bca4c6f263b78e2823a91e8aa50c70f331a0c06822
+  - [320]
+    - `name`: rough_vol.json
+    - `sha256`: a7a0dc640fe0c45b08e3a686dbc341f24e2ede115bd0777ce8d7ceb946bea648
+  - [321]
+    - `name`: round_lot_amzn.json
+    - `sha256`: 84c474210f467bd43f8285361cb93bc840b0a6821185a64d7fad0d0036198d6c
+  - [322]
+    - `name`: rt_audit.json
+    - `sha256`: 5cf3b9efba744325443e6dc9599ccf9dd651332ee7a1fd3eec5b45c7d03ccd7a
+  - [323]
+    - `name`: rubric_audit.json
+    - `sha256`: 2f6945fda3c5d3357a29f723a5e6eeac530d6de70909b108c4e7a04095ec239b
+  - [324]
+    - `name`: run_audit.json
+    - `sha256`: 05db03bc5b9474bee5eb68e1d3d5b2dca1a8ac239c01348f86f53e6ec1db237e
+  - [325]
+    - `name`: sbom_audit.json
+    - `sha256`: aea10d964151ed5af028e1f308b42c23378dfe6da86bcb5d6392174bb21d4bc7
+  - [326]
+    - `name`: schema_drift.json
+    - `sha256`: 739cdc3d79a415c89a28a696e7e98fd5aaea52a774ac0c621f2c721342999bc8
+  - [327]
+    - `name`: schema_fingerprint.json
+    - `sha256`: f02529f36e47efbd95c9d9c328517ec18cf1660ef6c3f14f33254af94898975b
+  - [328]
+    - `name`: seed_audit.json
+    - `sha256`: be653f889a4ca02a62b230bbeb0e4c7bc863c282369d365a691b234eb9d32fa7
+  - [329]
+    - `name`: seed_sweep_demo_amzn.json
+    - `sha256`: 7f5be12dde7fe0a377100dd6a2623ecd9b34a9d6d95cd68954c80f5068b9539f
+  - [330]
+    - `name`: serial_watch_140b073ea589b0c7.json
+    - `sha256`: b761d0a7b5f73b711c1ba02accbfca5c09206f071fca8a9520860c865de4a20e
+  - [331]
+    - `name`: serial_watch_1e8e1446e506fce1.json
+    - `sha256`: 30cb78079cb4baf19f22d8ac459eb03f157f49eff2250499a936c87bcd976976
+  - [332]
+    - `name`: serial_watch_2c14615c26efd19b.json
+    - `sha256`: b90d2efaa694eb46c93cae795b121fe7019fceb4ea37d52e5242eeb417a6519e
+  - [333]
+    - `name`: serial_watch_46445c3b227aa15e.json
+    - `sha256`: 46017d116935aa1bbd6392afc8359960e2f47ec46306b6fc67bb4b8e6182e4c0
+  - [334]
+    - `name`: serial_watch_47297eff3cb55178.json
+    - `sha256`: a416331d122d804237117f8d89cbd445bb7f0442b28fba198d35714f8106dcc7
+  - [335]
+    - `name`: serial_watch_4f4a495b59d022fb.json
+    - `sha256`: 6479f6806cc7b9cfb8f0c0f2fb292011d9a6293305c316232621c03fa6f748b9
+  - [336]
+    - `name`: serial_watch_771602cd1580476c.json
+    - `sha256`: 52d8269ee60d1f98c119d5fc179c4a6176445c837ee05900a5ef54044c815866
+  - [337]
+    - `name`: serial_watch_78dd891261e2aae9.json
+    - `sha256`: cafb78f75257cff2a338fe26021e82a4eae4b8049feeb02c7256ccfef805db0f
+  - [338]
+    - `name`: serial_watch_85db152db863d25d.json
+    - `sha256`: 4cc2079dbbfd83e0ae07fcba82e8319e18dd33aaf9589f8e11387433c88caad1
+  - [339]
+    - `name`: serial_watch_8977244ef78bfd2f.json
+    - `sha256`: 7f6c4e9d74a471019bba9fd44fc3193eb1a0f4ab7c1e6e0cc6f35cd8ebc5d57f
+  - [340]
+    - `name`: serial_watch_a6fd40311ce0fa04.json
+    - `sha256`: dcb4c9013319c21e5af8dbdc53f65b93656e5679ea4ca46ac8a335529fbad490
+  - [341]
+    - `name`: serial_watch_d311f5ea367a66a9.json
+    - `sha256`: 4b748b61f2cb5a6e7a4eb58fd58cd9fd98247520129c27f904138c2f1d2c3c7f
+  - [342]
+    - `name`: serial_watch_dbd21a6c99c81e00.json
+    - `sha256`: 072bbfebb6ed9a089476aa711cf717ab8cf7347644c63281b8c34875a3a4a36f
+  - [343]
+    - `name`: serve_audit.json
+    - `sha256`: 37ce4766e87a0a7200ba38e20f49fd5a5fe734640ab9ff43a4aa18ccea7b2113
+  - [344]
+    - `name`: shield_decay_amzn.json
+    - `sha256`: 2e88cdc4707a8890a0dea647749561eff8fda0d0b7711ff07bd42549e15319b2
+  - [345]
+    - `name`: side_imbalance_amzn.json
+    - `sha256`: fdce661d9fd73f5bd47f17dfbec526e3c4079ed0ea97dd6c59f2cb2a07791a76
+  - [346]
+    - `name`: sigkernel_mmd.json
+    - `sha256`: f56d3a4e991a23592af3e4406f64b2fecbd4abf8dddcec96f03e89934779358a
+  - [347]
+    - `name`: sign_autocorr_real_amzn.json
+    - `sha256`: d2b4dce996ab14b7e2e16112862b073e87294c06fe07b755942230c65ed65438
+  - [348]
+    - `name`: sign_predict_amzn.json
+    - `sha256`: fbbe98aec24936c1b3a0dff0c922a660fdb2e2419e402bf35ba30f923a7cf13f
+  - [349]
+    - `name`: sim_real_ledger_amzn.json
+    - `sha256`: 814b4853c24bd668b2c2fdb66f6fd4eb8b9854fcc335edc0ea22dbc6d3271622
+  - [350]
+    - `name`: sim_sensitivity.json
+    - `sha256`: cb33e655209b155f557770674a45d14a77e523f4d964f8cea6c69644048ca140
+  - [351]
+    - `name`: sources_audit.json
+    - `sha256`: 1819d4b627eb9bc9589978a0c16b7b38452bf72747f81641478bd4b64bc2af03
+  - [352]
+    - `name`: split_flow_bench.json
+    - `sha256`: 37c6fe8de4fab801aa4dbb5eff23c326ecbf8d471e869d500be9451d9fb6e73f
+  - [353]
+    - `name`: spread_dynamics_amzn.json
+    - `sha256`: 13bb86c5bbf5f826279c0af371790259cfdb202c8bf85c4f09155199cdd3bdce
+  - [354]
+    - `name`: spread_floor_bench.json
+    - `sha256`: 37861b395d98f358141ada1962c698679c80c24632baa50e7c08b32873930a6f
+  - [355]
+    - `name`: spread_reopen.json
+    - `sha256`: d22bb5a384368a0d383a9cf6df4f38b40e148830e700784a96ae446354aed406
+  - [356]
+    - `name`: spread_response_amzn.json
+    - `sha256`: ab2a078fc13c3bebf659ea962fb21ab18e826508f0abad2fc83e1210ba3c8463
+  - [357]
+    - `name`: spread_response_bench.json
+    - `sha256`: df3253be3c3a3f43bc4e4cccbda6d72f2a627d95ba99a683117cd9d19e9d5352
+  - [358]
+    - `name`: stack_invariance.json
+    - `sha256`: 4f3a5c2449d4192a248d17b06b05e6a5818d8671719af69bd37f216ddef0f1c6
+  - [359]
+    - `name`: stack_watch_synth.json
+    - `sha256`: d90dfbd42266b54ddeb8e237e12d674ecbb24359287166f074d6241ad61a7dba
+  - [360]
+    - `name`: stale_quote_amzn.json
+    - `sha256`: 91bfc70fb7cd64be078a327fae0df159395301ce2d42d954157c6749628bf6ce
+  - [361]
+    - `name`: streak_calibrate_bench.json
+    - `sha256`: 684c6584fc9d7d18d8e6801934e63a1ced7249321e13bc8f06f7868e60a2b86f
+  - [362]
+    - `name`: streak_stats_amzn.json
+    - `sha256`: d51d2a74e86e484183fa2af0405ad38af8273f38fb3621f2bcd39e6029556129
+  - [363]
+    - `name`: suite_health_drill.json
+    - `sha256`: 5a7d32e1da6c12cd23d1d713f996f242cf6dec95b22923b0264ec96818734de4
+  - [364]
+    - `name`: sweep_bound.json
+    - `sha256`: 87670d4022ace1a09b1eec2e2c142bfb3a3cbd33e4b983a3369e6b7421ef1791
+  - [365]
+    - `name`: sweep_crown.json
+    - `sha256`: d42626eead90475119af14f9c8d60d0ca5b94f62ad14c24ff157b4505f264b13
+  - [366]
+    - `name`: sweep_width_amzn.json
+    - `sha256`: ed310e546e4b4f2c2544f99c24cf010197ae78d3fa753bede0af328dde59ccdd
+  - [367]
+    - `name`: sweep_width_bench.json
+    - `sha256`: 67f57afee23c89322c27d64070da7731ba292703388bb68768afc34019f69431
+  - [368]
+    - `name`: tail_quota.json
+    - `sha256`: 307c022496df278307301b62207cdaf7c5fc3078cea9151fd486e088d60bafed
+  - [369]
+    - `name`: tail_real_drill.json
+    - `sha256`: 9b36d560170c53b02f873de648f4c9ea83d7e30e61ab0ad598a2ea4d05b477e4
+  - [370]
+    - `name`: tape_digest_amzn.json
+    - `sha256`: 4915ad1bb6cf3c0857a09020ca27f3c7e6685a9f64681c2fefd8f2e91a8b15cd
+  - [371]
+    - `name`: tape_surgery_amzn.json
+    - `sha256`: 4696227f39dac4b343da3dc5f9a708069d44b64db94a7f5ca12e6455c54629b5
+  - [372]
+    - `name`: tick_rule_amzn.json
+    - `sha256`: d69bc89702def00c3abee7c06e071378f18f0996a186a296a68ba16d676e3840
+  - [373]
+    - `name`: timepart_audit.json
+    - `sha256`: afe622b75c555ba7c810a074205287ba12588cdba90388876d9aea438fad95c5
+  - [374]
+    - `name`: touch_empty.json
+    - `sha256`: 909b434110fae047594dfa08b7342959281df4102e3ee8ba4d65d9c547319c95
+  - [375]
+    - `name`: touch_follow_amzn.json
+    - `sha256`: 8dc68233094f788f38f52a8e32fc5a04a25c27c35806b73d5b677f7160033bdb
+  - [376]
+    - `name`: trade_decomp_amzn.json
+    - `sha256`: af272bd9ef0a1845d901080caa9c3a27257a3ae341848cdffadd8f03475c0427
+  - [377]
+    - `name`: train_infra_audit.json
+    - `sha256`: 31319d104c42dee087fe7d24b42c92af5a99bba75587ebcb3336d9ea81d1e90b
+  - [378]
+    - `name`: train_receipt_audit.json
+    - `sha256`: e31a42fa72953f9b740dde1e2179b8525b6dd49c00c28fec4ebc8e160687c25a
+  - [379]
+    - `name`: trust_step.json
+    - `sha256`: 39f62ffed6cce8684bdb43ba62406bf2ecf12eede96e68d11f4d06ca50de59a8
+  - [380]
+    - `name`: ts_reasoning_audit.json
+    - `sha256`: fba6cce35080058c5eabcc308541cac27bdc27b3538596c1856755cdbdee8591
+  - [381]
+    - `name`: unhit_chase_amzn.json
+    - `sha256`: a7c9de93641c46d2853515894aa636286ba5d49bc12833aa936cc4c056080081
+  - [382]
+    - `name`: vac_chase_amzn.json
+    - `sha256`: 371db4e5f9b635abc95f30ea5e6e0b135202c998322124897d35b26f9a130b1c
+  - [383]
+    - `name`: validator_fuzz.json
+    - `sha256`: 524d611ec21c3688ec7b8af92b4eda6bd7f70fc23c7a558215fb5ec3d22d4ae2
+  - [384]
+    - `name`: verdict_real_drill.json
+    - `sha256`: 63e4fcfcd616f08ad740b2be0fe3163eaaae8243bdfbbdb8d196cafd19d790e7
+  - [385]
+    - `name`: vine_audit.json
+    - `sha256`: 86febce575e975c471715538d9ae242a5e56522d10afb46ff11e2e462c180962
+  - [386]
+    - `name`: vine_dominance.json
+    - `sha256`: 2c555910f452082daebc5ad1ee719d515725d1a6c1350932cb4d860ae7e230ce
+  - [387]
+    - `name`: vine_panel.json
+    - `sha256`: 4ed248f50d9977ef333f1456a947c01e6d01687eff3f93082e9afa2cc0d9484f
+  - [388]
+    - `name`: vol_bench_f3bf2afc2f159ace.json
+    - `sha256`: b9b70f7186d75054e91ee734b87b8aeeba22d66af713806a8d5410a9bc603ee3
+  - [389]
+    - `name`: vol_of_vol.json
+    - `sha256`: 8a46d4ec9cf6574f032ebc0041b4cb4466ebddfb53d16ac217fc6954d8f707e2
+  - [390]
+    - `name`: vol_signature_amzn.json
+    - `sha256`: 66c853a1efbe2fe0a41535ef9e191eee310e5346e7057fd157a8832b3b1e3eb8
+  - [391]
+    - `name`: vpin_amzn.json
+    - `sha256`: feed66eda5cf279af3d12224eeeb7cae7ff47a998dcc767249d185f78bcd27db
+  - [392]
+    - `name`: warmup_spec.json
+    - `sha256`: 01b3b622ed4e6d6852fd56f2122d257e1b9f31d100ae850cbea38921a38bafd6
+  - [393]
+    - `name`: wave23_map_amzn.json
+    - `sha256`: ad949f2ebda26df715cc45e1d6efef08c10e6deeac503580bc6668b61bf10ee6
+  - [394]
+    - `name`: wave24_map.json
+    - `sha256`: 5c765aa1b4d50ddd0fb2f3645de5edc6c60465ae6b6c936b7133507e3a0069aa
+  - [395]
+    - `name`: zone_card.json
+    - `sha256`: 751e3497d28c9a1f6e50d5040ec6b80a416194b0ea1b0ab2b05462c897b219d3
+  - [396]
+    - `name`: zone_churn.json
+    - `sha256`: 7f4b68803588fe0ddc3ee3c45698a7a2ea367f8c2bf5cad7e542fd56e91441f5
+  - [397]
+    - `name`: zone_embargo.json
+    - `sha256`: ee556605f12d88c494b6ead3a02099f569dfef7875cc21ca7ea5657983aea180
+  - [398]
+    - `name`: zone_map.json
+    - `sha256`: 43753aa2492ac472d22f2e221fa155d2c1393ed13201a1d9028231e15a4d68f7
+  - [399]
+    - `name`: zone_stability.json
+    - `sha256`: bd695896930494a0d8da307b9088744b98abe575a6574369d929ba7ffc8a4b2f
+  - [400]
+    - `name`: zone_ttl.json
+    - `sha256`: b5987b6ac2dfd8484a15f89fbbfa7dd8d6009df8dd1d4ec1098b4efe9580d722
+- `members_added`:
+  - corpus_epoch_f8d91d9a3266ce89.json
+  - suite_health_drill.json
+- `members_removed`:
+- `n_members`: 401
+- `params`:
+  - `head_sha`: 61005afdb40f53bc8c333ee723f187f43dbd44f0
+  - `pattern`: *.json
+- `prev_epoch_receipt`: corpus_epoch_f8d91d9a3266ce89.json
+- `prev_epoch_sha256`: e2df7ce0b6f1d691cbe89f032aedf05477e5f0bd382e6e32b564eeb027e69f54
+- `receipt_sha256`: ff585b9d7c8badaa185e893bbce1107c1761f6d4212f129acbaa993761c6487b
 - `research_only`: true
 - `schema`: corpus_epoch.v1
 - `simulated_only`: false
@@ -35646,11 +40567,11 @@ counted. Prose that contains such a token is quoted verbatim.
   - 0.9
   - 0.95
 
-### `receipts/fleet_eval_5e907be710811a44.json`
+### `receipts/fleet_eval_cee9aaee0a0f0f36.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/fleet_eval_5e907be710811a44.json | c95ce361609bdb00912147e0f87548fdbd2c0221ad27b8c1a4d0ba558b9330e1 | 5e907be710811a448c7268f805138bf0e59efffecdb21b7a467678681f85c9e4 | not_checked | absent | inputs_sha256=ca64872956b0c9fb2ce99d12504ae02cf54610a95efea34c53ede9c48fd5f443 | unspecified | absent | absent | false |
+| receipts/fleet_eval_cee9aaee0a0f0f36.json | 4709607074c51beb277a3b3721f7aa8cf1609f4997a7266edc0a9708d5def667 | cee9aaee0a0f0f362fe9d12c4eb8297aecfa1d06bad8c034945fb40abf23ac61 | not_checked | absent | inputs_sha256=ca64872956b0c9fb2ce99d12504ae02cf54610a95efea34c53ede9c48fd5f443 | unspecified | absent | absent | false |
 
 - `data_label`: SYNTHETIC
 - `kind`: distribution_fleet_eval
@@ -35680,7 +40601,7 @@ counted. Prose that contains such a token is quoted verbatim.
 - `n_eval`: 64
 - `n_rows`: 10
 - `n_train`: 128
-- `receipt_sha256`: 5e907be710811a448c7268f805138bf0e59efffecdb21b7a467678681f85c9e4
+- `receipt_sha256`: cee9aaee0a0f0f362fe9d12c4eb8297aecfa1d06bad8c034945fb40abf23ac61
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -35699,13 +40620,13 @@ counted. Prose that contains such a token is quoted verbatim.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/fleet_eval_9418dee658765f89.json
-      - `sha256`: 1904079220e70c8076b7149d3340dffa3ca457627873764f16c0f29d3db36f6c
+      - `path`: data/metadata/replay/fleet_eval_80b6bfaaba13b04a.json
+      - `sha256`: 94ec2898d42f69ce7a1f29b4f63254cbf4c16032ae8a5f4a5f0aed94241f6c11
 - `results`:
   - [0]
     - `coverage_80`: 0.75
     - `coverage_90`: 0.90625
-    - `crps`: 0.009466660066469929
+    - `crps`: 0.00946666006646993
     - `error`: null
     - `family`: distribution
     - `model`: empirical
@@ -35719,14 +40640,14 @@ counted. Prose that contains such a token is quoted verbatim.
     - `pinball_0.9`: 0.0032023020990120735
     - `pinball_0.95`: 0.0016780920934117566
     - `pit_ks`: 0.09861788199866184
-    - `pit_ks_p`: 0.5298376418958527
+    - `pit_ks_p`: 0.5298376418958533
     - `seed`: 7
     - `shard`: iid_gaussian
     - `status`: ok
   - [1]
     - `coverage_80`: 0.765625
     - `coverage_90`: 0.90625
-    - `crps`: 0.009413058212869852
+    - `crps`: 0.009413058212869854
     - `error`: null
     - `family`: distribution
     - `model`: gaussian
@@ -35759,16 +40680,16 @@ counted. Prose that contains such a token is quoted verbatim.
     - `pinball_0.5`: 0.006712071030714845
     - `pinball_0.75`: 0.006213295101327136
     - `pinball_0.9`: 0.003225665682499545
-    - `pinball_0.95`: 0.0018395848036675845
+    - `pinball_0.95`: 0.0018395848036675852
     - `pit_ks`: 0.09952680663843394
-    - `pit_ks_p`: 0.5181371984963417
+    - `pit_ks_p`: 0.5181371984963419
     - `seed`: 7
     - `shard`: iid_gaussian
     - `status`: ok
   - [3]
     - `coverage_80`: 0.75
     - `coverage_90`: 0.90625
-    - `crps`: 0.00941428508499235
+    - `crps`: 0.009414285084992348
     - `error`: null
     - `family`: distribution
     - `model`: hstep_t
@@ -35778,7 +40699,7 @@ counted. Prose that contains such a token is quoted verbatim.
     - `pinball_0.1`: 0.002769856378425242
     - `pinball_0.25`: 0.005177740163532663
     - `pinball_0.5`: 0.006750982884428852
-    - `pinball_0.75`: 0.0058905528928857006
+    - `pinball_0.75`: 0.0058905528928857
     - `pinball_0.9`: 0.003140699593415551
     - `pinball_0.95`: 0.0016486355107766097
     - `pit_ks`: 0.08770862981301075
@@ -35789,7 +40710,7 @@ counted. Prose that contains such a token is quoted verbatim.
   - [4]
     - `coverage_80`: 0.75
     - `coverage_90`: 0.90625
-    - `crps`: 0.009466660066469929
+    - `crps`: 0.00946666006646993
     - `error`: null
     - `family`: distribution
     - `model`: hstep_emp
@@ -35802,15 +40723,15 @@ counted. Prose that contains such a token is quoted verbatim.
     - `pinball_0.75`: 0.005899595616393209
     - `pinball_0.9`: 0.0032023020990120743
     - `pinball_0.95`: 0.0016780920934117568
-    - `pit_ks`: 0.09861788199866217
-    - `pit_ks_p`: 0.5298376418958487
+    - `pit_ks`: 0.09861788199866228
+    - `pit_ks_p`: 0.5298376418958473
     - `seed`: 7
     - `shard`: iid_gaussian
     - `status`: ok
   - [5]
     - `coverage_80`: 0.96875
     - `coverage_90`: 1.0
-    - `crps`: 0.009603513524494758
+    - `crps`: 0.009603513524494756
     - `error`: null
     - `family`: distribution
     - `model`: empirical
@@ -35873,19 +40794,19 @@ counted. Prose that contains such a token is quoted verbatim.
   - [8]
     - `coverage_80`: 0.96875
     - `coverage_90`: 1.0
-    - `crps`: 0.009544535748182773
+    - `crps`: 0.009544535748182774
     - `error`: null
     - `family`: distribution
     - `model`: hstep_t
     - `n_eval`: 64
     - `n_train`: 128
-    - `pinball_0.05`: 0.0029057463744273054
-    - `pinball_0.1`: 0.004733329242586955
-    - `pinball_0.25`: 0.007099679022316869
+    - `pinball_0.05`: 0.002905746374427305
+    - `pinball_0.1`: 0.004733329242586957
+    - `pinball_0.25`: 0.00709967902231687
     - `pinball_0.5`: 0.005104440669116631
     - `pinball_0.75`: 0.0052870019485251555
     - `pinball_0.9`: 0.003977290671391971
-    - `pinball_0.95`: 0.0026181596954780286
+    - `pinball_0.95`: 0.0026181596954780277
     - `pit_ks`: 0.30047499040043485
     - `pit_ks_p`: null
     - `seed`: 8
@@ -35894,7 +40815,7 @@ counted. Prose that contains such a token is quoted verbatim.
   - [9]
     - `coverage_80`: 0.96875
     - `coverage_90`: 1.0
-    - `crps`: 0.009603513524494758
+    - `crps`: 0.009603513524494756
     - `error`: null
     - `family`: distribution
     - `model`: hstep_emp
@@ -46900,24 +51821,24 @@ counted. Prose that contains such a token is quoted verbatim.
   - `fail`: a recursion disagrees with the enumeration oracle — see failures[]
 - `receipt_sha256`: 2022f016f3207a83226f8faa9f16f8586785ad3f0ebe30c6dd2b6af3a8cd15c2
 
-### `receipts/honest_verdict_b133e8b3992af893.json`
+### `receipts/honest_verdict_d5d9bf60e0d5e1a4.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/honest_verdict_b133e8b3992af893.json | 1a003a670945452a5c86d033900bc33429f2981422c8938b1b8e2469fc764f3a | b133e8b3992af8937df8b38e6d89432215769344f3fd58af3251652ceba7c882 | not_checked | absent | inputs_sha256=8d8cdbcb4d70535f3b10e5dfa969b96fffdc18784fd00979e8bd587e7ee9a626 | unspecified | absent | true | false |
+| receipts/honest_verdict_d5d9bf60e0d5e1a4.json | 600a4532ac34b11a39508838c609bbc03c9bbfc6ffad8551835f2d2083a05595 | d5d9bf60e0d5e1a456b303b1cc8b6fee03cc1340e0bf12a6bad77178fcf112a2 | not_checked | absent | inputs_sha256=59fc033a0c9eadd1e0b1685773588ef5857d169cf4ddc4c8919f761da6fc0a59 | unspecified | absent | true | false |
 
 - `alpha`: 0.05
 - `components`:
   - `calibration`:
     - `alarm_origin`: 119
     - `channel_wealths`:
-      - `grapa_disp`: 1030.4024638903657
-      - `grapa_loc`: 0.4851113698532761
-      - `loc_hi`: 0.9385093598974767
-      - `loc_lo`: 0.00044817339722807835
-      - `overconf`: 1.0460856313663306e-16
+      - `grapa_disp`: 1030.4024638903652
+      - `grapa_loc`: 0.48511136985327596
+      - `loc_hi`: 0.9385093598974757
+      - `loc_lo`: 0.00044817339722807824
+      - `overconf`: 1.046085631366333e-16
       - `underconf`: 0.0
-    - `final_evalue`: 171.97108879891894
+    - `final_evalue`: 171.97108879891886
     - `miscalibrated`: true
   - `drift`:
     - `alarm_index`: null
@@ -46930,7 +51851,7 @@ counted. Prose that contains such a token is quoted verbatim.
     - `alpha`: 0.05
     - `bound`: 0.002735780949881265
     - `challenger`: challenger
-    - `cs_high`: 0.00014372628968201232
+    - `cs_high`: 0.00014372628968201243
     - `cs_low`: -0.0002043815517922361
     - `data_label`: UNKNOWN
     - `evidence`:
@@ -46943,7 +51864,7 @@ counted. Prose that contains such a token is quoted verbatim.
     - `interpretation`: inconclusive
     - `kind`: loss_cs.v1
     - `lam`: 0.5
-    - `mean_diff`: -2.8897283353086835e-05
+    - `mean_diff`: -2.8897283353086838e-05
     - `n`: 128
     - `schema`: loss_cs.v1
   - `promotion`:
@@ -46958,7 +51879,7 @@ counted. Prose that contains such a token is quoted verbatim.
     - `naive_score`: 0.00418254937835278
     - `selected_head`: qar
     - `selection_aware_ci`:
-      - 0.0038444700889850784
+      - 0.003844470088985079
       - 0.004508393721572966
     - `selection_bias`: 2.796389909611764e-06
 - `data_label`: SYNTHETIC
@@ -46973,7 +51894,7 @@ counted. Prose that contains such a token is quoted verbatim.
 - `kind`: honest_verdict.v1
 - `n_heads`: 3
 - `n_obs`: 128
-- `receipt_sha256`: b133e8b3992af8937df8b38e6d89432215769344f3fd58af3251652ceba7c882
+- `receipt_sha256`: d5d9bf60e0d5e1a456b303b1cc8b6fee03cc1340e0bf12a6bad77178fcf112a2
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -46994,8 +51915,8 @@ counted. Prose that contains such a token is quoted verbatim.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/honest_verdict_9a043a885f02042b.json
-      - `sha256`: 9725bced9cbbf03beea8c4f111e61e3c076d8875441fa2c0757fae11d0770549
+      - `path`: data/metadata/replay/honest_verdict_9b5abef8567f72c2.json
+      - `sha256`: 03d694e7d3219eef15e0be570f2bc1782da31695dce285e247a22f23cdaa9715
 - `research_only`: true
 - `run`:
   - `excluded_heads`:
@@ -56001,11 +60922,11 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
 - `research_only`: true
 - `schema`: modelcard_audit.v1
 
-### `receipts/monitor_run_13d20aef00774027.json`
+### `receipts/monitor_run_85aece35e89b5b12.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/monitor_run_13d20aef00774027.json | 3ce1cd7f59c301be6b4710326ab905313725317bee3669ae8e755f6d422bc12d | 13d20aef00774027a9772ced8a4a118c875cec064b33ed826e7b78311b411e83 | not_checked | absent | inputs_sha256=b1a31d66d88e2934bb13c29f4161d1f51ebaa0afaa3de2b135c73fbb44521b0b | unspecified | absent | true | false |
+| receipts/monitor_run_85aece35e89b5b12.json | ae2c1dec2a6718452e5d591ac736ce8ebe09ed37352619199e9190516211c266 | 85aece35e89b5b12ddd19560e9d6b32b5c23e6222f56e95cc18095a954b1bd2b | not_checked | absent | inputs_sha256=b9859c5255c17708ab5588eb88bd13ffa2eac4ff25f339b0268c67932d722db6 | unspecified | absent | true | false |
 
 - `data_label`: SYNTHETIC
 - `evidence`:
@@ -56044,7 +60965,7 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
   - `tail_cell`:
     - 0.05
     - 0.1
-- `receipt_sha256`: 13d20aef00774027a9772ced8a4a118c875cec064b33ed826e7b78311b411e83
+- `receipt_sha256`: 85aece35e89b5b12ddd19560e9d6b32b5c23e6222f56e95cc18095a954b1bd2b
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -56063,8 +60984,8 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/monitor_run_5a2fdb39470f5feb.json
-      - `sha256`: a57dca296b0cab9b3128f67956fe36150eebfdb0a026cc3db51a8a8728f231e4
+      - `path`: data/metadata/replay/monitor_run_2c9ce71fd88970e0.json
+      - `sha256`: fa219c937355ec05a205d8959e61b886ca6892533000ce840872b152e33fd059
 - `research_only`: true
 - `schema`: monitor_run.v1
 
@@ -79013,241 +83934,6 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `share_improves_spread`: 0.2396
 - `ticker`: AMZN
 
-### `receipts/rankic_eval_8d740c0ddf6d5c54.json`
-
-| source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/rankic_eval_8d740c0ddf6d5c54.json | e48fce1ae4cebf94e417773bdef20c9ed7b0822397505c6a51e8843a8da06c81 | 8d740c0ddf6d5c5436264a719179b2ea00d66d4a6b5e2d68dd662e7590defb71 | not_checked | absent | inputs_sha256=9073fb912af25dca9cd48eca45f475c9ef13c0c77ada98992c68661b2006b2d8 | unspecified | absent | absent | false |
-
-- `challengers`:
-  - identity
-  - noisy
-  - lagged
-- `data_label`: SYNTHETIC
-- `horizons`:
-  - 1
-  - 5
-- `kind`: cross_sectional_rankic_eval
-- `n_assets`: 16
-- `n_dates`: 60
-- `n_error_rows`: 0
-- `n_rows`: 12
-- `panels`:
-  - `linear_signal`:
-    - `data_label`: SYNTHETIC
-    - `description`: linear_signal: fwd = beta*signal + eps
-    - `forward_sha256`:
-      - `1`: 83938f636602c215a26c175dbee2f53fa64767db147ba6040945220cb535a657
-      - `5`: de13071a97e853308be089d94a8b6292f57718b8f43e34dca942d9f1095bb1a3
-    - `n_assets`: 16
-    - `n_dates`: 60
-    - `seed`: 104740
-    - `signal_sha256`: c7884445bca9d6fec2393903596fc0b54fbf9ca2a1df0bd55cdecc06e190ae06
-  - `pure_noise`:
-    - `data_label`: SYNTHETIC
-    - `description`: pure_noise: fwd independent of signal
-    - `forward_sha256`:
-      - `1`: a881044a3be91bd2525f21feaa8c4c9c67313da8bd2eb8817d89a89d1ba29702
-      - `5`: cbf40b4f83d6ed1c9efa4737f40f22b3a76e53032c269a6864448f4f59873d1a
-    - `n_assets`: 16
-    - `n_dates`: 60
-    - `seed`: 11
-    - `signal_sha256`: 83beddccaef4913fc22b82476f2a47e5296220c67b65502a6985a96a7947a54a
-- `receipt_sha256`: 8d740c0ddf6d5c5436264a719179b2ea00d66d4a6b5e2d68dd662e7590defb71
-- `replay`:
-  - `argv`:
-    - dipcatcher
-    - rankic
-    - --panels
-    - pure_noise,linear_signal
-    - --challengers
-    - identity,noisy,lagged
-    - --n-assets
-    - 16
-    - --n-dates
-    - 60
-    - --horizons
-    - 1,5
-    - --seed
-    - 11
-    - --out-dir
-    - data/metadata/replay
-  - `artifacts`:
-    - [0]
-      - `path`: data/metadata/replay/rankic_eval_02738b0fa12b6676.json
-      - `sha256`: 211c506b2840a3a5ed65759db4a90b63b460a3f28850761e6eac99806c55d298
-- `results`:
-  - [0]
-    - `challenger`: identity
-    - `error`: 
-    - `horizon`: 1
-    - `icir_ann_pearson`: -1.9009782088751646
-    - `icir_pearson`: -0.11975037115325438
-    - `mean_pearson`: -0.029132726573750066
-    - `mean_spearman`: -0.02023928215353938
-    - `n_dates`: 59
-    - `p_spearman`: 0.5212153650308186
-    - `shard`: pure_noise
-    - `status`: ok
-    - `t_pearson`: -1.0864487092922395
-    - `t_spearman`: -0.6453964804947411
-  - [1]
-    - `challenger`: identity
-    - `error`: 
-    - `horizon`: 5
-    - `icir_ann_pearson`: -3.181236294678684
-    - `icir_pearson`: -0.20039904993934257
-    - `mean_pearson`: -0.04671045762208652
-    - `mean_spearman`: -0.043957219251336895
-    - `n_dates`: 55
-    - `p_spearman`: 0.16389724796779584
-    - `shard`: pure_noise
-    - `status`: ok
-    - `t_pearson`: -1.5078063434783282
-    - `t_spearman`: -1.4112823477319312
-  - [2]
-    - `challenger`: noisy
-    - `error`: 
-    - `horizon`: 1
-    - `icir_ann_pearson`: 0.3159084349299725
-    - `icir_pearson`: 0.01990036085457947
-    - `mean_pearson`: 0.004151154783926075
-    - `mean_spearman`: 0.018295114656031904
-    - `n_dates`: 59
-    - `p_spearman`: 0.47816234594986795
-    - `shard`: pure_noise
-    - `status`: ok
-    - `t_pearson`: 0.23070406655351647
-    - `t_spearman`: 0.713883391524331
-  - [3]
-    - `challenger`: noisy
-    - `error`: 
-    - `horizon`: 5
-    - `icir_ann_pearson`: -1.1327100490435362
-    - `icir_pearson`: -0.07135402612649934
-    - `mean_pearson`: -0.016480471607701247
-    - `mean_spearman`: 0.030374331550802137
-    - `n_dates`: 55
-    - `p_spearman`: 0.2046213278988016
-    - `shard`: pure_noise
-    - `status`: ok
-    - `t_pearson`: -0.7670130261443983
-    - `t_spearman`: 1.2840074521801748
-  - [4]
-    - `challenger`: lagged
-    - `error`: 
-    - `horizon`: 1
-    - `icir_ann_pearson`: -0.3351867773680959
-    - `icir_pearson`: -0.021114782277932256
-    - `mean_pearson`: -0.004633875014238986
-    - `mean_spearman`: 0.003988035892323026
-    - `n_dates`: 59
-    - `p_spearman`: 0.8840237932471338
-    - `shard`: pure_noise
-    - `status`: ok
-    - `t_pearson`: -0.17756925014623462
-    - `t_spearman`: 0.14651389172110124
-  - [5]
-    - `challenger`: lagged
-    - `error`: 
-    - `horizon`: 5
-    - `icir_ann_pearson`: -3.1192536516764973
-    - `icir_pearson`: -0.19649451043966915
-    - `mean_pearson`: -0.04585461395643827
-    - `mean_spearman`: -0.06203208556149732
-    - `n_dates`: 55
-    - `p_spearman`: 0.02183669959525495
-    - `shard`: pure_noise
-    - `status`: ok
-    - `t_pearson`: -1.7753433666931444
-    - `t_spearman`: -2.3615298104851985
-  - [6]
-    - `challenger`: identity
-    - `error`: 
-    - `horizon`: 1
-    - `icir_ann_pearson`: 24.05834890256328
-    - `icir_pearson`: 1.5155335274049084
-    - `mean_pearson`: 0.32009660976431614
-    - `mean_spearman`: 0.30558325024925226
-    - `n_dates`: 59
-    - `p_spearman`: 4.320068427633945e-15
-    - `shard`: linear_signal
-    - `status`: ok
-    - `t_pearson`: 10.315092006069307
-    - `t_spearman`: 10.536371557789227
-  - [7]
-    - `challenger`: identity
-    - `error`: 
-    - `horizon`: 5
-    - `icir_ann_pearson`: 20.447672610228103
-    - `icir_pearson`: 1.2880823003983457
-    - `mean_pearson`: 0.3250210495917273
-    - `mean_spearman`: 0.31828877005347583
-    - `n_dates`: 55
-    - `p_spearman`: 7.306060609585616e-11
-    - `shard`: linear_signal
-    - `status`: ok
-    - `t_pearson`: 8.700203290887131
-    - `t_spearman`: 8.080873988546475
-  - [8]
-    - `challenger`: noisy
-    - `error`: 
-    - `horizon`: 1
-    - `icir_ann_pearson`: 5.870630458212197
-    - `icir_pearson`: 0.36981495789501523
-    - `mean_pearson`: 0.09180780456101234
-    - `mean_spearman`: 0.06550348953140579
-    - `n_dates`: 59
-    - `p_spearman`: 0.008778074736495152
-    - `shard`: linear_signal
-    - `status`: ok
-    - `t_pearson`: 4.359570753406414
-    - `t_spearman`: 2.712345300455227
-  - [9]
-    - `challenger`: noisy
-    - `error`: 
-    - `horizon`: 5
-    - `icir_ann_pearson`: 4.009475893297263
-    - `icir_pearson`: 0.2525732405088834
-    - `mean_pearson`: 0.0662299888073039
-    - `mean_spearman`: 0.05641711229946524
-    - `n_dates`: 55
-    - `p_spearman`: 0.07679457477986884
-    - `shard`: linear_signal
-    - `status`: ok
-    - `t_pearson`: 2.0038056663470662
-    - `t_spearman`: 1.8040976769676234
-  - [10]
-    - `challenger`: lagged
-    - `error`: 
-    - `horizon`: 1
-    - `icir_ann_pearson`: 0.44417944905770834
-    - `icir_pearson`: 0.027980675230770937
-    - `mean_pearson`: 0.007679206482883079
-    - `mean_spearman`: 0.005583250249252248
-    - `n_dates`: 59
-    - `p_spearman`: 0.8567181440194039
-    - `shard`: linear_signal
-    - `status`: ok
-    - `t_pearson`: 0.23048484733110872
-    - `t_spearman`: 0.18135894458447757
-  - [11]
-    - `challenger`: lagged
-    - `error`: 
-    - `horizon`: 5
-    - `icir_ann_pearson`: 0.5615668527397992
-    - `icir_pearson`: 0.03537538659254142
-    - `mean_pearson`: 0.010302578401837693
-    - `mean_spearman`: 0.005882352941176472
-    - `n_dates`: 55
-    - `p_spearman`: 0.8965438224558474
-    - `shard`: linear_signal
-    - `status`: ok
-    - `t_pearson`: 0.25957480241352054
-    - `t_spearman`: 0.13064222081735188
-- `schema`: cross_sectional_rankic.v1
-- `seed`: 11
-
 ### `receipts/rankic_eval_9ebdad7da83e7348.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
@@ -80375,6 +85061,241 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `status`: ok
     - `t_pearson`: -5.193883163387239
     - `t_spearman`: -4.75560366545392
+- `schema`: cross_sectional_rankic.v1
+- `seed`: 11
+
+### `receipts/rankic_eval_b0f9818dfe2b3663.json`
+
+| source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| receipts/rankic_eval_b0f9818dfe2b3663.json | 784cc633b6d9e6abff52b6b391e7056c863a0b322acae173aa38196439ed11d8 | b0f9818dfe2b3663877c3932d6400c6428c2ce180ed63b11025c548df9d87c67 | not_checked | absent | inputs_sha256=437be2f1464c2ec32a6cc9f2bb6b8fe752f8ac14a922027310b8f9b0d4b0c89a | unspecified | absent | absent | false |
+
+- `challengers`:
+  - identity
+  - noisy
+  - lagged
+- `data_label`: SYNTHETIC
+- `horizons`:
+  - 1
+  - 5
+- `kind`: cross_sectional_rankic_eval
+- `n_assets`: 16
+- `n_dates`: 60
+- `n_error_rows`: 0
+- `n_rows`: 12
+- `panels`:
+  - `linear_signal`:
+    - `data_label`: SYNTHETIC
+    - `description`: linear_signal: fwd = beta*signal + eps
+    - `forward_sha256`:
+      - `1`: 2f832b588ef6e23c7112fd83a3d0f12fd69f348c88663f17f3e367ee8d756602
+      - `5`: 03b0854dc7b65065b8a958dc84840cc2123930199edf4753ef54beb9b0c3c39e
+    - `n_assets`: 16
+    - `n_dates`: 60
+    - `seed`: 104740
+    - `signal_sha256`: 8a971c338289f20a529b385f642b7c5f2bea588b0ba5d4de9e06c286fc32a8f9
+  - `pure_noise`:
+    - `data_label`: SYNTHETIC
+    - `description`: pure_noise: fwd independent of signal
+    - `forward_sha256`:
+      - `1`: 9b60394c3cb49a2cd1f443114b75102bd807aafa15723a41d9eb4943d7728fee
+      - `5`: 19ca2176f7eefab644887ef3de07c581a012195e8c6f0e46ca5ce5c8529b260b
+    - `n_assets`: 16
+    - `n_dates`: 60
+    - `seed`: 11
+    - `signal_sha256`: a6aaf77d36ed7e1557d48a3a68b40c8f519e15a51fe886105903b124e44c0155
+- `receipt_sha256`: b0f9818dfe2b3663877c3932d6400c6428c2ce180ed63b11025c548df9d87c67
+- `replay`:
+  - `argv`:
+    - dipcatcher
+    - rankic
+    - --panels
+    - pure_noise,linear_signal
+    - --challengers
+    - identity,noisy,lagged
+    - --n-assets
+    - 16
+    - --n-dates
+    - 60
+    - --horizons
+    - 1,5
+    - --seed
+    - 11
+    - --out-dir
+    - data/metadata/replay
+  - `artifacts`:
+    - [0]
+      - `path`: data/metadata/replay/rankic_eval_4310945be91ef9a3.json
+      - `sha256`: 1909d48b779a036d3f7ec32bf67269d29f0c453a523b2e89e188d727139ae392
+- `results`:
+  - [0]
+    - `challenger`: identity
+    - `error`: 
+    - `horizon`: 1
+    - `icir_ann_pearson`: -1.9009782
+    - `icir_pearson`: -0.11975037
+    - `mean_pearson`: -0.029132727
+    - `mean_spearman`: -0.020239282
+    - `n_dates`: 59
+    - `p_spearman`: 0.52121537
+    - `shard`: pure_noise
+    - `status`: ok
+    - `t_pearson`: -1.0864487
+    - `t_spearman`: -0.64539648
+  - [1]
+    - `challenger`: identity
+    - `error`: 
+    - `horizon`: 5
+    - `icir_ann_pearson`: -3.1812363
+    - `icir_pearson`: -0.20039905
+    - `mean_pearson`: -0.046710458
+    - `mean_spearman`: -0.043957219
+    - `n_dates`: 55
+    - `p_spearman`: 0.16389726
+    - `shard`: pure_noise
+    - `status`: ok
+    - `t_pearson`: -1.5078064
+    - `t_spearman`: -1.4112823
+  - [2]
+    - `challenger`: noisy
+    - `error`: 
+    - `horizon`: 1
+    - `icir_ann_pearson`: 0.31590845
+    - `icir_pearson`: 0.019900362
+    - `mean_pearson`: 0.0041511549
+    - `mean_spearman`: 0.018295115
+    - `n_dates`: 59
+    - `p_spearman`: 0.47816235
+    - `shard`: pure_noise
+    - `status`: ok
+    - `t_pearson`: 0.23070407
+    - `t_spearman`: 0.71388339
+  - [3]
+    - `challenger`: noisy
+    - `error`: 
+    - `horizon`: 5
+    - `icir_ann_pearson`: -1.1327101
+    - `icir_pearson`: -0.07135403
+    - `mean_pearson`: -0.016480473
+    - `mean_spearman`: 0.030374332
+    - `n_dates`: 55
+    - `p_spearman`: 0.20462131
+    - `shard`: pure_noise
+    - `status`: ok
+    - `t_pearson`: -0.76701306
+    - `t_spearman`: 1.2840075
+  - [4]
+    - `challenger`: lagged
+    - `error`: 
+    - `horizon`: 1
+    - `icir_ann_pearson`: -0.33518681
+    - `icir_pearson`: -0.021114784
+    - `mean_pearson`: -0.0046338754
+    - `mean_spearman`: 0.0039880359
+    - `n_dates`: 59
+    - `p_spearman`: 0.88402379
+    - `shard`: pure_noise
+    - `status`: ok
+    - `t_pearson`: -0.17756926
+    - `t_spearman`: 0.14651389
+  - [5]
+    - `challenger`: lagged
+    - `error`: 
+    - `horizon`: 5
+    - `icir_ann_pearson`: -3.1192537
+    - `icir_pearson`: -0.19649451
+    - `mean_pearson`: -0.045854615
+    - `mean_spearman`: -0.062032086
+    - `n_dates`: 55
+    - `p_spearman`: 0.0218367
+    - `shard`: pure_noise
+    - `status`: ok
+    - `t_pearson`: -1.7753434
+    - `t_spearman`: -2.3615298
+  - [6]
+    - `challenger`: identity
+    - `error`: 
+    - `horizon`: 1
+    - `icir_ann_pearson`: 24.058349
+    - `icir_pearson`: 1.5155335
+    - `mean_pearson`: 0.32009661
+    - `mean_spearman`: 0.30558325
+    - `n_dates`: 59
+    - `p_spearman`: 4.3200615e-15
+    - `shard`: linear_signal
+    - `status`: ok
+    - `t_pearson`: 10.315092
+    - `t_spearman`: 10.536372
+  - [7]
+    - `challenger`: identity
+    - `error`: 
+    - `horizon`: 5
+    - `icir_ann_pearson`: 20.447673
+    - `icir_pearson`: 1.2880823
+    - `mean_pearson`: 0.32502105
+    - `mean_spearman`: 0.31828877
+    - `n_dates`: 55
+    - `p_spearman`: 7.3060603e-11
+    - `shard`: linear_signal
+    - `status`: ok
+    - `t_pearson`: 8.7002033
+    - `t_spearman`: 8.080874
+  - [8]
+    - `challenger`: noisy
+    - `error`: 
+    - `horizon`: 1
+    - `icir_ann_pearson`: 5.8706305
+    - `icir_pearson`: 0.36981496
+    - `mean_pearson`: 0.091807804
+    - `mean_spearman`: 0.06550349
+    - `n_dates`: 59
+    - `p_spearman`: 0.0087780747
+    - `shard`: linear_signal
+    - `status`: ok
+    - `t_pearson`: 4.3595708
+    - `t_spearman`: 2.7123453
+  - [9]
+    - `challenger`: noisy
+    - `error`: 
+    - `horizon`: 5
+    - `icir_ann_pearson`: 4.0094759
+    - `icir_pearson`: 0.25257324
+    - `mean_pearson`: 0.066229988
+    - `mean_spearman`: 0.056417112
+    - `n_dates`: 55
+    - `p_spearman`: 0.076794571
+    - `shard`: linear_signal
+    - `status`: ok
+    - `t_pearson`: 2.0038057
+    - `t_spearman`: 1.8040977
+  - [10]
+    - `challenger`: lagged
+    - `error`: 
+    - `horizon`: 1
+    - `icir_ann_pearson`: 0.44417942
+    - `icir_pearson`: 0.027980674
+    - `mean_pearson`: 0.0076792061
+    - `mean_spearman`: 0.0055832502
+    - `n_dates`: 59
+    - `p_spearman`: 0.85671815
+    - `shard`: linear_signal
+    - `status`: ok
+    - `t_pearson`: 0.23048483
+    - `t_spearman`: 0.18135894
+  - [11]
+    - `challenger`: lagged
+    - `error`: 
+    - `horizon`: 5
+    - `icir_ann_pearson`: 0.56156677
+    - `icir_pearson`: 0.035375381
+    - `mean_pearson`: 0.010302577
+    - `mean_spearman`: 0.0058823529
+    - `n_dates`: 55
+    - `p_spearman`: 0.89654382
+    - `shard`: linear_signal
+    - `status`: ok
+    - `t_pearson`: 0.25957476
+    - `t_spearman`: 0.13064222
 - `schema`: cross_sectional_rankic.v1
 - `seed`: 11
 
@@ -94273,11 +99194,11 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
 - `research_only`: true
 - `schema`: vine_panel.v1
 
-### `receipts/vol_bench_f3bf2afc2f159ace.json`
+### `receipts/vol_bench_860a3412278105ca.json`
 
 | source | file sha256 | embedded seal | seal | git revision | dataset hash | data class | promote | research_only | live_pnl_claim |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| receipts/vol_bench_f3bf2afc2f159ace.json | b9b70f7186d75054e91ee734b87b8aeeba22d66af713806a8d5410a9bc603ee3 | f3bf2afc2f159acea32293b04760b07db7584dd45d460d1b4c295711b31d4aea | not_checked | absent | inputs_sha256=9bf80b4bc0721991e245a7a34983a851cc7e722713f5f6212446aec936c67302 | unspecified | absent | absent | false |
+| receipts/vol_bench_860a3412278105ca.json | 9a7dac094aaae3d1c11ce853d8951ae816f263816c56703536c2ddd337532d90 | 860a3412278105cafdaab6de3d1c13c9af3233b3770663ee97f05aacc70a0776 | not_checked | absent | inputs_sha256=677c9862dacbb2e885fd2a5e828e7a04dc2f98c2dc062f627a914ef4e4f7c911 | unspecified | absent | absent | false |
 
 - `claim`: research_only
 - `data_label`: SYNTHETIC
@@ -94294,7 +99215,7 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
 - `n_error_rows`: 0
 - `n_origins`: 10
 - `n_rows`: 6
-- `receipt_sha256`: f3bf2afc2f159acea32293b04760b07db7584dd45d460d1b4c295711b31d4aea
+- `receipt_sha256`: 860a3412278105cafdaab6de3d1c13c9af3233b3770663ee97f05aacc70a0776
 - `replay`:
   - `argv`:
     - dipcatcher
@@ -94317,38 +99238,38 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - data/metadata/replay
   - `artifacts`:
     - [0]
-      - `path`: data/metadata/replay/vol_bench_c584407c8097493e.json
-      - `sha256`: 8594d8d5d8b0f4a50891ce3c47ae273d06890af537ed27a6274eb85587ecfd32
+      - `path`: data/metadata/replay/vol_bench_f9b06fda2a49e295.json
+      - `sha256`: 942c055a36cbe89dd1fbe630ac0ce2a643bd8e856853b08be209c04b1377c44a
 - `results`:
   - [0]
-    - `dm_qlike_mean`: 0.026282817105292722
-    - `dm_qlike_se`: 0.023566845208215056
-    - `dm_qlike_t`: 1.1152454591644247
+    - `dm_qlike_mean`: 0.026282821
+    - `dm_qlike_se`: 0.023566847
+    - `dm_qlike_t`: 1.1152455
     - `epromotion_anytime_p`: 1.0
     - `epromotion_evalue`: 1.0
     - `epromotion_origin`: null
     - `error`: null
     - `horizon`: 1
     - `model`: rv_roll
-    - `mse`: 3.932024779468782e-09
+    - `mse`: 3.9320249e-09
     - `n_origins`: 10
-    - `qlike`: 0.11126354674782028
+    - `qlike`: 0.11126355
     - `seed`: 7
     - `shard`: garch_vol
     - `status`: ok
   - [1]
-    - `dm_qlike_mean`: 0.030448239544444134
-    - `dm_qlike_se`: 0.012281091759916499
-    - `dm_qlike_t`: 2.479277912719639
+    - `dm_qlike_mean`: 0.030448242
+    - `dm_qlike_se`: 0.012281093
+    - `dm_qlike_t`: 2.479278
     - `epromotion_anytime_p`: 1.0
     - `epromotion_evalue`: 1.0
     - `epromotion_origin`: null
     - `error`: null
     - `horizon`: 1
     - `model`: rv_ewma
-    - `mse`: 3.9100970206722025e-09
+    - `mse`: 3.9100971e-09
     - `n_origins`: 10
-    - `qlike`: 0.1154289691869717
+    - `qlike`: 0.11542897
     - `seed`: 7
     - `shard`: garch_vol
     - `status`: ok
@@ -94362,41 +99283,41 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `error`: null
     - `horizon`: 1
     - `model`: har
-    - `mse`: 2.500331818486244e-09
+    - `mse`: 2.5003318e-09
     - `n_origins`: 10
-    - `qlike`: 0.08498072964252756
+    - `qlike`: 0.084980729
     - `seed`: 7
     - `shard`: garch_vol
     - `status`: ok
   - [3]
-    - `dm_qlike_mean`: 0.052878800151732186
-    - `dm_qlike_se`: 0.0751954896897419
-    - `dm_qlike_t`: 0.7032177111939981
-    - `epromotion_anytime_p`: 0.5892857142857143
-    - `epromotion_evalue`: 1.696969696969697
+    - `dm_qlike_mean`: 0.052878801
+    - `dm_qlike_se`: 0.075195491
+    - `dm_qlike_t`: 0.70321771
+    - `epromotion_anytime_p`: 0.58928571
+    - `epromotion_evalue`: 1.6969697
     - `epromotion_origin`: null
     - `error`: null
     - `horizon`: 1
     - `model`: rv_roll
-    - `mse`: 1.4262236853662166e-07
+    - `mse`: 1.4262237e-07
     - `n_origins`: 10
-    - `qlike`: 0.1334280472455576
+    - `qlike`: 0.13342805
     - `seed`: 8
     - `shard`: rough_vol
     - `status`: ok
   - [4]
-    - `dm_qlike_mean`: 0.00874331189813149
-    - `dm_qlike_se`: 0.04519296766068152
-    - `dm_qlike_t`: 0.19346620394080222
-    - `epromotion_anytime_p`: 0.5892857142857143
-    - `epromotion_evalue`: 1.696969696969697
+    - `dm_qlike_mean`: 0.0087433123
+    - `dm_qlike_se`: 0.045192968
+    - `dm_qlike_t`: 0.19346621
+    - `epromotion_anytime_p`: 0.58928571
+    - `epromotion_evalue`: 1.6969697
     - `epromotion_origin`: null
     - `error`: null
     - `horizon`: 1
     - `model`: rv_ewma
-    - `mse`: 1.11496408638407e-07
+    - `mse`: 1.1149641e-07
     - `n_origins`: 10
-    - `qlike`: 0.0892925589919569
+    - `qlike`: 0.089292561
     - `seed`: 8
     - `shard`: rough_vol
     - `status`: ok
@@ -94410,9 +99331,9 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
     - `error`: null
     - `horizon`: 1
     - `model`: har
-    - `mse`: 1.2548993848632043e-07
+    - `mse`: 1.2548994e-07
     - `n_origins`: 10
-    - `qlike`: 0.08054924709382541
+    - `qlike`: 0.080549249
     - `seed`: 8
     - `shard`: rough_vol
     - `status`: ok
@@ -94432,9 +99353,9 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
       - `process`: gjr_garch_1_1
       - `seed`: 7
     - `n`: 200
-    - `parkinson_sha256`: bb5a06a1548a38a310ee4eded08a1180ee522245172eea2acc81ae97e9778015
-    - `returns_sha256`: a18b838f11608d59bd5e528bdd9fc90e4a962b4172be20d3d9ad926417b19823
-    - `rv_sha256`: bae765dc72bb29c614d0ef402d65f5256efb5c0e91b561f57c0acdde6661a0dc
+    - `parkinson_sha256`: 8f5dec47dea9b841d3ed47c629434902db2cf066776bfc9eebfb0d0791f56c7f
+    - `returns_sha256`: a63a8a41dc5a3b813578f55e1a15f0776914a8e38e5658f084675d5ba67b1986
+    - `rv_sha256`: c256b1ff8a8fd632f12977c91c453d9e745f1cdf284b0bf9dbe7abc557f5edbb
     - `seed`: 7
   - `rough_vol`:
     - `config`:
@@ -94447,9 +99368,9 @@ Omitted 3 fields whose names tokenize to a forbidden research-headline metric.
       - `seed`: 8
       - `vol_of_logvol`: 0.75
     - `n`: 200
-    - `parkinson_sha256`: f3edfbe36c2ac830dc677b0ec78b6b8d4bc6d82d47ae2697da655999b1808878
-    - `returns_sha256`: 28df1304f4bd66ff73589805060717b4fca43788f35b241639b158e34ae25b76
-    - `rv_sha256`: e95f54b6ca2cd8bf33e8edd948ceaf186740fa1dae5f629b45b5bb9517ddc080
+    - `parkinson_sha256`: e0a4ea15dfa74a77887cba2fc5ee4ac6999484251eff71a539ae4d10c927d315
+    - `returns_sha256`: e39326219b2c263d92a07ad26e3b54404b7457360d8d8d3cb6ff4fe1b52cd9b8
+    - `rv_sha256`: 5c2077f9f8818f7fdad9c86d02d5d42fffeaa9f0b953d633f54e704e5bc6fdd2
     - `seed`: 8
 - `stride`: 1
 - `target`: cumulative_realized_variance

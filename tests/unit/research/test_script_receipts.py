@@ -224,6 +224,9 @@ _LANE_COVERED_SCHEMAS = frozenset(
         "corpus_epoch.v1",
         "basis_carry.v1",
         "vol_of_vol.v1",
+        "sigkernel_mmd.v1",
+        "lane_receipt.v1",
+        "forward_record_preregistration.v1",
     }
 )
 #: schemas whose receipts dispatch to evalue_family_contract_errors via their
@@ -254,9 +257,18 @@ def test_every_committed_receipt_schema_is_contract_covered() -> None:
     dispatch to a deep check somewhere in the verifier."""
     uncovered: list[str] = []
     for path in sorted(RECEIPTS.glob("*.json")):
-        schema = json.loads(path.read_text()).get("schema")
+        # Sidecar seals are not receipts. ``_prereg_documented_errors`` returns
+        # None for ``prereg_seal.v1`` so only scanners that skip ``*.seal.json``
+        # should see one; the parent document is what the seal binds.
+        if path.name.endswith(".seal.json"):
+            continue
+        payload = json.loads(path.read_text())
+        schema = payload.get("schema")
         if schema in ("receipt.v2", None):
             continue  # v2 inners dispatch by kind fingerprint
+        # A numeric schema is a format version; the lane id lives on ``kind``.
+        if not isinstance(schema, str):
+            schema = payload.get("kind")
         if (
             schema in SCRIPT_RECEIPT_CONTRACTS
             or schema in _LANE_COVERED_SCHEMAS
@@ -265,3 +277,41 @@ def test_every_committed_receipt_schema_is_contract_covered() -> None:
             continue
         uncovered.append(f"{path.name}:{schema}")
     assert uncovered == []
+
+
+def test_lane_specific_contracts_rederive_committed_bodies() -> None:
+    """The three envelopes that are not measurement receipts still re-derive."""
+    for name in (
+        "lobster_replay_amzn_2012-06-21.json",
+        "queue_priority.json",
+        "calibration_audit_drill.json",
+        "fifo_priority_amzn.json",
+        "seed_sweep_demo_amzn.json",
+        "sweep_width_amzn.json",
+    ):
+        assert _errors(name) == [], f"{name}: {_errors(name)}"
+
+
+def test_lobster_forged_match_rate_caught() -> None:
+    payload = _load("lobster_replay_amzn_2012-06-21.json")
+    forged = copy.deepcopy(payload)
+    forged["reconstruction"]["match_rate"] = 0.5
+    errors = script_receipt_contract_errors(forged["schema"], forged)
+    assert "match_rate_not_n_match_over_n_compared" in errors
+    assert "engine_valid_on_emitted_mismatch" in errors
+
+
+def test_queue_priority_forged_comparison_caught() -> None:
+    payload = _load("queue_priority.json")
+    forged = copy.deepcopy(payload)
+    forged["comparison"]["p_fill_overall_iid"] = 0.99
+    errors = script_receipt_contract_errors(forged["schema"], forged)
+    assert "comparison_mismatch:p_fill_overall_iid" in errors
+
+
+def test_calibration_drill_forged_eval_length_caught() -> None:
+    payload = _load("calibration_audit_drill.json")
+    forged = copy.deepcopy(payload)
+    forged["params"]["n_eval"] = forged["params"]["n_eval"] + 1
+    errors = script_receipt_contract_errors(forged["schema"], forged)
+    assert "n_eval_not_echoed" in errors

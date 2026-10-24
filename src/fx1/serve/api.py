@@ -4185,10 +4185,9 @@ def _finish(request: Request, request_id: str, response: Any, started: float) ->
 
 
 class _RateLimiter:
-    """Per-client-host token bucket: ``rps`` refill with one second of
-    burst capacity, LRU-bounded so a spray of source addresses can't grow
-    the map without limit. `allow` returns 0.0 when the request may
-    proceed, else the seconds until a token refills."""
+    """Per-client-host token bucket: ``rps`` refill, one-second burst, LRU cap."""
+
+    _clock_box: dict[str, float] | None = None
 
     def __init__(self, rps: float, max_keys: int = _RATE_LIMIT_KEYS_MAX) -> None:
         self.rps = rps
@@ -4196,12 +4195,12 @@ class _RateLimiter:
         self.max_keys = max_keys
         self._lock = threading.Lock()
         self._buckets: OrderedDict[str, tuple[float, float]] = OrderedDict()
+        box = type(self)._clock_box
+        self._clock = time.monotonic if box is None else (lambda: float(box["t"]))
 
     def allow(self, identity: str) -> tuple[float, float]:
-        """Consume one token: returns ``(wait, remaining)`` — seconds until a
-        token refills (0.0 when the request may proceed) and the post-consume
-        token count for the `X-RateLimit-Remaining` header."""
-        now = time.monotonic()
+        """Return ``(wait, remaining)`` after consuming one token."""
+        now = self._clock()
         with self._lock:
             entry = self._buckets.pop(identity, None)
             tokens, ts = entry if entry is not None else (self.capacity, now)
