@@ -1,25 +1,25 @@
 {
   "heads": {
     ".box-soft-verify/*": {
-      "chain_root": "983424d1c79929130c52fa5963336a792dd4f002dca8864a0f4a5af32bdf586c",
-      "n_epochs": 3,
-      "receipt": "corpus_epoch_a89589e1d4111e0c.json",
-      "sha256": "5e9a4aec67b468614ec3d76d1808b1c7d8f51994da326d6c4c0b561604fe88ba",
-      "tree_root": "c931fd56d42a42e1259377c28b2c981ebf1a9c7b30e88a12ede971f34ef8d7d0"
+      "chain_root": "bbecd623cfc27d4cb2412ad3a1b4b97fc738d72fabc9e3f6c8f19d748a083f7a",
+      "n_epochs": 2,
+      "receipt": "corpus_epoch_5f5d753a30f53ecf.json",
+      "sha256": "936fddf3189b342915a5dbdb82f9c85a633ec6136764d06f65d439c4b64d1421",
+      "tree_root": "1e4cc61b53ef84e9501f595a8e761974fade1c495ec2ed0a24ddd7476d65d9e8"
     },
     ".cursor/*": {
-      "chain_root": "f8de14ddfde488e3c1cc1c7b0fce96561edacaa11ebf8d6c65dfa0456c019dfb",
-      "n_epochs": 3,
-      "receipt": "corpus_epoch_ad6e9d659175be48.json",
-      "sha256": "7d69e08f1b14b2be488166b786444138e849fc9140a753d95e7080a0f55b945f",
-      "tree_root": "8a400c255ef6cad36f861bf17c4b4fd8ec5306fac345d9417ede7e57ee8b7fbd"
+      "chain_root": "a671a62b1fe3ce388502e9754528a8d75ac5d7d3dd349ef6d209c852b920d637",
+      "n_epochs": 2,
+      "receipt": "corpus_epoch_01a94d650190d99f.json",
+      "sha256": "fc8b54e55f9e53200bb72974c3d6a8e0a1cfbbc18ef9fb548c9a9c87b1f57b2d",
+      "tree_root": "3ad753a146b4a0fdfbb76925583038c6cff44c1eab7b61ac2e184a7bab1753b0"
     },
     ".dsh-24x7/*": {
-      "chain_root": "65ed8625058ff46d6486107e12183338b3a4c64b39ab962bfe034d8078cd5d5c",
-      "n_epochs": 23,
-      "receipt": "corpus_epoch_c753e7d77b2340be.json",
-      "sha256": "c110c24ea5ef53fe5010a6d1c73efaa70fec8a3ac6fa453bd0e8e89e867f3e73",
-      "tree_root": "2eb33ea53454d8c0e002dce564ea1a6d40dd871a9b2e80f9748c5e270c523695"
+      "chain_root": "2cd5c04c551c9c4780f97721e65b6221bf2d60496db5c10b7ba064cf73f456af",
+      "n_epochs": 21,
+      "receipt": "corpus_epoch_7f1c0bd205fa95bd.json",
+      "sha256": "dbe91ac92fc6726d00154a510feff0ed5707e0c167f498ea7ba990c2d7405b8d",
+      "tree_root": "9a3d5cbe53bbd5c794144302cb7fdc3ee46e5b543003e837b53ef888c0223a42"
     },
     ".github/*": {
       "chain_root": "c7300ed49e412c134d27102c53b9740f11ba422e32e73cc1276d124d80f81263",
