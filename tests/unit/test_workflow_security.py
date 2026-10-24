@@ -21,6 +21,15 @@ def test_ci_does_not_grant_workflow_wide_actions_write() -> None:
     assert "actions: write" not in top_level
 
 
+def test_fast_gates_cancel_only_superseded_pull_requests() -> None:
+    """Main/schedule must drain; pull_request may cancel superseded runs."""
+
+    for name in ("ci.yml", "fx1.yml", "proofcore.yml"):
+        text = _workflow(name)
+        assert "cancel-in-progress:" in text, name
+        assert "${{ github.event_name == 'pull_request' }}" in text, name
+
+
 def test_dependency_review_fails_closed() -> None:
     """Unavailable dependency metadata must not produce a green review."""
 

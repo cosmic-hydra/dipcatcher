@@ -20,13 +20,13 @@ on:
           - fast
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  # Do NOT cancel in-flight runs. At this repo's push cadence (measured: 12
-  # merges in 68s) cancel-in-progress meant every run was superseded before it
-  # could finish — 400 consecutive attempts, zero successes. A gate that is
-  # always cancelled emits no verdict, so it cannot protect the branch. The
-  # group key still serialises runs; letting them drain is the whole point.
-  cancel-in-progress: false
+  # PR number isolates each PR; main/schedule/merge_group key on ref+event so
+  # a schedule does not serialize behind an unfinished main push.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || format('{0}-{1}', github.event_name, github.ref) }}
+  # Cancel superseded PR runs (new push to the same PR). Never cancel main,
+  # merge_group, or schedule — those must reach a verdict (see the 400-run
+  # zero-success history when every push cancelled the previous gate).
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 # Least privilege. Cache and artifact services use runner-scoped runtime
 # tokens; the workflow's GITHUB_TOKEN never needs Actions write access.
@@ -184,7 +184,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["3.12", "3.13"]
+        # PRs stay on 3.12×4 shards (fast gate). Push/schedule/merge_group keep
+        # 3.12+3.13 so main still proves the dual-interpreter floor; the full
+        # OS×3.13/3.14 matrix remains nightly in matrix.yml (other agents own
+        # flaky/3.13 test fixes).
+        python: ${{ github.event_name == 'pull_request' && fromJSON('["3.12"]') || fromJSON('["3.12", "3.13"]') }}
         shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -526,6 +530,16 @@ jobs:
         with:
           toolchain: "1.85.0"
           components: rustfmt, clippy
+      - name: Cache Cargo registry and quant_core target
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust/quant_core/target
+          key: cargo-quant-core-${{ runner.os }}-${{ hashFiles('rust/quant_core/Cargo.lock') }}
+          restore-keys: |
+            cargo-quant-core-${{ runner.os }}-
       - name: Sync
         run: uv sync --frozen --all-groups
       - name: Install maturin

@@ -12,7 +12,8 @@ on:
     - cron: "30 1 * * 6"
   push:
     branches: [main]
-  pull_request:
+  # No pull_request: Scorecard on every PR duplicates the weekly/main signal
+  # and burns a runner slot against the 20-job cap without gating merges.
 
 permissions: {}
 

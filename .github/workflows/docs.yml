@@ -15,7 +15,7 @@ on:
 # reclaimed in matrix.yml (36 jobs), not here.
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 # PRs only build. Push to main uploads a Pages artifact and deploys it when

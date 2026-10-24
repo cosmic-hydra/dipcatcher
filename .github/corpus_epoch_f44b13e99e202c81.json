@@ -1,0 +1,67 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "bb450c2d44e5ac219be3fc7870d0808b492364776b56b50c0fef5ac1e2d3db8f",
+  "inputs_sha256": "64faff681bc07abe12ac05ff9fb9ddd852b8de41919993c15be4c3cb288b3793",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "c95348d339e97f29bbc0bf2171fa6fee0fb7f454531a57127692d6928645fb57",
+  "members": [
+    {
+      "name": "HISTORY_REWRITE_PLAN.md",
+      "sha256": "2f8ab97634040aab5853a8423c417b45206dcaa4ee31acea1280d0eecd4b9f54"
+    },
+    {
+      "name": "PULL_REQUEST_TEMPLATE.md",
+      "sha256": "b758ec958f9d43f8b32f85f39fe53da4958d147922444eb809b5de364b51e345"
+    },
+    {
+      "name": "actionlint.yaml",
+      "sha256": "849e7462a530dc6fafa21a62fd3ef0aa7a660220d6199869de415a9a9c6509f0"
+    },
+    {
+      "name": "codeql/codeql-config.yml",
+      "sha256": "acb715120442b5aa3eb9ff6e1541ead7a6c5b7a75966a380285e211ed4d80fe4"
+    },
+    {
+      "name": "corpus_epoch_0861a7387e453c36.json",
+      "sha256": "f810173afdb57fe84a469fecb8f76a6305b602994a296d2767d191d71145c5e7"
+    },
+    {
+      "name": "corpus_epoch_26a4c2c8da9dae82.json",
+      "sha256": "3f41843a20eca74f7d3d203cb938686be63cadf29b2d325904b70c17efee1607"
+    },
+    {
+      "name": "corpus_epoch_66b11cb0bac7bc80.json",
+      "sha256": "416012ace1be36fb1f26d55af3de7970eaf58fd1f7538f2b6ac066972e001d19"
+    },
+    {
+      "name": "corpus_epoch_8a12bbf1b44658cf.json",
+      "sha256": "c74093976a8a4b8fae9665a09029531b7f91a8b5e337c8e865d43c810dffd82c"
+    },
+    {
+      "name": "corpus_epoch_9ad1a2f4c6bab0c6.json",
+      "sha256": "f4d087b59289c30a3c7fd340237de7318ce4c13c834e0fb64d9ce10520daeb19"
+    },
+    {
+      "name": "dependabot.yml",
+      "sha256": "0377bba62c89d512c9d0535d4d1b401797e66cabe82ef042b3e17af7290968ee"
+    }
+  ],
+  "members_added": [
+    "actionlint.yaml",
+    "corpus_epoch_8a12bbf1b44658cf.json"
+  ],
+  "members_removed": [],
+  "n_members": 10,
+  "params": {
+    "head_sha": "5b2716e90e901f6d18a2ed31e212a81344cc8cc2",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_8a12bbf1b44658cf.json",
+  "prev_epoch_sha256": "48c6e0b94aec5984dcaf968a054d34660c48d3b701dc71312424952057ae598f",
+  "receipt_sha256": "f44b13e99e202c81dae87a9490bf2a8a826c0053055b9a7079a73236dbdf4367",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}
