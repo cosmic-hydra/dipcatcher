@@ -10,6 +10,7 @@ import io
 import json
 import sys
 import threading
+import urllib.parse
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -371,7 +372,11 @@ def test_concierge_session_keys_harness_and_flash(
     concierge._input = lambda prompt: "https://fresh.example.test/v1"
     concierge.handle_line("/keys set fx1")
     assert "fresh.example.test" in concierge.said[-1]
-    assert profiles.resolve_endpoint("fx1")[1].startswith("https://fresh.example.test")
+    stored = profiles.resolve_endpoint("fx1")
+    assert stored is not None
+    parsed = urllib.parse.urlsplit(stored[1])
+    assert (parsed.scheme, parsed.hostname, parsed.path) == ("https", "fresh.example.test", "/v1")
+    assert stored == ("sk-new", "https://fresh.example.test/v1")
 
     concierge._input = lambda prompt: (_ for _ in ()).throw(EOFError)
     concierge.handle_line("/keys set fx1")
