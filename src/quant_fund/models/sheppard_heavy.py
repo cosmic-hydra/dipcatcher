@@ -140,7 +140,9 @@ def synth_heavy(
 ) -> dict[str, FloatArray]:
     """SYNTHETIC GARCH(1,1) returns + noisy realized measure, vol break."""
     rng = np.random.default_rng(seed)
-    r = np.empty(t)
+    # r[0] is read by the first variance update before it is drawn. np.empty
+    # leaves heap garbage there, so two calls on Windows diverge.
+    r = np.zeros(t)
     s2 = np.empty(t)
     s2[0] = 0.01
     hi = t * [False]

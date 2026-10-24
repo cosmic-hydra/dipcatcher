@@ -106,7 +106,7 @@ def sarsa(
     )
 
 
-def bench_td_learning(seed: int = 20261231) -> dict[str, float]:
+def bench_td_learning(seed: int = 20261231, *, episodes: int = 6000) -> dict[str, float]:
     from quant_fund.models.mdp_solvers import policy_eval, value_iteration
 
     rng = np.random.default_rng(seed)
@@ -123,9 +123,9 @@ def bench_td_learning(seed: int = 20261231) -> dict[str, float]:
     r[n_s - 1, :] = 1.5
     gamma = 0.95
     v_star, pi_star = value_iteration(p, r, gamma)
-    q_ql = q_learning(p, r, gamma, episodes=6000, alpha0=0.5, eps0=0.2, seed=seed + 1)
-    q_sa = sarsa(p, r, gamma, episodes=6000, alpha0=0.5, eps0=0.2, seed=seed + 2)
-    v_td = td0_eval(p, r, pi_star, gamma, episodes=6000, alpha0=0.5, seed=seed + 3)
+    q_ql = q_learning(p, r, gamma, episodes=episodes, alpha0=0.5, eps0=0.2, seed=seed + 1)
+    q_sa = sarsa(p, r, gamma, episodes=episodes, alpha0=0.5, eps0=0.2, seed=seed + 2)
+    v_td = td0_eval(p, r, pi_star, gamma, episodes=episodes, alpha0=0.5, seed=seed + 3)
     v_pi = policy_eval(p, r, pi_star, gamma)
     agree_ql = np.mean(q_ql.argmax(1) == pi_star.argmax(1))
     agree_sa = np.mean(q_sa.argmax(1) == pi_star.argmax(1))

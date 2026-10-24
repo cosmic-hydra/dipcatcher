@@ -74,11 +74,15 @@ def _ucb1_regret(probs: FloatArray, steps: int, rng: np.random.Generator) -> flo
     return float(regret)
 
 
-def bench_kl_bandits(seed: int | None = None) -> dict[str, float]:
+def bench_kl_bandits(
+    seed: int | None = None,
+    *,
+    steps: int = 2000,
+    runs: int = 8,
+) -> dict[str, float]:
     rng = np.random.default_rng(seed if seed is not None else 20261231)
     k = 10
     probs = np.array([0.72] + list(rng.uniform(0.2, 0.55, k - 1)))
-    steps, runs = 2000, 8
     kl = float(np.mean([kl_ucb(probs, steps, rng) for _ in range(runs)]))
     u = float(np.mean([_ucb1_regret(probs, steps, rng) for _ in range(runs)]))
     return {

@@ -203,6 +203,7 @@ def test_committed_ledger_branch_scores_when_default_db_is_absent(tmp_path: Path
     proc = subprocess.run(
         [
             "make",
+            "SHELL=bash",
             "reality-gate",
             "PROOFCORE_DB=data/metadata/proofcore.duckdb",
             f"COMMITTED_TRIAL_LEDGER={ledger}",

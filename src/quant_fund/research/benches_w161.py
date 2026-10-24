@@ -85,7 +85,7 @@ def bench_pino_residual_family() -> dict[str, float]:
 
 def bench_gno_lite_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("gno_lite", bench_gno_lite(seed=_SEED + 958)))
+        return _floats(_finite_blob("gno_lite", bench_gno_lite(seed=_SEED + 958, iters=40)))
     except ImportError:
         raise
     except _BENCH_EXC as exc:

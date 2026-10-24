@@ -61,6 +61,47 @@ def _corpus_glob(root: Path, corpus_dir: str) -> str:
     raise KeyError(corpus_dir)
 
 
+def _git_visible_relpaths(root: Path) -> set[str] | None:
+    """Tracked paths, plus untracked paths git does not ignore.
+
+    ``None`` when ``root`` is not the worktree top (synthetic trees, or git
+    missing): export then copies every on-disk member. Tracked files stay
+    visible even when a later ignore rule would hide them — ``git ls-files
+    -c`` lists the index — so committed evidence under an ignore rule still
+    exports. Untracked ignored scratch (runtime manifests, regenerated
+    reports) does not: it is not corpus content, and folding it into the
+    bundle makes ``require_stamped`` corpora fail ``unstamped_member``.
+    """
+    try:
+        top = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+        return None
+    if Path(top).resolve() != root.resolve():
+        return None
+    try:
+        listed = subprocess.run(
+            ["git", "ls-files", "-z", "-c", "-o", "--exclude-standard"],
+            cwd=root,
+            capture_output=True,
+            check=True,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
+        return None
+    return {entry.decode("utf-8", "surrogateescape") for entry in listed.stdout.split(b"\0") if entry}
+
+
+def _exportable(visible: set[str] | None, corpus_dir: str, rel: str) -> bool:
+    if visible is None:
+        return True
+    return f"{corpus_dir}/{rel}" in visible
+
+
 def _git_blob_sha1(path: Path) -> str:
     """The git blob object id for ``path``'s bytes — ``sha1("blob <n>\\0" + data)``.
 
@@ -73,16 +114,55 @@ def _git_blob_sha1(path: Path) -> str:
     return hashlib.sha1(b"blob %d\0" % len(data) + data, usedforsecurity=False).hexdigest()
 
 
+def _copy_corpus(
+    root: Path,
+    out: Path,
+    corpus_dir: str,
+    visible: set[str] | None,
+) -> dict[str, Any]:
+    """Copy one evidence corpus. Missing dir fails closed; ignored scratch stays out."""
+    src = root / corpus_dir
+    if not src.is_dir():
+        raise FileNotFoundError(f"evidence corpus missing from tree: {corpus_dir}")
+    pattern = _corpus_glob(root, corpus_dir)
+    members = member_digests(src, pattern=pattern)
+    copied = 0
+    git_members: dict[str, str] = {}
+    for rel in members:
+        if not _exportable(visible, corpus_dir, rel):
+            continue
+        src_file = src / rel
+        dst_file = out / corpus_dir / rel
+        dst_file.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(src_file, dst_file)
+        git_members[rel] = _git_blob_sha1(src_file)
+        copied += 1
+    # Epoch receipts are exempt bookkeeping under some globs (``*.md`` /
+    # ``*.yml`` don't match ``corpus_epoch_*.json``). Copy the visible ones:
+    # without the chain records the heads pin is unverifiable.
+    for receipt in sorted(src.glob("corpus_epoch_*.json")):
+        if receipt.name in members or not _exportable(visible, corpus_dir, receipt.name):
+            continue
+        dst_file = out / corpus_dir / receipt.name
+        dst_file.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(receipt, dst_file)
+    return {"glob": pattern, "members": copied, "git_members": git_members}
+
+
 def export_evidence_bundle(
     root: Path | str = ".", out_dir: Path | str = "evidence_bundle"
 ) -> dict[str, Any]:
     """Write the evidence bundle under ``out_dir``; returns the manifest.
 
-    Copies the exact member set of each evidence corpus — the exported tree
-    re-derives the pinned epoch heads byte-for-byte or it was wrong to call
-    itself a bundle. Fails closed: refuses to overwrite a non-empty dir,
-    and a missing corpus dir is an error (export is a full-tree operation;
-    there is no partial bundle).
+    Copies the git-visible member set of each evidence corpus — tracked
+    files, including ones an ignore rule would hide, plus untracked files
+    that are not ignored. Untracked ignored scratch is left behind so a
+    dirty worktree does not fail ``require_stamped`` on runtime output.
+    The exported tree re-derives the pinned epoch heads byte-for-byte or
+    it was wrong to call itself a bundle. Fails closed: refuses to
+    overwrite a non-empty dir, and a missing corpus dir is an error
+    (export is a full-tree operation; there is no partial bundle). When
+    ``root`` is not its own git worktree, every on-disk member is copied.
     """
     root = Path(root)
     out = Path(out_dir)
@@ -90,36 +170,11 @@ def export_evidence_bundle(
     if any(out.iterdir()):
         raise ValueError(f"export target not empty: {out}")
 
-    corpora: dict[str, dict[str, Any]] = {}
-    for corpus_dir in sorted(EVIDENCE_CORPORA):
-        src = root / corpus_dir
-        if not src.is_dir():
-            raise FileNotFoundError(f"evidence corpus missing from tree: {corpus_dir}")
-        pattern = _corpus_glob(root, corpus_dir)
-        members = member_digests(src, pattern=pattern)
-        copied = 0
-        git_members: dict[str, str] = {}
-        for rel in members:
-            src_file = src / rel
-            dst_file = out / corpus_dir / rel
-            dst_file.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(src_file, dst_file)
-            git_members[rel] = _git_blob_sha1(src_file)
-            copied += 1
-        # The corpus's own epoch receipts are exempt bookkeeping under some
-        # globs (e.g. ``*.md`` / ``*.yml`` don't match ``corpus_epoch_*.json``)
-        # — copy them anyway: without the chain records the heads pin is
-        # unverifiable and the epoch gate reports ``no_epoch_receipts``.
-        for receipt in sorted(src.glob("corpus_epoch_*.json")):
-            if receipt.name not in members:
-                dst_file = out / corpus_dir / receipt.name
-                dst_file.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(receipt, dst_file)
-        corpora[corpus_dir] = {
-            "glob": pattern,
-            "members": copied,
-            "git_members": git_members,
-        }
+    visible = _git_visible_relpaths(root)
+    corpora = {
+        corpus_dir: _copy_corpus(root, out, corpus_dir, visible)
+        for corpus_dir in sorted(EVIDENCE_CORPORA)
+    }
 
     bookkeeping: dict[str, str] = {}
     for rel in _BOOKKEEPING_FILES:

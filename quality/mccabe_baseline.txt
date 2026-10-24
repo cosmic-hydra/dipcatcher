@@ -944,7 +944,6 @@ src/quant_fund/research/evalue_contracts.py:_tail_audit_errors 11
 src/quant_fund/research/evalue_contracts.py:_winner_curse_errors 15
 src/quant_fund/research/evalue_contracts.py:evalue_family_contract_errors 22
 src/quant_fund/research/evidence_audit.py:evidence_audit_consistency_errors 15
-src/quant_fund/research/evidence_export.py:export_evidence_bundle 11
 src/quant_fund/research/expert_mixture.py:expert_mixture_consistency_errors 15
 src/quant_fund/research/expert_mixture.py:run_expert_mixture 16
 src/quant_fund/research/explainability/drift.py:attribution_drift 16

@@ -86,7 +86,7 @@ def bench_group_sequential() -> dict[str, float]:
     except ImportError:  # pragma: no cover - optional
         return {}
     try:
-        out = _core(seed=_GROUP_SEQUENTIAL_SEED)
+        out = _core(seed=_GROUP_SEQUENTIAL_SEED, n_sim=8_000)
     except (ValueError, RuntimeError, FloatingPointError, KeyError, TypeError):
         return {}
     return _isinstance_floats(out)

@@ -58,7 +58,7 @@ def bench_awac_family() -> dict[str, float]:
 
 def bench_redq_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("redq", bench_redq(seed=_SEED + 961)))
+        return _floats(_finite_blob("redq", bench_redq(seed=_SEED + 961, steps=600)))
     except ImportError:
         raise
     except _BENCH_EXC as exc:

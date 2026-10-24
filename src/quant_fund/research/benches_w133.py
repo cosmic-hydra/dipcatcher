@@ -49,7 +49,12 @@ def _floats(out: dict[str, float]) -> dict[str, float]:
 
 def bench_neural_process_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("neural_process", bench_neural_process(seed=_SEED + 786)))
+        return _floats(
+            _finite_blob(
+                "neural_process",
+                bench_neural_process(seed=_SEED + 786, n_train=160, iters=220),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -58,7 +63,11 @@ def bench_neural_process_family() -> dict[str, float]:
 
 def bench_attentive_np_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("attentive_np", bench_attentive_np(seed=_SEED + 787)))
+        return _floats(
+            _finite_blob(
+                "attentive_np", bench_attentive_np(seed=_SEED + 787, n_train=160, iters=250)
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -67,7 +76,12 @@ def bench_attentive_np_family() -> dict[str, float]:
 
 def bench_deep_kernel_gp_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("deep_kernel_gp", bench_deep_kernel_gp(seed=_SEED + 788)))
+        return _floats(
+            _finite_blob(
+                "deep_kernel_gp",
+                bench_deep_kernel_gp(seed=_SEED + 788, n_train=120, iters=180),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -76,7 +90,9 @@ def bench_deep_kernel_gp_family() -> dict[str, float]:
 
 def bench_convnp_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("convnp", bench_convnp(seed=_SEED + 789)))
+        return _floats(
+            _finite_blob("convnp", bench_convnp(seed=_SEED + 789, n_train=160, iters=220))
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

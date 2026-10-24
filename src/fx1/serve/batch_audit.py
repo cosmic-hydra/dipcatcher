@@ -493,6 +493,22 @@ def _busy_executor(app: Any, slots: int | None = None, sleep_s: float = 1.2) -> 
     time.sleep(0.05)
 
 
+def _occupy_executor(app: Any) -> threading.Event:
+    """Fill the pool until ``release`` is set.
+
+    ``_busy_executor``'s sleep is shorter than a slow create on a loaded
+    runner. A worker then drains and runs the batch the restart probe
+    needs left mid-flight. Callers cancel queued work, then set the event.
+    """
+    executor = app.state.jobs_executor
+    n = int(executor._max_workers)  # noqa: SLF001 — audit reads pool depth
+    release = threading.Event()
+    for _ in range(n):
+        executor.submit(release.wait)
+    time.sleep(0.05)
+    return release
+
+
 _VOLATILE_KEYS = frozenset({"id", "created", "created_at"})
 
 
@@ -1380,9 +1396,10 @@ def _probe_durability(workdir: Path, sink: _Sink) -> dict[str, bool]:
     # OpenAI: batch journaled validating, workers occupied, then "crash"
     sd = workdir / "state-openai"
     c1, app1 = _client(state_dir=sd)
-    _busy_executor(app1)
+    release_openai = _occupy_executor(app1)
     b = _batch_create(c1, [_line("d1", _chat_body("dur"))])
-    app1.state.jobs_executor.shutdown(wait=True, cancel_futures=True)
+    app1.state.jobs_executor.shutdown(wait=False, cancel_futures=True)
+    release_openai.set()
     c1.close()
     c2, _ = _client(state_dir=sd)
     rec = c2.get(f"/v1/batches/{b['id']}", headers=h).json()
@@ -1423,9 +1440,10 @@ def _probe_durability(workdir: Path, sink: _Sink) -> dict[str, bool]:
     # Anthropic: mid-flight batch recovers ended with restart errored rows
     sd3 = workdir / "state-abatch"
     c5, app5 = _client(state_dir=sd3)
-    _busy_executor(app5)
+    release_abatch = _occupy_executor(app5)
     ab = _abatch_create(c5, [_abatch_item("r1"), _abatch_item("r2")])
-    app5.state.jobs_executor.shutdown(wait=True, cancel_futures=True)
+    app5.state.jobs_executor.shutdown(wait=False, cancel_futures=True)
+    release_abatch.set()
     c5.close()
     c6, _ = _client(state_dir=sd3)
     rec3 = c6.get(

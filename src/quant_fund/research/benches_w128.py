@@ -49,7 +49,12 @@ def _floats(out: dict[str, float]) -> dict[str, float]:
 
 def bench_kan_forecaster_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("kan_forecaster", bench_kan_forecaster(seed=_SEED + 756)))
+        return _floats(
+            _finite_blob(
+                "kan_forecaster",
+                bench_kan_forecaster(seed=_SEED + 756, n=1200, steps=280, mlp_steps=140, batch=64),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -58,7 +63,12 @@ def bench_kan_forecaster_family() -> dict[str, float]:
 
 def bench_ts_mixer_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("ts_mixer", bench_ts_mixer(seed=_SEED + 757)))
+        return _floats(
+            _finite_blob(
+                "ts_mixer",
+                bench_ts_mixer(seed=_SEED + 757, t_len=800, steps=120, mlp_steps=60, batch=64),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -76,7 +86,12 @@ def bench_informer_attn_family() -> dict[str, float]:
 
 def bench_cnn_alpha_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("cnn_alpha", bench_cnn_alpha(seed=_SEED + 759)))
+        return _floats(
+            _finite_blob(
+                "cnn_alpha",
+                bench_cnn_alpha(seed=_SEED + 759, n=800, steps=60, batch=64),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -85,7 +100,12 @@ def bench_cnn_alpha_family() -> dict[str, float]:
 
 def bench_mask_autoencoder_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("mask_autoencoder", bench_mask_autoencoder(seed=_SEED + 760)))
+        return _floats(
+            _finite_blob(
+                "mask_autoencoder",
+                bench_mask_autoencoder(seed=_SEED + 760, steps=120, probe_steps=60, batch=64),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -94,7 +114,18 @@ def bench_mask_autoencoder_family() -> dict[str, float]:
 
 def bench_graph_temporal_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("graph_temporal", bench_graph_temporal(seed=_SEED + 761)))
+        return _floats(
+            _finite_blob(
+                "graph_temporal",
+                bench_graph_temporal(
+                    seed=_SEED + 761,
+                    t_len=700,
+                    joint_steps=100,
+                    ind_steps=40,
+                    batch=64,
+                ),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

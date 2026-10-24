@@ -32,6 +32,20 @@ def _positive_int(value: object) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value > 0
 
 
+def _count_int(value: object, *, positive: bool) -> int | None:
+    """Narrow a JSON count to a non-bool ``int``.
+
+    ``Mapping.get`` is ``Any | None``. Callers that divide or add those
+    counts need a value mypy can see is an ``int``; bool is an ``int``
+    subclass and is rejected, matching ``_positive_int``.
+    """
+    if isinstance(value, bool) or not isinstance(value, int):
+        return None
+    if positive and value <= 0:
+        return None
+    return value
+
+
 def _fraction(value: object) -> bool:
     f = _as_finite_float(value)
     return f is not None and 0.0 <= f <= 1.0
@@ -433,15 +447,9 @@ def _lobster_match_errors(recon: Mapping[str, Any]) -> tuple[list[str], float | 
     """Re-derive ``match_rate`` from ``n_match / n_compared``."""
     errors: list[str] = []
     match_rate = _as_finite_float(recon.get("match_rate"))
-    n_compared = recon.get("n_compared")
-    n_match = recon.get("n_match")
-    counts_ok = (
-        match_rate is not None
-        and _positive_int(n_compared)
-        and isinstance(n_match, int)
-        and not isinstance(n_match, bool)
-    )
-    if not counts_ok:
+    n_compared = _count_int(recon.get("n_compared"), positive=True)
+    n_match = _count_int(recon.get("n_match"), positive=False)
+    if match_rate is None or n_compared is None or n_match is None:
         errors.append("reconstruction_counts_bad")
     elif match_rate != (n_match / n_compared):
         errors.append("match_rate_not_n_match_over_n_compared")
@@ -450,23 +458,18 @@ def _lobster_match_errors(recon: Mapping[str, Any]) -> tuple[list[str], float | 
 
 def _lobster_resync_errors(recon: Mapping[str, Any], n_match: object) -> list[str]:
     """Re-derive ``resync_rate`` and the match/resync partition."""
-    n_compared = recon.get("n_compared")
-    n_resync = recon.get("n_resync_events")
+    n_compared = _count_int(recon.get("n_compared"), positive=True)
+    n_resync = _count_int(recon.get("n_resync_events"), positive=False)
     resync = _as_finite_float(recon.get("resync_rate"))
-    resync_ok = (
-        isinstance(n_resync, int)
-        and not isinstance(n_resync, bool)
-        and _positive_int(n_compared)
-        and resync is not None
-        and resync == (n_resync / n_compared)
-    )
-    if not resync_ok:
-        return ["resync_rate_not_n_resync_over_n_compared"]
     if (
-        isinstance(n_match, int)
-        and not isinstance(n_match, bool)
-        and n_match + n_resync != n_compared
+        n_resync is None
+        or n_compared is None
+        or resync is None
+        or resync != (n_resync / n_compared)
     ):
+        return ["resync_rate_not_n_resync_over_n_compared"]
+    matched = _count_int(n_match, positive=False)
+    if matched is not None and matched + n_resync != n_compared:
         return ["compared_events_not_partitioned"]
     return []
 
@@ -627,10 +630,8 @@ def _calibration_size_errors(
     if alpha is None or not 0.0 < alpha <= 1.0:
         errors.append("alpha_not_in_unit_interval")
     evidence = payload.get("evidence")
-    evidence_ok = isinstance(evidence, list) and bool(evidence)
-    if evidence_ok and any(not isinstance(item, str) or not item for item in evidence):
-        evidence_ok = False
-    if not evidence_ok:
+    evidence_items = evidence if isinstance(evidence, list) else None
+    if not evidence_items or any(not isinstance(item, str) or not item for item in evidence_items):
         errors.append("evidence_bad")
     return errors
 
@@ -759,6 +760,132 @@ _MEASUREMENT_SCHEMAS = (
     "zone_churn.v1",
     "zone_ttl.v1",
     "zone_stability.v1",
+    "alert_budget.v1",
+    "anthropic_sdk_audit.v1",
+    "api_audit.v1",
+    "api_fuzz.v1",
+    "asof_audit.v1",
+    "attestation_audit.v1",
+    "attribution.v1",
+    "auth_audit.v1",
+    "backend_parity.v1",
+    "bank_audit.v1",
+    "boundary_audit.v1",
+    "byok_audit.v1",
+    "cache_audit.v1",
+    "cancel_gradient.v1",
+    "cancel_lead.v1",
+    "cap_audit.v1",
+    "capability_audit.v1",
+    "causality_scan.v1",
+    "cli_audit.v1",
+    "client_audit.v1",
+    "contamination_audit.v1",
+    "contract_probe.v1",
+    "corpus_audit.v1",
+    "decay_watch.v1",
+    "dip_audit.v1",
+    "dip_run_audit.v1",
+    "disclosure_audit.v1",
+    "dispatch_audit.v1",
+    "diversity.v1",
+    "doctor_audit.v1",
+    "drain_audit.v1",
+    "ds_audit.v1",
+    "duration_check.v1",
+    "e2e_audit.v1",
+    "em_audit.v1",
+    "engine_fuzz.v1",
+    "error_shape.v1",
+    "eval_core_audit.v1",
+    "eval_lifecycle_audit.v1",
+    "ext_bench_audit.v1",
+    "fault_audit.v1",
+    "fifo_priority.v1",
+    "forecast_core_audit.v1",
+    "forecast_data_audit.v1",
+    "forecast_infra_audit.v1",
+    "fx1_contract_audit.v1",
+    "fx1_tail_audit.v1",
+    "grad_fidelity.v1",
+    "harness_audit.v1",
+    "hmm_stability.v1",
+    "hmm_verify.v1",
+    "honesty_audit.v1",
+    "hypotheses_audit.v1",
+    "imbalance_predict.v1",
+    "inherit_audit.v1",
+    "initiative_fade.v1",
+    "intraday_exec.v1",
+    "jobs_audit.v1",
+    "journal_audit.v1",
+    "kill_audit.v1",
+    "label_horizon_map.v1",
+    "label_stability.v1",
+    "ledger_audit.v1",
+    "lineage_dag.v1",
+    "lob_invariants.v1",
+    "map_parity.v1",
+    "masking_audit.v1",
+    "meta_model.v1",
+    "middleware_audit.v1",
+    "modelcard_audit.v1",
+    "mrm_audit.v1",
+    "native_conformance.v1",
+    "oai_sdk_audit.v1",
+    "ops_audit.v1",
+    "options_audit.v1",
+    "parity_audit.v1",
+    "parity_leak_audit.v1",
+    "perf_audit.v1",
+    "pipeline_audit.v1",
+    "pipeline_flat_audit.v1",
+    "promotion_gate.v1",
+    "quality_audit.v1",
+    "queue_class.v1",
+    "queue_fate.v1",
+    "queue_jump.v1",
+    "queue_occupancy.v1",
+    "quota2_audit.v1",
+    "receipts_audit.v1",
+    "replay_audit.v1",
+    "report_audit.v1",
+    "retrieval_audit.v1",
+    "reward_audit.v1",
+    "rt_audit.v1",
+    "rubric_audit.v1",
+    "run_audit.v1",
+    "sbom_audit.v1",
+    "schema_drift.v1",
+    "schema_fingerprint.v1",
+    "sdk_audit.v1",
+    "seed_audit.v1",
+    "seed_sweep_demo.v1",
+    "serve_audit.v1",
+    "side_imbalance.v1",
+    "sim_sensitivity.v1",
+    "sources_audit.v1",
+    "spec_audit.v1",
+    "stack_invariance.v1",
+    "stack_watch.v1",
+    "sweep_bound.v1",
+    "sweep_width.v1",
+    "tail_quota.v1",
+    "tape_surgery.v1",
+    "timepart_audit.v1",
+    "trade_decomp.v1",
+    "train_infra_audit.v1",
+    "train_receipt_audit.v1",
+    "trust_step.v1",
+    "ts_reasoning_audit.v1",
+    "usage_audit.v1",
+    "validator_fuzz.v1",
+    "vine_audit.v1",
+    "vine_dominance.v1",
+    "vine_panel.v1",
+    "vs_audit.v1",
+    "warmup_spec.v1",
+    "webhook_audit.v1",
 )
 
 

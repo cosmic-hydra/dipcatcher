@@ -124,7 +124,7 @@ def bench_e_divisive() -> dict[str, float]:
     except ImportError:  # pragma: no cover - optional
         return {}
     try:
-        out = _core(seed=_E_DIVISIVE_SEED)
+        out = _core(seed=_E_DIVISIVE_SEED, n_perm=30)
     except (ValueError, RuntimeError, FloatingPointError, KeyError, TypeError):
         return {}
     return _isinstance_floats(out)

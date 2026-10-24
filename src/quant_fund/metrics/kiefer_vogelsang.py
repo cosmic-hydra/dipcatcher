@@ -84,18 +84,30 @@ def _xi_b_samples(b: float, n_grid: int, n_rep: int, seed: int = 777) -> FloatAr
     return np.asarray(w1 / np.sqrt(jb), dtype=np.float64)
 
 
-def fixedb_cv(b: float, level: float = 0.05) -> float:
+def fixedb_cv(
+    b: float,
+    level: float = 0.05,
+    *,
+    n_grid: int = 1000,
+    n_rep: int = 4000,
+) -> float:
     """Two-sided critical value of |ξ_b| at the given level."""
     if not 0 < b <= 1 or not 0 < level < 0.5:
         raise ValueError("b in (0,1], level in (0,.5) required")
-    sims = _xi_b_samples(b, n_grid=1000, n_rep=4000)
+    sims = _xi_b_samples(b, n_grid=n_grid, n_rep=n_rep)
     return float(np.quantile(np.abs(sims), 1 - level))
 
 
-def fixedb_pvalue(x: FloatArray, b: float = 0.1) -> float:
+def fixedb_pvalue(
+    x: FloatArray,
+    b: float = 0.1,
+    *,
+    n_grid: int = 1000,
+    n_rep: int = 4000,
+) -> float:
     """Two-sided p-value of the fixed-b mean test."""
     st = fixedb_t(x, b)
-    sims = _xi_b_samples(b, n_grid=1000, n_rep=4000)
+    sims = _xi_b_samples(b, n_grid=n_grid, n_rep=n_rep)
     return float(np.mean(np.abs(sims) >= abs(st["t_b"])))
 
 
@@ -122,13 +134,17 @@ def bench_kiefer_vogelsang(seed: int = 20261231 + 256) -> dict[str, float]:
     toward normal as b→0; an AR(1) series with shifted mean
     rejects at b=.1 while a zero-mean one does not.
     All ``synthetic_*``."""
-    cv_small = fixedb_cv(0.02, 0.05)
-    cv_big = fixedb_cv(0.5, 0.05)
+    # The kernel is n_grid x n_grid. The published fixture uses 1000 x 4000
+    # (the direct fixedb_cv / fixedb_pvalue tests). This sweep only needs
+    # the ordering and the rejection call, which hold on a coarser grid.
+    grid, reps = 250, 600
+    cv_small = fixedb_cv(0.02, 0.05, n_grid=grid, n_rep=reps)
+    cv_big = fixedb_cv(0.5, 0.05, n_grid=grid, n_rep=reps)
     x1 = synth_ar1_mean(mean=0.9, seed=seed)
     x0 = synth_ar1_mean(mean=0.0, seed=seed + 1)
-    p1 = fixedb_pvalue(x1, b=0.1)
-    p0 = fixedb_pvalue(x0, b=0.1)
-    p1b = fixedb_pvalue(x1, b=0.1)
+    p1 = fixedb_pvalue(x1, b=0.1, n_grid=grid, n_rep=reps)
+    p0 = fixedb_pvalue(x0, b=0.1, n_grid=grid, n_rep=reps)
+    p1b = fixedb_pvalue(x1, b=0.1, n_grid=grid, n_rep=reps)
     return {
         "synthetic_cv_small_b": cv_small,
         "synthetic_cv_big_b": cv_big,

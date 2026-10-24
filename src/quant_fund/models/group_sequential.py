@@ -212,7 +212,7 @@ def _simulate_exits(bounds: FloatArray, t: FloatArray, n_sim: int, seed: int) ->
     return exits
 
 
-def bench_group_sequential(seed: int = 488) -> dict[str, float]:
+def bench_group_sequential(seed: int = 488, *, n_sim: int = 40_000) -> dict[str, float]:
     """SYNTHETIC bench: (i) Pocock K=5 equal-info
     boundary is flat ~2.413 (published value);
     (ii) Monte-Carlo realized exit mass per look
@@ -226,8 +226,8 @@ def bench_group_sequential(seed: int = 488) -> dict[str, float]:
     pb = np.asarray(poc["bounds"])
     poc_err = float(np.abs(pb - 2.413).max())
     ob = np.asarray(obf["bounds"])
-    exits_obf = _simulate_exits(ob, t, 40000, seed)
-    exits_poc = _simulate_exits(pb, t, 40000, seed + 1)
+    exits_obf = _simulate_exits(ob, t, n_sim, seed)
+    exits_poc = _simulate_exits(pb, t, n_sim, seed + 1)
     spend_obf = np.diff(alpha_use(np.concatenate([[0.0], t]), 0.05, kind="obrien_fleming"))
     spend_poc = np.diff(alpha_use(np.concatenate([[0.0], t]), 0.05, kind="pocock"))
     err_obf = float(np.abs(exits_obf - spend_obf).max())

@@ -49,7 +49,12 @@ def _floats(out: dict[str, float]) -> dict[str, float]:
 
 def bench_itransformer_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("itransformer", bench_itransformer(seed=_SEED + 762)))
+        return _floats(
+            _finite_blob(
+                "itransformer",
+                bench_itransformer(seed=_SEED + 762, n=160, iters=280),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -58,7 +63,12 @@ def bench_itransformer_family() -> dict[str, float]:
 
 def bench_tcn_forecaster_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("tcn_forecaster", bench_tcn_forecaster(seed=_SEED + 763)))
+        return _floats(
+            _finite_blob(
+                "tcn_forecaster",
+                bench_tcn_forecaster(seed=_SEED + 763, n=160, iters=140),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -67,7 +77,12 @@ def bench_tcn_forecaster_family() -> dict[str, float]:
 
 def bench_ft_transformer_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("ft_transformer", bench_ft_transformer(seed=_SEED + 764)))
+        return _floats(
+            _finite_blob(
+                "ft_transformer",
+                bench_ft_transformer(seed=_SEED + 764, n=200, iters=360),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -76,7 +91,12 @@ def bench_ft_transformer_family() -> dict[str, float]:
 
 def bench_nbeats_deep_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("nbeats_deep", bench_nbeats_deep(seed=_SEED + 765)))
+        return _floats(
+            _finite_blob(
+                "nbeats_deep",
+                bench_nbeats_deep(seed=_SEED + 765, n=180, iters=180),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -85,7 +105,12 @@ def bench_nbeats_deep_family() -> dict[str, float]:
 
 def bench_mambats_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("mambats", bench_mambats(seed=_SEED + 766)))
+        return _floats(
+            _finite_blob(
+                "mambats",
+                bench_mambats(seed=_SEED + 766, n=160, iters=160),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -94,7 +119,12 @@ def bench_mambats_family() -> dict[str, float]:
 
 def bench_crossformer_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("crossformer", bench_crossformer(seed=_SEED + 767)))
+        return _floats(
+            _finite_blob(
+                "crossformer",
+                bench_crossformer(seed=_SEED + 767, n=160, iters=160),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

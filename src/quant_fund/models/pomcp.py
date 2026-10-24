@@ -124,7 +124,13 @@ def _episode(
     return ret
 
 
-def bench_pomcp(seed: int = 20261231) -> dict[str, float]:
+def bench_pomcp(
+    seed: int = 20261231,
+    *,
+    n_episodes: int = 12,
+    n_sims: int = 300,
+    n_particles: int = 200,
+) -> dict[str, float]:
     """SYNTHETIC: POMCP on Tiger — listens first at the uniform
     belief, and its UCT policy beats the random-action baseline by a
     wide margin (Tiger's ±100 reward scale is intentionally brutal)."""
@@ -134,11 +140,11 @@ def bench_pomcp(seed: int = 20261231) -> dict[str, float]:
     # random baseline
     rand_ret = float(np.mean([_episode(p, None, rng, 12, 0) for _ in range(30)]))
     out["synthetic_pomcp_random_return"] = rand_ret
-    agent = POMCP(p, n_particles=200, c=4.0, depth=10)
+    agent = POMCP(p, n_particles=n_particles, c=4.0, depth=10)
     rets = []
-    for _ in range(12):
+    for _ in range(n_episodes):
         agent._reset(rng)
-        rets.append(_episode(p, agent, rng, 12, 300))
+        rets.append(_episode(p, agent, rng, 12, n_sims))
     out["synthetic_pomcp_return"] = float(np.mean(rets))
     out["synthetic_pomcp_beats_random"] = float(np.mean(rets) > rand_ret + 20.0)
     agent._reset(rng)

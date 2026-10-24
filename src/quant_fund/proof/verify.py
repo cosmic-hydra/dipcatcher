@@ -165,7 +165,10 @@ def _check_sidecars(
         try:
             data = path.read_bytes()
         except OSError as exc:
-            reasons.append(f"sidecar:{kind}:unreadable:{exc.__class__.__name__}")
+            # Windows read_bytes on a directory raises PermissionError.
+            # The contract name is the POSIX error a directory read produces.
+            label = {True: "IsADirectoryError"}.get(path.is_dir(), exc.__class__.__name__)
+            reasons.append(f"sidecar:{kind}:unreadable:{label}")
             continue
         if sha256_hex_bytes(data) != expected[kind]:
             reasons.append(f"sidecar:{kind}_sha256_mismatch")
@@ -221,7 +224,8 @@ def _check_committed_sidecars(
         try:
             data = path.read_bytes()
         except OSError as exc:
-            reasons.append(f"sidecar:{kind}:unreadable:{exc.__class__.__name__}")
+            label = {True: "IsADirectoryError"}.get(path.is_dir(), exc.__class__.__name__)
+            reasons.append(f"sidecar:{kind}:unreadable:{label}")
             continue
         if sha256_hex_bytes(data) != expected:
             reasons.append(f"sidecar:{kind}_sha256_mismatch")

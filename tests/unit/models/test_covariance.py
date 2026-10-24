@@ -314,6 +314,27 @@ def test_factor_covariance_rejects_invalid_inputs() -> None:
         factor_cov(np.eye(2), np.array([[1.0, 2.0], [2.0, 1.0]]), np.ones(2))
 
 
+def _stationary_garch_panel(n: int, k: int, seed: int) -> np.ndarray:
+    """Decimal returns from independent stationary GARCH(1,1) columns.
+
+    White noise leaves arch's stage-1 likelihood flat, so the same seed
+    converges interior on one BLAS and to persistence >= 1 on another.
+    The estimator then fail-closes with ``nonstationary_persistence``,
+    which is the right call for a boundary fit and the wrong fixture for
+    "DCC of a usable series is finite". Persistence here is 0.58.
+    """
+    rng = np.random.default_rng(seed)
+    omega, alpha, beta = 1e-6, 0.08, 0.50
+    out = np.empty((n, k))
+    for j in range(k):
+        sig2 = omega / (1.0 - alpha - beta)
+        for t in range(n):
+            shock = rng.normal()
+            out[t, j] = np.sqrt(sig2) * shock
+            sig2 = omega + alpha * shock**2 * sig2 + beta * sig2
+    return out
+
+
 def test_ewma_rejects_invalid_lambda_and_dcc_is_finite() -> None:
     with np.testing.assert_raises(ValueError):
         ewma_variance_1d(np.ones(3), lam=1.1)
@@ -322,12 +343,10 @@ def test_ewma_rejects_invalid_lambda_and_dcc_is_finite() -> None:
 
     if sys.platform == "darwin":
         # arch 8.0.0 DCC stage-1 GARCH optimizer hits a beta=1.0 boundary on
-        # macOS arm64 BLAS wheels for the seed-11 noise -> fail-closed
-        # `nonstationary_persistence`. macOS-only; identical code passes on
-        # Linux and Windows. Mirrored disclosure in PROOF.md.
+        # macOS arm64 BLAS wheels -> fail-closed `nonstationary_persistence`.
+        # Mirrored disclosure in PROOF.md.
         pytest.xfail("arch 8.0.0 DCC boundary on macOS arm64 (fail-closed path)")
-    rng = np.random.default_rng(11)
-    sigma, params = dcc_gaussian(rng.normal(size=(240, 4)) * 0.01)
+    sigma, params = dcc_gaussian(_stationary_garch_panel(400, 4, seed=11))
     assert np.isfinite(sigma).all()
     assert min_eigenvalue(sigma) >= -1e-8
     assert 0.0 <= float(params["a"]) + float(params["b"]) < 0.999

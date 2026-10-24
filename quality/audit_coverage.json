@@ -5326,7 +5326,7 @@
     },
     "research": {
       "doc": "docs/AUDIT_LEDGER.md",
-      "n_modules": 1861,
+      "n_modules": 1862,
       "reason": "Current module census; the expanded directory has not completed a line-level audit. Existing audit documents cover earlier reviewed scope only.",
       "status": "partial"
     },
@@ -5548,7 +5548,7 @@
       "status": "pending"
     },
     "live": {
-      "n_modules": 11,
+      "n_modules": 12,
       "reason": "Live desk and arming. Census only; not yet line-audited.",
       "status": "pending"
     },

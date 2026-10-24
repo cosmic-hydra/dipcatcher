@@ -50,7 +50,10 @@ def _floats(out: dict[str, float]) -> dict[str, float]:
 def bench_decision_transformer_family() -> dict[str, float]:
     try:
         return _floats(
-            _finite_blob("decision_transformer", bench_decision_transformer(seed=_SEED + 768))
+            _finite_blob(
+                "decision_transformer",
+                bench_decision_transformer(seed=_SEED + 768, n_ep=60, iters=200),
+            )
         )
     except ImportError:
         raise
@@ -60,7 +63,9 @@ def bench_decision_transformer_family() -> dict[str, float]:
 
 def bench_cql_agent_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("cql_agent", bench_cql_agent(seed=_SEED + 769)))
+        return _floats(
+            _finite_blob("cql_agent", bench_cql_agent(seed=_SEED + 769, n_ep=60, iters=200))
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -69,7 +74,9 @@ def bench_cql_agent_family() -> dict[str, float]:
 
 def bench_iql_agent_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("iql_agent", bench_iql_agent(seed=_SEED + 770)))
+        return _floats(
+            _finite_blob("iql_agent", bench_iql_agent(seed=_SEED + 770, n_ep=60, iters=200))
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -79,7 +86,10 @@ def bench_iql_agent_family() -> dict[str, float]:
 def bench_trajectory_transformer_family() -> dict[str, float]:
     try:
         return _floats(
-            _finite_blob("trajectory_transformer", bench_trajectory_transformer(seed=_SEED + 771))
+            _finite_blob(
+                "trajectory_transformer",
+                bench_trajectory_transformer(seed=_SEED + 771, n_ep=60, iters=150),
+            )
         )
     except ImportError:
         raise
@@ -89,7 +99,9 @@ def bench_trajectory_transformer_family() -> dict[str, float]:
 
 def bench_sac_agent_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("sac_agent", bench_sac_agent(seed=_SEED + 772)))
+        return _floats(
+            _finite_blob("sac_agent", bench_sac_agent(seed=_SEED + 772, steps=800, batch=64))
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -98,7 +110,12 @@ def bench_sac_agent_family() -> dict[str, float]:
 
 def bench_gail_imitation_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("gail_imitation", bench_gail_imitation(seed=_SEED + 773)))
+        return _floats(
+            _finite_blob(
+                "gail_imitation",
+                bench_gail_imitation(seed=_SEED + 773, n_ep=40, iters=200),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

@@ -17,7 +17,7 @@ import tomllib
 from collections.abc import Mapping
 from dataclasses import asdict
 from datetime import datetime
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 
 from quant_fund.metrics import inference, snooping
@@ -737,6 +737,15 @@ def verify_phase1_run(
     }
 
 
+def _path_is_absolute(value: str) -> bool:
+    """True for a POSIX or Windows absolute path, on either host.
+
+    ``Path`` follows the host. ``/abs/run`` is relative on Windows, so an
+    index that names it would be accepted there and rejected on Linux.
+    """
+    return PurePosixPath(value).is_absolute() or PureWindowsPath(value).is_absolute()
+
+
 def verify_phase1_index(path: Path) -> dict[str, Any]:
     """Verify an index binding run receipts to source configs and code provenance."""
     path = Path(path)
@@ -800,10 +809,10 @@ def verify_phase1_index(path: Path) -> dict[str, Any]:
         if kind not in {"real_benchmark", "net_tournament"}:
             errors.append(f"{label}: unknown run kind")
             continue
-        if not isinstance(run_path, str) or not run_path or Path(run_path).is_absolute():
+        if not isinstance(run_path, str) or not run_path or _path_is_absolute(run_path):
             errors.append(f"{label}: run path must be relative to index")
             continue
-        if not isinstance(config_path, str) or not config_path or Path(config_path).is_absolute():
+        if not isinstance(config_path, str) or not config_path or _path_is_absolute(config_path):
             errors.append(f"{label}: config path must be relative to index")
             continue
         identity = (kind, run_path)

@@ -52,11 +52,19 @@ def synth_graph_panel(n: int, rng: np.random.Generator) -> tuple[FloatArray, Flo
     return x, adj
 
 
-def bench_graph_temporal(seed: int = 107) -> dict[str, float]:
+def bench_graph_temporal(
+    seed: int = 107,
+    *,
+    t_len: int = 3000,
+    win: int = 20,
+    joint_steps: int = 600,
+    ind_steps: int = 200,
+    batch: int = 256,
+) -> dict[str, float]:
     rng = np.random.default_rng(seed)
     torch = _torch()
     torch.manual_seed(seed)
-    T, win = 3000, 20
+    T = t_len
     x, adj = synth_graph_panel(T, rng)
     tr_t = int(T * 0.85)
     adj_t = torch.tensor(adj, dtype=torch.float32)
@@ -77,8 +85,8 @@ def bench_graph_temporal(seed: int = 107) -> dict[str, float]:
         return head(hn[-1])
 
     opt = torch.optim.Adam(mods.parameters(), lr=5e-3)
-    for _ in range(600):
-        idx = torch.randint(0, tr, (256,))
+    for _ in range(joint_steps):
+        idx = torch.randint(0, tr, (batch,))
         loss = torch.mean((joint(xs[idx]) - ys[idx]) ** 2)
         opt.zero_grad()
         loss.backward()
@@ -95,8 +103,8 @@ def bench_graph_temporal(seed: int = 107) -> dict[str, float]:
         opt_i = torch.optim.Adam(mods_i.parameters(), lr=3e-3)
         xc = xs[:, :, c : c + 1]
         yc = ys[:, c]
-        for _ in range(200):
-            idx = torch.randint(0, tr, (256,))
+        for _ in range(ind_steps):
+            idx = torch.randint(0, tr, (min(batch, tr),))
             _, hn = gru_i(xc[idx])
             loss = torch.mean((head_i(hn[-1]).squeeze(-1) - yc[idx]) ** 2)
             opt_i.zero_grad()

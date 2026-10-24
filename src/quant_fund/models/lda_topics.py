@@ -56,7 +56,7 @@ def lda_gibbs(
     return {"phi": phi, "theta": theta, "z": z, "doc_of": doc_of}
 
 
-def bench_lda_topics(seed: int = 556) -> dict[str, float]:
+def bench_lda_topics(seed: int = 556, *, n_docs: int = 80, it: int = 250) -> dict[str, float]:
     """SYNTHETIC: docs drawn from two planted topic profiles —
     the learned φ must recover both (up to permutation)."""
     rng = np.random.default_rng(seed)
@@ -68,15 +68,15 @@ def bench_lda_topics(seed: int = 556) -> dict[str, float]:
     phi_true[1, 10:20] = 0.095
     phi_true /= phi_true.sum(axis=1, keepdims=True)
     docs: list[IntArray] = []
-    for i in range(80):
-        theta = np.array([0.9, 0.1]) if i < 40 else np.array([0.1, 0.9])
+    for i in range(n_docs):
+        theta = np.array([0.9, 0.1]) if i < n_docs // 2 else np.array([0.1, 0.9])
         theta += rng.normal(0, 0.05, 2)
         theta = np.clip(theta, 0.01, 1)
         theta /= theta.sum()
         zs = rng.choice(2, 40, p=theta)
         doc = np.asarray([rng.choice(vocab, p=phi_true[k]) for k in zs], dtype=np.int64)
         docs.append(doc)
-    mdl = lda_gibbs(docs, n_topics=2, vocab=vocab, it=250, seed=seed)
+    mdl = lda_gibbs(docs, n_topics=2, vocab=vocab, it=it, seed=seed)
     phi = np.asarray(mdl["phi"])
 
     # match topics by L1 distance to planted profiles

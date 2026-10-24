@@ -130,7 +130,9 @@ def bench_kernel_changepoint() -> dict[str, float]:
     except ImportError:
         return {}
     try:
-        return _finite_blob(_isinstance_floats(_core(seed=_KERNEL_CP_SEED)))
+        return _finite_blob(
+            _isinstance_floats(_core(seed=_KERNEL_CP_SEED, trials=4, n_perm=24, reps=3))
+        )
     except (ValueError, RuntimeError, FloatingPointError, KeyError, TypeError):
         return {}
 

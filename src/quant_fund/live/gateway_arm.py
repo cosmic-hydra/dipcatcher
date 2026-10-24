@@ -17,6 +17,7 @@ from typing import Any
 
 from quant_fund.live.config import Venue
 from quant_fund.live.errors import LiveGateError
+from quant_fund.live.permissions import restrict_to_owner
 
 LIVE_CAPITAL_PHRASE = "I AUTHORIZE LIVE CAPITAL"
 _ARM_SCHEMA = "live_arm.v1"
@@ -34,9 +35,9 @@ def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
         os.fsync(fd)
     finally:
         os.close(fd)
-    os.chmod(tmp, 0o600)
+    restrict_to_owner(tmp)
     os.replace(tmp, path)
-    os.chmod(path, 0o600)
+    restrict_to_owner(path)
 
 
 def _read_object(path: Path) -> dict[str, Any]:
@@ -65,7 +66,7 @@ def load_hmac_key(path: Path) -> bytes:
         raise
     else:
         os.close(fd)
-    os.chmod(path, 0o600)
+    restrict_to_owner(path)
     return data
 
 

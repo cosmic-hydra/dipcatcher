@@ -10,7 +10,7 @@
     ".pre-commit-config.yaml": "f03dc1edab77b369931fe7d73583c8b3232cbe58c39250fb5596084b2a43cb98",
     ".python-version": "7b55f8e67b5623c4bef3fa691288da9437d79d3aba156de48d481db32ac7d16d",
     ".test_durations": "548b3342f687099b4fe5bcacd6c7f6c392321caa4f5c9992dd6aab7c2d2b5e3f",
-    "AGENTS.md": "d46007332073c485eaeb679e33b42cbc200774ce834fdb0141bfa70183b75f60",
+    "AGENTS.md": "9a06e165c318aa6b090f55bf9d5ba6944b053b7fa9d5dbdeb09396ad53d8ba1f",
     "APPLY.md": "487dd6886bfa9521f00de3a27646818a4a8d53b7e4db1c865deaf4235c2acf45",
     "CHANGELOG.md": "b7c9fb852521e8739499a151a33c9123fd7718bc075f3a4eb68beb7632b3b538",
     "CITATION.cff": "945d8833cb41d3b400a98dbd7ba3de936ffa651db081ed7430c91d0c941d0cea",
@@ -23,7 +23,7 @@
     "INFLIGHT": "40ae7f281e79bcf2c174ae846664fd7efbce623ef9f4e62b9ea30d32f080b86c",
     "LICENSE": "31fde330e3de31bc54d70b69f0179ed9ea5bbe87f45c61e29f24c68c8329cba6",
     "MATH_SPEC.md": "9f32d0899fda13a84a582311933c0e62b20ccc9bdd5b2d73c02f5a41575e7a06",
-    "Makefile": "f7aff7aec6fe2e72d7ae78378268848e5ca4cfef7322264c0d2851d658887b9a",
+    "Makefile": "55e6591ee573092eb3da1268193637da0d4129e7c9214ddf978dfe7c8bd455fa",
     "README.md": "05eb7f9fd83b4383610b17a113ac63f99eee030bc9e8fe1dfc2fc1aead04b480",
     "RESEARCH_REFERENCES.md": "3d29ff2fddf292fc9eb0c62788ed58abf897b9483395356502eb94b58e729593",
     "SECURITY.md": "42ad8a773c98dfedc5580a0ae782793e30c955ffd267f716485518ba0e885798",
@@ -65,7 +65,7 @@
     "src/quant_fund/research/receipt_graph.py": "439168e5f42ee9f9186c01e8132c0e40d48d1e6d484a16b009eb9326e8f1556b",
     "src/quant_fund/research/receipt_lattice.py": "84ecc947900be5afd691739650bffda6b8bedb238e5b95db1cbc3008e2f6a3e4",
     "src/quant_fund/research/receipt_tombstone.py": "6d23cad97393c3f84e0bfbee7eb1e51e6eefcd874d476635ceaf3104fcb025af",
-    "src/quant_fund/research/receipt_v2.py": "e4b333c49b214bfc291796ff7ad60619c07a99752e5aefde4b7630b6d668edfd",
+    "src/quant_fund/research/receipt_v2.py": "3bce791e23ca92d522c3e3ce020136cfadcb9328dff320e85c82106a2d9d1522",
     "src/quant_fund/research/release_attestation.py": "7ebc40a70e7a26f81333fe57e2bc5662db4b98420062edaf64239403e412ab78",
     "src/quant_fund/research/repo_integrity.py": "2aaaa86a5bdeee853d1f850b716838965ee593378cbfbfb8740c4fe32c149efc",
     "src/quant_fund/research/selective_inference.py": "3842f8f97db1aec28e2eac25b1839998285e8398e33b0fd40ce7b16e0b10f56a",
@@ -74,8 +74,8 @@
     "src/quant_fund/research/witness_scan.py": "a664fd4b49c94539d725379a2fe58b0d08fcbcfd9284f331123ec70b6394ebea",
     "src/quant_fund/utils/atomicio.py": "26b3c04a3c55cf7777989edb91dea774656ea97af86699bc214e7de7c7823ca1",
     "src/quant_fund/utils/hashing.py": "99d4720d78c3079f189c0f367b55e1631ac4ccf25f4c76e5682aaa241b6f5da0",
-    "tests/conftest.py": "c871e86ceca28c1ee645fa7f944d3937920a4cccac6ff6b1a4f8bc884ca25fac",
-    "uv.lock": "0133c53f764830ec4318a75e3acfbca16cf1b14cda7e57245063e23da59aadf7"
+    "tests/conftest.py": "4d131820818878ef5f43992c0198dae2cd94e09d87b308791ff5310d974c7543",
+    "uv.lock": "f4b4f747b433f61730ec4d4cef03ce219a7264d9a8f9e030a8d286f5d76e8627"
   },
   "schema": "crown_jewels.v1"
 }

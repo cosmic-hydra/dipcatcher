@@ -76,11 +76,18 @@ def _rasterize(x: FloatArray, rows: int = 24) -> FloatArray:
     return out
 
 
-def bench_cnn_alpha(seed: int = 101) -> dict[str, float]:
+def bench_cnn_alpha(
+    seed: int = 101,
+    *,
+    n: int = 3000,
+    win: int = 24,
+    steps: int = 300,
+    batch: int = 256,
+) -> dict[str, float]:
     rng = np.random.default_rng(seed)
     torch = _torch()
     torch.manual_seed(seed)
-    n, win, tr = 3000, 24, 2400
+    tr = int(n * 0.8)
     x, y = synth_charts(n, win, rng)
     imgs = torch.tensor(_rasterize(x), dtype=torch.float32)
     ys = torch.tensor(y, dtype=torch.float32)
@@ -97,8 +104,8 @@ def bench_cnn_alpha(seed: int = 101) -> dict[str, float]:
     )
     opt = torch.optim.Adam(net.parameters(), lr=1e-3)
     bce = torch.nn.BCEWithLogitsLoss()
-    for _ in range(300):
-        idx = torch.randint(0, tr, (256,))
+    for _ in range(steps):
+        idx = torch.randint(0, tr, (batch,))
         loss = bce(net(imgs[idx]).squeeze(-1), ys[idx])
         opt.zero_grad()
         loss.backward()

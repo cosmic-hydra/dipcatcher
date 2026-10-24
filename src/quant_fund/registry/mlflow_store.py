@@ -18,10 +18,23 @@ ALIASES = ("candidate", "champion", "shadow", "retired")
 
 def configure_tracking(uri: str | None = None) -> None:
     import os
+    import tempfile
 
     os.environ.setdefault("MLFLOW_DISABLE_AGENT_HINT", "1")
-    # MLflow 3.x file store is in maintenance; default to local sqlite.
-    mlflow.set_tracking_uri(uri or "sqlite:///mlflow.db")
+    if uri is None:
+        uri = os.environ.get("MLFLOW_TRACKING_URI")
+    if not uri:
+        # MLflow 3.17's tracking store calls _initialize_tables without the
+        # file lock _safe_initialize_tables uses. pytest-xdist workers that
+        # share sqlite:///mlflow.db race on CREATE TABLE evaluation_datasets.
+        worker = os.environ.get("PYTEST_XDIST_WORKER")
+        if worker:
+            db_path = Path(tempfile.gettempdir()) / f"dipcatcher-mlflow-{worker}.db"
+            uri = "sqlite:///" + db_path.resolve().as_posix()
+        else:
+            # MLflow 3.x file store is in maintenance; default to local sqlite.
+            uri = "sqlite:///mlflow.db"
+    mlflow.set_tracking_uri(uri)
 
 
 def log_run(

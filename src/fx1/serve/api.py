@@ -3064,14 +3064,11 @@ def _mount_job_routes(
         job_id: str,
         timeout_s: float = Query(default=600.0, ge=1.0, le=3600.0),
     ) -> StreamingResponse:
-        """SSE job-status stream: the job record arrives as an
-        ``event: job`` frame on every change until a terminal status,
-        then the stream closes. ``: keepalive`` comment frames fire every
-        ``sse_keepalive_s`` while the job is quiet; ``timeout_s`` bounds
-        the stream — reconnect (and resume from the last frame) to keep
-        watching. Same read path as ``GET /harness/jobs/{job_id}`` — a
-        snapshot before the stream opens, so an unknown id 404s rather
-        than hanging."""
+        """SSE job-status stream: ``event: job`` frames until a terminal status.
+
+        ``: keepalive`` every ``sse_keepalive_s``. ``timeout_s`` bounds the stream.
+        Same path as ``GET /harness/jobs/{job_id}`` — an unknown id 404s.
+        """
         job = job_store.get(job_id)
         if job is None:
             raise ApiError(404, f"unknown job_id {job_id!r}")
@@ -3092,6 +3089,9 @@ def _mount_job_routes(
                     yield f"event: job\ndata: {snap}\n\n"
                 now = time.monotonic()
                 if cur.status in _TERMINAL_JOB_STATUS or now >= deadline:
+                    # Keep the terminal event off the tail yield ASGI may drop.
+                    # The comment is not a job snapshot; probes accept ':' frames.
+                    yield ": end\n\n"
                     return
                 if now >= next_keep:
                     yield ": keepalive\n\n"

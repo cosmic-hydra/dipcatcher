@@ -61,7 +61,7 @@ def test_receipt_verifies() -> None:
     bench = idem_audit_bench()
     res = verify_receipt_payload(bench)
     assert res["valid"], res
-    assert bench["claim"]["ok"] is True
+    assert bench["claim"]["ok"] is True, bench["claim"]["defects"]
     assert bench["claim"]["defects"] == []
 
 

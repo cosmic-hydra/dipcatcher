@@ -41,6 +41,22 @@ FloatArray = NDArray[np.float64]
 Objective = Callable[[FloatArray], float]
 
 
+def _positive_pivot_basis(basis: FloatArray) -> FloatArray:
+    """Flip each eigenvector so its largest component is positive.
+
+    ``np.linalg.eigh`` may flip column signs across BLAS builds. CMA maps
+    the same Gaussian draw through that basis, so a sign flip forks the
+    path on Rastrigin. The column span is unchanged.
+    """
+    out = np.array(basis, dtype=np.float64, copy=True)
+    for index in range(out.shape[1]):
+        column = out[:, index]
+        pivot = int(np.argmax(np.abs(column)))
+        if column[pivot] < 0.0:
+            out[:, index] = -column
+    return out
+
+
 def _validate_inputs(f: Objective, x0: FloatArray, sigma0: float) -> FloatArray:
     xa = np.asarray(x0, dtype=np.float64).ravel()
     if xa.size < 2 or not np.isfinite(xa).all():
@@ -141,7 +157,7 @@ def cma_es(
         dd, bb = np.linalg.eigh(c)
         dd = np.maximum(dd, 1e-20)
         eig_d = np.sqrt(dd)
-        eig_b = bb
+        eig_b = _positive_pivot_basis(bb)
         inv_sqrt_c = bb @ np.diag(1.0 / eig_d) @ bb.T
         # convergence: tiny sigma or no f improvement
         if sigma * eig_d.max() < tolx or (converged > 30 and sigma < 1e-8):

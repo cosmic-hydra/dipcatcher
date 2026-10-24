@@ -78,19 +78,84 @@ def git_worktree_sha256() -> str:
         return "UNKNOWN"
 
 
+_REVISION_CACHE: dict[str, str] = {}
+
+
+def _is_sha(value: str) -> bool:
+    return len(value) == 40 and all(char in "0123456789abcdef" for char in value)
+
+
+def _git_dir(start: Path) -> Path | None:
+    """Resolve ``.git`` from ``start`` upward, including linked worktrees."""
+    for parent in (start, *start.parents):
+        link = parent / ".git"
+        if link.is_dir():
+            return link
+        if not link.is_file():
+            continue
+        text = link.read_text(encoding="utf-8").strip()
+        if not text.startswith("gitdir:"):
+            return None
+        raw = text.split(":", 1)[1].strip()
+        path = Path(raw)
+        if not path.is_absolute():
+            path = (parent / path).resolve()
+        return path if path.is_dir() else None
+    return None
+
+
+def _sha_from_git_dir(git_dir: Path) -> str | None:
+    """Read HEAD without ``git rev-parse``, which waits on the index lock."""
+    head = (git_dir / "HEAD").read_text(encoding="utf-8").strip()
+    if _is_sha(head):
+        return head
+    if not head.startswith("ref: "):
+        return None
+    ref = head[5:].strip()
+    ref_file = git_dir / ref
+    if ref_file.is_file():
+        sha = ref_file.read_text(encoding="utf-8").strip()
+        if _is_sha(sha):
+            return sha
+    packed = git_dir / "packed-refs"
+    if not packed.is_file():
+        return None
+    for line in packed.read_text(encoding="utf-8").splitlines():
+        if not line or line.startswith("#") or line.startswith("^"):
+            continue
+        sha, _, name = line.partition(" ")
+        if name == ref and _is_sha(sha):
+            return sha
+    return None
+
+
 def git_revision() -> str:
     """Return the checked-out revision, or an explicit unknown marker.
 
     A loaded runner can miss a short ``git rev-parse`` budget while the
-    index lock is held. Retry so two seals of the same tree do not disagree
-    by one call landing on ``UNKNOWN``.
+    index lock is held. Read ``.git/HEAD`` first, then retry the subprocess,
+    and remember a successful sha for this git dir so two seals of the same
+    tree do not disagree by one call landing on ``UNKNOWN``.
     """
+    git_dir = _git_dir(Path.cwd())
+    cache_key = os.fspath(git_dir) if git_dir is not None else ""
+    cached = _REVISION_CACHE.get(cache_key)
+    if cached:
+        return cached
+    if git_dir is not None:
+        try:
+            sha = _sha_from_git_dir(git_dir)
+        except OSError:
+            sha = None
+        if sha:
+            _REVISION_CACHE[cache_key] = sha
+            return sha
     git = shutil.which("git")
     if git is None:
         return "UNKNOWN"
     for _attempt in range(3):
         try:
-            return subprocess.run(
+            sha = subprocess.run(
                 [git, "rev-parse", "HEAD"],
                 check=True,
                 capture_output=True,
@@ -99,6 +164,9 @@ def git_revision() -> str:
             ).stdout.strip()
         except (OSError, subprocess.SubprocessError):
             continue
+        if _is_sha(sha):
+            _REVISION_CACHE[cache_key] = sha
+            return sha
     return "UNKNOWN"
 
 
