@@ -54,9 +54,6 @@ _VS_SEED = _SEED + 80
 # --- hidden_markov_equilibrium: belief-Markovian pricing bench ---------------
 _HME_SEED = _SEED + 81
 
-# --- arl_mm: adversarial-RL market making bench (torch-gated) ----------------
-_ARL_SEED = _SEED + 83
-
 # --- liquidity_tail_lob: heavy-tailed sequential-LOB equilibrium -------------
 _LTL_SEED = _SEED + 84
 
@@ -139,7 +136,8 @@ def bench_arl_mm() -> dict[str, float]:
     except ImportError:
         return {}
     try:
-        return _finite_blob(_isinstance_floats(_arl_core_bench(seed=_ARL_SEED)))
+        # Lane default seed: the CI-scale protocol the headline test trains.
+        return _finite_blob(_isinstance_floats(_arl_core_bench()))
     except (ValueError, RuntimeError, FloatingPointError, KeyError, TypeError):
         return {}
 
