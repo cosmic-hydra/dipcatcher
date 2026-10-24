@@ -6331,6 +6331,11 @@ def _mount_complete_routes(  # noqa: C901 — eval submission shares the chain/j
                 model=env_chat["model"],
                 usage=env_chat["usage"],
                 cid=cid,
+                # Same instant the envelope stored. A second time.time()
+                # call here drifts across a second boundary and the keyed
+                # replay (which pins env["created"]) is no longer the
+                # byte prefix a partial reader already observed.
+                created=env_chat["created"],
             )
 
         keepalive_s = float(getattr(app.state, "sse_keepalive_s", 15.0))

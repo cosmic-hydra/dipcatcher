@@ -1577,6 +1577,33 @@ def _probe_replay_cancel_delete(workdir: Path) -> dict[str, bool]:
 # ---------------------------------------------------------------------------
 
 
+def _pinned_prefix_lines(lines: Iterator[str], n: int) -> list[str]:
+    """First *n* completion lines, skipping leading keepalive comments.
+
+    A slow grace window emits ``: keepalive`` frames before the stored
+    envelope. The keyed replay regenerates that envelope and does not
+    repeat the comments, so they are not part of the pinned prefix.
+    """
+    prefix: list[str] = []
+    for _ in range(64):
+        try:
+            line = next(lines)
+        except StopIteration:
+            break
+        if line.startswith(":"):
+            try:
+                blank = next(lines)
+            except StopIteration:
+                break
+            if blank != "":
+                prefix.append(blank)
+            continue
+        prefix.append(line)
+        if len(prefix) >= n:
+            break
+    return prefix
+
+
 def _probe_buffered_reads(ctx: _Ctx, workdir: Path) -> dict[str, bool]:
     out: dict[str, bool] = {}
     # Partial consumer read of a completed, buffered body, then a replay.
@@ -1586,16 +1613,12 @@ def _probe_buffered_reads(ctx: _Ctx, workdir: Path) -> dict[str, bool]:
         "POST", "/v1/chat/completions", json=body, headers={"Idempotency-Key": key}
     ) as s:
         it = s.iter_lines()
-        prefix: list[str] = []
-        for _ in range(6):
-            try:
-                prefix.append(next(it))
-            except StopIteration:
-                break
+        prefix = _pinned_prefix_lines(it, 6)
         # Closing here releases a buffered response; its ASGI producer
         # already finished before TestClient exposed the first line.
     r_full = ctx.client.post("/v1/chat/completions", json=body, headers={"Idempotency-Key": key})
-    out["buffered_prefix_matches_replay"] = r_full.text.startswith("\n".join(prefix))
+    pinned = "\n".join(prefix)
+    out["buffered_prefix_matches_replay"] = pinned != "" and r_full.text.startswith(pinned)
     out["buffered_partial_read_record_intact"] = (
         r_full.status_code == 200
         and r_full.headers.get("x-fx1-idempotent-replay") == "true"

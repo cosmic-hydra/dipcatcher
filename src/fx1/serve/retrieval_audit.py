@@ -1210,10 +1210,14 @@ def _stream_probes() -> dict[str, bool]:
     jid = str(jb.json()["job_id"])
     frames: list[str] = []
     terminal_seen = False
-    # _WAIT_S, not a 3s slice: the access log stamps response start, and a
-    # loaded runner can still be queued when a short stream hits its deadline.
+    # A loaded runner can still be queued when the SSE deadline hits, so the
+    # stream closes without a terminal frame. Wait for the terminal status
+    # on the job record first (longer than the stream budget), then open a
+    # short stream: an already-terminal job emits that snapshot and closes.
+    waited = _wait_job(client, jid, timeout=max(_WAIT_S, 60.0))
+    assert waited.get("status") in _TERMINAL_JOB, waited.get("status")
     with client.stream(
-        "GET", f"/harness/jobs/{jid}/events", params={"timeout_s": _WAIT_S}, headers=_h()
+        "GET", f"/harness/jobs/{jid}/events", params={"timeout_s": 5.0}, headers=_h()
     ) as s:
         assert s.status_code == 200, "job events stream refused"
         for chunk in s.iter_text():

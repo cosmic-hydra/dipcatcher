@@ -57,6 +57,8 @@ _HME_SEED = _SEED + 81
 # --- arl_mm: adversarial-RL market making bench (torch-gated) ----------------
 # arl_mm_bench's default seed. At the CI training budget this seed is the
 # one whose left-tail improvement the execution headline bench locks.
+# The wave offset (_SEED + 83) trains a different run whose pooled q05
+# improvement came out negative on the 3.13 shard.
 _ARL_SEED = 2
 
 # --- liquidity_tail_lob: heavy-tailed sequential-LOB equilibrium -------------

@@ -451,7 +451,8 @@ def _lobster_match_errors(recon: Mapping[str, Any]) -> tuple[list[str], float | 
     n_match = _count_int(recon.get("n_match"), positive=False)
     if match_rate is None or n_compared is None or n_match is None:
         errors.append("reconstruction_counts_bad")
-    elif match_rate != (n_match / n_compared):
+        return errors, match_rate, n_match
+    if match_rate != (n_match / n_compared):
         errors.append("match_rate_not_n_match_over_n_compared")
     return errors, match_rate, n_match
 
@@ -763,6 +764,328 @@ _MEASUREMENT_SCHEMAS = (
 )
 
 
+# Audits whose ``ok`` is "the registered battery is present and every probe
+# is literal True". A shorter all-true map is an honest defect, not a
+# forged headline. Counts match the writers (quota2, retrieval, vs).
+_COMPLETE_PROBE_COUNTS: dict[str, int] = {
+    "quota2_audit.v1": 107,
+    "retrieval_audit.v1": 136,
+    "vs_audit.v1": 277,
+}
+
+
+def _derived_bool_ok(results: Mapping[str, Any], required_probes: int | None) -> bool:
+    """``ok`` copied from a flat bool map, plus a registered battery size."""
+    every_true = all(results.values())
+    if required_probes is None:
+        return every_true
+    return len(results) == required_probes and every_true
+
+
+def _bool_ok_errors(claim: Mapping[str, Any], *, required_probes: int | None = None) -> list[str]:
+    """``ok`` and probe counts must copy a flat bool ``results`` map.
+
+    Cardinality-gated audits pass ``required_probes``: ``ok`` is true only
+    when the map has that many probes and every value is true.
+    """
+    results = claim.get("results")
+    if not isinstance(results, dict) or not results or "ok" not in claim:
+        return []
+    if not all(isinstance(value, bool) for value in results.values()):
+        return []
+    if claim.get("ok") is not _derived_bool_ok(results, required_probes):
+        return ["ok_not_all_results"]
+    n_probes = claim.get("n_probes")
+    if isinstance(n_probes, int) and not isinstance(n_probes, bool) and n_probes != len(results):
+        return ["n_probes_not_len_results"]
+    n_passed = claim.get("n_passed")
+    passed = sum(1 for value in results.values() if value)
+    if isinstance(n_passed, int) and not isinstance(n_passed, bool) and n_passed != passed:
+        return ["n_passed_not_true_count"]
+    return []
+
+
+def _len_echo_errors(claim: Mapping[str, Any]) -> list[str]:
+    """A count field must equal the sibling list or map it summarizes."""
+    errors: list[str] = []
+    pairs = (
+        ("n_flagged", "flagged"),
+        ("n_envelope_only", "envelope_only_files"),
+        ("n_drifted", "drifted"),
+        ("n_untagged", "untagged"),
+        ("total_violations", "first_violations"),
+        ("n_kernels", "per_kernel"),
+        ("n_divergences", "divergences"),
+    )
+    for count_key, seq_key in pairs:
+        count = claim.get(count_key)
+        seq = claim.get(seq_key)
+        if isinstance(count, bool) or not isinstance(count, int):
+            continue
+        if isinstance(seq, (list, dict)) and count != len(seq):
+            errors.append(f"{count_key}_not_len_{seq_key}")
+    return errors
+
+
+def _share_echo_errors(claim: Mapping[str, Any]) -> list[str]:
+    """Ratios and paired lengths that the claim body already contains."""
+    errors: list[str] = []
+    counts = claim.get("verdict_counts")
+    n_cells = claim.get("n_cells")
+    if isinstance(counts, dict) and isinstance(n_cells, int) and not isinstance(n_cells, bool):
+        total = 0
+        bad = False
+        for value in counts.values():
+            if isinstance(value, bool) or not isinstance(value, int):
+                bad = True
+                break
+            total += value
+        if bad or n_cells != total:
+            errors.append("n_cells_not_sum_verdict_counts")
+    viable = claim.get("viable_cells")
+    total_cells = claim.get("total_cells")
+    share = _as_finite_float(claim.get("viable_share"))
+    if (
+        isinstance(viable, int)
+        and not isinstance(viable, bool)
+        and isinstance(total_cells, int)
+        and not isinstance(total_cells, bool)
+        and total_cells > 0
+        and share is not None
+        and share != (viable / total_cells)
+    ):
+        errors.append("viable_share_not_viable_over_total")
+    return errors
+
+
+def _status_echo_errors(claim: Mapping[str, Any]) -> list[str]:
+    """Headline flags that are defined as 'the detail list is empty'."""
+    errors: list[str] = []
+    n_contracted = claim.get("n_contracted")
+    n_envelope = claim.get("n_envelope_only")
+    n_receipts = claim.get("n_receipts")
+    if (
+        isinstance(n_contracted, int)
+        and not isinstance(n_contracted, bool)
+        and isinstance(n_envelope, int)
+        and not isinstance(n_envelope, bool)
+        and isinstance(n_receipts, int)
+        and not isinstance(n_receipts, bool)
+        and n_contracted + n_envelope != n_receipts
+    ):
+        errors.append("n_receipts_not_contracted_plus_envelope")
+    n_drifted = claim.get("n_drifted")
+    groups = claim.get("groups_with_drift")
+    if (
+        isinstance(n_drifted, int)
+        and not isinstance(n_drifted, bool)
+        and isinstance(groups, int)
+        and not isinstance(groups, bool)
+        and groups != n_drifted
+    ):
+        errors.append("groups_with_drift_not_n_drifted")
+    divergent = claim.get("divergent_tasks")
+    if (
+        isinstance(divergent, list)
+        and isinstance(claim.get("parity"), bool)
+        and claim.get("parity") is not (len(divergent) == 0)
+    ):
+        errors.append("parity_not_empty_divergent_tasks")
+    failures = claim.get("failures")
+    if isinstance(failures, list) and "ok" in claim and claim.get("ok") is not (len(failures) == 0):
+        errors.append("ok_not_empty_failures")
+    n_failing = claim.get("n_failing_kernels")
+    if (
+        isinstance(n_failing, int)
+        and not isinstance(n_failing, bool)
+        and "ok" in claim
+        and claim.get("ok") is not (n_failing == 0)
+    ):
+        errors.append("ok_not_zero_failing_kernels")
+    return errors
+
+
+def _phantom_why_errors(claim: Mapping[str, Any]) -> list[str]:
+    """``n_not_ancestor`` counts phantom rows whose ``why`` is ``not_ancestor``."""
+    rows = claim.get("phantom_revisions")
+    n_not_ancestor = claim.get("n_not_ancestor")
+    if not isinstance(rows, list):
+        return []
+    if isinstance(n_not_ancestor, bool) or not isinstance(n_not_ancestor, int):
+        return []
+    found = sum(1 for row in rows if isinstance(row, Mapping) and row.get("why") == "not_ancestor")
+    if found != n_not_ancestor:
+        return ["n_not_ancestor_not_phantom_why"]
+    return []
+
+
+def audit_claim_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """Re-derive audit and tape claim headlines from the embedded detail.
+
+    The honesty envelope still applies. On top of it, a flat boolean
+    ``results`` map defines ``ok`` and the probe counts, and every count
+    field has to equal the list or map it summarizes. Schemas in
+    ``_COMPLETE_PROBE_COUNTS`` also require that battery size: a shorter
+    all-true map keeps ``ok`` false. A string claim has to be non-empty —
+    there is no numeric detail to divide.
+    """
+    errors = measurement_receipt_contract_errors(payload)
+    claim = payload.get("claim")
+    if isinstance(claim, str):
+        if not claim.strip():
+            errors.append("claim_empty")
+        return errors
+    if claim is None:
+        claims = payload.get("claims")
+        if claims is not None and (not isinstance(claims, dict) or not claims):
+            errors.append("claims_empty")
+        return errors
+    if not isinstance(claim, dict):
+        errors.append("claim_unexpected_type")
+        return errors
+    schema = payload.get("schema")
+    required = _COMPLETE_PROBE_COUNTS.get(schema) if isinstance(schema, str) else None
+    errors.extend(_bool_ok_errors(claim, required_probes=required))
+    errors.extend(_len_echo_errors(claim))
+    errors.extend(_share_echo_errors(claim))
+    errors.extend(_status_echo_errors(claim))
+    errors.extend(_phantom_why_errors(claim))
+    return errors
+
+
+#: Audit and tape receipts whose headlines re-derive from the embedded
+#: claim body (boolean probe maps, count/list echoes). Registering the
+#: name without that re-derivation is not a contract.
+_AUDIT_CLAIM_SCHEMAS = (
+    "alert_budget.v1",
+    "anthropic_sdk_audit.v1",
+    "api_audit.v1",
+    "api_fuzz.v1",
+    "asof_audit.v1",
+    "attestation_audit.v1",
+    "attribution.v1",
+    "auth_audit.v1",
+    "backend_parity.v1",
+    "bank_audit.v1",
+    "boundary_audit.v1",
+    "byok_audit.v1",
+    "cache_audit.v1",
+    "cancel_gradient.v1",
+    "cancel_lead.v1",
+    "cap_audit.v1",
+    "capability_audit.v1",
+    "causality_scan.v1",
+    "cli_audit.v1",
+    "client_audit.v1",
+    "contamination_audit.v1",
+    "contract_probe.v1",
+    "corpus_audit.v1",
+    "decay_watch.v1",
+    "dip_audit.v1",
+    "dip_run_audit.v1",
+    "disclosure_audit.v1",
+    "dispatch_audit.v1",
+    "diversity.v1",
+    "doctor_audit.v1",
+    "drain_audit.v1",
+    "ds_audit.v1",
+    "duration_check.v1",
+    "e2e_audit.v1",
+    "em_audit.v1",
+    "engine_fuzz.v1",
+    "error_shape.v1",
+    "eval_core_audit.v1",
+    "eval_lifecycle_audit.v1",
+    "ext_bench_audit.v1",
+    "fault_audit.v1",
+    "fifo_priority.v1",
+    "forecast_core_audit.v1",
+    "forecast_data_audit.v1",
+    "forecast_infra_audit.v1",
+    "fx1_contract_audit.v1",
+    "fx1_tail_audit.v1",
+    "grad_fidelity.v1",
+    "harness_audit.v1",
+    "hmm_stability.v1",
+    "hmm_verify.v1",
+    "honesty_audit.v1",
+    "hypotheses_audit.v1",
+    "imbalance_predict.v1",
+    "inherit_audit.v1",
+    "initiative_fade.v1",
+    "intraday_exec.v1",
+    "jobs_audit.v1",
+    "journal_audit.v1",
+    "kill_audit.v1",
+    "label_horizon_map.v1",
+    "label_stability.v1",
+    "ledger_audit.v1",
+    "lineage_dag.v1",
+    "lob_invariants.v1",
+    "map_parity.v1",
+    "masking_audit.v1",
+    "meta_model.v1",
+    "middleware_audit.v1",
+    "modelcard_audit.v1",
+    "mrm_audit.v1",
+    "native_conformance.v1",
+    "oai_sdk_audit.v1",
+    "ops_audit.v1",
+    "options_audit.v1",
+    "parity_audit.v1",
+    "parity_leak_audit.v1",
+    "perf_audit.v1",
+    "pipeline_audit.v1",
+    "pipeline_flat_audit.v1",
+    "promotion_gate.v1",
+    "quality_audit.v1",
+    "queue_class.v1",
+    "queue_fate.v1",
+    "queue_jump.v1",
+    "queue_occupancy.v1",
+    "quota2_audit.v1",
+    "receipts_audit.v1",
+    "replay_audit.v1",
+    "report_audit.v1",
+    "retrieval_audit.v1",
+    "reward_audit.v1",
+    "rt_audit.v1",
+    "rubric_audit.v1",
+    "run_audit.v1",
+    "sbom_audit.v1",
+    "schema_drift.v1",
+    "schema_fingerprint.v1",
+    "sdk_audit.v1",
+    "seed_audit.v1",
+    "seed_sweep_demo.v1",
+    "serve_audit.v1",
+    "side_imbalance.v1",
+    "sim_sensitivity.v1",
+    "sources_audit.v1",
+    "spec_audit.v1",
+    "stack_invariance.v1",
+    "stack_watch.v1",
+    "sweep_bound.v1",
+    "sweep_width.v1",
+    "tail_quota.v1",
+    "tape_surgery.v1",
+    "timepart_audit.v1",
+    "trade_decomp.v1",
+    "train_infra_audit.v1",
+    "train_receipt_audit.v1",
+    "trust_step.v1",
+    "ts_reasoning_audit.v1",
+    "usage_audit.v1",
+    "validator_fuzz.v1",
+    "vine_audit.v1",
+    "vine_dominance.v1",
+    "vine_panel.v1",
+    "vs_audit.v1",
+    "warmup_spec.v1",
+    "webhook_audit.v1",
+)
+
+
 SCRIPT_RECEIPT_CONTRACTS: dict[str, Any] = {
     "adaptive_mix_band_search.v1": band_search_contract_errors,
     "adaptive_mix_replay.v1": adaptive_mix_replay_contract_errors,
@@ -776,6 +1099,7 @@ SCRIPT_RECEIPT_CONTRACTS: dict[str, Any] = {
     "queue_priority.v1": queue_priority_contract_errors,
     "calibration_audit.drill.v1": calibration_audit_drill_contract_errors,
     **{s: measurement_receipt_contract_errors for s in _MEASUREMENT_SCHEMAS},
+    **{s: audit_claim_contract_errors for s in _AUDIT_CLAIM_SCHEMAS},
 }
 
 

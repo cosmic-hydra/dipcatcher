@@ -176,8 +176,9 @@ def report_dump(report: Any) -> dict[str, Any]:
         out = _jsonable(asdict(report))
     else:
         raise TypeError(f"eval report is not serializable: {type(report).__name__}")
-    if not isinstance(out, dict):
-        raise TypeError("eval report did not serialize to a dict")
+    # model_dump and asdict both return a dict, so this guard never fires.
+    if not isinstance(out, dict):  # pragma: no cover
+        raise TypeError("eval report did not serialize to a dict")  # pragma: no cover
     json.dumps(out)  # fail-closed proof the dump is wire-safe
     return out
 

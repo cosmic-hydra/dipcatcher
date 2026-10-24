@@ -342,6 +342,41 @@ def _keys_mod() -> ModuleType:
     return keys_mod
 
 
+class _SteppedClock:
+    """Key-store clock that moves only when the probe says so.
+
+    A 50 ms wall-clock window expires inside one slow ``complete()`` on a
+    loaded runner, so the refusal reads as a fresh admission. Stepping this
+    clock keeps the window edge independent of request latency.
+    """
+
+    def __init__(self) -> None:
+        self.now = time.time()
+
+    def __call__(self) -> float:
+        return self.now
+
+    def advance(self, seconds: float) -> None:
+        self.now += seconds
+
+
+@contextmanager
+def _pinned_key_clock(clock: _SteppedClock) -> Iterator[None]:
+    """Stores constructed inside the block read *clock* instead of ``time.time``."""
+    keys_mod = _keys_mod()
+    original = keys_mod.ApiKeyStore.__init__
+
+    def _init(self: Any, *args: Any, **kwargs: Any) -> None:
+        kwargs["clock"] = clock
+        original(self, *args, **kwargs)
+
+    keys_mod.ApiKeyStore.__init__ = _init  # type: ignore[method-assign]
+    try:
+        yield
+    finally:
+        keys_mod.ApiKeyStore.__init__ = original  # type: ignore[method-assign]
+
+
 def _rl_headers(resp: Any) -> dict[str, str]:
     return {k.lower(): v for k, v in resp.headers.items()}
 
@@ -748,38 +783,45 @@ def _window_edge_probes() -> dict[str, Any]:
     # call's slot. Window 1.2s; call1 at t≈0, call2 at t≈0.7 (full),
     # call3 at t≈1.4 — past the anchor, inside call2's sliding expiry.
     saved_window = float(getattr(keys_mod, _RATE_WINDOW_CONST))
+    clock = _SteppedClock()
     try:
-        setattr(keys_mod, _RATE_WINDOW_CONST, 1.2)
-        client, _ = _client({"byok": lambda: _MeterBackend("byok-model", dict(_U6))}, api_key=_ROOT)
-        w_raw, w_id = _mint(client, root_h, rpm=2)
-        w_h = {_H_KEY: w_raw}
-        assert _complete(client, w_h).status_code == 200
-        time.sleep(0.7)
-        assert _complete(client, w_h).status_code == 200
-        time.sleep(0.7)
-        third = _complete(client, w_h)
-        # sliding would report remaining 0 (call2's slot still live);
-        # the declared fixed anchor drops the whole occupancy
-        out["window_fixed_anchor_drops_whole"] = (
-            third.status_code == 200 and third.headers.get(_H_RL_REMAINING) == "1"
-        )
-        w_card = _usage_card(client, root_h, w_id)
-        out["window_recovery_card_fresh"] = w_card["window_remaining"] == 1
+        with _pinned_key_clock(clock):
+            setattr(keys_mod, _RATE_WINDOW_CONST, 1.2)
+            client, _ = _client(
+                {"byok": lambda: _MeterBackend("byok-model", dict(_U6))}, api_key=_ROOT
+            )
+            w_raw, w_id = _mint(client, root_h, rpm=2)
+            w_h = {_H_KEY: w_raw}
+            assert _complete(client, w_h).status_code == 200
+            clock.advance(0.7)
+            assert _complete(client, w_h).status_code == 200
+            clock.advance(0.7)
+            third = _complete(client, w_h)
+            # sliding would report remaining 0 (call2's slot still live);
+            # the declared fixed anchor drops the whole occupancy
+            out["window_fixed_anchor_drops_whole"] = (
+                third.status_code == 200 and third.headers.get(_H_RL_REMAINING) == "1"
+            )
+            w_card = _usage_card(client, root_h, w_id)
+            out["window_recovery_card_fresh"] = w_card["window_remaining"] == 1
 
-        # --- expiry re-admits and the surfaces report the fresh count
-        setattr(keys_mod, _RATE_WINDOW_CONST, _TINY_WINDOW_S)
-        e_raw, e_id = _mint(client, root_h, rpm=1)
-        e_h = {_H_KEY: e_raw}
-        first = _complete(client, e_h)
-        denied = _complete(client, e_h)
-        time.sleep(_WINDOW_RECOVER_S)
-        third2 = _complete(client, e_h)
-        out["window_expiry_readmits"] = (
-            first.status_code == 200 and denied.status_code == 429 and third2.status_code == 200
-        )
-        out["window_recovery_remaining_fresh"] = third2.headers.get(_H_RL_REMAINING) == "0"
-        e_card = _usage_card(client, root_h, e_id)
-        out["window_recovery_card_honest"] = e_card["window_remaining"] == 0
+            # --- expiry re-admits and the surfaces report the fresh count.
+            # The refusal is issued at the same instant as the admission, then
+            # the clock steps past the window. Wall time between the calls
+            # must not open a new window on its own.
+            setattr(keys_mod, _RATE_WINDOW_CONST, _TINY_WINDOW_S)
+            e_raw, e_id = _mint(client, root_h, rpm=1)
+            e_h = {_H_KEY: e_raw}
+            first = _complete(client, e_h)
+            denied = _complete(client, e_h)
+            clock.advance(_WINDOW_RECOVER_S)
+            third2 = _complete(client, e_h)
+            out["window_expiry_readmits"] = (
+                first.status_code == 200 and denied.status_code == 429 and third2.status_code == 200
+            )
+            out["window_recovery_remaining_fresh"] = third2.headers.get(_H_RL_REMAINING) == "0"
+            e_card = _usage_card(client, root_h, e_id)
+            out["window_recovery_card_honest"] = e_card["window_remaining"] == 0
     finally:
         setattr(keys_mod, _RATE_WINDOW_CONST, saved_window)
 
@@ -979,15 +1021,20 @@ def _metering_probes() -> dict[str, Any]:
     # admit → refuse nets exactly one use and one charge
     keys_mod = _keys_mod()
     saved = float(getattr(keys_mod, _RATE_WINDOW_CONST))
+    clock = _SteppedClock()
     try:
-        setattr(keys_mod, _RATE_WINDOW_CONST, _TINY_WINDOW_S)
-        t_raw, t_id = _mint(client, root_h, rpm=1)
-        t_h = {_H_KEY: t_raw}
-        first = _complete(client, t_h)
-        denied = _complete(client, t_h)
-        time.sleep(_WINDOW_RECOVER_S)
-        second = _complete(client, t_h)
-        t_card = _usage_card(client, root_h, t_id)
+        with _pinned_key_clock(clock):
+            setattr(keys_mod, _RATE_WINDOW_CONST, _TINY_WINDOW_S)
+            timed, _ = _client(
+                {"byok": lambda: _MeterBackend("byok-model", dict(_U6))}, api_key=_ROOT
+            )
+            t_raw, t_id = _mint(timed, root_h, rpm=1)
+            t_h = {_H_KEY: t_raw}
+            first = _complete(timed, t_h)
+            denied = _complete(timed, t_h)
+            clock.advance(_WINDOW_RECOVER_S)
+            second = _complete(timed, t_h)
+            t_card = _usage_card(timed, root_h, t_id)
         out["retry_sequence_bills_admitted_only"] = (
             first.status_code == 200
             and denied.status_code == 429

@@ -41,6 +41,24 @@ FloatArray = NDArray[np.float64]
 Objective = Callable[[FloatArray], float]
 
 
+def _canonical_eigh(c: FloatArray) -> tuple[FloatArray, FloatArray]:
+    """Symmetric eigendecomposition with a pinned eigenvector sign.
+
+    ``np.linalg.eigh`` is the right decomposition, but each column's sign
+    is a BLAS choice. CMA multiplies samples by those columns, so a sign
+    flip is a reflection of the search and a seeded run is no longer the
+    same run on another build. The largest-magnitude entry of each column
+    is forced positive; ties take the earliest index.
+    """
+    dd, bb = np.linalg.eigh(c)
+    for i in range(bb.shape[1]):
+        col = bb[:, i]
+        pivot = int(np.argmax(np.abs(col)))
+        if col[pivot] < 0.0:
+            bb[:, i] = -col
+    return dd, bb
+
+
 def _validate_inputs(f: Objective, x0: FloatArray, sigma0: float) -> FloatArray:
     xa = np.asarray(x0, dtype=np.float64).ravel()
     if xa.size < 2 or not np.isfinite(xa).all():
@@ -137,8 +155,9 @@ def cma_es(
         sigma *= float(np.exp(min(1.0, (c_s / d_s) * (p_s_norm / chi_n - 1))))
         if not np.isfinite(sigma) or sigma <= 0:
             raise ValueError("sigma diverged")
-        # eigendecompose
-        dd, bb = np.linalg.eigh(c)
+        # Eigendecompose. BLAS picks an arbitrary eigenvector sign, and that
+        # reflection changes which Rastrigin basin a seeded run falls into.
+        dd, bb = _canonical_eigh(c)
         dd = np.maximum(dd, 1e-20)
         eig_d = np.sqrt(dd)
         eig_b = bb

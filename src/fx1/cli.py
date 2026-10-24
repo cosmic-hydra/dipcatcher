@@ -151,7 +151,7 @@ def _json_meta(raw: str | None) -> dict[str, str] | None:
         meta = json.loads(raw)
     except json.JSONDecodeError:
         _bad_arg(_METADATA_PAIRS_ERR)
-        raise AssertionError("unreachable") from None
+        raise AssertionError("unreachable") from None  # pragma: no cover — _bad_arg always raises
     if not (
         isinstance(meta, dict)
         and all(isinstance(k, str) and isinstance(v, str) for k, v in meta.items())
@@ -4199,7 +4199,9 @@ def harness_conv_create(
             parsed = json.loads(items)
         except json.JSONDecodeError:
             _bad_arg(_ITEMS_JSON_ERR)
-            raise AssertionError("unreachable") from None
+            raise AssertionError(
+                "unreachable"
+            ) from None  # pragma: no cover — _bad_arg always raises
         if not isinstance(parsed, list):
             _bad_arg(_ITEMS_JSON_ERR)
         seed = parsed
@@ -4421,7 +4423,9 @@ def harness_vs_create(
             parsed_ids = json.loads(file_ids)
         except json.JSONDecodeError:
             _bad_arg("--file-ids must be a JSON array of file-* ids")
-            raise AssertionError("unreachable") from None
+            raise AssertionError(
+                "unreachable"
+            ) from None  # pragma: no cover — _bad_arg always raises
         if not (isinstance(parsed_ids, list) and all(isinstance(i, str) for i in parsed_ids)):
             _bad_arg("--file-ids must be a JSON array of file-* ids")
         ids = parsed_ids

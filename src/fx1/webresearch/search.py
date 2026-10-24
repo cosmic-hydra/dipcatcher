@@ -211,9 +211,9 @@ class DuckDuckGoLiteSearcher(Searcher):
                 continue
             try:
                 html = body.decode("utf-8", errors="replace")
-            except UnicodeError:
-                result.error = "search response not decodable"
-                continue
+            except UnicodeError:  # pragma: no cover — errors="replace" never raises UnicodeError
+                result.error = "search response not decodable"  # pragma: no cover
+                continue  # pragma: no cover
             hits = _parse_results(html, engine)
             if hits:
                 result.hits = hits[:max_results]

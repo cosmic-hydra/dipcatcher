@@ -3104,6 +3104,10 @@ class OpenAIEnvelopeStore:
             if isinstance(did, str):
                 self._items.pop(did, None)
                 self._subitems.pop(did, None)
+            else:  # pragma: no cover — _validate_op already rejected a non-string id
+                return
+        else:  # pragma: no cover — _validate_op already rejected an unknown operation
+            return
 
     def _compact_locked(self) -> None:
         """Rewrite the journal with only the live state — called on boot
