@@ -29,7 +29,7 @@ try:
     from numba import njit
 
     _HAVE_NUMBA = True
-except (ImportError, OSError):  # pragma: no cover - numba-less / broken llvmlite
+except (ImportError, OSError):
     _HAVE_NUMBA = False
 
     def njit(*_a: Any, **_k: Any) -> Any:  # type: ignore[no-redef]
@@ -322,8 +322,9 @@ def evaluate_forecasts(
     metrics: dict[str, float] = {}
     all_pairs: list[tuple[float, bool]] = []
     for horizon, pairs in sorted(per_horizon.items()):
-        if not pairs:
-            continue
+        # per_horizon only gains a key when a pair is appended, so this guard never fires.
+        if not pairs:  # pragma: no cover
+            continue  # pragma: no cover
         all_pairs.extend(pairs)
         metrics[f"brier_{horizon}"] = sum(_brier(p, y) for p, y in pairs) / len(pairs)
         metrics[f"log_loss_{horizon}"] = sum(_log_loss(p, y) for p, y in pairs) / len(pairs)

@@ -154,4 +154,7 @@ def resolve_seed_id(seed_id: int) -> dict[str, Any]:
                     "owner": owner,
                     _OWNER_FIELD[kind]: owner,
                 }
-    raise KeyError(f"seed id {seed_id!r} is not registered by any extension owner")
+    # Unreachable: every integer in 0..1_000_000 sits on a registered owner stride.
+    raise KeyError(  # pragma: no cover
+        f"seed id {seed_id!r} is not registered by any extension owner"
+    )

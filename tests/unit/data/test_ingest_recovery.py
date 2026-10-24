@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from quant_fund.data.ingest_resume import Batch, IngestCheckpoint, IngestJournalError
 
 
@@ -44,6 +46,20 @@ def test_resume_state_is_research_only(tmp_path) -> None:
     state = run.resume()
     assert state["research_only"] is True
     assert state["live_pnl_claim"] is False
+
+
+def test_journal_skips_blank_lines_and_rejects_broken_records(tmp_path) -> None:
+    path = tmp_path / "ingest.jsonl"
+    path.write_text("\n  \n", encoding="utf-8")
+    assert IngestCheckpoint(path).cursor == 0
+
+    path.write_text("{not json}\n", encoding="utf-8")
+    with pytest.raises(IngestJournalError, match="corrupt ingest journal"):
+        IngestCheckpoint(path)
+
+    path.write_text("[]\n", encoding="utf-8")
+    with pytest.raises(IngestJournalError, match="not an object"):
+        IngestCheckpoint(path)
 
 
 def test_corrupt_journal_fails_closed(tmp_path) -> None:

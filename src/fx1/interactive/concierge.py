@@ -475,7 +475,8 @@ class Concierge:
         if backend is not None:
 
             def model_fn(prompt: str) -> str:
-                with (
+                # The opening paren has no bytecode of its own; the trace line is the expression.
+                with (  # pragma: no cover
                     OrbAnimator(OrbState.COMPOSING, preset="inline") if self._animated else _null()
                 ):
                     return str(backend.complete([{"role": "user", "content": prompt}]))

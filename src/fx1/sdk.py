@@ -1625,7 +1625,7 @@ class Fx1Harness:
             try:
                 if "pause_gate" in inspect.signature(self._ft_runner).parameters:
                     _extra["pause_gate"] = entry.cancel.is_set
-            except (TypeError, ValueError):  # pragma: no cover - C callables
+            except (TypeError, ValueError):
                 _extra["pause_gate"] = entry.cancel.is_set
             outcome = self._ft_runner(
                 spec,
@@ -3009,8 +3009,9 @@ class Fx1Harness:
         inject_parts: list[str] = []
         budget = self._RETRIEVAL_INJECT_BUDGET
         for spec in fs_specs:
-            if spec.type != "file_search":
-                continue
+            # fs_specs is already filtered to type == "file_search".
+            if spec.type != "file_search":  # pragma: no cover
+                continue  # pragma: no cover
             ro = spec.ranking_options or {}
             threshold = ro.get("score_threshold")
             try:

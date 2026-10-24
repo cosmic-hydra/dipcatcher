@@ -346,7 +346,8 @@ class HarnessClient:
         retries = self._max_retries if (idempotent or self._retry_writes) else 0
         backoff = self._retry_backoff_s
         try:
-            for attempt in range(retries + 1):
+            # Every attempt returns, raises, or breaks, so the iterator never exhausts.
+            for attempt in range(retries + 1):  # pragma: no branch
                 try:
                     status, headers, body = self._transport(
                         method,

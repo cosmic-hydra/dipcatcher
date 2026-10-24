@@ -387,9 +387,9 @@ def fetch_page(
             result.size_bytes = len(body)
             try:
                 decoded = body.decode("utf-8", errors="replace")
-            except UnicodeError:
-                result.error = "body is not decodable text"
-                return result
+            except UnicodeError:  # pragma: no cover — errors="replace" never raises UnicodeError
+                result.error = "body is not decodable text"  # pragma: no cover
+                return result  # pragma: no cover
             if result.content_type.startswith("text/html") or "<html" in decoded[:512].lower():
                 title, text, links = html_to_text(decoded, base_url=result.final_url or url)
                 result.title = title
