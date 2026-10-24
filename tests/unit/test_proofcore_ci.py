@@ -38,17 +38,19 @@ MAKEFILE = REPO_ROOT / "Makefile"
 # Main raised the package floors +1 (2026-09-28 measurements); the wave-2
 # amendment adds per-MODULE floors (dotted keys) for the new wave-2 modules,
 # all 90 (WAVE2.md §1.6: every new module >= 90%).
+# 2026-10-24: proof, proofcore, leakage, and their wave-2 module floors
+# ratcheted to the measured 100% line+branch. Pit and reality are unchanged.
 EXPECTED_FLOORS = {
     "pit": 91,
-    "proof": 91,
-    "leakage": 86,
+    "proof": 100,
+    "leakage": 100,
     "reality": 91,
-    "proofcore": 91,
-    "proofcore.scheduler": 90,
-    "proof.runner": 90,
-    "proof.estimators": 90,
-    "proof.replay": 90,
-    "leakage.guard": 90,
+    "proofcore": 100,
+    "proofcore.scheduler": 100,
+    "proof.runner": 100,
+    "proof.estimators": 100,
+    "proof.replay": 100,
+    "leakage.guard": 100,
 }
 
 

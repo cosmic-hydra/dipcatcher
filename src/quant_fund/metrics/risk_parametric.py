@@ -137,7 +137,7 @@ def fit_student_t(losses: Array) -> dict[str, float]:
         lambda theta: _t_neg_log_likelihood(theta, v),
         x0,
         method="Nelder-Mead",
-        options={"maxiter": 2000},
+        options={"maxiter": 2000, "xatol": 1e-4, "fatol": 1e-4, "adaptive": False},
     )
     if not res.success and not np.all(np.isfinite(res.x)):
         raise ValueError("Student-t fit failed")

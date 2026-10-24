@@ -1,10 +1,10 @@
 {
   "data_label": "CORPUS",
-  "epoch_root_sha256": "061b85e0a4582079aaa4acf3c58028579a791fd19715f22c4794e020fe1d2465",
+  "epoch_root_sha256": "83d1ccb906898d47cfb37b08a41c0a2119d0c6e480ef9363f862fe91e155bee4",
   "inputs_sha256": "058b9eef52fa657daa0f02820c06b473987dcc600032f7c2ac0a46a3e58b2b3b",
   "kind": "corpus_epoch.v1",
   "live_pnl_claim": false,
-  "member_tree_root": "611a721d8b6008e0fba4c48808d3c7e4d5a64b735c21f46a78fcdee5c7a8f105",
+  "member_tree_root": "2f7d6fe0013bdc933c0c49b596e9465c30cfdfe643e9c3b343abb815e2cac41a",
   "members": [
     {
       "name": "corpus_epoch_03515326e08a756d.json",
@@ -141,6 +141,10 @@
     {
       "name": "corpus_epoch_d43c325398ec6b1f.json",
       "sha256": "cf2d3c0cb0fe053f1b75086396866728553cbd9d997f4afd10c5def07726109a"
+    },
+    {
+      "name": "corpus_epoch_dd5697c61b02e4dc.json",
+      "sha256": "d4f1bc253a24a2e8b4ec5d240a9c1f7120853cabfccd44e92c3fb90d9c8c00b4"
     },
     {
       "name": "corpus_epoch_de53e1aec0b37473.json",
@@ -1180,7 +1184,7 @@
     },
     {
       "name": "fx1/serve/api.py",
-      "sha256": "0a48bbad9f9c333bdfa0302086e6cd06a76786f7eb3abdac36f9d7c489100284"
+      "sha256": "161a05df841b45842f24ac3d080c751df6914d7d729b28ff61a6629b923f56ca"
     },
     {
       "name": "fx1/serve/api_audit.py",
@@ -1280,7 +1284,7 @@
     },
     {
       "name": "fx1/serve/jobs_audit.py",
-      "sha256": "6a3311b5265c1486cd95025d56c741ed2bdec9c1873e5da1ed598519d0546279"
+      "sha256": "659caea36f1b9b5319590d141eb3a6cd2017d8f3241fe9ea0e964f5748e7fb9f"
     },
     {
       "name": "fx1/serve/journal.py",
@@ -1332,7 +1336,7 @@
     },
     {
       "name": "fx1/serve/quota2_audit.py",
-      "sha256": "1e59b1237fb9596ac0870f24d2a616dfb15cfe38df19d99a605da4525a03b2e6"
+      "sha256": "99b786f03944af69041104ac5417926727bf6b9452402311af84b410bb06e9c6"
     },
     {
       "name": "fx1/serve/quota_audit.py",
@@ -1340,7 +1344,7 @@
     },
     {
       "name": "fx1/serve/receipt_store.py",
-      "sha256": "9f9d48fde5b924a4c062de182e36edd4a3ead67e97bf5d1bee740f17b402d7d8"
+      "sha256": "e657825823ea8283d9c75f95a7a28905796df85a5d999c5812f4f3be938713cb"
     },
     {
       "name": "fx1/serve/replay_audit.py",
@@ -1708,7 +1712,7 @@
     },
     {
       "name": "quant_fund/cli/research_cmds.py",
-      "sha256": "6682abb21258e8e68478e9e9bd847058f5ebcfd2492b11455282f5c5cf773b4a"
+      "sha256": "b361c4b3ece5d912c6a3ec47099d2d949cf20c82c58f5fa7f6e15329a02d45e1"
     },
     {
       "name": "quant_fund/cli/sota_cmds.py",
@@ -2900,7 +2904,7 @@
     },
     {
       "name": "quant_fund/metrics/risk_parametric.py",
-      "sha256": "e59ab891fa5b10e023efc0eb140217b37eda101e4521c5d72be771394fe97b7c"
+      "sha256": "4dec9886d5288b8b927871f559a4234ff54189f7f55489b8fec8e029e957bd49"
     },
     {
       "name": "quant_fund/metrics/robust_location.py",
@@ -10316,7 +10320,7 @@
     },
     {
       "name": "quant_fund/models/cma_es.py",
-      "sha256": "297f46d882953713eb51575a7d8921610ef0a5ae54ea4b7ae7a0f899dfcb028f"
+      "sha256": "540af9fc2674d3dc8dc78ba26bded1f8e3462a991412a7661df7a2f7f2f2ff3e"
     },
     {
       "name": "quant_fund/models/cmb_anisotropy.py",
@@ -29120,7 +29124,7 @@
     },
     {
       "name": "quant_fund/models/muon_opt.py",
-      "sha256": "16ab92bba82e986e793fbc37e7d602c7b9c07917ece81468a75400eb650f67ed"
+      "sha256": "db149c6d71e21e1b94805dd473fbbb5f5e07472ee1c14ced20459024d5f58846"
     },
     {
       "name": "quant_fund/models/mup_init.py",
@@ -40972,7 +40976,7 @@
     },
     {
       "name": "quant_fund/models/synthetic_gan.py",
-      "sha256": "1b86b15be2a2d2114b79ee78f0997346090999cf48402b1f21643dcc5400dc4e"
+      "sha256": "7afdf2e19323779a3744fdc4b798e67d2d3108781082dfaaf9ae41446609b3db"
     },
     {
       "name": "quant_fund/models/synthetic_likelihood.py",
@@ -43988,7 +43992,7 @@
     },
     {
       "name": "quant_fund/models/volatility.py",
-      "sha256": "3d758b73c251857713f5ad9ba9e81fd7bd155cf19c1b0728b5115c12f9b33377"
+      "sha256": "1367c2525491dee92b4162e7a8503bce52433f8a2d1f000c4d0c420c0ab0013d"
     },
     {
       "name": "quant_fund/models/volcano_qa_studies.py",
@@ -45828,7 +45832,7 @@
     },
     {
       "name": "quant_fund/proof/verify.py",
-      "sha256": "60aa78827eba07b5534ee5602d1b4f6deb531fb06cf1afa57316f37e9da74757"
+      "sha256": "d19255405a5fa5a27ac74d2ed504be2b203dd76f9185c3187e2c4790c27799f1"
     },
     {
       "name": "quant_fund/proofcore/__init__.py",
@@ -45992,7 +45996,7 @@
     },
     {
       "name": "quant_fund/registry/mlflow_store.py",
-      "sha256": "bee5196f18aaef22e9e57e777ab4a7ced4804d8c9b27619250a295d8862ed481"
+      "sha256": "01a49818e4bceeb5aea13ec8010d68fe76bebfa92ad6ef65694f52972e7e4eaa"
     },
     {
       "name": "quant_fund/registry/promotion_gate.py",
@@ -49388,7 +49392,7 @@
     },
     {
       "name": "quant_fund/research/benches_w20.py",
-      "sha256": "0c4e9c10e046569feb8bf4fbf51b42c0527c6e093458f476f035e2c99ffbe6d1"
+      "sha256": "91a58703ffef7c8a3faf5891195453d5b4247628c7ea6bbb7a17a9a97491a0a9"
     },
     {
       "name": "quant_fund/research/benches_w200.py",
@@ -53004,7 +53008,7 @@
     },
     {
       "name": "quant_fund/research/catalog/retired_families.py",
-      "sha256": "29cf6ad8c8eaa2665f2e1c6d00fc98e4f22ca88ca4ac64a13d94426218d30644"
+      "sha256": "3129d3cad98875c7f3d6c0b33e047835ea04f02df4a80ec3a12cc41ec235e502"
     },
     {
       "name": "quant_fund/research/catalog/session.py",
@@ -53040,7 +53044,7 @@
     },
     {
       "name": "quant_fund/research/corpus_epoch.py",
-      "sha256": "8ffe062db9a653239e09fda256d34f811104f75552e5da7e690853fec0471148"
+      "sha256": "240daf023c3397e820117aa1819772911e54190c7612cddb14a5ddf35e78218e"
     },
     {
       "name": "quant_fund/research/corpus_inference.py",
@@ -53384,7 +53388,7 @@
     },
     {
       "name": "quant_fund/research/script_receipts.py",
-      "sha256": "b92a1163dc91f7a0fb93ca2b7ed9d13e74f4f2e8865308844576832fbe58f427"
+      "sha256": "10a30a5f2a555ddaa8ab6a8c1aeff19e0ce7ce1672b9e72c55715f110a377e6c"
     },
     {
       "name": "quant_fund/research/selective_inference.py",
@@ -53720,7 +53724,7 @@
     },
     {
       "name": "quant_fund/utils/reproducibility.py",
-      "sha256": "c6bcc91a1124872c717f279b6cb25bac8dc37da91ce57d9842cb3e288339d59a"
+      "sha256": "1e6c4f19e45335f1aa61ed9966d71fb208104299988e4f807499580e4579f25e"
     },
     {
       "name": "quant_fund/utils/seeds.py",
@@ -53788,17 +53792,17 @@
     }
   ],
   "members_added": [
-    "corpus_epoch_e75d72d294180051.json"
+    "corpus_epoch_dd5697c61b02e4dc.json"
   ],
   "members_removed": [],
-  "n_members": 13445,
+  "n_members": 13446,
   "params": {
-    "head_sha": "371e4916cf9a36fad1566616b36a70f0abbcecd7",
+    "head_sha": "233fb82a44c059dcd6cc511f9d5dbe400134b28b",
     "pattern": "*"
   },
-  "prev_epoch_receipt": "corpus_epoch_e75d72d294180051.json",
-  "prev_epoch_sha256": "3fc99ab21addaac6acaffbfd52c6a6afe04de67924fb1847b48e9f20b3406635",
-  "receipt_sha256": "b454287ce5bb24767ede75065e923bd28941e454ca87287213a0447cb22175ed",
+  "prev_epoch_receipt": "corpus_epoch_dd5697c61b02e4dc.json",
+  "prev_epoch_sha256": "94bea664ba838a8df7dcaa8608bb2c189728b4a5e98528782dec2e5082b80b2d",
+  "receipt_sha256": "e5f3a5655a5ed90f5309678c4e6eca0baf96737d5a313f0e11c315edc6f162c8",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,

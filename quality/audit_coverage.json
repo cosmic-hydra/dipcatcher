@@ -1,6 +1,15 @@
 {
   "schema_version": "audit-coverage/v1",
   "modules": {
+    "cli/__main__.py": {
+      "status": "pending"
+    },
+    "utils/cli_errors.py": {
+      "status": "pending"
+    },
+    "data/quality/__main__.py": {
+      "status": "pending"
+    },
     "research/benches_w524.py": {
       "status": "audited"
     },
@@ -5396,7 +5405,7 @@
     },
     "utils": {
       "doc": "docs/AUDIT_FRONTIER.md",
-      "n_modules": 9,
+      "n_modules": 10,
       "status": "audited"
     },
     "proof": {
@@ -5414,7 +5423,7 @@
       "status": "audited"
     },
     "cli": {
-      "n_modules": 18,
+      "n_modules": 19,
       "status": "audited"
     },
     "hedge_lab": {
@@ -5529,7 +5538,7 @@
     },
     "data": {
       "doc": "docs/AUDIT_P63_DATA.md",
-      "n_modules": 45,
+      "n_modules": 46,
       "status": "audited"
     },
     "combination": {

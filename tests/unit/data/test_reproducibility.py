@@ -250,6 +250,57 @@ def test_smudged_lfs_file_matching_pointer_is_clean(
     assert git_worktree_sha256() != hash_bytes(b"")
 
 
+def test_git_revision_reuses_a_resolved_head_when_later_calls_time_out(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Two seals must agree when a later rev-parse loses the index lock."""
+    import quant_fund.utils.reproducibility as repro
+
+    repro.clear_git_revision_cache()
+    calls = {"n": 0}
+    real_run = subprocess.run
+
+    def flaky_run(cmd: list[str] | tuple[str, ...], *args: object, **kwargs: object):
+        if isinstance(cmd, (list, tuple)) and "rev-parse" in cmd and "HEAD" in cmd:
+            calls["n"] += 1
+            if calls["n"] > 1:
+                raise subprocess.TimeoutExpired(cmd, float(kwargs.get("timeout", 15)))
+        return real_run(cmd, *args, **kwargs)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(repro.subprocess, "run", flaky_run)
+    try:
+        first = repro.git_revision()
+        second = repro.git_revision()
+    finally:
+        repro.clear_git_revision_cache()
+    assert first != "UNKNOWN"
+    assert second == first
+    assert calls["n"] == 1
+
+
+def test_git_revision_does_not_cache_an_unknown_miss(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import quant_fund.utils.reproducibility as repro
+
+    repro.clear_git_revision_cache()
+    monkeypatch.setattr(repro.time, "sleep", lambda _delay: None)
+    real_run = subprocess.run
+
+    def timed_out(cmd: list[str] | tuple[str, ...], *args: object, **kwargs: object):
+        raise subprocess.TimeoutExpired(cmd, 15)
+
+    monkeypatch.setattr(repro.subprocess, "run", timed_out)
+    try:
+        assert repro.git_revision() == "UNKNOWN"
+        monkeypatch.setattr(repro.subprocess, "run", real_run)
+        resolved = repro.git_revision()
+    finally:
+        repro.clear_git_revision_cache()
+    assert resolved != "UNKNOWN"
+    assert len(resolved) >= 7
+
+
 def test_additions_blob_is_injective_under_path_content_repacking() -> None:
     """Untracked entries are length-framed: a file's bytes can no longer be
     reparsed as another file's ``path\\0`` header — the old concat scheme

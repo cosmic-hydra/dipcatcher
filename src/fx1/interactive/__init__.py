@@ -13,8 +13,9 @@ The orchestration surface lives alongside the classic shell:
   private-data sharing.
 """
 
+from typing import Any
+
 from fx1.interactive import actions, approvals, concierge, orb, profiles, shell, superpower, wizard
-from fx1.interactive.app import app, main
 
 __all__ = [
     "actions",
@@ -28,3 +29,12 @@ __all__ = [
     "superpower",
     "wizard",
 ]
+
+
+def __getattr__(name: str) -> Any:
+    # Lazy so ``python -m fx1.interactive.app`` is not a second import of app.
+    if name in {"app", "main"}:
+        from fx1.interactive.app import app, main
+
+        return {"app": app, "main": main}[name]
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

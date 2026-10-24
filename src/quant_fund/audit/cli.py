@@ -49,6 +49,8 @@ def run_verify(
 
 
 def build_parser() -> argparse.ArgumentParser:
+    from quant_fund import __version__
+
     parser = argparse.ArgumentParser(
         prog="verify-ledger",
         description=(
@@ -56,6 +58,12 @@ def build_parser() -> argparse.ArgumentParser:
             "reordered entries against signed Merkle roots. Exit 0 is valid, "
             "1 is tamper or an inconsistent log, 2 is usage."
         ),
+    )
+    parser.add_argument(
+        "--version",
+        "-V",
+        action="version",
+        version=f"verify-ledger {__version__}",
     )
     parser.add_argument(
         "ledger", type=Path, help="Directory with entries.jsonl and checkpoints.jsonl"
@@ -92,15 +100,19 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> None:
     parser = build_parser()
     args = parser.parse_args(argv)
-    code = run_verify(
-        args.ledger,
-        trust_pub=args.trust_pub,
-        expect_size=args.expect_size,
-        expect_root=args.expect_root,
-        sigstore_identity=args.sigstore_identity,
-        sigstore_issuer=args.sigstore_issuer,
-        sigstore_offline=args.sigstore_offline,
-    )
+    try:
+        code = run_verify(
+            args.ledger,
+            trust_pub=args.trust_pub,
+            expect_size=args.expect_size,
+            expect_root=args.expect_root,
+            sigstore_identity=args.sigstore_identity,
+            sigstore_issuer=args.sigstore_issuer,
+            sigstore_offline=args.sigstore_offline,
+        )
+    except OSError as exc:
+        sys.stderr.write(f"error: {exc}\n")
+        raise SystemExit(2) from None
     raise SystemExit(code)
 
 
@@ -165,3 +177,7 @@ def trace_number(
     sys.stdout.write(json.dumps(report, indent=2, sort_keys=True, default=str))
     sys.stdout.write("\n")
     return report
+
+
+if __name__ == "__main__":
+    main()

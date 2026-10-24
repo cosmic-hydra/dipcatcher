@@ -41,6 +41,7 @@ from quant_fund.research.allocation_cli import allocation_app
 from quant_fund.research.explainability_cli import explainability_app
 from quant_fund.research.research100_cli import research100_app
 from quant_fund.stress.cli import stress_app
+from quant_fund.utils.cli_errors import DipcatcherTyperGroup
 
 if TYPE_CHECKING:
     from quant_fund.config.models import AppConfig
@@ -75,7 +76,12 @@ def format_fdr_families(hypotheses: Sequence[object]) -> str:
 
 
 app = typer.Typer(
-    help="Dipcatcher — Artificial Hedge's proprietary research lab. Default mode is research, never live."
+    cls=DipcatcherTyperGroup,
+    help=(
+        "Dipcatcher — Artificial Hedge's proprietary research lab. "
+        "Default mode is research, never live. "
+        "--version on any command prints the version and exits."
+    ),
 )
 
 # The fx-1 interactive front door is the `fxi` console script (pyproject.toml:
@@ -87,14 +93,35 @@ app = typer.Typer(
 # src/quant_fund/__init__.py, which hatch reads for the distribution version.
 
 
+def _emit_version(value: bool) -> None:
+    if not value:
+        return
+    from quant_fund import __version__
+
+    typer.echo(f"dipcatcher {__version__}")
+    raise typer.Exit()
+
+
 @app.callback(invoke_without_command=True)
-def _bare_help(ctx: typer.Context) -> None:
+def _bare_help(
+    ctx: typer.Context,
+    _version: bool = typer.Option(
+        False,
+        "--version",
+        "-V",
+        help="Show the dipcatcher version and exit.",
+        is_eager=True,
+        callback=_emit_version,
+    ),
+) -> None:
     """Bare ``dipcatcher`` prints help and exits 0.
 
     Click exits 2 when a root Typer app has only sub-typers and no direct
     commands, even with ``no_args_is_help=True``. This callback restores the
     expected help-and-zero behavior without importing any fx1 code.
+    ``--version`` is also accepted on every subcommand.
     """
+    del _version
     if ctx.invoked_subcommand is None:
         ctx.get_help()
         raise typer.Exit()

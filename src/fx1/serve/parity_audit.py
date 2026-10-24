@@ -3476,53 +3476,53 @@ def parity_audit() -> dict[str, bool]:  # NOSONAR
         == "echo:bg-p"
     )
 
-    # cancel parity — a still-running background response flips to
-    # cancelled on both legs and a second cancel refuses with the same
-    # verdict (OpenAICompatError/cancel_terminal in-process, the 409
-    # envelope on the wire)
+    _hold_cancel = threading.Event()  # block completion until cancel is observed
+
     class _SlowParityBackend(_ParityBackend):
         def complete(
             self, messages: list[dict[str, str]], *, sampling: SamplingParams | None = None
         ) -> str:
-            _bg_time.sleep(0.3)
+            _hold_cancel.wait(30)
             return super().complete(messages, sampling=sampling)
 
     _csdk, _cwire = _surfaces(_SlowParityBackend)
     _cremote = HarnessClient("http://harness.test", transport=_tc_transport(_cwire))
-    _c_sdk1, _ = _csdk.openai_response(
-        {
-            "model": "hosted_k3",
-            "input": "bg-c",
-            "background": True,
-            "fx1": {"backend": "byok"},
-        }
-    )
-    _c_wl1 = _cwire.post(
-        "/v1/responses",
-        json={
-            "model": "fx1",
-            "input": "bg-c",
-            "background": True,
-            "fx1": {"backend": "byok"},
-        },
-    ).json()
-    _c_sdk_cx = _csdk.openai_response_cancel(_c_sdk1["id"])
-    _c_wl_cx = _cremote.cancel_response(_c_wl1["id"])
     try:
-        _csdk.openai_response_cancel(_c_sdk1["id"])
-        _c_sdk_again = ""
-    except Exception as _exc2:  # noqa: BLE001 — probe captures the class+code
-        _c_sdk_again = str(getattr(_exc2, "code", ""))
-    _c_wl_again = _cwire.post(f"/v1/responses/{_c_wl1['id']}/cancel")
-    _bg_time.sleep(0.5)  # let the workers settle past the cancel verdict
-    out["response_background_cancel_parity"] = (
-        _c_sdk_cx["status"] == _c_wl_cx["status"] == "cancelled"
-        and _c_sdk_again == "cancel_terminal"
-        and _c_wl_again.status_code == 409
-        and _c_wl_again.json()["error"]["code"] == "cancel_terminal"
-        and _csdk.openai_response_get(_c_sdk1["id"])["status"] == "cancelled"
-        and _cremote.retrieve_response(_c_wl1["id"])["status"] == "cancelled"
-    )
+        _c_sdk1, _ = _csdk.openai_response(
+            {
+                "model": "hosted_k3",
+                "input": "bg-c",
+                "background": True,
+                "fx1": {"backend": "byok"},
+            }
+        )
+        _c_wl1 = _cwire.post(
+            "/v1/responses",
+            json={
+                "model": "fx1",
+                "input": "bg-c",
+                "background": True,
+                "fx1": {"backend": "byok"},
+            },
+        ).json()
+        _c_sdk_cx = _csdk.openai_response_cancel(_c_sdk1["id"])
+        _c_wl_cx = _cremote.cancel_response(_c_wl1["id"])
+        try:
+            _csdk.openai_response_cancel(_c_sdk1["id"])
+            _c_sdk_again = ""
+        except Exception as _exc2:  # noqa: BLE001 — probe captures the class+code
+            _c_sdk_again = str(getattr(_exc2, "code", ""))
+        _c_wl_again = _cwire.post(f"/v1/responses/{_c_wl1['id']}/cancel")
+        out["response_background_cancel_parity"] = (
+            _c_sdk_cx["status"] == _c_wl_cx["status"] == "cancelled"
+            and _c_sdk_again == "cancel_terminal"
+            and _c_wl_again.status_code == 409
+            and _c_wl_again.json()["error"]["code"] == "cancel_terminal"
+            and _csdk.openai_response_get(_c_sdk1["id"])["status"] == "cancelled"
+            and _cremote.retrieve_response(_c_wl1["id"])["status"] == "cancelled"
+        )
+    finally:
+        _hold_cancel.set()
     # replay parity — GET /v1/responses/{id}?stream=true is one contract:
     # the SDK's openai_response_replay and the wire leg's responses_replay
     # emit the same typed event grammar off the stored envelope (the

@@ -2923,6 +2923,34 @@ def _mount_v1_catch_all(app: FastAPI) -> None:
         return JSONResponse(status_code=404, content=body)
 
 
+def _job_sse_frames(
+    job_store: _JobStore, job_id: str, timeout_s: float, keepalive_s: float
+) -> Iterator[str]:
+    # Status is read from the snapshot. The worker mutates the record in place.
+    deadline = time.monotonic() + timeout_s
+    last = ""
+    next_keep = time.monotonic() + keepalive_s if keepalive_s > 0 else math.inf
+    poll_s = 0.25 if keepalive_s <= 0 else min(0.25, keepalive_s)
+    while True:
+        cur = job_store.get(job_id)
+        if cur is None:
+            return
+        snap = cur.model_dump_json()
+        if snap != last:
+            last = snap
+            yield f"event: job\ndata: {snap}\n\n"
+        if json.loads(snap)["status"] in _TERMINAL_JOB_STATUS:
+            yield ": end\n\n"
+            return
+        now = time.monotonic()
+        if now >= deadline:
+            return
+        if now >= next_keep:
+            yield ": keepalive\n\n"
+            next_keep = now + keepalive_s
+        time.sleep(poll_s)
+
+
 def _mount_job_routes(
     app: FastAPI,
     lab: Harness,
@@ -3064,50 +3092,13 @@ def _mount_job_routes(
         job_id: str,
         timeout_s: float = Query(default=600.0, ge=1.0, le=3600.0),
     ) -> StreamingResponse:
-        """SSE job-status stream: ``event: job`` frames on every change
-        until a terminal status, then the stream closes. ``: keepalive``
-        frames fire every ``sse_keepalive_s``; ``timeout_s`` bounds it.
-        Unknown ids 404, same read path as ``GET /harness/jobs/{job_id}``."""
+        """SSE job-status stream until a terminal status, then close."""
         job = job_store.get(job_id)
         if job is None:
             raise ApiError(404, f"unknown job_id {job_id!r}")
         keepalive_s = float(getattr(app.state, "sse_keepalive_s", 15.0))
-
-        def _frames() -> Iterator[str]:
-            deadline = time.monotonic() + timeout_s
-            last = ""
-            next_keep = time.monotonic() + keepalive_s if keepalive_s > 0 else math.inf
-            poll_s = 0.25 if keepalive_s <= 0 else min(0.25, keepalive_s)
-            while True:
-                cur = job_store.get(job_id)
-                if cur is None:
-                    return  # evicted from the bounded store mid-stream
-                # The worker mutates this record in place. A second read of
-                # cur.status can already be terminal while ``snap`` still
-                # says queued/running; closing on that later read ends the
-                # stream without a terminal frame.
-                snap = cur.model_dump_json()
-                if snap != last:
-                    last = snap
-                    yield f"event: job\ndata: {snap}\n\n"
-                try:
-                    status = json.loads(snap).get("status")
-                except json.JSONDecodeError:
-                    status = None
-                now = time.monotonic()
-                if status in _TERMINAL_JOB_STATUS:
-                    # Trailing comment: some ASGI clients drop a terminal last chunk.
-                    yield ": end\n\n"
-                    return
-                if now >= deadline:
-                    return
-                if now >= next_keep:
-                    yield ": keepalive\n\n"
-                    next_keep = now + keepalive_s
-                time.sleep(poll_s)
-
         return StreamingResponse(
-            _frames(),
+            _job_sse_frames(job_store, job_id, timeout_s, keepalive_s),
             media_type="text/event-stream",
             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
         )

@@ -1,0 +1,42 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "129610989999f236abab307a0f4a234250f7aa1187dae5812d61bb5557a26754",
+  "inputs_sha256": "4a49a844f9f769e2c2c2ddbd3d4249d64e8b896ba1fbcd304b8f3c97d9f97f49",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "8a400c255ef6cad36f861bf17c4b4fd8ec5306fac345d9417ede7e57ee8b7fbd",
+  "members": [
+    {
+      "name": "corpus_epoch_01a94d650190d99f.json",
+      "sha256": "fc8b54e55f9e53200bb72974c3d6a8e0a1cfbbc18ef9fb548c9a9c87b1f57b2d"
+    },
+    {
+      "name": "corpus_epoch_fe416fbfe9a8f39c.json",
+      "sha256": "3d9d6e83d02e4e75d490a204221c67a7a60e86536346d2ae0735955a5fc36e2b"
+    },
+    {
+      "name": "environment.json",
+      "sha256": "cb41c9b9bf037abef26d47236fccb02408e44f3529c3ef23d43c42ff5d299c10"
+    },
+    {
+      "name": "install.sh",
+      "sha256": "1d88604d9dcb668cedb5e69facd5ab98d338a607a913f441ca2b9b1e13826960"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_01a94d650190d99f.json"
+  ],
+  "members_removed": [],
+  "n_members": 4,
+  "params": {
+    "head_sha": "233fb82a44c059dcd6cc511f9d5dbe400134b28b",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_01a94d650190d99f.json",
+  "prev_epoch_sha256": "425847d9c71fae2bf7f5c2cbb30d1b7fd1c3ca3e37f47d6eeccd54f93d812902",
+  "receipt_sha256": "6463895907cf55673a8d92900422690564e142bb856fa73307d68483822a1290",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

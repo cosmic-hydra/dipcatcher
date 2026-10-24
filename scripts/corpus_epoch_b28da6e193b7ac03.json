@@ -1,10 +1,10 @@
 {
   "data_label": "CORPUS",
-  "epoch_root_sha256": "e314be9cb7cffc18efc482ab5932324ade4e8b4554751fa0baaef95af427d605",
+  "epoch_root_sha256": "8e685fcc5fe0ad3043f89dec68a0432386577a0050cc13be7a302dedcb2e9eea",
   "inputs_sha256": "cc2ac22ec88c8a753cde7d5547d6d90f1aa562f24d2c9db4649e50dcd7681991",
   "kind": "corpus_epoch.v1",
   "live_pnl_claim": false,
-  "member_tree_root": "c98eccb727a4ac54f162396899922ce7ad60d2925205bdf725a27abba2960642",
+  "member_tree_root": "382f2b67c4fb8d56b59996b8a2ac0b6b2ac875d7713eb1fd2fee162bde6a0087",
   "members": [
     {
       "name": "README.md",
@@ -361,6 +361,10 @@
     {
       "name": "corpus_epoch_585de4e6d617a8a3.json",
       "sha256": "703e88da9be8beb67ef14397d53317dd40a07a9c4566ff704b2ec5e4ca81b117"
+    },
+    {
+      "name": "corpus_epoch_5dd173570918dd37.json",
+      "sha256": "b7c6e4551b8a7a99580e2ca28978630c736c2ae85420793ae5af0d6b1c797c7d"
     },
     {
       "name": "corpus_epoch_61c14bc64166f097.json",
@@ -1216,7 +1220,7 @@
     },
     {
       "name": "verify_epoch_chain.py",
-      "sha256": "b67797c41e8d3e92d1d88ca9b1f4e49d33f5f21eb04214b2905582b98072624d"
+      "sha256": "3bff4a10940dd48628941fd724c0f93ad5cd4af7a48bea75785774c859c3df30"
     },
     {
       "name": "verify_evidence_bundle.py",
@@ -1236,21 +1240,19 @@
     }
   ],
   "members_added": [
-    "corpus_epoch_53bf0eda66e281e4.json"
+    "corpus_epoch_5dd173570918dd37.json"
   ],
-  "members_removed": [
-    "smoke_installed_wheel.py"
-  ],
-  "n_members": 307,
+  "members_removed": [],
+  "n_members": 308,
   "params": {
-    "head_sha": "371e4916cf9a36fad1566616b36a70f0abbcecd7",
+    "head_sha": "bf5b01097cec4bf696062559fda679aeeaa032f5",
     "pattern": "*"
   },
-  "prev_epoch_receipt": "corpus_epoch_53bf0eda66e281e4.json",
-  "prev_epoch_sha256": "2f03faa964711fe14dfa85ea016a75f7bdf8539981b4cd31d97debc76b2f4947",
-  "receipt_sha256": "01ee99d380ff5c3e860ea3aa74f026bb73940c0f4783803fa04e3899fbf8b5f2",
+  "prev_epoch_receipt": "corpus_epoch_5dd173570918dd37.json",
+  "prev_epoch_sha256": "401e178d86844cd2efd0b17be4e257efcf12d145a00d4f3bc6b90e56c044c21d",
+  "receipt_sha256": "b28da6e193b7ac038d9deb7ae1418dee0a85f2f79891e010d4157d3b3b08549e",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,
-  "verdict": "shrinking"
+  "verdict": "advancing"
 }

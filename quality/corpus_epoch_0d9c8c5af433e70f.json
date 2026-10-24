@@ -1,10 +1,10 @@
 {
   "data_label": "CORPUS",
-  "epoch_root_sha256": "c22ed3d85f0cb107742097640e3f844c28aa18cc9ad3344f497ba3f72cdf3f27",
+  "epoch_root_sha256": "166e866ff6661bae204d335f7c9aa344c9087e717b1d565903a6fb5aba76aa6e",
   "inputs_sha256": "5f5ba69a36a374769a3cced3c5c0b6823b34b46c1011dee883d80dad8aa993bd",
   "kind": "corpus_epoch.v1",
   "live_pnl_claim": false,
-  "member_tree_root": "f4931f26c2a45c5da6196216f8165494cd0863f6b373d3a309dd234476f051ef",
+  "member_tree_root": "adb1b5932b68b2f94cd110d97ab158cfd6de0b696116af373c9696673a3b619a",
   "members": [
     {
       "name": "api_surface.json",
@@ -20,7 +20,7 @@
     },
     {
       "name": "canon_qualification_summary.json",
-      "sha256": "d3c4ae0865f40a898039f92349238515629a9233483bee23710869bacf7552b2"
+      "sha256": "b5f7bd8e6288f50e272a90992a8d5b3659edfdf62cd61f0762c4377216cc65db"
     },
     {
       "name": "corpus_epoch_006e861b9df12cad.json",
@@ -855,10 +855,6 @@
       "sha256": "5b51301182b083f6d8cd35ddb5974d8979ddf1bf0a05b99392821edbe96bd9bf"
     },
     {
-      "name": "corpus_epoch_d0ab8538284f00bf.json",
-      "sha256": "c6219e79a831c49da9aa44994d9fbd4ee964b1ef219573c9aa15c487ddc68615"
-    },
-    {
       "name": "corpus_epoch_d0b397335ab7a5ce.json",
       "sha256": "24e8f6d1eeb8b4cf07efc2eacd4dad138076c06e7127f47a2148361c6c4f06aa"
     },
@@ -1068,7 +1064,7 @@
     },
     {
       "name": "crown_jewels.json",
-      "sha256": "e6c497fb655b8fc4077a2194c23dd95f84b4df1c2aa89543c5b380e3ca2edca4"
+      "sha256": "88a80f96896b6fa1c9f00de09c245ddeb2f81b124c47408ae08a8fcb29aed845"
     },
     {
       "name": "epoch_allowed_removals.json",
@@ -1136,17 +1132,17 @@
     }
   ],
   "members_added": [
-    "corpus_epoch_d0ab8538284f00bf.json"
+    "corpus_epoch_ea48aba287ef83ee.json"
   ],
   "members_removed": [],
-  "n_members": 282,
+  "n_members": 281,
   "params": {
-    "head_sha": "371e4916cf9a36fad1566616b36a70f0abbcecd7",
+    "head_sha": "ef0c77a471a32ba59e038b5aa0a6c2e60ead3fab",
     "pattern": "*.json"
   },
-  "prev_epoch_receipt": "corpus_epoch_d0ab8538284f00bf.json",
-  "prev_epoch_sha256": "33655a381309c09bb42514d69a7ef2b38758a5e25ed1b6dc5f5665b2467e88b8",
-  "receipt_sha256": "0eb5bf9f3d550adc8643f8edae5dce6b975c6c7944c8189c34070fc2cd1e5643",
+  "prev_epoch_receipt": "corpus_epoch_ea48aba287ef83ee.json",
+  "prev_epoch_sha256": "4afedd36460ff14fb7c48d3b11fc185f24db9c9a4671b326fa42ef403dbb6ded",
+  "receipt_sha256": "0d9c8c5af433e70fb30bc35b796962ddd0fc6970ff83b6ba0aa3327570e718aa",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,

@@ -566,6 +566,32 @@ def test_github_workflows_subcorpus_exempt(tmp_path: Path) -> None:
     assert "workflows/ci.yml" not in members
 
 
+def test_lake_runtime_sidecars_are_not_metadata_members(tmp_path: Path) -> None:
+    """Ingest and the CLI drop gitignored sidecars beside the lake evidence.
+
+    Those exact names are not chain members under ``data/metadata``. The same
+    names in another corpus, and any other file in the metadata corpus, stay
+    members — a dropped file still fails ``require_stamped``.
+    """
+    lake = tmp_path / "metadata"
+    lake.mkdir()
+    _receipt(lake, "evidence.json", "sealed")
+    (lake / "data_manifest.json").write_text("{}\n")
+    (lake / "resolved_config.json").write_text("{}\n")
+    (lake / "proofcore.duckdb").write_bytes(b"db")
+    members = member_digests(lake, pattern="*")
+    assert set(members) == {"evidence.json"}
+    write_epoch_receipt(corpus_epoch(lake, pattern="*"), lake)
+    (lake / "rogue.json").write_text("{}\n")
+    res = check_epoch_chain(lake, pattern="*", require_stamped=True)
+    assert res["errors"] == ["unstamped_member:'rogue.json'"]
+
+    other = tmp_path / "receipts"
+    other.mkdir()
+    (other / "data_manifest.json").write_text("{}\n")
+    assert "data_manifest.json" in member_digests(other, pattern="*")
+
+
 def test_script_membership_parity(tmp_path: Path) -> None:
     """The standalone auditor's membership must equal the library's byte-for-
     byte — it carries its own exemption rules and has diverged before."""
@@ -583,5 +609,13 @@ def test_script_membership_parity(tmp_path: Path) -> None:
     (gh / "workflows").mkdir(parents=True)
     (gh / "workflows" / "ci.yml").write_text("x")
     (gh / "tpl.md").write_text("t")
-    for d in (corpus, gh):
+    lake = tmp_path / "metadata"
+    lake.mkdir()
+    (lake / "evidence.json").write_text("{}")
+    (lake / "data_manifest.json").write_text("{}")
+    (lake / "resolved_config.json").write_text("{}")
+    (lake / "proofcore.duckdb").write_bytes(b"db")
+    (lake / "nested" / "manifest.json").parent.mkdir()
+    (lake / "nested" / "manifest.json").write_text("{}")
+    for d in (corpus, gh, lake):
         assert sv._member_digests(d, "*") == member_digests(d, pattern="*")

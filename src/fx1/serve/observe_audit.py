@@ -119,6 +119,29 @@ _RESOURCE_STACK: ContextVar[ExitStack | None] = ContextVar("observe_audit_resour
 
 
 @contextmanager
+def _cleared_backend_env() -> Iterator[None]:
+    """Drop credential env for one request, then restore it.
+
+    ``_backend_configured`` reads the process environment on every
+    ``/health``. ``_make_app`` only clears those variables while the app
+    is constructed, so a sibling test that left ``MOONSHOT_API_KEY`` or
+    ``FX1_BYOK_*`` set makes the fail-closed probe see a configured
+    backend. The probe is about the unconfigured state.
+    """
+    saved = {name: os.environ.get(name) for name in _SWEPT_ENVS}
+    for name in _SWEPT_ENVS:
+        os.environ.pop(name, None)
+    try:
+        yield
+    finally:
+        for name, value in saved.items():
+            if value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = value
+
+
+@contextmanager
 def _audit_resources() -> Iterator[None]:
     """Close every client and worker pool even when a probe raises."""
     with ExitStack() as stack:
@@ -475,33 +498,6 @@ def _wait_job(
 # ---------------------------------------------------------------------------
 
 
-def _health_with_backends_unconfigured(client: TestClient) -> dict[str, Any]:
-    """Read ``/health`` while backend credentials are absent.
-
-    ``_backend_configured`` inspects the process environment on every
-    request. ``_make_app`` restores the caller's env before the client
-    is used, so a developer shell — or an earlier test on this worker
-    that applied ``MOONSHOT_API_KEY`` in-process — would otherwise mark
-    a backend configured and fail the unconfigured pin. The sweep is
-    the same set ``_make_app`` uses, minus the API key the app already
-    captured at startup.
-    """
-    names = tuple(name for name in _SWEPT_ENVS if name != _API_KEY_ENV)
-    saved = {name: os.environ.get(name) for name in names}
-    try:
-        for name in names:
-            os.environ.pop(name, None)
-        response = client.get("/health")
-    finally:
-        for name, value in saved.items():
-            if value is None:
-                os.environ.pop(name, None)
-            else:
-                os.environ[name] = value
-    body: dict[str, Any] = response.json()
-    return body
-
-
 def _probe_liveness() -> dict[str, bool]:
     """Health is liveness (public, always up); ready is readiness
     (keyed, fails closed under drain and off the public path)."""
@@ -513,7 +509,8 @@ def _probe_liveness() -> dict[str, bool]:
     out["health_public_wrong_key"] = (
         client.get("/health", headers={"X-API-Key": "fx1k_deadbeef"}).status_code == 200
     )
-    h = _health_with_backends_unconfigured(client)
+    with _cleared_backend_env():
+        h = client.get("/health").json()
     out["health_shape"] = (
         h.get("status") == "ok"
         and isinstance(h.get("registered_commands"), int)
@@ -522,9 +519,8 @@ def _probe_liveness() -> dict[str, bool]:
         and all(isinstance(v, bool) for v in h["backends"].values())
         and isinstance(h.get("draining"), bool)
     )
-    # Credential env is cleared for this read (see
-    # _health_with_backends_unconfigured). The flags must report the
-    # real unconfigured state instead of claiming a backend is healthy.
+    # Flags are read live. With credential env removed for this request
+    # they must report nothing configured, not whatever a sibling left set.
     out["health_backends_fail_closed_unconfigured"] = all(
         v is False for v in h["backends"].values()
     )
