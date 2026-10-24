@@ -453,18 +453,18 @@ def bench_extra_conformal() -> dict[str, float]:
         main = _extra_conformal_core_bench.bench_extra_conformal(seed=_SEED + 51)
         harm = _extra_conformal_core_bench.bench_extra_harm(seed=_SEED + 51)
         mapped = {
-            "xc_coverage": float(main["coverage"]),
-            "xc_mean_width": float(main["mean_width"]),
-            "xc_unweighted_coverage": float(main["unweighted_coverage"]),
-            "xc_coverage_error": float(main["coverage_error"]),
-            "xc_unweighted_coverage_error": float(main["unweighted_coverage_error"]),
-            "xc_ess_fraction": float(main["ess_fraction"]),
-            "xc_alpha": float(main["alpha"]),
-            "xc_n_cal": float(main["n"]),
-            "xc_harm_coverage": float(harm["coverage"]),
-            "xc_harm_unweighted_coverage": float(harm["unweighted_coverage"]),
-            "xc_harm_coverage_gap": float(harm["harm_coverage_gap"]),
-            "xc_harm_ess_fraction": float(harm["ess_fraction"]),
+            "xc_coverage": float(main["synthetic_coverage"]),
+            "xc_mean_width": float(main["synthetic_mean_width"]),
+            "xc_unweighted_coverage": float(main["synthetic_unweighted_coverage"]),
+            "xc_coverage_error": float(main["synthetic_coverage_error"]),
+            "xc_unweighted_coverage_error": float(main["synthetic_unweighted_coverage_error"]),
+            "xc_ess_fraction": float(main["synthetic_ess_fraction"]),
+            "xc_alpha": float(main["synthetic_alpha"]),
+            "xc_n_cal": float(main["synthetic_n"]),
+            "xc_harm_coverage": float(harm["synthetic_coverage"]),
+            "xc_harm_unweighted_coverage": float(harm["synthetic_unweighted_coverage"]),
+            "xc_harm_coverage_gap": float(harm["synthetic_harm_coverage_gap"]),
+            "xc_harm_ess_fraction": float(harm["synthetic_ess_fraction"]),
         }
         return _finite_blob(mapped)
     except (ValueError, RuntimeError, FloatingPointError, KeyError, TypeError):

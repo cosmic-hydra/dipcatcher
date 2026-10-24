@@ -322,12 +322,25 @@ def test_ewma_rejects_invalid_lambda_and_dcc_is_finite() -> None:
 
     if sys.platform == "darwin":
         # arch 8.0.0 DCC stage-1 GARCH optimizer hits a beta=1.0 boundary on
-        # macOS arm64 BLAS wheels for the seed-11 noise -> fail-closed
-        # `nonstationary_persistence`. macOS-only; identical code passes on
-        # Linux and Windows. Mirrored disclosure in PROOF.md.
+        # macOS arm64 BLAS wheels -> fail-closed `nonstationary_persistence`.
+        # macOS-only; the planted series below is stationary on Linux.
+        # Mirrored disclosure in PROOF.md.
         pytest.xfail("arch 8.0.0 DCC boundary on macOS arm64 (fail-closed path)")
+    # White noise at 1e-2 sits on the GARCH unit-root boundary: arch's
+    # stage-1 fit then fail-closes with nonstationary_persistence (seen on
+    # CPython 3.13). A planted GARCH(1,1) with a+b=0.95 is actually
+    # stationary, so the one-step DCC matrix has to come back finite.
     rng = np.random.default_rng(11)
-    sigma, params = dcc_gaussian(rng.normal(size=(240, 4)) * 0.01)
+    n_obs, n_assets = 400, 4
+    columns = []
+    for _asset in range(n_assets):
+        shock = rng.normal(size=n_obs)
+        variance = np.empty(n_obs)
+        variance[0] = 1e-4
+        for t in range(1, n_obs):
+            variance[t] = 1e-6 + 0.05 * variance[t - 1] * shock[t - 1] ** 2 + 0.90 * variance[t - 1]
+        columns.append(np.sqrt(variance) * shock * 0.01)
+    sigma, params = dcc_gaussian(np.column_stack(columns))
     assert np.isfinite(sigma).all()
     assert min_eigenvalue(sigma) >= -1e-8
     assert 0.0 <= float(params["a"]) + float(params["b"]) < 0.999

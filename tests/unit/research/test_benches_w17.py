@@ -52,6 +52,7 @@ from quant_fund.research.benches_w17 import (
     bench_adaptive_eps,
     bench_conformal_oce,
     bench_diffusion_forecaster,
+    bench_extra_conformal,
     bench_greek_neutral,
 )
 from quant_fund.research.catalog import (
@@ -231,6 +232,22 @@ def test_diffusion_forecaster_crps_gain_and_calibration(
     # bound — the shrunk n_samples = 80 adds MC noise to the PIT estimate).
     assert 0.0 <= diffusion_forecaster["diffpts_pit_ks_pvalue"] <= 1.0
     assert diffusion_forecaster["diffpts_pit_ks_pvalue"] > 0.01
+
+
+def test_extra_conformal_scorecard_blob_is_finite() -> None:
+    """The model stamps ``synthetic_*`` keys; the scorecard blob must keep them.
+
+    An empty blob is what ``verify-research`` reports as
+    ``scorecard_invalid:extra_conformal``.
+    """
+    blob = bench_extra_conformal()
+    assert blob
+    assert family_blob_has_finite_observation(blob)
+    assert family_blob_forbidden_metrics_absent(blob)
+    assert all(np.isfinite(v) for v in blob.values())
+    assert blob["xc_harm_coverage_gap"] == (
+        blob["xc_harm_unweighted_coverage"] - blob["xc_harm_coverage"]
+    )
 
 
 def test_numpy_benches_are_deterministic(
