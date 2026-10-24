@@ -1,10 +1,10 @@
 {
   "data_label": "CORPUS",
-  "epoch_root_sha256": "d6fcaa153da0c2bf4a22987e949e46272deaf2953105abfd56010e9cf0ef4e41",
+  "epoch_root_sha256": "83d1ccb906898d47cfb37b08a41c0a2119d0c6e480ef9363f862fe91e155bee4",
   "inputs_sha256": "058b9eef52fa657daa0f02820c06b473987dcc600032f7c2ac0a46a3e58b2b3b",
   "kind": "corpus_epoch.v1",
   "live_pnl_claim": false,
-  "member_tree_root": "abdccaa4c7adb0ccf8bf5d207dd2704aaf7759a691c8fd58a91bf038e6fee0b7",
+  "member_tree_root": "2f7d6fe0013bdc933c0c49b596e9465c30cfdfe643e9c3b343abb815e2cac41a",
   "members": [
     {
       "name": "corpus_epoch_03515326e08a756d.json",
@@ -39,16 +39,8 @@
       "sha256": "e79f709c2adda6418b04a21c747f3f40d91e6bb65740c8ac6027639311c6d331"
     },
     {
-      "name": "corpus_epoch_587eb63e8f3f03c0.json",
-      "sha256": "a68d3ee92817f01fee6ea90267f4e005bce4d7754f531715de98ff319664bc4b"
-    },
-    {
       "name": "corpus_epoch_5c172504c353aeba.json",
       "sha256": "5769cc242cff49316f76a46bb8ed22f101ad40f2ade0dd7654d35c2e6cebcb73"
-    },
-    {
-      "name": "corpus_epoch_612082b4b849e4d3.json",
-      "sha256": "3737ccc8d7389fd6d6a3e4786722c642b169eabef27325292957525dd109e0f0"
     },
     {
       "name": "corpus_epoch_655dfe2caa0322a8.json",
@@ -151,6 +143,10 @@
       "sha256": "cf2d3c0cb0fe053f1b75086396866728553cbd9d997f4afd10c5def07726109a"
     },
     {
+      "name": "corpus_epoch_dd5697c61b02e4dc.json",
+      "sha256": "d4f1bc253a24a2e8b4ec5d240a9c1f7120853cabfccd44e92c3fb90d9c8c00b4"
+    },
+    {
       "name": "corpus_epoch_de53e1aec0b37473.json",
       "sha256": "1c7492ba581fc24532966d9ec473a30374dc086b5c04794c20079a70710bb00b"
     },
@@ -173,14 +169,6 @@
     {
       "name": "corpus_epoch_f328f9a3d442e735.json",
       "sha256": "7ef0967a0e43d55727cfe78535c0c78267f6f96e71a38da336d032e95ea49f25"
-    },
-    {
-      "name": "corpus_epoch_f887520df3a8b7e3.json",
-      "sha256": "a848c980d597988ef8c6156d0816860b38bf8a7754a42ae2d436ecc615b05ca2"
-    },
-    {
-      "name": "corpus_epoch_faf35f76b9d65673.json",
-      "sha256": "ba3e8e3ace6d5eeec713c3c9d720ebad8686f82ffc9171be63ecbd94e367fea7"
     },
     {
       "name": "corpus_epoch_fb9b2238526d6bd0.json",
@@ -208,7 +196,7 @@
     },
     {
       "name": "fx1/bench/dip.py",
-      "sha256": "b80e419b7beb7bf9431fd1f491c4abbcfa96631f97f16e5bc2656d499af9486b"
+      "sha256": "0784a6bf659e310b7c7ac267d24e691dc3b4a3faf63e856a55149c4122af1deb"
     },
     {
       "name": "fx1/bench/dip_audit.py",
@@ -224,11 +212,11 @@
     },
     {
       "name": "fx1/capabilities.py",
-      "sha256": "74a879b8d417056c29032ecae25b4ad0f514286ce2284d37bb8f7b76b51d1bd2"
+      "sha256": "7c951891178ecc78a61cc97f169167b51d52fefc1b101248cb2a13efa17e0c44"
     },
     {
       "name": "fx1/cli.py",
-      "sha256": "692b86b08a7099d2adc66e688fc4d4b9253b054f3281f1be01064fdc02d9d26d"
+      "sha256": "6445e158a2a740d5d3f07ff7d6618617ef6b951f0e9ff6b54c5304a6b4ce88f7"
     },
     {
       "name": "fx1/cli_audit.py",
@@ -932,7 +920,7 @@
     },
     {
       "name": "fx1/interactive/concierge.py",
-      "sha256": "5e06a5cc3efc0125e730f05a5924d53c7f3cc04c0ec0dc0cd0cfa5a1ce6a13a0"
+      "sha256": "1903b5871196b0f33c88b443e47a207e42fff0a15ae13586bd768295c4382ede"
     },
     {
       "name": "fx1/interactive/orb.py",
@@ -1172,7 +1160,7 @@
     },
     {
       "name": "fx1/sdk.py",
-      "sha256": "448a47141f52d2ca1dd155893ab35721bb639ed96a54a8a7299a26deb21e683b"
+      "sha256": "7785feae1e2ec669374b4d4efad4c0d9ff4235a49c9dfe5eee2f8f5c7ad69c95"
     },
     {
       "name": "fx1/sdk_audit.py",
@@ -1196,7 +1184,7 @@
     },
     {
       "name": "fx1/serve/api.py",
-      "sha256": "b4e33844a25ace82e009df7b4e12b264bb0f030138252163d5620edf9a3bb6a7"
+      "sha256": "161a05df841b45842f24ac3d080c751df6914d7d729b28ff61a6629b923f56ca"
     },
     {
       "name": "fx1/serve/api_audit.py",
@@ -1236,7 +1224,7 @@
     },
     {
       "name": "fx1/serve/client.py",
-      "sha256": "265084502a55204117dcae27204809fc3eed49dfdf5a21ad490a0d854912f2ec"
+      "sha256": "e48e3de828e436a4d697351450a124cf53bcf2c46bbb53864d8285ee470f057f"
     },
     {
       "name": "fx1/serve/client_audit.py",
@@ -1268,7 +1256,7 @@
     },
     {
       "name": "fx1/serve/evals.py",
-      "sha256": "f87204d0e3fd53e70b4afeb4b3e9b8242ecd41b9a7627711ac32f9450cbf87d4"
+      "sha256": "6fa72955a8dd01e3b277f01d66e698da89134280fcd69c5846b6fa49061fe6be"
     },
     {
       "name": "fx1/serve/fault_audit.py",
@@ -1328,7 +1316,7 @@
     },
     {
       "name": "fx1/serve/openai_compat.py",
-      "sha256": "9ccf0935bff77ffa00176a6747265d7259663b22a6d5585810e56da8cdc05c51"
+      "sha256": "dde62dd385585d74f84869ea750d5521ca62f767230eedc6c881e32cfb84b3aa"
     },
     {
       "name": "fx1/serve/ops_audit.py",
@@ -1364,7 +1352,7 @@
     },
     {
       "name": "fx1/serve/retrieval_audit.py",
-      "sha256": "343c6f6e603d3985b7a5b01c4849eeb0821a51598fb41101221fa65d27253c43"
+      "sha256": "5cb76de5d4147bfb571866d9a3604bed309d12b0621438fe3350720d5ac8afa3"
     },
     {
       "name": "fx1/serve/serve_audit.py",
@@ -1380,7 +1368,7 @@
     },
     {
       "name": "fx1/serve/stream_audit.py",
-      "sha256": "0e466e88fdc53c13b8c57fe3fe4c0a063409c4c7ce2abc853d0dcae0ecf4d5ad"
+      "sha256": "dba4da15473126fd1e437fddf7a7da16eaa296204fc0c7855f016d95acbcef2d"
     },
     {
       "name": "fx1/serve/tenancy_audit.py",
@@ -1488,11 +1476,11 @@
     },
     {
       "name": "fx1/webresearch/fetch.py",
-      "sha256": "8e1d001f4f89aaa4cd672b2034b54890fa2bcdc6c365a2d5eb55358223cae0a0"
+      "sha256": "e9a63ea2fdf727a552d6e2df5e7ee8664c7d830892ccedbd72de126e74cb62e7"
     },
     {
       "name": "fx1/webresearch/search.py",
-      "sha256": "5f1c90c20cb5acb308ace0d9e027deee6f04e12d1a3f1eca4f8ed59b2a3f07e6"
+      "sha256": "8aa549fc2ef8038c5d73db0a1f6cd91fb01130d78b2b24d1c5a2df12c9f3ea84"
     },
     {
       "name": "quant_fund/__init__.py",
@@ -10332,7 +10320,7 @@
     },
     {
       "name": "quant_fund/models/cma_es.py",
-      "sha256": "ac1fa13ea06531e04e6e84833131f3ecc3d26551a508ac5b62ec12db12314e31"
+      "sha256": "540af9fc2674d3dc8dc78ba26bded1f8e3462a991412a7661df7a2f7f2f2ff3e"
     },
     {
       "name": "quant_fund/models/cmb_anisotropy.py",
@@ -49404,7 +49392,7 @@
     },
     {
       "name": "quant_fund/research/benches_w20.py",
-      "sha256": "9691e78a05e15cba88dbf7af4896dee1e19d54e86d2da8badc42d0bde99e3420"
+      "sha256": "91a58703ffef7c8a3faf5891195453d5b4247628c7ea6bbb7a17a9a97491a0a9"
     },
     {
       "name": "quant_fund/research/benches_w200.py",
@@ -53400,7 +53388,7 @@
     },
     {
       "name": "quant_fund/research/script_receipts.py",
-      "sha256": "3ff779200c08a88f3afea598fdfcb94e5f2390f874d65874eba6f7eb9f917f2d"
+      "sha256": "10a30a5f2a555ddaa8ab6a8c1aeff19e0ce7ce1672b9e72c55715f110a377e6c"
     },
     {
       "name": "quant_fund/research/selective_inference.py",
@@ -53804,17 +53792,17 @@
     }
   ],
   "members_added": [
-    "corpus_epoch_612082b4b849e4d3.json"
+    "corpus_epoch_dd5697c61b02e4dc.json"
   ],
   "members_removed": [],
-  "n_members": 13449,
+  "n_members": 13446,
   "params": {
-    "head_sha": "cbccdffa17fd4e17d33c1bafff47699355a121e2",
+    "head_sha": "233fb82a44c059dcd6cc511f9d5dbe400134b28b",
     "pattern": "*"
   },
-  "prev_epoch_receipt": "corpus_epoch_612082b4b849e4d3.json",
-  "prev_epoch_sha256": "e276a5119717a6a5a1d824b033190b24311b121b83bc226adf54c63480cee93b",
-  "receipt_sha256": "0b55ea85dc1ba2defc991a4ae6f41d5a4820ebb4b36c863201a5d3d9f92ef3b2",
+  "prev_epoch_receipt": "corpus_epoch_dd5697c61b02e4dc.json",
+  "prev_epoch_sha256": "94bea664ba838a8df7dcaa8608bb2c189728b4a5e98528782dec2e5082b80b2d",
+  "receipt_sha256": "e5f3a5655a5ed90f5309678c4e6eca0baf96737d5a313f0e11c315edc6f162c8",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,

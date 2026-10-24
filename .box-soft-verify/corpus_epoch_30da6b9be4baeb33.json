@@ -85,12 +85,12 @@
   "members_removed": [],
   "n_members": 18,
   "params": {
-    "head_sha": "9afbad84fdf49283be2f14c41195c4d944a01751",
+    "head_sha": "233fb82a44c059dcd6cc511f9d5dbe400134b28b",
     "pattern": "*"
   },
   "prev_epoch_receipt": "corpus_epoch_5f5d753a30f53ecf.json",
   "prev_epoch_sha256": "009fb521b141eb286c8897ac17860a1ad31b8eccc695dde1962e6b4d36bf5dfb",
-  "receipt_sha256": "c321ac72d46d95e590c366b735877d4c1bee1e72503a0fcae06ead01b915d3d9",
+  "receipt_sha256": "30da6b9be4baeb3329fbe703d545a18e8de1dbda32cb1c93c963f512f6eaefa0",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,

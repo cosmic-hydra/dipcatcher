@@ -1243,12 +1243,12 @@
   ],
   "n_members": 307,
   "params": {
-    "head_sha": "9afbad84fdf49283be2f14c41195c4d944a01751",
+    "head_sha": "233fb82a44c059dcd6cc511f9d5dbe400134b28b",
     "pattern": "*"
   },
   "prev_epoch_receipt": "corpus_epoch_53bf0eda66e281e4.json",
   "prev_epoch_sha256": "2f03faa964711fe14dfa85ea016a75f7bdf8539981b4cd31d97debc76b2f4947",
-  "receipt_sha256": "def61e926ce50ac1501cf96900063b4db2280c8216dce09f6d855a34105d8fbf",
+  "receipt_sha256": "5dd173570918dd37d8785c6428b3aeaebe9809873461dcc0c4872fff08ebae17",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,

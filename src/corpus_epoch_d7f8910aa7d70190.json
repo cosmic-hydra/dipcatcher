@@ -1,10 +1,10 @@
 {
   "data_label": "CORPUS",
-  "epoch_root_sha256": "c689a9624cec9baacbb654c8de8499cdd5b186029f191be82cae8ed9d0c0c605",
+  "epoch_root_sha256": "efeccf652e8446e48f51f09164a11276dbd58558151a48fe0ed9c4966e9cba01",
   "inputs_sha256": "058b9eef52fa657daa0f02820c06b473987dcc600032f7c2ac0a46a3e58b2b3b",
   "kind": "corpus_epoch.v1",
   "live_pnl_claim": false,
-  "member_tree_root": "04c7915afbcc1752dc0c9cc4b124d44a2181e0ca9f67b0af7133296a0097da5f",
+  "member_tree_root": "2752c13e0725037ad4dbb7fbff3120e655d577ab7f0ab610bc819d7fd9924245",
   "members": [
     {
       "name": "corpus_epoch_03515326e08a756d.json",
@@ -37,10 +37,6 @@
     {
       "name": "corpus_epoch_57fa9f3ff7db462e.json",
       "sha256": "e79f709c2adda6418b04a21c747f3f40d91e6bb65740c8ac6027639311c6d331"
-    },
-    {
-      "name": "corpus_epoch_587eb63e8f3f03c0.json",
-      "sha256": "a68d3ee92817f01fee6ea90267f4e005bce4d7754f531715de98ff319664bc4b"
     },
     {
       "name": "corpus_epoch_5c172504c353aeba.json",
@@ -147,6 +143,10 @@
       "sha256": "cf2d3c0cb0fe053f1b75086396866728553cbd9d997f4afd10c5def07726109a"
     },
     {
+      "name": "corpus_epoch_dd5697c61b02e4dc.json",
+      "sha256": "d4f1bc253a24a2e8b4ec5d240a9c1f7120853cabfccd44e92c3fb90d9c8c00b4"
+    },
+    {
       "name": "corpus_epoch_de53e1aec0b37473.json",
       "sha256": "1c7492ba581fc24532966d9ec473a30374dc086b5c04794c20079a70710bb00b"
     },
@@ -159,6 +159,10 @@
       "sha256": "cb7d331f86e6af796c4f3241b7c632949ca6fd96bc0e9f7e4724b6c79c6c8501"
     },
     {
+      "name": "corpus_epoch_e5f3a5655a5ed90f.json",
+      "sha256": "a1cc66d97d3b474f2257b694e255dc0a06d5a43ab174ac2fcbdee74dd974e603"
+    },
+    {
       "name": "corpus_epoch_e75d72d294180051.json",
       "sha256": "fcb94ced7b87e267d55640fed212469acdbf45e1eca79220cf43a40482e9fb82"
     },
@@ -169,10 +173,6 @@
     {
       "name": "corpus_epoch_f328f9a3d442e735.json",
       "sha256": "7ef0967a0e43d55727cfe78535c0c78267f6f96e71a38da336d032e95ea49f25"
-    },
-    {
-      "name": "corpus_epoch_f887520df3a8b7e3.json",
-      "sha256": "a848c980d597988ef8c6156d0816860b38bf8a7754a42ae2d436ecc615b05ca2"
     },
     {
       "name": "corpus_epoch_fb9b2238526d6bd0.json",
@@ -220,11 +220,19 @@
     },
     {
       "name": "fx1/cli.py",
-      "sha256": "692b86b08a7099d2adc66e688fc4d4b9253b054f3281f1be01064fdc02d9d26d"
+      "sha256": "1719bb831b407fa369ed597219abcab3447926c8b2bf1ad7f295792ee22d8e0d"
     },
     {
       "name": "fx1/cli_audit.py",
       "sha256": "e9b22d6167a63eca38c22876901942e7b109bb42276d5e873587231e5ff3752d"
+    },
+    {
+      "name": "fx1/cli_errors.py",
+      "sha256": "6433cdd7bf878f5005c81295fa07fb58441884ce22aefec95ba947b63ce2d0db"
+    },
+    {
+      "name": "fx1/cli_sources.py",
+      "sha256": "ab11793554102218f5046ecae87d94604e08aa5d4a37dc9a3197121c18bee82f"
     },
     {
       "name": "fx1/data/__init__.py",
@@ -908,7 +916,7 @@
     },
     {
       "name": "fx1/interactive/__init__.py",
-      "sha256": "af3934e46b7c887654c6dc3f7c8e2b48e743bb690271206ec81856880b87f64f"
+      "sha256": "0c0c0edc8c99e8a13ad700852368cfaafd06a126d1f58caf98bde0a175726a8f"
     },
     {
       "name": "fx1/interactive/actions.py",
@@ -916,7 +924,7 @@
     },
     {
       "name": "fx1/interactive/app.py",
-      "sha256": "f9186f8b2b0a47dd1cd885bba2f50757a130de13ce55b82710e9fa1d92f86691"
+      "sha256": "50b8319310b25f7b57de0018bc1d1bbee019b1aae045ea2eac13f6c90e22db5b"
     },
     {
       "name": "fx1/interactive/approvals.py",
@@ -1232,7 +1240,7 @@
     },
     {
       "name": "fx1/serve/client_audit.py",
-      "sha256": "b472118d7d19836e46dd5be2a5f45e035e2a4245ca37b30087207cbfeee53cc2"
+      "sha256": "b46d123b4de8f618473f6cc7d4c23d4da3194b091ba8292133f1136a333aa45e"
     },
     {
       "name": "fx1/serve/contract.py",
@@ -1316,7 +1324,7 @@
     },
     {
       "name": "fx1/serve/observe_audit.py",
-      "sha256": "ef42f97cb7bc1e8394d36abb3eb8d90677a97f0a35cbd6cd31fbb7ee6857b2b8"
+      "sha256": "b5772197841420bcaa184f4efdc5dd33092d806906be4c3f6f1b51fda2b51d47"
     },
     {
       "name": "fx1/serve/openai_compat.py",
@@ -1332,7 +1340,7 @@
     },
     {
       "name": "fx1/serve/parity_audit.py",
-      "sha256": "27b4eea6f4eeb7f82dc12516c732d36425839090156b2e3aa3d1dce039a187fa"
+      "sha256": "5d8e592b2699e14ca1847c890bd206710c6ae61d57251e45f794e6b5779ae2c4"
     },
     {
       "name": "fx1/serve/perf_audit.py",
@@ -1532,7 +1540,7 @@
     },
     {
       "name": "quant_fund/audit/cli.py",
-      "sha256": "d4f1b81a30079f5e2fc97649df826a6f574bcc2240397d2f9e19600797af7658"
+      "sha256": "ded822855515348e0334dc43d90028983a590a6837cf3ba968d65b294d0a26fb"
     },
     {
       "name": "quant_fund/audit/errors.py",
@@ -1660,11 +1668,15 @@
     },
     {
       "name": "quant_fund/cli/__init__.py",
-      "sha256": "a505b726bb829757039bce1e94cae7a92bdfa1c94867202848e6493928b29a4a"
+      "sha256": "92a548d796489899d5e801f04d8aed0ed979fb1ec531846f543f4f6ffe51fc9f"
+    },
+    {
+      "name": "quant_fund/cli/__main__.py",
+      "sha256": "baedb86c9dcdd6a62b073c2521a6f847617ee420f7e07b57938bc6ce8d8c7869"
     },
     {
       "name": "quant_fund/cli/_app.py",
-      "sha256": "bbf1d13976b119a779dedbe000399ddf4663e56d821fc20fb264a891a7cb425a"
+      "sha256": "a52cd093db84e5fb6c3456004faf5facf0e729272f004e8ffb1bf27fd8e43f56"
     },
     {
       "name": "quant_fund/cli/app.py",
@@ -1947,12 +1959,16 @@
       "sha256": "377a14ecdd06389598b58fcce359e838ffab6f1948afcd22145de4c70ffd4590"
     },
     {
+      "name": "quant_fund/data/quality/__main__.py",
+      "sha256": "788180bd48425f2978d18fb248e9e400c74a34a74b9d5cfa72856051c7f29812"
+    },
+    {
       "name": "quant_fund/data/quality/checks.py",
       "sha256": "80ebafca5c761a0309ab5c5fcd6400a9fcd602ec15053b7745ef811ef5fa7c3c"
     },
     {
       "name": "quant_fund/data/quality/cli.py",
-      "sha256": "2f8be5a7ceb3317efac46cb41c23bc4330d0688d38dfdf3b648cb3585455efd3"
+      "sha256": "0a13300507bc67eaebae163073f3a8753e8a8e0cd347ee024a05dd91615b452f"
     },
     {
       "name": "quant_fund/data/quality/models.py",
@@ -2488,11 +2504,11 @@
     },
     {
       "name": "quant_fund/market_sim/__init__.py",
-      "sha256": "877c40fdec55f83097189e2deaa5c3723731601528a4831b5bbb59decbeb4ce6"
+      "sha256": "770fd355f72848114cfb2bdd03725ac3747f27fd9b9c13e39f159f88aabb881c"
     },
     {
       "name": "quant_fund/market_sim/__main__.py",
-      "sha256": "32741b2cb50ac553dde5b89566c4958074a59d1cf2527fcd5f84deada2274b25"
+      "sha256": "8c62dd4a7711e4c99acc4d311da9a782b685a7104a45316b1e994985cdfc0065"
     },
     {
       "name": "quant_fund/market_sim/_lob_core.c",
@@ -2560,7 +2576,7 @@
     },
     {
       "name": "quant_fund/mc_engine/cli.py",
-      "sha256": "6eaabac1eb376fc533e10daa2d112f8506db225597f33a1da30bb5cf7e9fc50d"
+      "sha256": "857f528d102e29b6bc51a6a66abed2d3892a84f0bf10500eb278ddd8d17f9c34"
     },
     {
       "name": "quant_fund/mc_engine/engine.py",
@@ -2908,7 +2924,7 @@
     },
     {
       "name": "quant_fund/metrics/risk_parametric.py",
-      "sha256": "e59ab891fa5b10e023efc0eb140217b37eda101e4521c5d72be771394fe97b7c"
+      "sha256": "4dec9886d5288b8b927871f559a4234ff54189f7f55489b8fec8e029e957bd49"
     },
     {
       "name": "quant_fund/metrics/robust_location.py",
@@ -10324,7 +10340,7 @@
     },
     {
       "name": "quant_fund/models/cma_es.py",
-      "sha256": "540af9fc2674d3dc8dc78ba26bded1f8e3462a991412a7661df7a2f7f2f2ff3e"
+      "sha256": "ac1fa13ea06531e04e6e84833131f3ecc3d26551a508ac5b62ec12db12314e31"
     },
     {
       "name": "quant_fund/models/cmb_anisotropy.py",
@@ -45536,7 +45552,7 @@
     },
     {
       "name": "quant_fund/parity/__main__.py",
-      "sha256": "1d3f81a46719f99b36c6b4179cb0c03338b9e2e95e7717dae591b4d7f2e174b3"
+      "sha256": "6d9755ca91cd7bdcae6584c720e32bfff56ab941d8a90e1528f1888aa23912d6"
     },
     {
       "name": "quant_fund/parity/checker.py",
@@ -49396,7 +49412,7 @@
     },
     {
       "name": "quant_fund/research/benches_w20.py",
-      "sha256": "0c4e9c10e046569feb8bf4fbf51b42c0527c6e093458f476f035e2c99ffbe6d1"
+      "sha256": "9691e78a05e15cba88dbf7af4896dee1e19d54e86d2da8badc42d0bde99e3420"
     },
     {
       "name": "quant_fund/research/benches_w200.py",
@@ -53392,7 +53408,7 @@
     },
     {
       "name": "quant_fund/research/script_receipts.py",
-      "sha256": "c7bcb9517bdfef6d3eb46ca6667d5f667230713ffc8e28d58b736c7a82484909"
+      "sha256": "d8daef8ceb591eb40fb046bcd17565f2345ee9f9af6209a785299078d54bebc5"
     },
     {
       "name": "quant_fund/research/selective_inference.py",
@@ -53520,7 +53536,7 @@
     },
     {
       "name": "quant_fund/robustness/__main__.py",
-      "sha256": "54b30bb157c461f642f8d54348cfbffb98d1ebba9c295699fefa1eb3c254f7c5"
+      "sha256": "ed0a730ab4e12e84d4e292a792fa8a6328a0d087f5ec2511cc618ca89eee22f9"
     },
     {
       "name": "quant_fund/robustness/analytic.py",
@@ -53711,6 +53727,10 @@
       "sha256": "26b3c04a3c55cf7777989edb91dea774656ea97af86699bc214e7de7c7823ca1"
     },
     {
+      "name": "quant_fund/utils/cli_errors.py",
+      "sha256": "ebc6e3111da7d4849e911c6f1ffd8f86eac3dd7bb2c08d25f52eeed57a446419"
+    },
+    {
       "name": "quant_fund/utils/hashing.py",
       "sha256": "99d4720d78c3079f189c0f367b55e1631ac4ccf25f4c76e5682aaa241b6f5da0"
     },
@@ -53796,17 +53816,22 @@
     }
   ],
   "members_added": [
-    "corpus_epoch_f887520df3a8b7e3.json"
+    "corpus_epoch_e5f3a5655a5ed90f.json",
+    "fx1/cli_errors.py",
+    "fx1/cli_sources.py",
+    "quant_fund/cli/__main__.py",
+    "quant_fund/data/quality/__main__.py",
+    "quant_fund/utils/cli_errors.py"
   ],
   "members_removed": [],
-  "n_members": 13447,
+  "n_members": 13452,
   "params": {
-    "head_sha": "e66e50e15d2014bb5e785de29e82047f58edbf08",
+    "head_sha": "3fc2e56e9503c11bf57e0f03a63654b2c5b35824",
     "pattern": "*"
   },
-  "prev_epoch_receipt": "corpus_epoch_f887520df3a8b7e3.json",
-  "prev_epoch_sha256": "120d4ebba4f3224dd662a3b73fe25b347fb2595fb532481aa04889bf48d0f1c0",
-  "receipt_sha256": "faf35f76b9d6567323c06942dc18e1d4353ad13cac575e1696838efdfcc54468",
+  "prev_epoch_receipt": "corpus_epoch_e5f3a5655a5ed90f.json",
+  "prev_epoch_sha256": "83d1ccb906898d47cfb37b08a41c0a2119d0c6e480ef9363f862fe91e155bee4",
+  "receipt_sha256": "d7f8910aa7d7019011d2e13e4a8114771c103be6b5cfda2f8949becd85cb8b76",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,

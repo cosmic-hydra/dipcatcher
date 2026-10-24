@@ -1,10 +1,10 @@
 {
   "data_label": "CORPUS",
-  "epoch_root_sha256": "ef7f04e2d5270926491f05fa9d5965db050f6b17b1c08eacea1d39f4f3979b45",
+  "epoch_root_sha256": "166e866ff6661bae204d335f7c9aa344c9087e717b1d565903a6fb5aba76aa6e",
   "inputs_sha256": "5f5ba69a36a374769a3cced3c5c0b6823b34b46c1011dee883d80dad8aa993bd",
   "kind": "corpus_epoch.v1",
   "live_pnl_claim": false,
-  "member_tree_root": "5a433386ce54c9999b89fb57bb38621cc6a9e9c2659889df96aee1debe36fad1",
+  "member_tree_root": "adb1b5932b68b2f94cd110d97ab158cfd6de0b696116af373c9696673a3b619a",
   "members": [
     {
       "name": "api_surface.json",
@@ -1064,7 +1064,7 @@
     },
     {
       "name": "crown_jewels.json",
-      "sha256": "c9a84c675e9db5e1ba4e1fb73c7d3ed5e413771ce4762db9e7a90611f0a68c9f"
+      "sha256": "88a80f96896b6fa1c9f00de09c245ddeb2f81b124c47408ae08a8fcb29aed845"
     },
     {
       "name": "epoch_allowed_removals.json",
@@ -1137,12 +1137,12 @@
   "members_removed": [],
   "n_members": 281,
   "params": {
-    "head_sha": "9afbad84fdf49283be2f14c41195c4d944a01751",
+    "head_sha": "ef0c77a471a32ba59e038b5aa0a6c2e60ead3fab",
     "pattern": "*.json"
   },
   "prev_epoch_receipt": "corpus_epoch_ea48aba287ef83ee.json",
   "prev_epoch_sha256": "4afedd36460ff14fb7c48d3b11fc185f24db9c9a4671b326fa42ef403dbb6ded",
-  "receipt_sha256": "756bd48626cfa2dea5335ec58a5e7f44d08752b8f6793778ce21ef321336b764",
+  "receipt_sha256": "0d9c8c5af433e70fb30bc35b796962ddd0fc6970ff83b6ba0aa3327570e718aa",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,

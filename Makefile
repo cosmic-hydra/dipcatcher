@@ -235,13 +235,17 @@ proofcore-coverage: ## Per-package coverage floors (A3 #2): pit/proof/reality/pr
 	# -k matches substrings of the node id. Wave-2 files whose names do not
 	# contain those words (estimators, proven runner, replay, io guard,
 	# scheduler) never ran, so the per-module floors saw a partial import.
-	# Append the proofcore-test file list. Floors are unchanged.
+	# Append the proofcore-test file list. Promotion-receipt tests are
+	# the same case: their paths do not contain the -k words, and the
+	# proof floor counts their branches.
 	uv run pytest -m "not network" -q \
 		tests/unit/test_scheduler.py tests/unit/test_proven_runner.py \
 		tests/unit/test_estimators.py tests/unit/test_replay_engine.py \
 		tests/unit/test_io_guard.py tests/unit/test_cscv_combo_guard.py \
 		tests/unit/test_fingerprint_fallback.py tests/unit/test_wave2_e2e.py \
 		tests/property/test_replay_determinism.py \
+		tests/unit/test_promotion_receipt.py \
+		tests/unit/research/test_verify_promotion_receipt.py \
 		--cov --cov-append --cov-report= --cov-fail-under=0
 	uv run python -m quant_fund.proofcore.ci coverage-gate
 

@@ -81,13 +81,9 @@ Issues = "https://github.com/artificial-hedge/dipcatcher/issues"
 
 [project.scripts]
 fx1 = "fx1.cli:app"
-# The outer dipcatcher launcher opens chat in a terminal and preserves explicit
-# lab commands. quant stays the independent harness; fxi remains compatible.
-# NOTE: origin/main instead maps `dipcatcher` at quant_fund.cli.main and treats
-# `fxi` as the chat front door. Resolved toward this branch because
-# src/dipcatcher_cli/, tests/unit/cli/test_dipcatcher_launcher.py,
-# AGENTS.md and docs/DIP_CONCIERGE.md all describe the launcher. Product
-# direction needs an owner ruling — see docs/ULTRA_PROD_READINESS.md.
+# dipcatcher is the chat launcher (a terminal opens chat; a pipe prints help).
+# Explicit lab commands pass through to the quant CLI. quant is that lab CLI
+# with no chat. fxi is the same chat front door, one-shot commands included.
 quant = "quant_fund.cli.main:app"
 dipcatcher = "dipcatcher_cli.app:main"
 fxi = "fx1.interactive.app:main"
@@ -415,16 +411,19 @@ directory = "htmlcov"
 # 2026-09-28 local measurements: pit 93.02, proof 94.57, leakage 96.55,
 # reality 95.27, proofcore 97.04. Floors raised +1 — CI measures lower than
 # local, so floors stay well below either reading.
+# 2026-10-24: proof, proofcore, and leakage (including the wave-2 module
+# floors) measured 100% line+branch on `make proofcore-coverage`. Pit and
+# reality stay at the previous ratchet; this change does not remeasure them.
 pit = 91
-proof = 91
-leakage = 86
+proof = 100
+leakage = 100
 reality = 91
-proofcore = 91
+proofcore = 100
 # Wave-2 per-MODULE floors (WAVE2.md §1.6, amendment I5): every new wave-2
 # module >= 90%, enforced alongside the package floors above. Dotted keys map
 # to single module files in `proofcore.ci coverage-gate`.
-"proofcore.scheduler" = 90
-"proof.runner" = 90
-"proof.estimators" = 90
-"proof.replay" = 90
-"leakage.guard" = 90
+"proofcore.scheduler" = 100
+"proof.runner" = 100
+"proof.estimators" = 100
+"proof.replay" = 100
+"leakage.guard" = 100

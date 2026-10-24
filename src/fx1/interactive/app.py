@@ -19,15 +19,18 @@ from typing import NoReturn
 import typer
 
 import fx1
+from fx1.cli_errors import FxiTyperGroup
 from fx1.interactive import actions, concierge, profiles, shell, wizard
 
 app = typer.Typer(
+    cls=FxiTyperGroup,
     name="fxi",
     help=(
         "Interactive CLI for fx-1. Bare `fxi` opens the concierge — chat, "
         "/superpower orchestration, background web research, and flash "
         "context. Store fx1 / fx1-lite model endpoints (API key + base URL) "
-        "and use them across the dipcatcher harness."
+        "and use them across the dipcatcher harness. "
+        "--version on any command prints the version and exits."
     ),
     add_completion=False,
     context_settings={"help_option_names": ["-h", "--help"]},

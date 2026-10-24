@@ -615,7 +615,7 @@ def test_script_membership_parity(tmp_path: Path) -> None:
     (lake / "data_manifest.json").write_text("{}")
     (lake / "resolved_config.json").write_text("{}")
     (lake / "proofcore.duckdb").write_bytes(b"db")
-    (lake / "nested").mkdir()
+    (lake / "nested" / "manifest.json").parent.mkdir()
     (lake / "nested" / "manifest.json").write_text("{}")
     for d in (corpus, gh, lake):
         assert sv._member_digests(d, "*") == member_digests(d, pattern="*")

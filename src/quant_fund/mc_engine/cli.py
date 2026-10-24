@@ -20,11 +20,14 @@ from quant_fund.mc_engine.scenario import (
     VolTargetStrategyGenerator,
     generator_from_spec,
 )
+from quant_fund.utils.cli_errors import McEngineTyperGroup
 
 app = typer.Typer(
+    cls=McEngineTyperGroup,
     help=(
         "Monte Carlo scenario risk. Research simulation only. "
-        "Does not submit orders and does not claim live profit."
+        "Does not submit orders and does not claim live profit. "
+        "--version on any command prints the version and exits."
     ),
     no_args_is_help=True,
 )

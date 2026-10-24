@@ -1,10 +1,10 @@
 {
   "data_label": "CORPUS",
-  "epoch_root_sha256": "80d1ac5421f71b6e4550cfe72ca28b566e8df25d74d0f839b0cb0cbf4c371cf1",
+  "epoch_root_sha256": "194ae559b0feb2796efaaddef5feb1ffe1701976c5db0863e2d67351e8e60a9d",
   "inputs_sha256": "e87e8da9bb8ea459f3ad6e62d3b32eed38f937bd12e9489f488c324af78af002",
   "kind": "corpus_epoch.v1",
   "live_pnl_claim": false,
-  "member_tree_root": "bf9ff4e33fb51d32afdeda88189ddfd0239ef5b6b48bf0200a8f56e9427f290f",
+  "member_tree_root": "bdc088409099bac851c451d3331bbe3bf8e9b1174fd32adedf6a98c3fd488e85",
   "members": [
     {
       "name": "__init__.py",
@@ -15,16 +15,8 @@
       "sha256": "4d131820818878ef5f43992c0198dae2cd94e09d87b308791ff5310d974c7543"
     },
     {
-      "name": "corpus_epoch_008e5093a0d61005.json",
-      "sha256": "9e1d5cfa536db24e2fcfed54331f602ca5b66575bc94e341d18cca4dd04b3973"
-    },
-    {
       "name": "corpus_epoch_08b66b765e684f6c.json",
       "sha256": "08edd5e8cd1387e8595aff93b5fc85a8a165a07687dd51b0c780ec4dd9398908"
-    },
-    {
-      "name": "corpus_epoch_15275c41707ae795.json",
-      "sha256": "0416b79affdb91f9cb1bc9d7f95070dace9a97000943b9f4ca1b2e4b30e77141"
     },
     {
       "name": "corpus_epoch_19827656fe3b4ec6.json",
@@ -37,10 +29,6 @@
     {
       "name": "corpus_epoch_1cf58982f7240bea.json",
       "sha256": "e7725fa9c432d38ae58b47d11df386ccd5a161bf675d7c4e0588da0be130352b"
-    },
-    {
-      "name": "corpus_epoch_20b28605fcc89c48.json",
-      "sha256": "0efde966977f3f56457bfcdb6eb757b913c8f7958a0caf98365cb28f4b56b748"
     },
     {
       "name": "corpus_epoch_2593c4c89a22cad5.json",
@@ -69,10 +57,6 @@
     {
       "name": "corpus_epoch_5a6086acf9de594a.json",
       "sha256": "42439e63cb75c16f78042d975636f462bf7bc6f786db0bad215152d680ce3302"
-    },
-    {
-      "name": "corpus_epoch_65fbb38972583dc5.json",
-      "sha256": "9d5ee637b7d1c18687f82b339994b6a63d66c09eba578b4b227cc0cef11296da"
     },
     {
       "name": "corpus_epoch_6b67b235fbb35aa2.json",
@@ -127,16 +111,12 @@
       "sha256": "1a36f6be80c1c546f8536a540655dead12bf37377f76204f1dfeb83755040c52"
     },
     {
+      "name": "corpus_epoch_b230d262c4ee180f.json",
+      "sha256": "2b35f0c4334dc825736cc3a20b1ab59d33e99290334eb7bdaae1903c54c3ab14"
+    },
+    {
       "name": "corpus_epoch_bbca60f39b0dab02.json",
       "sha256": "e38d6046f778105569690774486cf62a4aca1822cf12c4174c47717cb36ca429"
-    },
-    {
-      "name": "corpus_epoch_c3b97195dce9fd72.json",
-      "sha256": "3f1f6ccde37f8c8d17f015c1c915476b042fb249d06fb9637a7d04facfa1edda"
-    },
-    {
-      "name": "corpus_epoch_c865012c596c8387.json",
-      "sha256": "f221e5b3b45897c38c8dbec2cca89737e23caefed0f3aa250748ab187535c614"
     },
     {
       "name": "corpus_epoch_ccc7f71261399a3d.json",
@@ -153,10 +133,6 @@
     {
       "name": "corpus_epoch_e71190e72c2f4d5a.json",
       "sha256": "d0a4583251153c5abf88dd5629228b57ab8e2e9ef430af2ce8d8e18bb47decbe"
-    },
-    {
-      "name": "corpus_epoch_e964d531c9227239.json",
-      "sha256": "44b25c1f3fec7a557d2f6f9104a520efa583d1de6d76a655c75203488ddb9c1c"
     },
     {
       "name": "corpus_epoch_fa22f1b02f5a7ccc.json",
@@ -331,10 +307,6 @@
       "sha256": "4cbb7a9a13adf0e770aed74790b4cb2ce00eef8e03c92ae9cbff78ce1b13c52a"
     },
     {
-      "name": "fx1/test_cli_coverage_edges.py",
-      "sha256": "a1152e5e8c8fc1e7e9e0e1917cf8f1fb46c90d24452d377814abe6155ad022a9"
-    },
-    {
       "name": "fx1/test_concierge.py",
       "sha256": "f0378fe95fb7386c6d83fa10441df746af7933791fea993af8f704cc7c95ff0b"
     },
@@ -369,10 +341,6 @@
     {
       "name": "fx1/test_eval.py",
       "sha256": "3e27520c8465b12c1ca9052de7eaedd2dd849952a256fe3ddd2c8fd5cf312846"
-    },
-    {
-      "name": "fx1/test_eval_train_data_coverage_edges.py",
-      "sha256": "295cd123a28172f1eae354f15845539c88508da2175c965799c4edd99c19c6ee"
     },
     {
       "name": "fx1/test_ext_bench.py",
@@ -427,10 +395,6 @@
       "sha256": "4d6a249fa85556d13ebb160ff996c9d2d19788840c02f5edfe20f930fd94eec0"
     },
     {
-      "name": "fx1/test_flash_forecast_coverage_edges.py",
-      "sha256": "c28a40d070af12cab06fa299fb602a1dfe64753428814cf96095c575695a5578"
-    },
-    {
       "name": "fx1/test_forecast_config_windows.py",
       "sha256": "3371b2a914d83e9eb25b3803381cc0cc6aeb008e56c971afb4c5b489bd3b7a75"
     },
@@ -479,10 +443,6 @@
       "sha256": "19bd3d52bc459eca60b8b137a14f789961049a0af5545037a6d27c5a9b62d9be"
     },
     {
-      "name": "fx1/test_interactive_coverage_edges.py",
-      "sha256": "e055454e2ea88117d19db1f5b4a1e611b3c485a55b7ab9ae37bad6757ed6d668"
-    },
-    {
       "name": "fx1/test_key_recovery_adversarial.py",
       "sha256": "7b081ea5c38072c7391ad39afe04d63663b779e444e9463b0b3dd2979183cd09"
     },
@@ -509,14 +469,6 @@
     {
       "name": "fx1/test_operations_cli.py",
       "sha256": "1ff2368b4013a5f7652b0208f154ec764212e415248a59b3be6278788eb9017e"
-    },
-    {
-      "name": "fx1/test_operations_coverage_edges.py",
-      "sha256": "10086efea599ceb149826e1bb283612d8b50b08b67c1fcabb5f5b06da0c2ec87"
-    },
-    {
-      "name": "fx1/test_operations_coverage_edges_b.py",
-      "sha256": "a51a89df2e060e74574584c6519d1c5fd231b547331a8f1acc2be6dda32c5a28"
     },
     {
       "name": "fx1/test_operations_features.py",
@@ -551,10 +503,6 @@
       "sha256": "0f6af1089094af746c6c472c160a5afabc04ad9380de81c28825f12370f25253"
     },
     {
-      "name": "fx1/test_residual_coverage_edges.py",
-      "sha256": "17fca81ca3f26495ca26c5955bb6ed2ef9d59a0740edc248f116e336b6638c4e"
-    },
-    {
       "name": "fx1/test_retrieval_eval.py",
       "sha256": "497118668b60aa36d5bef312d9c5f3293cb2f2a24efeeec45ef8ce863d72e5ac"
     },
@@ -569,10 +517,6 @@
     {
       "name": "fx1/test_sbom.py",
       "sha256": "98c700834f7c885823b5ae63e446aee48994dc6fcd744cf2e832a22809f76f14"
-    },
-    {
-      "name": "fx1/test_sdk_coverage_edges.py",
-      "sha256": "bb1ece58b40b7ab048e8a2d0650b518225b4ffa3a76b3cdbcc3494e149172155"
     },
     {
       "name": "fx1/test_selftest.py",
@@ -629,10 +573,6 @@
     {
       "name": "fx1/test_webresearch.py",
       "sha256": "0b82746785051e04825c2f61a8076a39ca521af1d72ac7cdf1a652c11d272a1c"
-    },
-    {
-      "name": "fx1/test_webresearch_coverage_edges.py",
-      "sha256": "441ec17fb86b35a9d1227b95b0ab5835575d19edf97c580b162ee08574bc64e1"
     },
     {
       "name": "leakage_fixtures/adv_e01_numpy_indexing.py",
@@ -1740,7 +1680,7 @@
     },
     {
       "name": "unit/data/test_ingest_recovery.py",
-      "sha256": "1a1786d1924df5a81c4301a78fe06c736158b605ce1009ee5b1f6e7535a816f8"
+      "sha256": "c3b2ce741706507f1c3f464a9ba5fb8626c644521b82bec618cecfbbe91f7e37"
     },
     {
       "name": "unit/data/test_lake_atomicity.py",
@@ -1791,10 +1731,6 @@
       "sha256": "957eba59f6e204d91f0273bbb7eb3a76b8235e54727306d31d0228eec0334376"
     },
     {
-      "name": "unit/data/test_quality_check_edges.py",
-      "sha256": "43aaa6fa7817f1c7628f64352fc8fe1602b075674e494d260055f927c8932892"
-    },
-    {
       "name": "unit/data/test_quality_scorecard.py",
       "sha256": "3efdc91a014db4225225b97e9956c94b8a33e02aaa9708a6edb9dc9b7feee63d"
     },
@@ -1804,7 +1740,7 @@
     },
     {
       "name": "unit/data/test_reproducibility.py",
-      "sha256": "34fbb14e609bfc4a889cc0a7e0b5df449fc7441a8d234b2cb85874fa5a895ea9"
+      "sha256": "0d9af66d55d30a9dfee88d22ace289e9d492cf6b2a1c6098aaa2aee332757438"
     },
     {
       "name": "unit/data/test_security_master_lake_edges.py",
@@ -2055,24 +1991,12 @@
       "sha256": "d9dfb36486dc82101323b0ba6d1e6c68035d372cb22c6f058111f0c9085b19aa"
     },
     {
-      "name": "unit/fx1_serve/test_anthropic_sdk_audit_coverage_edges.py",
-      "sha256": "51731a30b26c64ea57256a970c9c4ff672edf0fe49cb2b8af9a7a727ff567dcc"
-    },
-    {
       "name": "unit/fx1_serve/test_anthropic_sdk_passthrough.py",
       "sha256": "a2e82a2292a6934cb3253a171eb1de98d0011a0b121bb73f1482df39222f2ca8"
     },
     {
       "name": "unit/fx1_serve/test_api_audit.py",
       "sha256": "65b2c606c02784fce8986bd211c46ada387077782d0d473bd2d05b76308e294c"
-    },
-    {
-      "name": "unit/fx1_serve/test_api_audit_coverage_edges.py",
-      "sha256": "04624d61b5bcbf537c9a5d9a2da7deb87a8182aa75970495fd6bbb3e4d4ecc04"
-    },
-    {
-      "name": "unit/fx1_serve/test_api_coverage_edges.py",
-      "sha256": "8ee9ab67ef7c0e797e43c1f8765c5b433cc09b0e7ac3c4e81751a3ffae5a1c4a"
     },
     {
       "name": "unit/fx1_serve/test_attestation_audit.py",
@@ -2085,10 +2009,6 @@
     {
       "name": "unit/fx1_serve/test_backend_usage_boundary.py",
       "sha256": "b211385b7a7598469aa9efb5d3db5b5eda3d9e4314a4e1bda3db45be1c855dfd"
-    },
-    {
-      "name": "unit/fx1_serve/test_backends_coverage_edges.py",
-      "sha256": "2c66ed2d5eefd56dd261c6a06ad969987e1923f5333eda5d6ad4d86586af079a"
     },
     {
       "name": "unit/fx1_serve/test_bank_audit.py",
@@ -2105,10 +2025,6 @@
     {
       "name": "unit/fx1_serve/test_byok_audit.py",
       "sha256": "fc061153881be08681eff17fa5f1b7c65e34c5c2b0d9319ed7d1935939d16fe6"
-    },
-    {
-      "name": "unit/fx1_serve/test_byok_audit_coverage_edges.py",
-      "sha256": "54489a18dc4ea7bc6a49c8f82bedfeefc6d9a247095f8742390f1ed45891d483"
     },
     {
       "name": "unit/fx1_serve/test_byok_special_addresses.py",
@@ -2131,10 +2047,6 @@
       "sha256": "1db99649c3752ec63ea37c65adbeabcbeb65ceab089ebb58af79f98eef51f68e"
     },
     {
-      "name": "unit/fx1_serve/test_cap_audit_coverage_edges.py",
-      "sha256": "3b8676649c98250180eec2f0aa05a675af1cf40f582c507aabb4d4fefd012ea8"
-    },
-    {
       "name": "unit/fx1_serve/test_capability_audit.py",
       "sha256": "2ac456a9293d265d02f8e5d84904e39365063a4c169794b1a5dc824d00ba30b4"
     },
@@ -2153,10 +2065,6 @@
     {
       "name": "unit/fx1_serve/test_client_audit.py",
       "sha256": "caacf13f691801d27d222bd93b0db1f6a7a4c8f9c7557da8670ac37fdd5757e3"
-    },
-    {
-      "name": "unit/fx1_serve/test_client_coverage_edges.py",
-      "sha256": "472d34d5f823a181bcc827d4458e754d7fbaa534e9cee10acb832b4c1d4c0e6c"
     },
     {
       "name": "unit/fx1_serve/test_complete_batch_validation.py",
@@ -2199,10 +2107,6 @@
       "sha256": "1add3641328db8b9604b10dc2d7ab5361d4cf3a065544ce0dcde28f6c7cfb1af"
     },
     {
-      "name": "unit/fx1_serve/test_e2e_audit_coverage_edges.py",
-      "sha256": "cf2ac740c33037ce9a57ac89a8b398f5dc46338bda71deb56750d360953dbdd0"
-    },
-    {
       "name": "unit/fx1_serve/test_envelope_journal_faults.py",
       "sha256": "f9115181fbd36eeeee24f39f826f8353d805713cd4455db4ad5e8bca9c1f90c8"
     },
@@ -2223,16 +2127,8 @@
       "sha256": "cdc218ebd38efbb3c05a230db459d55d49a79d1752e3d977ad1e48938c5001a0"
     },
     {
-      "name": "unit/fx1_serve/test_eval_lifecycle_audit_coverage_edges.py",
-      "sha256": "a5b84a8181d49e7ab6bbd2dfba4cfdfab20acad9e818b41ca806931e804d4f98"
-    },
-    {
       "name": "unit/fx1_serve/test_eval_spec_hotreload.py",
       "sha256": "011056c10664bdb5b508aaf5052db380c4fd77acd92c910629b68d25c198df85"
-    },
-    {
-      "name": "unit/fx1_serve/test_evals_coverage_edges.py",
-      "sha256": "c5d21bfbcb519e994dc3dfdcbcf4d596a6349bb78792242973c3aaea88cdc880"
     },
     {
       "name": "unit/fx1_serve/test_ext_bench_audit.py",
@@ -2249,10 +2145,6 @@
     {
       "name": "unit/fx1_serve/test_files_audit.py",
       "sha256": "050710ac83cbf3b251cde6c075fd48543e887a2da5e051600b7df1f6f617eac2"
-    },
-    {
-      "name": "unit/fx1_serve/test_files_audit_coverage_edges.py",
-      "sha256": "12545c77964866b83f5bee5bd95eca7e4a1839b5bb5ae7258bd3f12564648513"
     },
     {
       "name": "unit/fx1_serve/test_finetune.py",
@@ -2299,20 +2191,12 @@
       "sha256": "4d4de8bba3735173e09891b99cfb2fdbb7eaff62e998c1ebf212638f9f69bbf2"
     },
     {
-      "name": "unit/fx1_serve/test_harness_doctor_coverage_edges.py",
-      "sha256": "7c869fec9dad77c707d55e236a6a855bd93ed4994e5fae7e68a4edec40e02711"
-    },
-    {
       "name": "unit/fx1_serve/test_harness_idempotency_races.py",
       "sha256": "68175e7b78bb387c70fcc6beba436456aea2127b02cebd3790d5f6df442e1cb7"
     },
     {
       "name": "unit/fx1_serve/test_header_audit.py",
       "sha256": "baf5da245664ab60bbf3cdd893af64ebc11cd7d3ea44f30b29375ad5ec84861b"
-    },
-    {
-      "name": "unit/fx1_serve/test_header_audit_coverage_edges.py",
-      "sha256": "87fd04bd3cfef361fc04bdbeacb2a85238650389545ec9d5a323134156d87c86"
     },
     {
       "name": "unit/fx1_serve/test_honesty_audit.py",
@@ -2347,10 +2231,6 @@
       "sha256": "11979f336114bb3e5670de77ba45b4bac7cc8475235c88a904bd3fc49d44b7ad"
     },
     {
-      "name": "unit/fx1_serve/test_jobs_audit_coverage_edges.py",
-      "sha256": "f0a89d9ef352b89154639d3f47209f60a009336be1ef765d21f20bd0652587cc"
-    },
-    {
       "name": "unit/fx1_serve/test_journal_audit.py",
       "sha256": "159999a78610cd2c8f02e7dbc4fad3f4d7aa16a880bf06da227280aca7882e4c"
     },
@@ -2365,10 +2245,6 @@
     {
       "name": "unit/fx1_serve/test_ledger_audit.py",
       "sha256": "7a4c547278cab260ad8f02302ea74d459c2337c542e6fc68024940f8abd00cc1"
-    },
-    {
-      "name": "unit/fx1_serve/test_local_engine_coverage_edges.py",
-      "sha256": "3e74d7a4a68c3cedcb139bfa074201d3117b477c040e6457c49224c7022fcc5d"
     },
     {
       "name": "unit/fx1_serve/test_local_engine_startup_cleanup.py",
@@ -2399,16 +2275,8 @@
       "sha256": "91851c8ca56c9d062407c841280c9660c33b1c60f79dd817de5e5124a438b850"
     },
     {
-      "name": "unit/fx1_serve/test_observe_audit_coverage_edges.py",
-      "sha256": "21c9ecbfb7078c4e41002f5949ffe6b575b2b7fc38dd07e7318a0fc264cd79de"
-    },
-    {
       "name": "unit/fx1_serve/test_observe_audit_guards.py",
       "sha256": "ecc2dcc945f9efe216fd91c6716d63406e58a793e41fc71ebd083ef4fca45e7d"
-    },
-    {
-      "name": "unit/fx1_serve/test_openai_compat_coverage_edges.py",
-      "sha256": "9f8f5eeb56f817e2d16954ce236460810e5a10ee993c48a8c769c951da5a06d8"
     },
     {
       "name": "unit/fx1_serve/test_ops_audit.py",
@@ -2421,10 +2289,6 @@
     {
       "name": "unit/fx1_serve/test_parity_audit.py",
       "sha256": "b0d817493c6e76f791324eb01ee3dc9184f79217b94e49ba14e243ae16269ef6"
-    },
-    {
-      "name": "unit/fx1_serve/test_parity_audit_coverage_edges.py",
-      "sha256": "c2b8008605132038bf8bb90bc824b28e247a45865e489f9a69c1d5a8f98703cc"
     },
     {
       "name": "unit/fx1_serve/test_parity_leak_audit.py",
@@ -2515,10 +2379,6 @@
       "sha256": "751435b1714e88e888db31fb50945f2407823022f4e7750b359592ce99e74f84"
     },
     {
-      "name": "unit/fx1_serve/test_retrieval_audit_coverage_edges.py",
-      "sha256": "36edb86f5690e26224276224eaa649ac57666af61bbe791da25735411b074b37"
-    },
-    {
       "name": "unit/fx1_serve/test_reward_audit.py",
       "sha256": "5477c7a6428bf9d9ceee028b9632b6f6de96a00e8cfdc3532f1d2484251fccec"
     },
@@ -2547,10 +2407,6 @@
       "sha256": "24685ce25087ca87712d32cad7f606c6540e62271c7be317fad485d3ff9459f4"
     },
     {
-      "name": "unit/fx1_serve/test_serve_audit_coverage_edges.py",
-      "sha256": "9ea9c0c0b128a78d71c4989b2763b0b7dbe920028aae883945ad1ab1f6047928"
-    },
-    {
       "name": "unit/fx1_serve/test_serve_lazy_exports.py",
       "sha256": "c5aca1a59260a4f748efa1438ca031f6d8f817eaecf228986a36ffc93e8fba8c"
     },
@@ -2564,7 +2420,7 @@
     },
     {
       "name": "unit/fx1_serve/test_stream_audit.py",
-      "sha256": "9e338a2e421f8b3360230bbf595ff3c416b9a5463474e5243271e698d6ecfe4e"
+      "sha256": "41cba446e131e194d2f81f51eab62979b4c8fb5d800be6d38ca898db0cf4e929"
     },
     {
       "name": "unit/fx1_serve/test_stream_keepalive.py",
@@ -2573,10 +2429,6 @@
     {
       "name": "unit/fx1_serve/test_tenancy_audit.py",
       "sha256": "16e7fbfdaa396bc46621165544fc3bb4a6a16cc4ec41e0bc510fd2477a4c798a"
-    },
-    {
-      "name": "unit/fx1_serve/test_tenancy_audit_coverage_edges.py",
-      "sha256": "5cf8f48a7311647f4ac82ae91f40df6bfddcf7a3e8223acd37a0329ece2b025c"
     },
     {
       "name": "unit/fx1_serve/test_timepart_audit.py",
@@ -2637,10 +2489,6 @@
     {
       "name": "unit/fx1_serve/test_vectorstore_membership_transactions.py",
       "sha256": "931634cd632c0e882b6d8a95da60c3b88973f52943de998ba374afacee838e24"
-    },
-    {
-      "name": "unit/fx1_serve/test_vectorstores_coverage_edges.py",
-      "sha256": "75693eb347c089daca08d7c6283461ed0eba100ceeb1831a5f0f3b4f55d1b1be"
     },
     {
       "name": "unit/fx1_serve/test_vine_audit.py",
@@ -2912,7 +2760,7 @@
     },
     {
       "name": "unit/metrics/fit_student_t_golden.json",
-      "sha256": "b5f93e75edbb0bf23d03a21f42773a856bfd011cad79a4a5a3fa1ad346a769f2"
+      "sha256": "f17e1a2b908e3a0932a01e4be169c8c12e12e4b2f477a9c4b376d8f877757e5e"
     },
     {
       "name": "unit/metrics/test_barrett_donald.py",
@@ -5220,7 +5068,7 @@
     },
     {
       "name": "unit/models/test_cma_es.py",
-      "sha256": "9982785cde9e2b688fa2973e3f0e31be9a212e6abeeeda5b135661583e7cc640"
+      "sha256": "e66c08afdf0ffcb28873943d2ba1740dabbd8d74e9b5b8e8c637feac511e4951"
     },
     {
       "name": "unit/models/test_cochran_q.py",
@@ -10292,7 +10140,7 @@
     },
     {
       "name": "unit/models/test_w159_opt.py",
-      "sha256": "f55fa231ae98f24ecd5973a6807bd0881da1c12a7aaccf7fb04b9ea5d965377d"
+      "sha256": "1b7cbb8b42b4e595cc077c92129d3768569c85b2f307ce3ae15733fb0ba93fc0"
     },
     {
       "name": "unit/models/test_w1600.py",
@@ -14401,10 +14249,6 @@
     {
       "name": "unit/pipeline/test_features_labels.py",
       "sha256": "efd572fa8c87efe81674e790b5f33eb602614448e06315afe4cf437ddf83838e"
-    },
-    {
-      "name": "unit/pipeline/test_forecast_schema_coverage_edges.py",
-      "sha256": "2c491ff942ee0d66f91ff44c63a736abc9f7ae43112daacdf99227cd9db1df1e"
     },
     {
       "name": "unit/pipeline/test_fusion_fixtures.py",
@@ -21856,7 +21700,7 @@
     },
     {
       "name": "unit/research/test_corpus_epoch.py",
-      "sha256": "26594f4832c30b995a67864ad433343f985460a31392befcfbbeb7e0a2321936"
+      "sha256": "e52787314ec38a7909aa6f3ace82b41c3f2b4338039edd95f63176e26915fc22"
     },
     {
       "name": "unit/research/test_corpus_inference.py",
@@ -22308,7 +22152,7 @@
     },
     {
       "name": "unit/research/test_script_receipts.py",
-      "sha256": "b8a0c71ec91c88394da2dc04516e5cf1c928fe377efc8beb2c1fc32b18331d43"
+      "sha256": "9f3c87560377676b15bcf4be68e6ba116ba1f9d58b78b75e3d68ce3d10c74f48"
     },
     {
       "name": "unit/research/test_selective_inference.py",
@@ -22587,10 +22431,6 @@
       "sha256": "e40c2cbd1e70ecb7a14ccef379a706dfb99d01c10245263e54398ec9a5fd01f6"
     },
     {
-      "name": "unit/schemas/test_pit_record_edges.py",
-      "sha256": "0b2fa409a0bd899f7b4c8ea0b03a1233b00e5f2d6c75bf5933641162aef38bcb"
-    },
-    {
       "name": "unit/scripts/test_no_nested_stray_trees.py",
       "sha256": "3111ec2865401cabc22141aa1a876257e1e8aad8004244184ad9244b70951619"
     },
@@ -22751,6 +22591,10 @@
       "sha256": "73a4cb64a967b47077a0484d5f7b23a514a68feb858ce4caa07a012813f7007d"
     },
     {
+      "name": "unit/test_leakage_coverage_edges.py",
+      "sha256": "e3dcc7aa49edfc5fbcc94171c8c016b6ad2fafa6b856a19bf6df245e9e294241"
+    },
+    {
       "name": "unit/test_leakage_failclosed_audit.py",
       "sha256": "74daf341bf11f7d353c644fd930d7c25800b2d8c96b6dbd9db84145dc4f21426"
     },
@@ -22831,6 +22675,10 @@
       "sha256": "cdb924142d269de76d6e56bafaa4f49c45b1baa651a86f01786228361a00d3d6"
     },
     {
+      "name": "unit/test_proof_coverage_edges.py",
+      "sha256": "1d4146d917fdc2a85f6da922708594a16515389e5ef7f2bab2912fe3f9be0139"
+    },
+    {
       "name": "unit/test_proof_hardening.py",
       "sha256": "3f00395b2679e41fb301493036752e5b394e3ab1e07f26ff9ddfcf15eb85dea6"
     },
@@ -22852,11 +22700,15 @@
     },
     {
       "name": "unit/test_proofcore_ci.py",
-      "sha256": "e75ec9f8ba2cd2416b6892612122da2f73a73c87e01702661f8935d7f2b6c8a2"
+      "sha256": "50c736fd41b281e2ff3699474f0410e2aca31a04437a49a4ee1453a5191741a8"
     },
     {
       "name": "unit/test_proofcore_contracts.py",
       "sha256": "73cc170eeb2ac9cd0cab50df4f56e168ffecbc2c13f631800ec5a362346f005a"
+    },
+    {
+      "name": "unit/test_proofcore_coverage_edges.py",
+      "sha256": "6e4ec84a716371834ba010bbbbea8d93cfadf385f2b4959fccdc3e0e7ebd16d5"
     },
     {
       "name": "unit/test_proofcore_layering.py",
@@ -22983,10 +22835,6 @@
       "sha256": "22ca85b394d47b9f502f7d4489dd6b0a39c0b9b7db823bc2527057dc8bf968e9"
     },
     {
-      "name": "unit/utils/test_atomicio_coverage_edges.py",
-      "sha256": "f73791b790698bc32d2fb3c381883a3dedde8fe262e34e30da77720acc45adaa"
-    },
-    {
       "name": "unit/utils/test_midrank_ties.py",
       "sha256": "89c4a00b32be3f5c6a2011474cb6b5005902103690a0dd1bbc13403d4c480d60"
     },
@@ -23008,17 +22856,17 @@
     }
   ],
   "members_added": [
-    "corpus_epoch_c865012c596c8387.json"
+    "corpus_epoch_b230d262c4ee180f.json"
   ],
   "members_removed": [],
-  "n_members": 5750,
+  "n_members": 5712,
   "params": {
-    "head_sha": "cbccdffa17fd4e17d33c1bafff47699355a121e2",
+    "head_sha": "8fa34c843135ee5fd9d4a4faccbb59191e70a3fc",
     "pattern": "*"
   },
-  "prev_epoch_receipt": "corpus_epoch_c865012c596c8387.json",
-  "prev_epoch_sha256": "e327c33bc7426aa2adb7644bdd8c4782ee5032420371e95a42a027a7d767d1be",
-  "receipt_sha256": "761f3cd5d3ac4080132eff84d85f4415c1df6b7decb374ab13474126818e8770",
+  "prev_epoch_receipt": "corpus_epoch_b230d262c4ee180f.json",
+  "prev_epoch_sha256": "af4c1448d051118ccb33fe680a73e9e3c63d12b2e26a248cf8d1038cd6b4ec1e",
+  "receipt_sha256": "11cb0cbcf6502d77af4d31853cf47a6ecacad252be6221c386cc1cb46cf28bb5",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,

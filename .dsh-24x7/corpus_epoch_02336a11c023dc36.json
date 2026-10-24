@@ -3658,12 +3658,12 @@
   "members_removed": [],
   "n_members": 911,
   "params": {
-    "head_sha": "9afbad84fdf49283be2f14c41195c4d944a01751",
+    "head_sha": "233fb82a44c059dcd6cc511f9d5dbe400134b28b",
     "pattern": "*"
   },
   "prev_epoch_receipt": "corpus_epoch_7f1c0bd205fa95bd.json",
   "prev_epoch_sha256": "7faa76e4b0ec96fa0c7040f8a2d24d4dd33c2b91991b20faab750ed11eb94c57",
-  "receipt_sha256": "d2b38f34a739471bf81a2f3b1587295000150ddee50745f498b7bd55a25add69",
+  "receipt_sha256": "02336a11c023dc36cd8ce1de084eb3e3614991d0c2551c2ada74509855630b32",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,

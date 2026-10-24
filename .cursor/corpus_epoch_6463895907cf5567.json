@@ -29,12 +29,12 @@
   "members_removed": [],
   "n_members": 4,
   "params": {
-    "head_sha": "9afbad84fdf49283be2f14c41195c4d944a01751",
+    "head_sha": "233fb82a44c059dcd6cc511f9d5dbe400134b28b",
     "pattern": "*"
   },
   "prev_epoch_receipt": "corpus_epoch_01a94d650190d99f.json",
   "prev_epoch_sha256": "425847d9c71fae2bf7f5c2cbb30d1b7fd1c3ca3e37f47d6eeccd54f93d812902",
-  "receipt_sha256": "fc583aabe8eefa4c2ef4208bea83bdfb0172eca720a7cdb885136bf3a38bf623",
+  "receipt_sha256": "6463895907cf55673a8d92900422690564e142bb856fa73307d68483822a1290",
   "research_only": true,
   "schema": "corpus_epoch.v1",
   "simulated_only": false,
