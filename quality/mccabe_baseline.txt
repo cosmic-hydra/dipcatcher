@@ -79,7 +79,6 @@ src/fx1/serve/api.py:_mount_complete_routes.openai_completions 16
 src/fx1/serve/api.py:_mount_complete_routes.openai_responses 39
 src/fx1/serve/api.py:_mount_job_routes 22
 src/fx1/serve/api.py:_mount_key_lifecycle 23
-src/fx1/serve/api.py:_mount_receipt_routes 16
 src/fx1/serve/api.py:_resolve_auth 12
 src/fx1/serve/api.py:_submit_job 14
 src/fx1/serve/api.py:create_app 71
@@ -153,7 +152,6 @@ src/quant_fund/audit/trace.py:trace_published_number 20
 src/quant_fund/audit/verify.py:_check_checkpoint 16
 src/quant_fund/audit/verify.py:verify_ledger 20
 src/quant_fund/backtest/adaptive_mix.py:trailing_nav_allocations 13
-src/quant_fund/backtest/carry_engine.py:run_carry_backtest 44
 src/quant_fund/backtest/engine.py:_run_backtest_event_loop 36
 src/quant_fund/backtest/event_sim/fills.py:advance_queue 10
 src/quant_fund/backtest/event_sim/sensitivity.py:execution_sensitivity 10

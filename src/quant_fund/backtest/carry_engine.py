@@ -242,402 +242,429 @@ def _carry_liquidation_marks(
     return liq_perp, liq_spot
 
 
-def run_carry_backtest(
-    perp_bars: pl.DataFrame,
-    spot_bars: pl.DataFrame,
-    funding: pl.DataFrame | None,
-    weights: pl.DataFrame,
+def _carry_attr_row(attr: dict[str, dict[str, float]], sid: str) -> dict[str, float]:
+    return attr.setdefault(
+        sid, {"funding": 0.0, "realized": 0.0, "fees": 0.0, "liq_realized": 0.0, "liq_fee": 0.0}
+    )
+
+
+def _carry_pair_costs(
+    delta: float,
+    po: float,
+    so: float,
+    sid: str,
+    advs_p: dict[str, float],
+    vols_p: dict[str, float],
+    advs_s: dict[str, float],
+    vols_s: dict[str, float],
     config: AppConfig,
+) -> tuple[dict[str, float | str], dict[str, float | str]]:
+    costs_p = total_cost(delta, po, advs_p.get(sid, 1.0), vols_p.get(sid, 0.02), config.costs)
+    costs_s = total_cost(delta, so, advs_s.get(sid, 1.0), vols_s.get(sid, 0.02), config.costs)
+    return costs_p, costs_s
+
+
+def _carry_leverage_clamp(
+    delta: float,
+    current: float,
+    po: float,
+    equity: float,
+    book: CarryBook,
+    mark_p: dict[str, float],
+    perp_cfg: Any,
+) -> tuple[float, str]:
+    """Clamp projected perp gross to max leverage. Status ``ok`` or ``margin_reject``."""
+    # leverage cap on the perp leg (projected gross notional vs
+    # equity): clamp the resulting position to the headroom left
+    # after other pairs — capping |delta| on top of existing gross
+    # would block deleveraging and trap an over-cap book.
+    gross_now = book.perp_gross(mark_p)
+    cap = perp_cfg.max_leverage * equity
+    others_gross = gross_now - abs(current) * po
+    projected = current + delta
+    room_qty = max(0.0, cap - others_gross) / po
+    if abs(projected) <= room_qty:
+        return delta, "ok"
+    capped_delta = np.sign(projected) * room_qty - current
+    if capped_delta == 0.0 or np.sign(capped_delta) != np.sign(delta):
+        return delta, "margin_reject"
+    return float(capped_delta), "ok"
+
+
+def _carry_budget_clamp(
+    delta: float,
+    po: float,
+    so: float,
+    equity: float,
+    book: CarryBook,
+    cash_buffer_frac: float,
+    sid: str,
+    advs_p: dict[str, float],
+    vols_p: dict[str, float],
+    advs_s: dict[str, float],
+    vols_s: dict[str, float],
+    config: AppConfig,
+    costs_p: dict[str, float | str],
+    costs_s: dict[str, float | str],
+) -> tuple[float, dict[str, float | str], dict[str, float | str], str]:
+    """Binary-search a cash-affordable size when costs + notional exceed buffer."""
+    # Both legs' costs are cash debits too. The notional-only
+    # clamp above is merely an upper bound; solve the monotone
+    # spot-notional + pair-cost budget after the other caps.
+    budget = max(0.0, book.cash - cash_buffer_frac * equity)
+    required = delta * so + float(costs_p["total"]) + float(costs_s["total"])
+    if required <= budget:
+        return delta, costs_p, costs_s, "ok"
+    lo, hi = 0.0, float(delta)
+    for _ in range(64):
+        mid = (lo + hi) / 2.0
+        cp, cs = _carry_pair_costs(mid, po, so, sid, advs_p, vols_p, advs_s, vols_s, config)
+        if mid * so + float(cp["total"]) + float(cs["total"]) <= budget:
+            lo = mid
+        else:
+            hi = mid
+    delta = lo
+    if delta * so < 1.0 or delta * po < 1.0:
+        return delta, costs_p, costs_s, "skip"
+    costs_p, costs_s = _carry_pair_costs(delta, po, so, sid, advs_p, vols_p, advs_s, vols_s, config)
+    return delta, costs_p, costs_s, "ok"
+
+
+def _carry_clamp_delta(
     *,
-    initial_nav: float = 1_000_000.0,
-    scaler: OverlayScaler | None = None,
-    cash_buffer_frac: float = 0.02,
-) -> BacktestResult:
-    """`weights` = target fraction of equity per pair (target_weight ≥ 0 only).
+    delta: float,
+    current: float,
+    po: float,
+    so: float,
+    equity: float,
+    book: CarryBook,
+    mark_p: dict[str, float],
+    cash_buffer_frac: float,
+    perp_cfg: Any,
+    advs_p: dict[str, float],
+    vols_p: dict[str, float],
+    advs_s: dict[str, float],
+    vols_s: dict[str, float],
+    sid: str,
+    config: AppConfig,
+) -> tuple[float, dict[str, float | str], dict[str, float | str], str]:
+    """Apply cash/leverage/participation clamps.
 
-    Negative weights are rejected — negative-funding harvest would need spot
-    borrow this book does not model.
-    Funding follows ``run_perp_backtest``: exact application bar-label matches,
-    applied after open fills and before liquidation using the perp close
-    mark (or a permitted carried mark). Unmapped off-grid events are skipped and
-    counted in ``funding_events_dropped`` when reported. By default the funding
-    ``event_time`` supplies the label; explicit ``application_time`` mapping
-    does not imply automatic interval bucketing.
+    Status is ``ok``, ``skip``, or ``margin_reject`` (leverage headroom blocked).
     """
-    if weights.height:
-        _ = _target_weight_map(weights)
-    if (weights["target_weight"] < 0).any() if weights.height else False:
-        raise ValueError("carry book is long-spot/short-perp only: target_weight must be >= 0")
-
-    wmap_by_time: dict[datetime, dict[str, float]] = {}
-    for wrow in weights.select(_CARRY_COLS).iter_rows(named=True):
-        wmap_by_time.setdefault(wrow["event_time"], {})[str(wrow["security_id"])] = float(
-            wrow["target_weight"]
+    if abs(delta) * so < 1.0:
+        return delta, {}, {}, "skip"
+    if delta > 0:
+        # spot leg is paid from cash — clamp to liquidity minus buffer
+        affordable = max(0.0, (book.cash - cash_buffer_frac * equity) / so)
+        delta = min(delta, affordable)
+        if delta * so < 1.0:
+            return delta, {}, {}, "skip"
+    delta, lev_status = _carry_leverage_clamp(delta, current, po, equity, book, mark_p, perp_cfg)
+    if lev_status != "ok":
+        return delta, {}, {}, lev_status
+    if abs(delta) * po < 1.0:
+        return delta, {}, {}, "skip"
+    costs_p, costs_s = _carry_pair_costs(delta, po, so, sid, advs_p, vols_p, advs_s, vols_s, config)
+    max_qty_p = config.costs.participation_limit * (advs_p.get(sid, 1.0) / po)
+    max_qty_s = config.costs.participation_limit * (advs_s.get(sid, 1.0) / so)
+    max_qty = min(max_qty_p, max_qty_s)
+    if abs(delta) > max_qty > 0:
+        delta = float(np.sign(delta) * max_qty)
+        costs_p, costs_s = _carry_pair_costs(
+            delta, po, so, sid, advs_p, vols_p, advs_s, vols_s, config
         )
+    if delta <= 0:
+        return delta, costs_p, costs_s, "ok"
+    return _carry_budget_clamp(
+        delta,
+        po,
+        so,
+        equity,
+        book,
+        cash_buffer_frac,
+        sid,
+        advs_p,
+        vols_p,
+        advs_s,
+        vols_s,
+        config,
+        costs_p,
+        costs_s,
+    )
 
-    by_time = _pair_bars(perp_bars, spot_bars)
-    times = sorted(by_time)
-    perp_cfg = config.perp
-    ppy = (
-        float(perp_cfg.periods_per_year_override)
-        if perp_cfg.periods_per_year_override is not None
-        else infer_periods_per_year(times, perp_cfg.bar_seconds_hint)
-    )
-    fund_map = (
-        _funding_by_time(
-            funding, multiplier=perp_cfg.funding_spike_multiplier, bar_times=set(times)
-        )
-        if perp_cfg.funding_enabled
-        else {}
-    )
 
-    book = CarryBook(cash=float(initial_nav))
-    pending: dict[str, tuple[float, datetime, int]] = {}
-    pending_exec_at: dict[str, int] = {}
-    navs: list[dict[str, Any]] = []
-    fill_rows: list[dict[str, Any]] = []
-    liq_rows: list[dict[str, Any]] = []
-    cost_sum = {"commission": 0.0, "spread": 0.0, "impact": 0.0}
-    funding_received = 0.0
-    funding_paid = 0.0
-    funding_events_applied = 0
-    # Funding events whose timestamp never equals a bar time are silently
-    # skipped by ``fund_map.get(dt)`` — count them so feed misalignment is
-    # visible instead of fabricating zero-funding receipts.
-    bar_times = set(times)
-    funding_events_dropped = sum(
-        len(events) for ts, events in fund_map.items() if ts not in bar_times
+def _carry_apply_fill(
+    *,
+    book: CarryBook,
+    sid: str,
+    delta: float,
+    po: float,
+    so: float,
+    costs_p: dict[str, float | str],
+    costs_s: dict[str, float | str],
+    spot_vwap: dict[str, float],
+    attr_row: dict[str, float],
+    cost_sum: dict[str, float],
+    fill_rows: list[dict[str, Any]],
+    dt: datetime,
+    signal_t: datetime,
+    nav_safe: float,
+) -> float:
+    """Mutate book/attribution for one fill; return turnover contribution."""
+    fee = float(costs_p["total"]) + float(costs_s["total"])
+    current = book.units.get(sid, 0.0)
+    new_units = current + delta
+    # cash: spot leg pays/receives full notional; perp leg only settles
+    # realized PnL on quantity reductions (same convention as perp engine)
+    book.cash -= delta * so
+    old_entry = book.perp_entry.get(sid, po)
+    old_spot = spot_vwap.get(sid, so)
+    if delta < 0:
+        book.cash += (-delta) * (old_entry - po)  # buy back short: realize
+        attr_row["realized"] += (-delta) * (so - old_spot) + (-delta) * (old_entry - po)
+    if abs(current) < 1e-12:
+        book.perp_entry[sid] = po
+        spot_vwap[sid] = so
+    elif abs(new_units) > abs(current):
+        book.perp_entry[sid] = (current * old_entry + delta * po) / new_units
+        spot_vwap[sid] = (current * old_spot + delta * so) / new_units
+    elif abs(new_units) < 1e-12:
+        book.perp_entry.pop(sid, None)
+        spot_vwap.pop(sid, None)
+    if abs(new_units) < 1e-12:
+        book.units.pop(sid, None)
+    else:
+        book.units[sid] = new_units
+    book.cash -= fee
+    attr_row["fees"] += fee
+    for k in ("commission", "spread", "impact"):
+        cost_sum[k] += float(costs_p[k]) + float(costs_s[k])
+    fill_rows.append(
+        {
+            "fill_time": dt,
+            "signal_time": signal_t,
+            "security_id": sid,
+            "quantity": delta,
+            "spot_price": so,
+            "perp_price": po,
+            "fee": float(costs_p["commission"]) + float(costs_s["commission"]),
+            "spread_cost": float(costs_p["spread"]) + float(costs_s["spread"]),
+            "impact_cost": float(costs_p["impact"]) + float(costs_s["impact"]),
+        }
     )
-    liquidation_count = 0
-    liquidation_cost = 0.0
+    return abs(delta) * so / nav_safe
+
+
+def _carry_execute_due(
+    *,
+    i: int,
+    dt: datetime,
+    book: CarryBook,
+    pending: dict[str, tuple[float, datetime, int]],
+    pending_exec_at: dict[str, int],
+    exec_perp: dict[str, float],
+    exec_spot: dict[str, float],
+    mark_p: dict[str, float],
+    mark_s: dict[str, float],
+    advs_p: dict[str, float],
+    vols_p: dict[str, float],
+    advs_s: dict[str, float],
+    vols_s: dict[str, float],
+    cash_buffer_frac: float,
+    perp_cfg: Any,
+    config: AppConfig,
+    kill: KillSwitch,
+    spot_vwap: dict[str, float],
+    attr: dict[str, dict[str, float]],
+    cost_sum: dict[str, float],
+    fill_rows: list[dict[str, Any]],
+    order_seq: int,
+) -> tuple[float, int, int, int, int]:
+    """Fill pending pair orders due at bar *i*.
+
+    Returns ``(traded_turn, margin_rejects, risk_rejects, halts, order_seq)``.
+    """
+    traded_turn = 0.0
     margin_reject_count = 0
     reject_count = 0
     halt_count = 0
-    order_seq = 0
-    last_spot: dict[str, float] = {}
-    last_perp: dict[str, float] = {}
-    mark_ages: dict[str, int] = {}
-    kill = KillSwitch(config.kill_switch)
-    ruined = False
-    # Per-symbol P&L attribution: spot vwap cost lets every fill/liquidation
-    # be decomposed into realized pair P&L vs funding vs fees, so a receipt
-    # can show exactly where equity went instead of a bare NAV path.
-    spot_vwap: dict[str, float] = {}
-    attr: dict[str, dict[str, float]] = {}
-
-    def _attr(sid: str) -> dict[str, float]:
-        return attr.setdefault(
-            sid, {"funding": 0.0, "realized": 0.0, "fees": 0.0, "liq_realized": 0.0, "liq_fee": 0.0}
+    due = [sid for sid, idx in pending_exec_at.items() if idx <= i]
+    for sid in sorted(due):
+        target_w, signal_t, _ = pending.pop(sid)
+        del pending_exec_at[sid]
+        po = exec_perp.get(sid)
+        so = exec_spot.get(sid)
+        if po is None or so is None:
+            continue  # cannot hedge without both prints — order lapses
+        equity = book.equity(mark_s, mark_p)
+        desired_units = max(0.0, target_w * equity / so)
+        current = book.units.get(sid, 0.0)
+        delta = desired_units - current
+        delta, costs_p, costs_s, status = _carry_clamp_delta(
+            delta=delta,
+            current=current,
+            po=po,
+            so=so,
+            equity=equity,
+            book=book,
+            mark_p=mark_p,
+            cash_buffer_frac=cash_buffer_frac,
+            perp_cfg=perp_cfg,
+            advs_p=advs_p,
+            vols_p=vols_p,
+            advs_s=advs_s,
+            vols_s=vols_s,
+            sid=sid,
+            config=config,
         )
-
-    for i, dt in enumerate(times):
-        slot = by_time[dt]
-        marks = _carry_bar_marks(slot, last_spot, last_perp, mark_ages)
-        exec_spot = marks.exec_spot
-        exec_perp = marks.exec_perp
-        advs_p = marks.advs_p
-        vols_p = marks.vols_p
-        advs_s = marks.advs_s
-        vols_s = marks.vols_s
-        # Marks knowable at execution time: before this bar's close prints.
-        # Non-executing names valued at this bar's close would leak future
-        # prices into pair sizing and the leverage cap.
-        prev_spot, prev_perp = last_spot, last_perp
-        last_spot, last_perp, mark_ages = marks.close_spot, marks.close_perp, marks.ages
-        stale_held = {
-            sid: mark_ages.get(sid)
-            for sid, u in book.units.items()
-            if abs(u) > 1e-12 and mark_ages.get(sid, 10**9) > config.risk_gate.stale_price_bars
-        }
-        if stale_held:
-            details = ", ".join(f"{s}={a}" for s, a in stale_held.items())
-            raise StaleValuationError("held carry pair valuation stale beyond limit: " + details)
-
-        # --- execute pending pair orders at this bar's opens ---
-        mark_p = {**prev_perp, **exec_perp}
-        mark_s = {**prev_spot, **exec_spot}
-        traded_turn = 0.0
-        due = [sid for sid, idx in pending_exec_at.items() if idx <= i]
-        for sid in sorted(due):
-            target_w, signal_t, _ = pending.pop(sid)
-            del pending_exec_at[sid]
-            po = exec_perp.get(sid)
-            so = exec_spot.get(sid)
-            if po is None or so is None:
-                continue  # cannot hedge without both prints — order lapses
-            equity = book.equity(mark_s, mark_p)
-            desired_units = max(0.0, target_w * equity / so)
-            current = book.units.get(sid, 0.0)
-            delta = desired_units - current
-            if abs(delta) * so < 1.0:
-                continue
-            if delta > 0:
-                # spot leg is paid from cash — clamp to liquidity minus buffer
-                affordable = max(0.0, (book.cash - cash_buffer_frac * equity) / so)
-                delta = min(delta, affordable)
-                if delta * so < 1.0:
-                    continue
-            # leverage cap on the perp leg (projected gross notional vs
-            # equity): clamp the resulting position to the headroom left
-            # after other pairs — capping |delta| on top of existing gross
-            # would block deleveraging and trap an over-cap book.
-            gross_now = book.perp_gross(mark_p)
-            cap = perp_cfg.max_leverage * equity
-            others_gross = gross_now - abs(current) * po
-            projected = current + delta
-            room_qty = max(0.0, cap - others_gross) / po
-            if abs(projected) > room_qty:
-                capped_delta = np.sign(projected) * room_qty - current
-                if capped_delta == 0.0 or np.sign(capped_delta) != np.sign(delta):
-                    margin_reject_count += 1
-                    continue
-                delta = capped_delta
-            if abs(delta) * po < 1.0:
-                continue
-            costs_p = total_cost(
-                delta, po, advs_p.get(sid, 1.0), vols_p.get(sid, 0.02), config.costs
-            )
-            costs_s = total_cost(
-                delta, so, advs_s.get(sid, 1.0), vols_s.get(sid, 0.02), config.costs
-            )
-            max_qty_p = config.costs.participation_limit * (advs_p.get(sid, 1.0) / po)
-            max_qty_s = config.costs.participation_limit * (advs_s.get(sid, 1.0) / so)
-            max_qty = min(max_qty_p, max_qty_s)
-            if abs(delta) > max_qty > 0:
-                delta = np.sign(delta) * max_qty
-                costs_p = total_cost(
-                    delta, po, advs_p.get(sid, 1.0), vols_p.get(sid, 0.02), config.costs
-                )
-                costs_s = total_cost(
-                    delta, so, advs_s.get(sid, 1.0), vols_s.get(sid, 0.02), config.costs
-                )
-            if delta > 0:
-                # Both legs' costs are cash debits too. The notional-only
-                # clamp above is merely an upper bound; solve the monotone
-                # spot-notional + pair-cost budget after the other caps.
-                budget = max(0.0, book.cash - cash_buffer_frac * equity)
-                required = delta * so + float(costs_p["total"]) + float(costs_s["total"])
-                if required > budget:
-                    lo, hi = 0.0, float(delta)
-                    for _ in range(64):
-                        mid = (lo + hi) / 2.0
-                        cp = total_cost(
-                            mid, po, advs_p.get(sid, 1.0), vols_p.get(sid, 0.02), config.costs
-                        )
-                        cs = total_cost(
-                            mid, so, advs_s.get(sid, 1.0), vols_s.get(sid, 0.02), config.costs
-                        )
-                        if mid * so + float(cp["total"]) + float(cs["total"]) <= budget:
-                            lo = mid
-                        else:
-                            hi = mid
-                    delta = lo
-                    if delta * so < 1.0 or delta * po < 1.0:
-                        continue
-                    costs_p = total_cost(
-                        delta, po, advs_p.get(sid, 1.0), vols_p.get(sid, 0.02), config.costs
-                    )
-                    costs_s = total_cost(
-                        delta, so, advs_s.get(sid, 1.0), vols_s.get(sid, 0.02), config.costs
-                    )
-            try:
-                kill.assert_new_orders_allowed()
-            except KillSwitchActive:
-                halt_count += 1
-                continue
-            nav_safe = max(equity, 1e-12)
-            current_w = current * so / nav_safe
-            order_seq += 1
-            order = _make_order(
-                sid=sid, delta=delta, signal_time=signal_t, order_time=dt, order_seq=order_seq
-            )
-            try:
-                check_order(
-                    order,
-                    nav=equity,
-                    price=so,
-                    current_weight=current_w,
-                    gross_after=0.0,  # pair book: net market exposure ≈ 0 by construction
-                    net_after=0.0,
-                    participation=abs(delta) * po / max(advs_p.get(sid, 1.0), 1e-12),
-                    predicted_vol=vols_p.get(sid, 0.02),
-                    config=config,
-                )
-            except RiskGateRejected:
-                reject_count += 1
-                continue
-            fee = float(costs_p["total"]) + float(costs_s["total"])
-            new_units = current + delta
-            # cash: spot leg pays/receives full notional; perp leg only settles
-            # realized PnL on quantity reductions (same convention as perp engine)
-            book.cash -= delta * so
-            old_entry = book.perp_entry.get(sid, po)
-            old_spot = spot_vwap.get(sid, so)
-            if delta < 0:
-                book.cash += (-delta) * (old_entry - po)  # buy back short: realize
-                _attr(sid)["realized"] += (-delta) * (so - old_spot) + (-delta) * (old_entry - po)
-            if abs(current) < 1e-12:
-                book.perp_entry[sid] = po
-                spot_vwap[sid] = so
-            elif abs(new_units) > abs(current):
-                book.perp_entry[sid] = (current * old_entry + delta * po) / new_units
-                spot_vwap[sid] = (current * old_spot + delta * so) / new_units
-            elif abs(new_units) < 1e-12:
-                book.perp_entry.pop(sid, None)
-                spot_vwap.pop(sid, None)
-            if abs(new_units) < 1e-12:
-                book.units.pop(sid, None)
-            else:
-                book.units[sid] = new_units
-            book.cash -= fee
-            _attr(sid)["fees"] += fee
-            traded_turn += abs(delta) * so / nav_safe
-            for k in ("commission", "spread", "impact"):
-                cost_sum[k] += float(costs_p[k]) + float(costs_s[k])
-            fill_rows.append(
-                {
-                    "fill_time": dt,
-                    "signal_time": signal_t,
-                    "security_id": sid,
-                    "quantity": delta,
-                    "spot_price": so,
-                    "perp_price": po,
-                    "fee": float(costs_p["commission"]) + float(costs_s["commission"]),
-                    "spread_cost": float(costs_p["spread"]) + float(costs_s["spread"]),
-                    "impact_cost": float(costs_p["impact"]) + float(costs_s["impact"]),
-                }
-            )
-
-        # --- funding on the perp leg ---
-        # Funding accrues at the bar's close mark, matching the perp
-        # engine's convention (exec opens in mark_p are not close marks).
-        received, paid, applied = _apply_carry_funding(book, fund_map.get(dt, []), last_perp, _attr)
-        funding_received += received
-        funding_paid += paid
-        funding_events_applied += applied
-
-        # --- wick-paranoid liquidation on the perp leg ---
-        liq_perp, liq_spot = _carry_liquidation_marks(
-            slot,
-            last_spot,
-            last_perp,
-            book.units,
-            on_wick=perp_cfg.liquidation_on_wick,
+        if status == "margin_reject":
+            margin_reject_count += 1
+            continue
+        if status != "ok":
+            continue
+        try:
+            kill.assert_new_orders_allowed()
+        except KillSwitchActive:
+            halt_count += 1
+            continue
+        nav_safe = max(equity, 1e-12)
+        current_w = current * so / nav_safe
+        order_seq += 1
+        order = _make_order(
+            sid=sid, delta=delta, signal_time=signal_t, order_time=dt, order_seq=order_seq
         )
+        try:
+            check_order(
+                order,
+                nav=equity,
+                price=so,
+                current_weight=current_w,
+                gross_after=0.0,  # pair book: net market exposure ≈ 0 by construction
+                net_after=0.0,
+                participation=abs(delta) * po / max(advs_p.get(sid, 1.0), 1e-12),
+                predicted_vol=vols_p.get(sid, 0.02),
+                config=config,
+            )
+        except RiskGateRejected:
+            reject_count += 1
+            continue
+        traded_turn += _carry_apply_fill(
+            book=book,
+            sid=sid,
+            delta=delta,
+            po=po,
+            so=so,
+            costs_p=costs_p,
+            costs_s=costs_s,
+            spot_vwap=spot_vwap,
+            attr_row=_carry_attr_row(attr, sid),
+            cost_sum=cost_sum,
+            fill_rows=fill_rows,
+            dt=dt,
+            signal_t=signal_t,
+            nav_safe=nav_safe,
+        )
+    return traded_turn, margin_reject_count, reject_count, halt_count, order_seq
 
-        def _mmr_deficit(lp: dict[str, float] = liq_perp, ls: dict[str, float] = liq_spot) -> float:
-            return perp_cfg.maint_margin_ratio * book.perp_gross(lp) - book.equity(ls, lp)
 
-        while _mmr_deficit() > 0 and book.perp_gross(liq_perp) > 0:
-            victim = max(
-                (s for s in book.units if abs(book.units[s]) > 1e-12),
-                key=lambda s: abs(book.units[s]) * liq_perp.get(s, 0.0),
-                default=None,
-            )
-            if victim is None:
-                break
-            u = book.units.pop(victim)
-            entry = book.perp_entry.pop(victim, liq_perp.get(victim, 0.0))
-            s_vwap = spot_vwap.pop(victim, liq_spot.get(victim, 0.0))
-            liq_s = liq_spot.get(victim, 0.0)
-            liq_p = liq_perp.get(victim, entry)
-            # venue force-covers the short at the adverse liq price; the
-            # orphaned hedge is unwound at market (bar close) with normal
-            # costs, plus the liquidation fee on the perp leg
-            book.cash += u * liq_s  # dump spot
-            book.cash += u * (entry - liq_p)  # cover short
-            liq_spot_costs = total_cost(
-                u, liq_s, advs_s.get(victim, 1.0), vols_s.get(victim, 0.02), config.costs
-            )
-            book.cash -= float(liq_spot_costs["total"])
-            liq_fee = u * liq_perp.get(victim, 0.0) * perp_cfg.liquidation_fee_bps / 1e4
-            book.cash -= liq_fee
-            liq_realized = (
-                u * (liq_s - s_vwap) + u * (entry - liq_p) - float(liq_spot_costs["total"])
-            )
-            _attr(victim)["liq_realized"] += liq_realized
-            _attr(victim)["liq_fee"] += liq_fee
-            for k in ("commission", "spread", "impact"):
-                cost_sum[k] += float(liq_spot_costs[k])
-            liquidation_cost += liq_fee
-            liquidation_count += 1
-            liq_rows.append(
-                {
-                    "event_time": dt,
-                    "security_id": victim,
-                    "quantity": u,
-                    "liq_perp_price": liq_perp.get(victim),
-                    "liq_spot_price": liq_spot.get(victim),
-                    "fee": liq_fee,
-                    "realized_pnl": liq_realized,
-                    "perp_entry": entry,
-                    "spot_vwap": s_vwap,
-                }
-            )
+def _carry_liquidate(
+    *,
+    book: CarryBook,
+    slot: dict[str, dict[str, float]],
+    last_perp: dict[str, float],
+    last_spot: dict[str, float],
+    perp_cfg: Any,
+    advs_s: dict[str, float],
+    vols_s: dict[str, float],
+    config: AppConfig,
+    spot_vwap: dict[str, float],
+    attr: dict[str, dict[str, float]],
+    cost_sum: dict[str, float],
+    liq_rows: list[dict[str, Any]],
+    dt: datetime,
+) -> tuple[int, float]:
+    """Wick-paranoid MMR liquidation loop. Returns (count, fee_cost)."""
+    liq_perp, liq_spot = _carry_liquidation_marks(
+        slot,
+        last_spot,
+        last_perp,
+        book.units,
+        on_wick=perp_cfg.liquidation_on_wick,
+    )
 
-        # --- mark close, queue targets ---
-        nav_close = book.equity(last_spot, last_perp)
-        gross_p = book.perp_gross(last_perp) / max(abs(nav_close), 1e-12)
-        navs.append(
+    def _mmr_deficit(lp: dict[str, float] = liq_perp, ls: dict[str, float] = liq_spot) -> float:
+        return float(perp_cfg.maint_margin_ratio * book.perp_gross(lp) - book.equity(ls, lp))
+
+    liquidation_count = 0
+    liquidation_cost = 0.0
+    while _mmr_deficit() > 0 and book.perp_gross(liq_perp) > 0:
+        victim = max(
+            (s for s in book.units if abs(book.units[s]) > 1e-12),
+            key=lambda s: abs(book.units[s]) * liq_perp.get(s, 0.0),
+            default=None,
+        )
+        if victim is None:
+            break
+        u = book.units.pop(victim)
+        entry = book.perp_entry.pop(victim, liq_perp.get(victim, 0.0))
+        s_vwap = spot_vwap.pop(victim, liq_spot.get(victim, 0.0))
+        liq_s = liq_spot.get(victim, 0.0)
+        liq_p = liq_perp.get(victim, entry)
+        # venue force-covers the short at the adverse liq price; the
+        # orphaned hedge is unwound at market (bar close) with normal
+        # costs, plus the liquidation fee on the perp leg
+        book.cash += u * liq_s  # dump spot
+        book.cash += u * (entry - liq_p)  # cover short
+        liq_spot_costs = total_cost(
+            u, liq_s, advs_s.get(victim, 1.0), vols_s.get(victim, 0.02), config.costs
+        )
+        book.cash -= float(liq_spot_costs["total"])
+        liq_fee = u * liq_perp.get(victim, 0.0) * perp_cfg.liquidation_fee_bps / 1e4
+        book.cash -= liq_fee
+        liq_realized = u * (liq_s - s_vwap) + u * (entry - liq_p) - float(liq_spot_costs["total"])
+        row_attr = _carry_attr_row(attr, victim)
+        row_attr["liq_realized"] += liq_realized
+        row_attr["liq_fee"] += liq_fee
+        for k in ("commission", "spread", "impact"):
+            cost_sum[k] += float(liq_spot_costs[k])
+        liquidation_cost += liq_fee
+        liquidation_count += 1
+        liq_rows.append(
             {
                 "event_time": dt,
-                "nav": nav_close,
-                "gross": gross_p,
-                "net": gross_p,  # pair book: gross==net exposure metric is the perp leg
-                "turnover": traded_turn,
+                "security_id": victim,
+                "quantity": u,
+                "liq_perp_price": liq_perp.get(victim),
+                "liq_spot_price": liq_spot.get(victim),
+                "fee": liq_fee,
+                "realized_pnl": liq_realized,
+                "perp_entry": entry,
+                "spot_vwap": s_vwap,
             }
         )
-        if scaler is not None:
-            scaler.observe(dt, nav_close)
-        if nav_close <= 0:
-            ruined = True
-            break
-        if i + 1 + perp_cfg.fill_delay_bars < len(times):
-            targets = wmap_by_time.get(dt)
-            if targets:
-                if scaler is not None:
-                    targets = scaler.scale(dt, dict(targets))
-                exec_idx = i + 1 + perp_cfg.fill_delay_bars
-                for sid, w in targets.items():
-                    pending[sid] = (w, dt, exec_idx)
-                    pending_exec_at[sid] = exec_idx
+    return liquidation_count, liquidation_cost
 
-    eq = pl.DataFrame(navs) if navs else pl.DataFrame({"event_time": [], "nav": []})
-    # Per-symbol attribution: unrealized for still-open pairs marks at last
-    # close vs vwap entries; realized/funding/fees/liq were tracked at events.
-    for sid, u in book.units.items():
-        if abs(u) < 1e-12:
-            continue
-        s_now = last_spot.get(sid)
-        p_now = last_perp.get(sid)
-        if s_now is None or p_now is None:
-            continue
-        _attr(sid)["unrealized"] = u * (s_now - spot_vwap.get(sid, s_now)) + u * (
-            book.perp_entry.get(sid, p_now) - p_now
-        )
-    attr_totals = {
-        k: sum(row.get(k, 0.0) for row in attr.values())
-        for k in ("funding", "realized", "fees", "liq_realized", "liq_fee", "unrealized")
-    }
-    final_equity = float(navs[-1]["nav"]) if navs else float(initial_nav)
-    conservation_error = (
-        final_equity
-        - float(initial_nav)
-        - (
-            attr_totals["funding"]
-            + attr_totals["realized"]
-            + attr_totals["liq_realized"]
-            - attr_totals["fees"]
-            - attr_totals["liq_fee"]
-            + attr_totals["unrealized"]
-        )
-    )
-    pnl_attribution = {
-        "by_symbol": {sid: row for sid, row in sorted(attr.items())},
-        "totals": attr_totals,
-        "conservation_error": conservation_error,
-        "liquidation_events": liq_rows,
-    }
+
+def _carry_build_metrics(
+    *,
+    eq: pl.DataFrame,
+    ppy: float,
+    initial_nav: float,
+    cost_sum: dict[str, float],
+    funding_received: float,
+    funding_paid: float,
+    funding_events_applied: int,
+    funding_events_dropped: int,
+    liquidation_count: int,
+    liquidation_cost: float,
+    margin_reject_count: int,
+    ruined: bool,
+    reject_count: int,
+    halt_count: int,
+    pnl_attribution: dict[str, Any],
+    config: AppConfig,
+) -> dict[str, float | str | int | bool | dict[str, Any]]:
     if eq.height >= 2:
         rets = eq["nav"].pct_change().drop_nulls().to_numpy()
         sr = sharpe_ratio(rets, periods_per_year=ppy)
@@ -697,6 +724,400 @@ def run_carry_backtest(
     if config.costs.frictionless:
         metrics["label"] = "FRICTIONLESS RESEARCH ONLY"
     metrics["data_source"] = "file"
+    return metrics
+
+
+def _carry_weight_map(weights: pl.DataFrame) -> dict[datetime, dict[str, float]]:
+    if weights.height:
+        _ = _target_weight_map(weights)
+    if (weights["target_weight"] < 0).any() if weights.height else False:
+        raise ValueError("carry book is long-spot/short-perp only: target_weight must be >= 0")
+    wmap_by_time: dict[datetime, dict[str, float]] = {}
+    for wrow in weights.select(_CARRY_COLS).iter_rows(named=True):
+        wmap_by_time.setdefault(wrow["event_time"], {})[str(wrow["security_id"])] = float(
+            wrow["target_weight"]
+        )
+    return wmap_by_time
+
+
+def _carry_raise_if_stale(
+    book: CarryBook, mark_ages: dict[str, int], stale_price_bars: int
+) -> None:
+    stale_held = {
+        sid: mark_ages.get(sid)
+        for sid, u in book.units.items()
+        if abs(u) > 1e-12 and mark_ages.get(sid, 10**9) > stale_price_bars
+    }
+    if stale_held:
+        details = ", ".join(f"{s}={a}" for s, a in stale_held.items())
+        raise StaleValuationError("held carry pair valuation stale beyond limit: " + details)
+
+
+def _carry_queue_targets(
+    *,
+    i: int,
+    dt: datetime,
+    times: list[datetime],
+    fills_delay_bars: int,
+    wmap_by_time: dict[datetime, dict[str, float]],
+    scaler: OverlayScaler | None,
+    pending: dict[str, tuple[float, datetime, int]],
+    pending_exec_at: dict[str, int],
+) -> None:
+    if i + 1 + fills_delay_bars >= len(times):
+        return
+    targets = wmap_by_time.get(dt)
+    if not targets:
+        return
+    if scaler is not None:
+        targets = scaler.scale(dt, dict(targets))
+    exec_idx = i + 1 + fills_delay_bars
+    for sid, w in targets.items():
+        pending[sid] = (w, dt, exec_idx)
+        pending_exec_at[sid] = exec_idx
+
+
+def _carry_pnl_attribution(
+    *,
+    book: CarryBook,
+    last_spot: dict[str, float],
+    last_perp: dict[str, float],
+    spot_vwap: dict[str, float],
+    attr: dict[str, dict[str, float]],
+    liq_rows: list[dict[str, Any]],
+    navs: list[dict[str, Any]],
+    initial_nav: float,
+) -> dict[str, Any]:
+    # Per-symbol attribution: unrealized for still-open pairs marks at last
+    # close vs vwap entries; realized/funding/fees/liq were tracked at events.
+    for sid, u in book.units.items():
+        if abs(u) < 1e-12:
+            continue
+        s_now = last_spot.get(sid)
+        p_now = last_perp.get(sid)
+        if s_now is None or p_now is None:
+            continue
+        _carry_attr_row(attr, sid)["unrealized"] = u * (s_now - spot_vwap.get(sid, s_now)) + u * (
+            book.perp_entry.get(sid, p_now) - p_now
+        )
+    attr_totals = {
+        k: sum(row.get(k, 0.0) for row in attr.values())
+        for k in ("funding", "realized", "fees", "liq_realized", "liq_fee", "unrealized")
+    }
+    final_equity = float(navs[-1]["nav"]) if navs else float(initial_nav)
+    conservation_error = (
+        final_equity
+        - float(initial_nav)
+        - (
+            attr_totals["funding"]
+            + attr_totals["realized"]
+            + attr_totals["liq_realized"]
+            - attr_totals["fees"]
+            - attr_totals["liq_fee"]
+            + attr_totals["unrealized"]
+        )
+    )
+    return {
+        "by_symbol": {sid: row for sid, row in sorted(attr.items())},
+        "totals": attr_totals,
+        "conservation_error": conservation_error,
+        "liquidation_events": liq_rows,
+    }
+
+
+@dataclass
+class _CarryBarOutcome:
+    """Close marks and counter deltas produced by one bar step."""
+
+    last_spot: dict[str, float]
+    last_perp: dict[str, float]
+    mark_ages: dict[str, int]
+    order_seq: int
+    margin_rejects: int
+    risk_rejects: int
+    halts: int
+    funding_received: float
+    funding_paid: float
+    funding_applied: int
+    liquidation_count: int
+    liquidation_cost: float
+    ruined: bool
+
+
+def _carry_run_bar(
+    *,
+    i: int,
+    dt: datetime,
+    times: list[datetime],
+    slot: dict[str, dict[str, float]],
+    book: CarryBook,
+    last_spot: dict[str, float],
+    last_perp: dict[str, float],
+    mark_ages: dict[str, int],
+    pending: dict[str, tuple[float, datetime, int]],
+    pending_exec_at: dict[str, int],
+    fund_events: list[tuple[str, float]],
+    cash_buffer_frac: float,
+    perp_cfg: Any,
+    config: AppConfig,
+    kill: KillSwitch,
+    spot_vwap: dict[str, float],
+    attr: dict[str, dict[str, float]],
+    cost_sum: dict[str, float],
+    fill_rows: list[dict[str, Any]],
+    liq_rows: list[dict[str, Any]],
+    navs: list[dict[str, Any]],
+    wmap_by_time: dict[datetime, dict[str, float]],
+    scaler: OverlayScaler | None,
+    order_seq: int,
+) -> _CarryBarOutcome:
+    """One bar: marks → fills → funding → liquidation → NAV/queue."""
+    marks = _carry_bar_marks(slot, last_spot, last_perp, mark_ages)
+    # Marks knowable at execution time: before this bar's close prints.
+    # Non-executing names valued at this bar's close would leak future
+    # prices into pair sizing and the leverage cap.
+    prev_spot, prev_perp = last_spot, last_perp
+    last_spot, last_perp, mark_ages = marks.close_spot, marks.close_perp, marks.ages
+    _carry_raise_if_stale(book, mark_ages, config.risk_gate.stale_price_bars)
+
+    # --- execute pending pair orders at this bar's opens ---
+    mark_p = {**prev_perp, **marks.exec_perp}
+    mark_s = {**prev_spot, **marks.exec_spot}
+    traded_turn, mrej, rrej, halts, order_seq = _carry_execute_due(
+        i=i,
+        dt=dt,
+        book=book,
+        pending=pending,
+        pending_exec_at=pending_exec_at,
+        exec_perp=marks.exec_perp,
+        exec_spot=marks.exec_spot,
+        mark_p=mark_p,
+        mark_s=mark_s,
+        advs_p=marks.advs_p,
+        vols_p=marks.vols_p,
+        advs_s=marks.advs_s,
+        vols_s=marks.vols_s,
+        cash_buffer_frac=cash_buffer_frac,
+        perp_cfg=perp_cfg,
+        config=config,
+        kill=kill,
+        spot_vwap=spot_vwap,
+        attr=attr,
+        cost_sum=cost_sum,
+        fill_rows=fill_rows,
+        order_seq=order_seq,
+    )
+
+    # --- funding on the perp leg ---
+    # Funding accrues at the bar's close mark, matching the perp
+    # engine's convention (exec opens in mark_p are not close marks).
+    received, paid, applied = _apply_carry_funding(
+        book, fund_events, last_perp, lambda sid: _carry_attr_row(attr, sid)
+    )
+
+    # --- wick-paranoid liquidation on the perp leg ---
+    liq_n, liq_c = _carry_liquidate(
+        book=book,
+        slot=slot,
+        last_perp=last_perp,
+        last_spot=last_spot,
+        perp_cfg=perp_cfg,
+        advs_s=marks.advs_s,
+        vols_s=marks.vols_s,
+        config=config,
+        spot_vwap=spot_vwap,
+        attr=attr,
+        cost_sum=cost_sum,
+        liq_rows=liq_rows,
+        dt=dt,
+    )
+
+    # --- mark close, queue targets ---
+    nav_close = book.equity(last_spot, last_perp)
+    gross_p = book.perp_gross(last_perp) / max(abs(nav_close), 1e-12)
+    navs.append(
+        {
+            "event_time": dt,
+            "nav": nav_close,
+            "gross": gross_p,
+            "net": gross_p,  # pair book: gross==net exposure metric is the perp leg
+            "turnover": traded_turn,
+        }
+    )
+    if scaler is not None:
+        scaler.observe(dt, nav_close)
+    ruined = nav_close <= 0
+    if not ruined:
+        _carry_queue_targets(
+            i=i,
+            dt=dt,
+            times=times,
+            fills_delay_bars=perp_cfg.fill_delay_bars,
+            wmap_by_time=wmap_by_time,
+            scaler=scaler,
+            pending=pending,
+            pending_exec_at=pending_exec_at,
+        )
+    return _CarryBarOutcome(
+        last_spot=last_spot,
+        last_perp=last_perp,
+        mark_ages=mark_ages,
+        order_seq=order_seq,
+        margin_rejects=mrej,
+        risk_rejects=rrej,
+        halts=halts,
+        funding_received=received,
+        funding_paid=paid,
+        funding_applied=applied,
+        liquidation_count=liq_n,
+        liquidation_cost=liq_c,
+        ruined=ruined,
+    )
+
+
+def run_carry_backtest(
+    perp_bars: pl.DataFrame,
+    spot_bars: pl.DataFrame,
+    funding: pl.DataFrame | None,
+    weights: pl.DataFrame,
+    config: AppConfig,
+    *,
+    initial_nav: float = 1_000_000.0,
+    scaler: OverlayScaler | None = None,
+    cash_buffer_frac: float = 0.02,
+) -> BacktestResult:
+    """`weights` = target fraction of equity per pair (target_weight ≥ 0 only).
+
+    Negative weights are rejected — negative-funding harvest would need spot
+    borrow this book does not model.
+    Funding follows ``run_perp_backtest``: exact application bar-label matches,
+    applied after open fills and before liquidation using the perp close
+    mark (or a permitted carried mark). Unmapped off-grid events are skipped and
+    counted in ``funding_events_dropped`` when reported. By default the funding
+    ``event_time`` supplies the label; explicit ``application_time`` mapping
+    does not imply automatic interval bucketing.
+    """
+    wmap_by_time = _carry_weight_map(weights)
+    by_time = _pair_bars(perp_bars, spot_bars)
+    times = sorted(by_time)
+    perp_cfg = config.perp
+    ppy = (
+        float(perp_cfg.periods_per_year_override)
+        if perp_cfg.periods_per_year_override is not None
+        else infer_periods_per_year(times, perp_cfg.bar_seconds_hint)
+    )
+    fund_map = (
+        _funding_by_time(
+            funding, multiplier=perp_cfg.funding_spike_multiplier, bar_times=set(times)
+        )
+        if perp_cfg.funding_enabled
+        else {}
+    )
+
+    book = CarryBook(cash=float(initial_nav))
+    pending: dict[str, tuple[float, datetime, int]] = {}
+    pending_exec_at: dict[str, int] = {}
+    navs: list[dict[str, Any]] = []
+    fill_rows: list[dict[str, Any]] = []
+    liq_rows: list[dict[str, Any]] = []
+    cost_sum = {"commission": 0.0, "spread": 0.0, "impact": 0.0}
+    funding_received = 0.0
+    funding_paid = 0.0
+    funding_events_applied = 0
+    # Funding events whose timestamp never equals a bar time are silently
+    # skipped by ``fund_map.get(dt)`` — count them so feed misalignment is
+    # visible instead of fabricating zero-funding receipts.
+    bar_times = set(times)
+    funding_events_dropped = sum(
+        len(events) for ts, events in fund_map.items() if ts not in bar_times
+    )
+    liquidation_count = 0
+    liquidation_cost = 0.0
+    margin_reject_count = 0
+    reject_count = 0
+    halt_count = 0
+    order_seq = 0
+    last_spot: dict[str, float] = {}
+    last_perp: dict[str, float] = {}
+    mark_ages: dict[str, int] = {}
+    kill = KillSwitch(config.kill_switch)
+    ruined = False
+    # Per-symbol P&L attribution: spot vwap cost lets every fill/liquidation
+    # be decomposed into realized pair P&L vs funding vs fees, so a receipt
+    # can show exactly where equity went instead of a bare NAV path.
+    spot_vwap: dict[str, float] = {}
+    attr: dict[str, dict[str, float]] = {}
+
+    for i, dt in enumerate(times):
+        bar = _carry_run_bar(
+            i=i,
+            dt=dt,
+            times=times,
+            slot=by_time[dt],
+            book=book,
+            last_spot=last_spot,
+            last_perp=last_perp,
+            mark_ages=mark_ages,
+            pending=pending,
+            pending_exec_at=pending_exec_at,
+            fund_events=fund_map.get(dt, []),
+            cash_buffer_frac=cash_buffer_frac,
+            perp_cfg=perp_cfg,
+            config=config,
+            kill=kill,
+            spot_vwap=spot_vwap,
+            attr=attr,
+            cost_sum=cost_sum,
+            fill_rows=fill_rows,
+            liq_rows=liq_rows,
+            navs=navs,
+            wmap_by_time=wmap_by_time,
+            scaler=scaler,
+            order_seq=order_seq,
+        )
+        last_spot, last_perp, mark_ages = bar.last_spot, bar.last_perp, bar.mark_ages
+        order_seq = bar.order_seq
+        margin_reject_count += bar.margin_rejects
+        reject_count += bar.risk_rejects
+        halt_count += bar.halts
+        funding_received += bar.funding_received
+        funding_paid += bar.funding_paid
+        funding_events_applied += bar.funding_applied
+        liquidation_count += bar.liquidation_count
+        liquidation_cost += bar.liquidation_cost
+        if bar.ruined:
+            ruined = True
+            break
+
+    eq = pl.DataFrame(navs) if navs else pl.DataFrame({"event_time": [], "nav": []})
+    pnl_attribution = _carry_pnl_attribution(
+        book=book,
+        last_spot=last_spot,
+        last_perp=last_perp,
+        spot_vwap=spot_vwap,
+        attr=attr,
+        liq_rows=liq_rows,
+        navs=navs,
+        initial_nav=initial_nav,
+    )
+    metrics = _carry_build_metrics(
+        eq=eq,
+        ppy=ppy,
+        initial_nav=initial_nav,
+        cost_sum=cost_sum,
+        funding_received=funding_received,
+        funding_paid=funding_paid,
+        funding_events_applied=funding_events_applied,
+        funding_events_dropped=funding_events_dropped,
+        liquidation_count=liquidation_count,
+        liquidation_cost=liquidation_cost,
+        margin_reject_count=margin_reject_count,
+        ruined=ruined,
+        reject_count=reject_count,
+        halt_count=halt_count,
+        pnl_attribution=pnl_attribution,
+        config=config,
+    )
     return BacktestResult(
         equity=eq,
         fills=pl.DataFrame(fill_rows) if fill_rows else pl.DataFrame(),
