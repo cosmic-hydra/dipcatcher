@@ -12166,7 +12166,7 @@
     },
     "/harness/jobs/{job_id}/events": {
       "get": {
-        "description": "SSE job-status stream: ``event: job`` frames on every change\nuntil a terminal status, then the stream closes. ``: keepalive``\nframes fire every ``sse_keepalive_s``; ``timeout_s`` bounds it.\nUnknown ids 404, same read path as ``GET /harness/jobs/{job_id}``.",
+        "description": "SSE job-status stream until a terminal status, then close.",
         "operationId": "stream_job_events",
         "parameters": [
           {
