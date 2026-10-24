@@ -3082,15 +3082,24 @@ def _mount_job_routes(
                 cur = job_store.get(job_id)
                 if cur is None:
                     return  # evicted from the bounded store mid-stream
+                # The worker mutates this record in place. A second read of
+                # cur.status can already be terminal while ``snap`` still
+                # says queued/running; closing on that later read ends the
+                # stream without a terminal frame.
                 snap = cur.model_dump_json()
                 if snap != last:
                     last = snap
                     yield f"event: job\ndata: {snap}\n\n"
+                try:
+                    status = json.loads(snap).get("status")
+                except json.JSONDecodeError:
+                    status = None
                 now = time.monotonic()
-                # Trailing comment: some ASGI clients drop a terminal last chunk.
-                closer = ": end\n\n" if cur.status in _TERMINAL_JOB_STATUS else ""
-                if closer or now >= deadline:
-                    yield closer
+                if status in _TERMINAL_JOB_STATUS:
+                    # Trailing comment: some ASGI clients drop a terminal last chunk.
+                    yield ": end\n\n"
+                    return
+                if now >= deadline:
                     return
                 if now >= next_keep:
                     yield ": keepalive\n\n"

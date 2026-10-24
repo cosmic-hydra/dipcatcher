@@ -475,6 +475,33 @@ def _wait_job(
 # ---------------------------------------------------------------------------
 
 
+def _health_with_backends_unconfigured(client: TestClient) -> dict[str, Any]:
+    """Read ``/health`` while backend credentials are absent.
+
+    ``_backend_configured`` inspects the process environment on every
+    request. ``_make_app`` restores the caller's env before the client
+    is used, so a developer shell — or an earlier test on this worker
+    that applied ``MOONSHOT_API_KEY`` in-process — would otherwise mark
+    a backend configured and fail the unconfigured pin. The sweep is
+    the same set ``_make_app`` uses, minus the API key the app already
+    captured at startup.
+    """
+    names = tuple(name for name in _SWEPT_ENVS if name != _API_KEY_ENV)
+    saved = {name: os.environ.get(name) for name in names}
+    try:
+        for name in names:
+            os.environ.pop(name, None)
+        response = client.get("/health")
+    finally:
+        for name, value in saved.items():
+            if value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = value
+    body: dict[str, Any] = response.json()
+    return body
+
+
 def _probe_liveness() -> dict[str, bool]:
     """Health is liveness (public, always up); ready is readiness
     (keyed, fails closed under drain and off the public path)."""
@@ -486,7 +513,7 @@ def _probe_liveness() -> dict[str, bool]:
     out["health_public_wrong_key"] = (
         client.get("/health", headers={"X-API-Key": "fx1k_deadbeef"}).status_code == 200
     )
-    h = client.get("/health").json()
+    h = _health_with_backends_unconfigured(client)
     out["health_shape"] = (
         h.get("status") == "ok"
         and isinstance(h.get("registered_commands"), int)
@@ -495,8 +522,9 @@ def _probe_liveness() -> dict[str, bool]:
         and all(isinstance(v, bool) for v in h["backends"].values())
         and isinstance(h.get("draining"), bool)
     )
-    # all backend envs are swept in this app — the flags must read the
-    # real config state (nothing configured) instead of claiming health
+    # Credential env is cleared for this read (see
+    # _health_with_backends_unconfigured). The flags must report the
+    # real unconfigured state instead of claiming a backend is healthy.
     out["health_backends_fail_closed_unconfigured"] = all(
         v is False for v in h["backends"].values()
     )
