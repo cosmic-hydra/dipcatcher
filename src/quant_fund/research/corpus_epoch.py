@@ -97,6 +97,21 @@ EXEMPT_PREFIXES_BY_CORPUS: dict[str, frozenset[str]] = {
     "third_party": frozenset({"kronos_src/", "kronos_weights/"}),
 }
 
+# Exact rel-paths, scoped by the corpus directory's basename. The data lake
+# writes these next to the force-added evidence under ``data/metadata`` and
+# ``.gitignore`` excludes them (``data/metadata/**``). They are not committed
+# members. A nested ``manifest.json`` keeps its own name and stays chained.
+# Any other arrival, including a file dropped beside these sidecars, does not.
+EXEMPT_RELPATHS_BY_CORPUS: dict[str, frozenset[str]] = {
+    "metadata": frozenset(
+        {
+            "data_manifest.json",
+            "resolved_config.json",
+            "proofcore.duckdb",
+        }
+    ),
+}
+
 # Directory names never admitted as members in ANY corpus: machine-local
 # build/cache artifacts (bytecode, JS deps, notebook checkpoints, tool
 # caches, bundler output) — chaining them would break the chain across
@@ -165,6 +180,7 @@ def _exempt_member(root: Path, relname: str) -> bool:
     return (
         Path(relname).name in EXEMPT_BASENAMES
         or relname in EXEMPT_RELPATHS
+        or relname in EXEMPT_RELPATHS_BY_CORPUS.get(root.name, ())
         or _machine_local(relname)
         or any(
             relname.startswith(prefix) for prefix in EXEMPT_PREFIXES_BY_CORPUS.get(root.name, ())

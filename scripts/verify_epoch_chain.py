@@ -60,6 +60,17 @@ EXEMPT_PREFIXES_BY_CORPUS = {
     ".github": frozenset({"workflows/"}),
     "third_party": frozenset({"kronos_src/", "kronos_weights/"}),
 }
+# Gitignored lake sidecars under data/metadata. Exact names only; nested
+# manifests stay members. Mirrors corpus_epoch.EXEMPT_RELPATHS_BY_CORPUS.
+EXEMPT_RELPATHS_BY_CORPUS = {
+    "metadata": frozenset(
+        {
+            "data_manifest.json",
+            "resolved_config.json",
+            "proofcore.duckdb",
+        }
+    ),
+}
 # Machine-local build/cache artifacts are never members in any corpus
 # (bytecode, JS deps, notebook checkpoints, tool caches, bundler output).
 EXEMPT_DIRNAMES = frozenset(
@@ -199,6 +210,7 @@ def _exempt_member(root: Path, relname: str) -> bool:
     return (
         Path(relname).name in EXEMPT_BASENAMES
         or relname in EXEMPT_RELPATHS
+        or relname in EXEMPT_RELPATHS_BY_CORPUS.get(root.name, ())
         or _machine_local(relname)
         or any(
             relname.startswith(prefix) for prefix in EXEMPT_PREFIXES_BY_CORPUS.get(root.name, ())
