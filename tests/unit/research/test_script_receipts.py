@@ -315,3 +315,13 @@ def test_calibration_drill_forged_eval_length_caught() -> None:
     forged["params"]["n_eval"] = forged["params"]["n_eval"] + 1
     errors = script_receipt_contract_errors(forged["schema"], forged)
     assert "n_eval_not_echoed" in errors
+
+
+def test_audit_claim_forged_ok_caught() -> None:
+    """A flat boolean probe map defines ``ok``; flipping it is a forged headline."""
+    payload = _load("honesty_audit.json")
+    assert payload["schema"] == "honesty_audit.v1"
+    forged = copy.deepcopy(payload)
+    forged["claim"]["ok"] = not forged["claim"]["ok"]
+    errors = script_receipt_contract_errors(forged["schema"], forged)
+    assert "ok_not_all_results" in errors
