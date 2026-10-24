@@ -1,6 +1,6 @@
 {
   "generator": "scripts/gen_arch_diagrams.py",
-  "module_count": 13398,
+  "module_count": 13400,
   "module_edges": [
     {
       "dst": "fx1.interactive.concierge",
@@ -7171,6 +7171,10 @@
       "src": "quant_fund.live.gateway_arm"
     },
     {
+      "dst": "quant_fund.live.permissions",
+      "src": "quant_fund.live.gateway_arm"
+    },
+    {
       "dst": "quant_fund.live.errors",
       "src": "quant_fund.live.risk_memory"
     },
@@ -7200,6 +7204,10 @@
     },
     {
       "dst": "quant_fund.live.ledger",
+      "src": "quant_fund.live.session"
+    },
+    {
+      "dst": "quant_fund.live.permissions",
       "src": "quant_fund.live.session"
     },
     {
@@ -62170,6 +62178,7 @@
     "quant_fund.live.errors",
     "quant_fund.live.gateway_arm",
     "quant_fund.live.ledger",
+    "quant_fund.live.permissions",
     "quant_fund.live.risk_memory",
     "quant_fund.live.session",
     "quant_fund.market_sim",
@@ -74804,6 +74813,7 @@
     "quant_fund.research.catalog.retired_families",
     "quant_fund.research.catalog.session",
     "quant_fund.research.catalog.sweep",
+    "quant_fund.research.catalog_threads",
     "quant_fund.research.changepoint_localize",
     "quant_fund.research.checkpoint_chain",
     "quant_fund.research.coherence",
@@ -76303,7 +76313,7 @@
     },
     {
       "dst": "quant_fund.live",
-      "imports": 19,
+      "imports": 21,
       "src": "quant_fund.live"
     },
     {

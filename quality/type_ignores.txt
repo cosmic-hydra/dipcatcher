@@ -62,7 +62,7 @@ src/quant_fund/models/smolyak.py 1
 src/quant_fund/models/sur_model.py 3
 src/quant_fund/models/tactic_engine.py 12
 src/quant_fund/models/tree_walk_interp.py 3
-src/quant_fund/models/volatility.py 4
+src/quant_fund/models/volatility.py 1
 src/quant_fund/observe/install.py 1
 src/quant_fund/paper/recon.py 2
 src/quant_fund/parity/checker.py 2

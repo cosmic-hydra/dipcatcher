@@ -808,7 +808,7 @@ sequenceDiagram
 | `quant_fund.labels` | 7 |
 | `quant_fund.leakage` | 8 |
 | `quant_fund.lightspeed` | 8 |
-| `quant_fund.live` | 11 |
+| `quant_fund.live` | 12 |
 | `quant_fund.market_sim` | 13 |
 | `quant_fund.mc_engine` | 13 |
 | `quant_fund.metrics` | 108 |
@@ -833,7 +833,7 @@ sequenceDiagram
 | `quant_fund.realized` | 2 |
 | `quant_fund.registry` | 7 |
 | `quant_fund.reporting` | 6 |
-| `quant_fund.research` | 1861 |
+| `quant_fund.research` | 1862 |
 | `quant_fund.risk` | 7 |
 | `quant_fund.robustness` | 13 |
 | `quant_fund.schemas` | 9 |
@@ -842,7 +842,7 @@ sequenceDiagram
 | `quant_fund.utils` | 9 |
 | `quant_fund.validation` | 14 |
 
-- Modules scanned: **13398**
+- Modules scanned: **13400**
 - Packages: **95**
 - Cross-package import edges: **395**
 

@@ -93,7 +93,9 @@ def test_paper_adapter_still_refuses_a_live_endpoint() -> None:
 def test_owner_only_mode_is_posix_0600(tmp_path: Path) -> None:
     path = tmp_path / "secret"
     path.write_bytes(b"x")
-    os.chmod(path, 0o644)
+    # Group-readable, not world-readable: still not owner-only, and not a
+    # world-readable chmod (CodeQL py/overly-permissive-file).
+    os.chmod(path, 0o640)
     if os.name != "nt":
         assert not is_owner_only(path)
     restrict_to_owner(path)

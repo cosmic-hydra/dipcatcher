@@ -80,6 +80,38 @@ def test_export_reproduces_pinned_member_set(tmp_path: Path) -> None:
         )
 
 
+def test_export_skips_untracked_gitignored_members(tmp_path: Path) -> None:
+    """Runtime scratch under an ignore rule is not corpus content.
+
+    A tracked file that the same rule would ignore still exports: the
+    index, not the ignore rule, decides committed evidence. An untracked
+    file that is not ignored still exports, so a real arrival stays visible
+    to ``require_stamped``.
+    """
+    root = _minimal_evidence_tree(tmp_path)
+    corpus = sorted(EVIDENCE_CORPORA)[0]
+    (root / ".gitignore").write_text(f"{corpus}/scratch.json\n", encoding="utf-8")
+    (root / corpus / "arrival.json").write_text('{"arrival": true}\n', encoding="utf-8")
+    subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+    subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+    subprocess.run(
+        ["git", "-c", "user.email=t@t", "-c", "user.name=t", "commit", "-qm", "x"],
+        cwd=root,
+        check=True,
+    )
+    # After the commit: ignored scratch must stay out; an unignored arrival
+    # that is not yet committed must still export.
+    (root / corpus / "scratch.json").write_text('{"scratch": true}\n', encoding="utf-8")
+    (root / corpus / "pending.json").write_text('{"pending": true}\n', encoding="utf-8")
+
+    manifest = export_evidence_bundle(root, tmp_path / "bundle")
+    names = {p.name for p in (tmp_path / "bundle" / corpus).rglob("*") if p.is_file()}
+    assert "scratch.json" not in names
+    assert "arrival.json" in names
+    assert "pending.json" in names
+    assert manifest["corpora"][corpus]["members"] >= 1
+
+
 def test_export_refuses_nonempty_target(tmp_path: Path) -> None:
     root = _minimal_evidence_tree(tmp_path)
     out = tmp_path / "bundle"

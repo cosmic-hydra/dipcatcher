@@ -4199,7 +4199,13 @@ def _emit_live_families(families: dict[str, Any]) -> dict[str, Any]:
 
 def _live_optional_family_blobs() -> dict[str, Any]:
     # The pin returns None, so the seeded live-optional catalog is what runs.
-    return __import__("quant_fund.research.catalog_threads").pin_catalog_threads() or {
+    # importlib, not __import__: __import__("pkg.mod") returns the top package.
+    import importlib
+
+    pin_catalog_threads = importlib.import_module(
+        "quant_fund.research.catalog_threads"
+    ).pin_catalog_threads
+    return pin_catalog_threads() or {
         "anytime_valid": bench_anytime_valid(),
         "energy_score": bench_energy_score(),
         "ts_conformal": bench_ts_conformal(),
