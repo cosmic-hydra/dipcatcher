@@ -175,9 +175,19 @@ class _StubBackend:
     chunks, counts calls; ``sleep_s`` stretches the call for the
     inflight-saturation leg. ``entered`` flags a call in flight."""
 
-    def __init__(self, model: str = "stub-v0", *, sleep_s: float = 0.0) -> None:
+    def __init__(
+        self,
+        model: str = "stub-v0",
+        *,
+        sleep_s: float = 0.0,
+        release: threading.Event | None = None,
+    ) -> None:
         self._model = model
         self._sleep_s = sleep_s
+        # ``release`` holds the call until the probe says so. A wall-clock
+        # sleep loses that race when the suite is under coverage: the
+        # response completes before cancel is observed.
+        self._release = release
         self.calls = 0
         self.entered = threading.Event()
         self.done = threading.Event()
@@ -185,7 +195,10 @@ class _StubBackend:
     def _gate(self) -> None:
         self.calls += 1
         self.entered.set()
-        if self._sleep_s:
+        if self._release is not None:
+            self._release.wait(30.0)
+            self.done.set()
+        elif self._sleep_s:
             time.sleep(self._sleep_s)
             self.done.set()
 
@@ -1451,24 +1464,30 @@ def _cancel_probes() -> dict[str, bool]:
 
     # background response: create + abandon + cancel; the record reports
     # cancelled and the replay ends on a terminal cancelled frame.
-    slow2 = _StubBackend(sleep_s=0.6)
+    # Hold the model call until those reads land — a 0.6s sleep can
+    # finish first when the worker is scheduled ahead of the client.
+    release_bg = threading.Event()
+    slow2 = _StubBackend(release=release_bg)
     client2, _ = _client({"byok": slow2})
     remote2 = _remote(client2)
-    env, _cid3 = remote2.responses_create("hi", backend="byok", background=True)
-    rid = env["id"]
-    cancelled_r = remote2.cancel_response(rid)
-    rec2 = remote2.retrieve_response(rid)
-    out["bg_response_cancel_record"] = (
-        cancelled_r["status"] == "cancelled" and rec2["status"] == "cancelled"
-    )
-    exc = _exc(lambda: remote2.cancel_response(rid))
-    out["cancel_terminal_response_409"] = type(exc).__name__ == "HarnessTransportError"
-    evs, _cid = remote2.responses_replay(rid)
-    out["cancelled_replay_terminal_frame"] = evs[-1]["type"] in (
-        "response.cancelled",
-        "response.failed",
-        "response.completed",
-    )
+    try:
+        env, _cid3 = remote2.responses_create("hi", backend="byok", background=True)
+        rid = env["id"]
+        cancelled_r = remote2.cancel_response(rid)
+        rec2 = remote2.retrieve_response(rid)
+        out["bg_response_cancel_record"] = (
+            cancelled_r["status"] == "cancelled" and rec2["status"] == "cancelled"
+        )
+        exc = _exc(lambda: remote2.cancel_response(rid))
+        out["cancel_terminal_response_409"] = type(exc).__name__ == "HarnessTransportError"
+        evs, _cid = remote2.responses_replay(rid)
+        out["cancelled_replay_terminal_frame"] = evs[-1]["type"] in (
+            "response.cancelled",
+            "response.failed",
+            "response.completed",
+        )
+    finally:
+        release_bg.set()
     exc = _exc(lambda: remote2.cancel_response("resp_nope"))
     out["cancel_unknown_response_404"] = type(exc).__name__ == "KeyError"
     return out
