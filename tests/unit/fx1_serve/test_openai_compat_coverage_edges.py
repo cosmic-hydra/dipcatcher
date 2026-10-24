@@ -8,6 +8,7 @@ import pytest
 from pydantic import ValidationError
 
 from fx1.serve.openai_compat import (
+    OpenAIBatchRequest,
     OpenAIChatMessage,
     OpenAIChatRequest,
     OpenAICompletionRequest,
@@ -23,8 +24,12 @@ from fx1.serve.openai_compat import (
     OpenAIVectorStoreSearch,
     _resolve_openai_link,
     _response_output_item_events,
+    _text_pieces,
+    chained_response_input,
+    openai_completion_envelope,
     openai_messages,
     response_input_to_messages,
+    response_output_pieces,
     response_query_text,
 )
 
@@ -241,3 +246,79 @@ def test_conversation_search_embedding_and_envelope_edges() -> None:
     )
     assert store.repin({"id": "resp_1", "status": "older"})["status"] == "completed"
     assert store.put_if_present({"id": "resp_missing", "status": "completed"}) is False
+
+
+def test_valid_legacy_metadata_usage_and_envelope_replays() -> None:
+    """Fall-throughs the happy path never takes: valid stop/metadata, non-int
+    usage, a word longer than one chunk, and a journal replay that misses."""
+    ok = OpenAICompletionRequest(
+        prompt="hi",
+        stop=["END"],
+        metadata={"k": "v"},
+        logit_bias={"1": 0},
+    )
+    assert ok.stop == ["END"] and ok.metadata == {"k": "v"}
+
+    bare = OpenAIBatchRequest.model_validate(
+        {"input_file_id": "file_1", "endpoint": "/v1/chat/completions", "metadata": None}
+    )
+    assert bare.metadata is None
+
+    env = openai_completion_envelope(
+        cid="c",
+        envs=[
+            {
+                "created": 1,
+                "model": "m",
+                "system_fingerprint": "fp",
+                "choices": [{"message": {"content": "yo"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 2, "flag": True, "note": "skip"},
+            }
+        ],
+        prompts=["hi"],
+    )
+    assert env["usage"] == {"prompt_tokens": 2}
+    pieces = list(_text_pieces("a" * 80))
+    assert "".join(pieces) == "a" * 80 and all(len(part) <= 64 for part in pieces)
+
+    accepted = OpenAIResponseRequest(
+        input="hi",
+        tools=[_search_tool(score_threshold=0.25)],
+    )
+    assert accepted.tools is not None
+
+    skipped = response_input_to_messages(
+        [
+            {"type": "file_search_call", "results": ["nope", {"text": 1}]},
+            {"type": "message", "role": "user", "content": "ask"},
+        ],
+        None,
+    )
+    assert skipped == [{"role": "user", "content": "ask"}]
+    kept = response_input_to_messages(
+        [
+            {"type": "file_search_call", "results": [{"text": "hit"}]},
+            {"type": "message", "role": "user", "content": "ask"},
+        ],
+        None,
+    )
+    assert any("hit" in message["content"] for message in kept)
+
+    chained = chained_response_input(
+        {"output": ["skip", {"type": "message", "role": "user", "content": "a", "id": "old"}]},
+        [],
+        "next",
+    )
+    assert all("id" not in item for item in chained)
+    text, _item_id, _calls, _search, _lp = response_output_pieces(
+        {"output": [{"type": "message", "id": "m1", "content": "plain"}], "status": "completed"}
+    )
+    assert text == ""
+
+    store = OpenAIEnvelopeStore(2)
+    store._apply({"op": "set_items", "id": "missing", "key": "messages", "items": []})
+    assert store.get("missing") is None
+    store._compact_locked()
+    store.put({"id": "resp_2", "object": "response"})
+    merged = store.mutate_items("resp_2", "messages", lambda rows: [*rows, {"role": "user"}])
+    assert merged == [{"role": "user"}]
