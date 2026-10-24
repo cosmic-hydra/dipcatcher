@@ -457,14 +457,10 @@ export interface paths {
         };
         /**
          * Job Events
-         * @description SSE job-status stream: the job record arrives as an
-         *     ``event: job`` frame on every change until a terminal status,
-         *     then the stream closes. ``: keepalive`` comment frames fire every
-         *     ``sse_keepalive_s`` while the job is quiet; ``timeout_s`` bounds
-         *     the stream — reconnect (and resume from the last frame) to keep
-         *     watching. Same read path as ``GET /harness/jobs/{job_id}`` — a
-         *     snapshot before the stream opens, so an unknown id 404s rather
-         *     than hanging.
+         * @description SSE job-status stream: ``event: job`` frames on every change
+         *     until a terminal status, then the stream closes. ``: keepalive``
+         *     frames fire every ``sse_keepalive_s``; ``timeout_s`` bounds it.
+         *     Unknown ids 404, same read path as ``GET /harness/jobs/{job_id}``.
          */
         get: operations["stream_job_events"];
         put?: never;

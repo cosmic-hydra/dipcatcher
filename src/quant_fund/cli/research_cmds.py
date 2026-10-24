@@ -1390,13 +1390,9 @@ def corpus(
         help="Receipt schema version: 1 = corpus_inference.v1 (default), 2 = unified receipt.v2 envelope.",
     ),
 ) -> None:
-    """Pool every committed receipt's claims into one BH-FDR family.
+    """Pool claims into a BH-FDR corpus_inference.v1 receipt.
 
-    Harvests the p/e-value findings across ``--receipts-dir`` and writes a
-    sealed ``corpus_inference.v1`` receipt naming which claims survive the
-    corpus-level FDR correction — the selection-bias check lifted to the
-    whole evidence store. Correctness evidence, never a market or P&L claim.
-    """
+    Correctness evidence, never a market or P&L claim."""
     try:
         from quant_fund.research.corpus_inference import corpus_audit, write_corpus_receipt
     except ImportError as exc:
@@ -1406,9 +1402,7 @@ def corpus(
         receipt = corpus_audit(receipts_dir, q=q)
     except ValueError as exc:
         message = str(exc)
-        # Rich wraps a long path in front of the phrase, so the contiguous
-        # "does not exist" the operator (and the CLI contract) require is
-        # split across lines. Lead with the phrase.
+        # Lead with the phrase so Rich cannot split "does not exist".
         if message.endswith("does not exist"):
             message = f"does not exist: {receipts_dir}"
         raise typer.BadParameter(message) from exc

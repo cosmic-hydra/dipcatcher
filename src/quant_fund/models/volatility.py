@@ -360,12 +360,12 @@ class GARCHVol(JoblibMixin):
         try:
             am = load_arch_model(
                 returns_percent,
-                vol=arch_vol,  # type: ignore[arg-type]
+                vol=arch_vol,
                 p=self.p,
                 o=o,
                 q=self.q,
-                dist=self.dist,  # type: ignore[arg-type]
-                mean=self.mean,  # type: ignore[arg-type]
+                dist=self.dist,
+                mean=self.mean,
                 power=self.power,
                 rescale=False,
             )

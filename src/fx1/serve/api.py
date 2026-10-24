@@ -3064,14 +3064,10 @@ def _mount_job_routes(
         job_id: str,
         timeout_s: float = Query(default=600.0, ge=1.0, le=3600.0),
     ) -> StreamingResponse:
-        """SSE job-status stream: the job record arrives as an
-        ``event: job`` frame on every change until a terminal status,
-        then the stream closes. ``: keepalive`` comment frames fire every
-        ``sse_keepalive_s`` while the job is quiet; ``timeout_s`` bounds
-        the stream — reconnect (and resume from the last frame) to keep
-        watching. Same read path as ``GET /harness/jobs/{job_id}`` — a
-        snapshot before the stream opens, so an unknown id 404s rather
-        than hanging."""
+        """SSE job-status stream: ``event: job`` frames on every change
+        until a terminal status, then the stream closes. ``: keepalive``
+        frames fire every ``sse_keepalive_s``; ``timeout_s`` bounds it.
+        Unknown ids 404, same read path as ``GET /harness/jobs/{job_id}``."""
         job = job_store.get(job_id)
         if job is None:
             raise ApiError(404, f"unknown job_id {job_id!r}")
@@ -3091,14 +3087,10 @@ def _mount_job_routes(
                     last = snap
                     yield f"event: job\ndata: {snap}\n\n"
                 now = time.monotonic()
-                if cur.status in _TERMINAL_JOB_STATUS:
-                    # A closer comment keeps the terminal event frame from
-                    # being the last yield. Some ASGI clients drop the tail
-                    # chunk when the generator returns on that yield, so a
-                    # finished job looked like a stream that never ended.
-                    yield ": end\n\n"
-                    return
-                if now >= deadline:
+                # Trailing comment: some ASGI clients drop a terminal last chunk.
+                closer = ": end\n\n" if cur.status in _TERMINAL_JOB_STATUS else ""
+                if closer or now >= deadline:
+                    yield closer
                     return
                 if now >= next_keep:
                     yield ": keepalive\n\n"

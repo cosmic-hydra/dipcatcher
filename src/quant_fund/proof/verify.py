@@ -137,6 +137,17 @@ def _check_data_manifest(bundle: ProofBundleV1, reasons: list[str]) -> None:
         reasons.append("data_manifest:merkle_root_mismatch")
 
 
+def _read_sidecar(path: Path) -> bytes:
+    """Read sidecar bytes. Directories raise ``IsADirectoryError`` on every OS.
+
+    Windows ``Path.read_bytes`` on a directory raises ``PermissionError``.
+    The contract name is the POSIX error a directory read produces.
+    """
+    if path.is_dir():
+        raise IsADirectoryError(21, "Is a directory", str(path))
+    return path.read_bytes()
+
+
 def _check_sidecars(
     bundle: ProofBundleV1, bundle_dir: Path, reasons: list[str]
 ) -> dict[str, bytes]:
@@ -162,13 +173,8 @@ def _check_sidecars(
         if not path.exists():
             reasons.append(f"sidecar:{kind}:missing")
             continue
-        if path.is_dir():
-            # Windows read_bytes on a directory raises PermissionError.
-            # The contract name is the POSIX error a directory read produces.
-            reasons.append(f"sidecar:{kind}:unreadable:IsADirectoryError")
-            continue
         try:
-            data = path.read_bytes()
+            data = _read_sidecar(path)
         except OSError as exc:
             reasons.append(f"sidecar:{kind}:unreadable:{exc.__class__.__name__}")
             continue
@@ -223,11 +229,8 @@ def _check_committed_sidecars(
         if not path.exists():
             reasons.append(f"sidecar:{kind}:missing")
             continue
-        if path.is_dir():
-            reasons.append(f"sidecar:{kind}:unreadable:IsADirectoryError")
-            continue
         try:
-            data = path.read_bytes()
+            data = _read_sidecar(path)
         except OSError as exc:
             reasons.append(f"sidecar:{kind}:unreadable:{exc.__class__.__name__}")
             continue

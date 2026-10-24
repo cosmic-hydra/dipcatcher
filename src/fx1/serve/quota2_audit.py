@@ -185,8 +185,12 @@ _H_ANTH_REMAINING = "anthropic-ratelimit-requests-remaining"
 _H_ANTH_RESET = "anthropic-ratelimit-requests-reset"
 _RATE_WINDOW_CONST = "_RATE_WINDOW_S"
 _REAL_WINDOW_S = 60.0
-_TINY_WINDOW_S = 0.05
-_WINDOW_RECOVER_S = 0.08
+# Two back-to-back harness calls must land inside the window, and the
+# recovery sleep must start after that pair and still outlast it. A 50 ms
+# window expired between those calls on a loaded CI runner, so the
+# "denied" leg was admitted and the probe read as a contract failure.
+_TINY_WINDOW_S = 2.0
+_WINDOW_RECOVER_S = 2.5
 
 _U6 = {"prompt_tokens": 2, "completion_tokens": 4, "total_tokens": 6}
 
