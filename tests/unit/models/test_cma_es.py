@@ -32,6 +32,22 @@ def test_rastrigin_reasonable():
     assert r["best_f"] < 20.0
 
 
+def test_eigh_column_sign_is_canonical():
+    """A BLAS sign flip must not survive into the covariance factor."""
+    from quant_fund.models.cma_es import _canonical_eigh
+
+    rng = np.random.default_rng(0)
+    draw = rng.normal(size=(6, 6))
+    cov = draw @ draw.T
+    values, vectors = _canonical_eigh(cov)
+    ref, _ = np.linalg.eigh(cov)
+    assert np.allclose(values, ref)
+    for i in range(vectors.shape[1]):
+        col = vectors[:, i]
+        pivot = int(np.argmax(np.abs(col)))
+        assert col[pivot] > 0.0
+
+
 def test_deterministic():
     x0 = np.ones(5)
     a = cma_es(sphere, x0, 1.0, 800, seed=9)
