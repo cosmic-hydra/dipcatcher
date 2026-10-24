@@ -8,6 +8,7 @@ not cryptographic receipt verification.
 from __future__ import annotations
 
 import fnmatch
+import hashlib
 import json
 import os
 import re
@@ -16,8 +17,29 @@ import threading
 from pathlib import Path
 
 SHA256_HEX = re.compile(r"[0-9a-f]{64}")
-_FileStamp = tuple[int, int, int, int, int]
+# Content digest is part of the stamp. Windows FindFirstFile stat leaves
+# st_ino at 0, and os.utime can make creation time match mtime, so a
+# same-size replace that keeps the nanosecond mtime is invisible to
+# dev/ino/size/mtime/ctime alone.
+_FileStamp = tuple[int, int, int, int, int, bytes]
 _Snapshot = dict[Path, _FileStamp]
+
+
+def _content_digest(path: str, size: int) -> bytes:
+    """Hash file bytes without Path.read_bytes (callers track that for parses)."""
+    digest = hashlib.sha256()
+    fd = os.open(path, os.O_RDONLY)
+    try:
+        remaining = size
+        while remaining > 0:
+            chunk = os.read(fd, min(remaining, 65536))
+            if not chunk:
+                break
+            digest.update(chunk)
+            remaining -= len(chunk)
+    finally:
+        os.close(fd)
+    return digest.digest()
 
 
 def _receipt_sha(path: Path) -> str | None:
@@ -68,12 +90,17 @@ class ReceiptIndex:
                 metadata = entry.stat(follow_symlinks=False)
                 if not stat.S_ISREG(metadata.st_mode):
                     continue
+                try:
+                    content = _content_digest(entry.path, metadata.st_size)
+                except OSError:
+                    content = b"\x00unreadable"
                 stamp = (
                     metadata.st_dev,
                     metadata.st_ino,
                     metadata.st_size,
                     metadata.st_mtime_ns,
                     metadata.st_ctime_ns,
+                    content,
                 )
                 files[self._root / entry.name] = stamp
         return files

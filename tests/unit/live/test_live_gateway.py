@@ -30,6 +30,7 @@ from quant_fund.live.brokers import (
 from quant_fund.live.config import LiveConfig
 from quant_fund.live.errors import LiveBrokerRefused, LiveGateError
 from quant_fund.live.ledger import LedgerFill, LiveLedger
+from quant_fund.live.permissions import is_owner_only, restrict_to_owner
 from quant_fund.live.session import open_session
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -89,6 +90,18 @@ def test_paper_adapter_still_refuses_a_live_endpoint() -> None:
         refuse_live_endpoint("alpaca-live")
 
 
+def test_owner_only_mode_is_posix_0600(tmp_path: Path) -> None:
+    path = tmp_path / "secret"
+    path.write_bytes(b"x")
+    os.chmod(path, 0o644)
+    if os.name != "nt":
+        assert not is_owner_only(path)
+    restrict_to_owner(path)
+    assert is_owner_only(path)
+    if os.name != "nt":
+        assert os.stat(path).st_mode & 0o777 == 0o600
+
+
 def test_unarmed_submit_does_not_call_the_broker(tmp_path: Path) -> None:
     session = _open(tmp_path)
     with pytest.raises(LiveGateError, match="not armed"):
@@ -112,8 +125,7 @@ def test_loopback_fill_is_accounting_not_a_research_claim(tmp_path: Path) -> Non
     replay = _buy(session, client_order_id="dc-order-1")
     assert replay["replayed"] is True
     assert session.broker.account().positions["AAPL"] == 10.0
-    mode = os.stat(tmp_path / "arm.json").st_mode & 0o777
-    assert mode == 0o600
+    assert is_owner_only(tmp_path / "arm.json")
 
 
 def test_pretrade_collar_blocks_before_the_broker(tmp_path: Path) -> None:
@@ -638,7 +650,7 @@ def test_reopen_repairs_the_audit_log_mode(tmp_path: Path) -> None:
         os.umask(previous)
     assert os.stat(audit).st_mode & 0o077 != 0
     _open(tmp_path)
-    assert os.stat(audit).st_mode & 0o777 == 0o600
+    assert is_owner_only(audit)
 
 
 def test_expired_and_unknown_broker_statuses_are_not_accepted(tmp_path: Path) -> None:

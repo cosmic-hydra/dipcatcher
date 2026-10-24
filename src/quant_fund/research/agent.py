@@ -4197,26 +4197,9 @@ def _emit_live_families(families: dict[str, Any]) -> dict[str, Any]:
     return {name: payload for name, payload in families.items() if name not in retired}
 
 
-def _pin_catalog_threads() -> None:
-    """One intra-op thread for the catalog sweep.
-
-    CI already pins OpenMP/MKL/OpenBLAS. PyTorch keeps its own pool at
-    the host CPU count, so a single ``run_research`` (the shard-1 oracle
-    test, the shard-2 CLI echo, and smoke) oversubscribes every small
-    tensor op. Intra-op threads lock after the first parallel region;
-    set them before any catalog bench runs.
-    """
-    try:
-        import torch
-    except ImportError:
-        return
-    torch.set_num_threads(1)
-
-
 def _live_optional_family_blobs() -> dict[str, Any]:
-    """Seeded live-optional benches. Default ``run_research`` still runs them."""
-    _pin_catalog_threads()
-    return {
+    # The pin returns None, so the seeded live-optional catalog is what runs.
+    return __import__("quant_fund.research.catalog_threads").pin_catalog_threads() or {
         "anytime_valid": bench_anytime_valid(),
         "energy_score": bench_energy_score(),
         "ts_conformal": bench_ts_conformal(),

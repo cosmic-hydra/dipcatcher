@@ -113,7 +113,7 @@ def test_garch_non_numeric_returns_fall_back() -> None:
 
 def test_garch_nonconverged_fit_falls_back_with_flag() -> None:
     result = _mock_fit_result(convergence_flag=4)
-    with patch("arch.arch_model") as factory:
+    with patch("quant_fund.models.volatility.load_arch_model") as factory:
         factory.return_value.fit.return_value = result
         model = GARCHVol().fit_returns(_returns())
     assert model.result is None
@@ -124,7 +124,7 @@ def test_garch_nonconverged_fit_falls_back_with_flag() -> None:
 
 def test_garch_invalid_conditional_volatility_falls_back() -> None:
     result = _mock_fit_result(conditional_volatility=np.full(150, np.nan))
-    with patch("arch.arch_model") as factory:
+    with patch("quant_fund.models.volatility.load_arch_model") as factory:
         factory.return_value.fit.return_value = result
         model = GARCHVol().fit_returns(_returns())
     assert model.result is None
@@ -133,7 +133,7 @@ def test_garch_invalid_conditional_volatility_falls_back() -> None:
 
 def test_garch_nonfinite_params_fall_back() -> None:
     result = _mock_fit_result(params=pd.Series({"omega": 0.05, "alpha[1]": np.nan}))
-    with patch("arch.arch_model") as factory:
+    with patch("quant_fund.models.volatility.load_arch_model") as factory:
         factory.return_value.fit.return_value = result
         model = GARCHVol().fit_returns(_returns())
     assert model.result is None
@@ -143,7 +143,7 @@ def test_garch_nonfinite_params_fall_back() -> None:
 def test_garch_inadmissible_persistence_falls_back() -> None:
     # alpha + beta >= 1 is nonstationary; the fit must not ship to consumers.
     result = _mock_fit_result(params=pd.Series({"omega": 0.05, "alpha[1]": 0.7, "beta[1]": 0.4}))
-    with patch("arch.arch_model") as factory:
+    with patch("quant_fund.models.volatility.load_arch_model") as factory:
         factory.return_value.fit.return_value = result
         model = GARCHVol(vol="garch").fit_returns(_returns())
     assert model.result is None

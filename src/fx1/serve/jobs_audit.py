@@ -1348,10 +1348,16 @@ def _store_probes() -> dict[str, bool]:
     out: dict[str, bool] = {}
     import fx1.serve.api as api_mod  # noqa: PLC0415
 
+    # Windows time.time_ns can repeat within one tick, and a repeated id
+    # makes put overwrite the running job the cancel probe still holds.
+    nonce = 0
+
     def _job(status: str = "queued") -> Any:
+        nonlocal nonce
+        nonce += 1
         return api_mod.JobStatusResponse.model_validate(
             {
-                "job_id": f"job-{status}-{time.time_ns()}",
+                "job_id": f"job-{status}-{nonce}",
                 "status": status,
                 "created_at": time.time(),
                 "finished_at": None,

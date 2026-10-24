@@ -42,6 +42,7 @@ from quant_fund.live.gateway_arm import (
     zero_audit_head,
 )
 from quant_fund.live.ledger import LedgerFill, LiveLedger, ledger_fill_from_dict
+from quant_fund.live.permissions import restrict_to_owner
 from quant_fund.live.risk_memory import export_pretrade, restore_pretrade
 from quant_fund.pretrade.codes import KIND_CANCEL, KIND_ORDER
 from quant_fund.pretrade.config import PretradeConfig
@@ -141,9 +142,9 @@ def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
         os.fsync(fd)
     finally:
         os.close(fd)
-    os.chmod(tmp, 0o600)
+    restrict_to_owner(tmp)
     os.replace(tmp, path)
-    os.chmod(path, 0o600)
+    restrict_to_owner(path)
 
 
 def _read_object(path: Path) -> dict[str, Any] | None:
@@ -912,7 +913,7 @@ class LiveSession:
             os.fsync(fd)
         finally:
             os.close(fd)
-        os.chmod(self.audit_path, 0o600)
+        restrict_to_owner(self.audit_path)
         self.audit_head = digest
 
     @contextmanager
@@ -925,7 +926,7 @@ class LiveSession:
             if path.stat().st_size == 0:
                 handle.write(b"\0")
                 handle.flush()
-            os.chmod(path, 0o600)
+            restrict_to_owner(path)
             _acquire(handle)
             try:
                 token = self._file_token()
@@ -948,7 +949,7 @@ class LiveSession:
     def _reload_locked(self) -> None:
         """Read the desk from disk. The caller already holds the process lock."""
         if self.audit_path.exists():
-            os.chmod(self.audit_path, 0o600)
+            restrict_to_owner(self.audit_path)
         self._arm = read_arm(self.arm_path, venue=self.venue, pretrade_sha256=self.pretrade_sha256)
         stored = _read_object(self.state_path)
         self.audit_head = _verify_audit(self.audit_path)

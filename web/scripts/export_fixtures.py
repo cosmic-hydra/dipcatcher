@@ -171,7 +171,9 @@ def _collect_hashes(value: Any, into: list[str], parent_hashy: bool = False) -> 
 def _write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
-        json.dumps(payload, indent=1, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8"
+        json.dumps(payload, indent=1, sort_keys=True, allow_nan=False) + "\n",
+        encoding="utf-8",
+        newline="\n",
     )
 
 
