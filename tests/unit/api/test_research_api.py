@@ -22,6 +22,7 @@ from quant_fund.api.research_api import (
     ArtifactDetail,
     ArtifactListResponse,
     HealthResponse,
+    ReadyResponse,
     ReceiptDetail,
     ReceiptListResponse,
     ResearchApiSettings,
@@ -243,6 +244,32 @@ def test_health(client: TestClient) -> None:
     assert body.mode == "read_only"
     assert body.data_root_present and body.receipts_dir_present
     assert body.claim == "research_only"
+
+
+def test_ready_when_roots_present(client: TestClient) -> None:
+    resp = client.get("/ready")
+    assert resp.status_code == 200
+    body = ReadyResponse.model_validate(resp.json())
+    assert body.status == "ready"
+    assert all(body.checks.values())
+    assert body.claim == "research_only"
+
+
+def test_ready_fails_closed_when_receipts_missing(
+    settings: ResearchApiSettings, tmp_path: Path
+) -> None:
+    broken = ResearchApiSettings(
+        data_root=settings.data_root,
+        receipts_dir=tmp_path / "missing-receipts",
+        verifier_dir=settings.verifier_dir,
+        artifacts_dir=settings.artifacts_dir,
+        api_key=settings.api_key,
+    )
+    resp = TestClient(create_app(broken)).get("/ready")
+    assert resp.status_code == 503
+    body = ReadyResponse.model_validate(resp.json())
+    assert body.status == "not_ready"
+    assert body.checks["receipts_dir"] is False
 
 
 def test_runs_list_and_pagination(client: TestClient) -> None:

@@ -35,7 +35,9 @@ make sync          # uv sync --frozen --all-groups --all-extras (uv.lock is
 | Lab tests | `make test` (PR gate: not network, not slow, xdist). `make test-full` includes slow. |
 | fx1 suite | `make fx1-test` — separate lane, ~200 tests |
 | fx1 full gate | `make fx1-gate` — lint + types + tests + honesty + corpus smoke |
-| CI parity | `.github/workflows/ci.yml` + `fx1.yml` use `uv sync --frozen` |
+| Docs vs code | `make docs-consistency` — release/deploy path and honesty checks |
+| Release dry-run | `make release-dry-run` — version/changelog, wheel, SBOM, checksums, container health (no tag/sign/publish) |
+| CI parity | `.github/workflows/ci.yml` + `fx1.yml` use `uv sync --frozen`. A `v*.*.*` tag signs only after same-SHA green CI (incl. `evidence-audit`) plus readiness gates (`scripts/require_release_gates.py`, `scripts/verify_release_readiness.py`, `release.yml`). |
 
 ## Honesty contract (hard rules — do not weaken)
 

@@ -1,8 +1,7 @@
 # Dipcatcher operations runbook
 
 Dipcatcher is Artificial Hedge's proprietary research lab. This runbook covers
-the supported research and simulated paper/shadow workflows. It does not
-authorize live trading.
+the supported research and simulated paper/shadow workflows. It does not authorize live trading.
 
 Structure: "Deployment" through "Windows remote-fleet operations" are the
 production operations procedures (deploy, rollback, incident response,
@@ -114,20 +113,24 @@ publication, preserve the run directory and resume from the last valid
 
 ## Deployment
 
-There is **no hosted live-trading deployment**. `dipcatcher live` is the
+There is **no hosted live-trading deployment**. Config, secrets, observability
+(`deploy/observability`), health probes, and release dry-run steps are in
+[PRODUCTION_DEPLOY.md](PRODUCTION_DEPLOY.md). `dipcatcher live` is the
 operator desk: shadow by default, loopback for a SYNTHETIC rehearsal, and a
 drop folder for an operator-owned bridge ([LIVE_DESK.md](LIVE_DESK.md)). A
 gateway config can add an Alpaca paper session; the live host is refused
 ([LIVE_TRADING.md](LIVE_TRADING.md)). Neither path satisfies institutional
-condition 2 or claims live performance. "Deployment" here means three
+condition 2 or claims live performance. "Deployment" here means
 research/simulation surfaces:
 
 1. **Research harness (local or container).** `make sync` installs the locked
    environment. `Dockerfile` builds the research API image (non-root uid
    10001, loopback bind on :8000 by default, `/health` healthcheck, immutable
    `uv sync --frozen`); `docker/research-api.Dockerfile` builds the research
-   API variant on :8010 (`python -m quant_fund.api.research_api`). CI builds
-   the image and waits for its healthcheck.
+   API variant on :8010 (`python -m quant_fund.api.research_api`) with
+   `/health` liveness and `/ready` directory readiness. CI and `release.yml`
+   build the image and wait for its healthcheck; `make container-health`
+   mirrors that locally.
 2. **fx-1 harness service.** `uv run fx1 harness serve --host … --port …`;
    launch, `--state-dir` durability, managed keys, drain, and the
    failure-mode table live in [FX1_DEPLOY.md](FX1_DEPLOY.md). Release
@@ -135,17 +138,22 @@ research/simulation surfaces:
    release practice is the `FXI_WHEEL_SHA256` checksum pin** (verified before
    pip install, fail-closed on mismatch, warn on unpinned downloads) — see
    [FX1_DEPLOY.md](FX1_DEPLOY.md) "Installing release artifacts".
-3. **Windows remote research/SOTA fleet** (`D:\dipcatcher`) — see
+3. **Observability stack.** Optional Prometheus / Grafana / OTLP via
+   `deploy/observability/docker-compose.yml` (loopback only). Contract:
+   [AUDIT_OBSERVABILITY.md](AUDIT_OBSERVABILITY.md). `make audit-obs` is the
+   local gate.
+4. **Windows remote research/SOTA fleet** (`D:\dipcatcher`) — see
    "Windows remote-fleet operations" below.
-4. **Armed order gateway** (`dipcatcher live`). Default venue is in-process
+5. **Armed order gateway** (`dipcatcher live`). Default venue is in-process
    loopback. Alpaca paper and Alpaca live send orders only after arming,
    pre-trade allow, and environment credentials. A fill is broker accounting,
    not a research result. `live kill` latches this gateway; it does not cancel
    orders already accepted by the broker. Use `live cancel` and `live flatten`.
 
 Deploy gates: `make lint`, `make typecheck`, `make test`,
-`make evidence-audit`, plus for the fx-1 service `fx1 harness selftest` and
-`fx1 harness bench` (exit 0 required).
+`make evidence-audit`, `make docs-consistency`, plus for the fx-1 service
+`fx1 harness selftest` and `fx1 harness bench` (exit 0 required). Before an
+owner tags a release: `make release-dry-run`.
 
 **Known gate status (2026-10-08):**
 

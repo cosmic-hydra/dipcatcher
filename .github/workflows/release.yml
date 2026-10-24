@@ -1,10 +1,14 @@
 name: Release
 
-# Tag push (v1.2.3, v1.2.3-rc1, …) builds the sdist and wheel, writes a
-# CycloneDX SBOM, signs the distributions with Sigstore, and emits SLSA
-# build provenance. This workflow does not publish to PyPI and does not
-# create a GitHub Release. Artifacts are uploaded as workflow artifacts
-# only. Verify downloaded bundles with:
+# Tag push (v1.2.3, v1.2.3-rc1, …) runs a preflight that requires:
+#   1. tag ↔ fx1.__version__ ↔ CHANGELOG heading
+#   2. same-SHA green ci / fx1 / proofcore / full platform matrix
+#   3. latest completed CI run includes a green evidence-audit job
+# then builds the sdist and wheel, writes a CycloneDX SBOM, signs the
+# distributions with Sigstore, emits SLSA build provenance, and builds the
+# runtime container (no registry push). This workflow does not publish to
+# PyPI and does not create a GitHub Release. Artifacts are uploaded as
+# workflow artifacts only. Verify downloaded bundles with:
 #   uv run python scripts/verify_release_artifacts.py <dist-dir>
 # Optional Sigstore identity check (needs network or --offline + bundles):
 #   uv run python scripts/verify_release_artifacts.py <dist-dir> --sigstore \
@@ -12,11 +16,21 @@ name: Release
 #     "https://github.com/<owner>/<repo>/.github/workflows/release.yml@refs/tags/vX.Y.Z"
 # SLSA provenance from GitHub artifact attestations:
 #   gh attestation verify <artifact> --repo <owner>/<repo>
+#
+# workflow_dispatch dry_run=true builds wheel + SBOM + container and verifies
+# checksums without signing, attesting, uploading, or requiring remote CI
+# evidence. Prefer `make release-dry-run` locally before the owner tags.
 
 on:
   push:
     tags:
       - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Build wheel/SBOM/container without signing or uploading"
+        type: boolean
+        default: true
 
 permissions: {}
 
@@ -25,14 +39,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  preflight:
+    name: Tag version and same-commit evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Local version and changelog consistency
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+        run: python3 scripts/verify_release_readiness.py --local-only
+      - name: Tag version, changelog, and same-commit workflow evidence
+        if: ${{ github.event_name == 'push' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 scripts/verify_release_readiness.py
+      - name: Fail closed unless CI and evidence-audit succeeded on this commit
+        if: ${{ github.event_name == 'push' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/require_release_gates.py \
+            --repo "${GITHUB_REPOSITORY}" \
+            --sha "${GITHUB_SHA}"
+
   build:
+    needs: preflight
     name: Build, SBOM, sign, attest
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     permissions:
       contents: read
       id-token: write
       attestations: write
+    env:
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -50,10 +95,9 @@ jobs:
       - name: Smoke-test the wheel
         run: |
           set -euo pipefail
-          uv sync --frozen --all-groups --no-install-project
+          uv sync --frozen --all-groups --no-install-project --no-build
           uv pip install --python .venv/bin/python --no-deps dist/*.whl
-          .venv/bin/fx1 --help
-          .venv/bin/dipcatcher --help
+          .venv/bin/python scripts/smoke_installed_wheel.py
 
       - name: CycloneDX SBOM from the locked runtime set
         run: |
@@ -83,6 +127,7 @@ jobs:
           cat SHA256SUMS
 
       - name: Sign distributions with Sigstore
+        if: ${{ env.DRY_RUN != 'true' }}
         # setup-uv exports VIRTUAL_ENV. uvx with those variables unset uses
         # its own environment. sigstore 4.5 has no --oidc switch; on Actions
         # it takes the ambient OIDC token (id-token: write). The certificate
@@ -106,6 +151,7 @@ jobs:
             "${dists[@]}"
 
       - name: SLSA build provenance
+        if: ${{ env.DRY_RUN != 'true' }}
         uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
           subject-path: |
@@ -115,6 +161,7 @@ jobs:
             dist/SHA256SUMS
 
       - name: Attest the SBOM
+        if: ${{ env.DRY_RUN != 'true' }}
         uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4.2.2
         with:
           subject-path: |
@@ -125,7 +172,33 @@ jobs:
       - name: Local checksum verification
         run: uv run --no-project python scripts/verify_release_artifacts.py dist
 
+      - name: Build runtime container
+        run: docker build --pull --tag dipcatcher-release:${{ github.sha }} .
+
+      - name: Start container and wait for /health
+        run: |
+          set -euo pipefail
+          docker run --detach --name dipcatcher-release dipcatcher-release:${{ github.sha }}
+          for _ in $(seq 1 30); do
+            status="$(docker inspect --format='{{.State.Health.Status}}' dipcatcher-release)"
+            if [ "$status" = "healthy" ]; then
+              exit 0
+            fi
+            if [ "$status" = "unhealthy" ]; then
+              docker logs dipcatcher-release
+              exit 1
+            fi
+            sleep 2
+          done
+          docker logs dipcatcher-release
+          exit 1
+
+      - name: Remove runtime container
+        if: always()
+        run: docker rm --force dipcatcher-release || true
+
       - name: Upload release artifacts
+        if: ${{ env.DRY_RUN != 'true' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-dists

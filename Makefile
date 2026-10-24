@@ -1,4 +1,4 @@
-.PHONY: help test test-full coverage lint typecheck doctor sync fmt security audit ci examples evidence native audit-obs docs docs-serve formal simtest simtest-large fx1-test fx1-lint fx1-corpus fx1-corpus-full fx1-eval fx1-gate mc-engine-smoke diffbacktest proofcore-test proofcore-coverage proof-integrity proof-verify leakage-scan reality-gate receipts-reverify receipt-integrity-scan audit-cli-mounts pretrade-bench stress-smoke market-sim-test parity-smoke demo-data lattice-check replay-sweep perf-record perf-check evidence-audit admission-gate stamp-epochs sign-pins anchor-pins checkpoint anchor-checkpoint witness-checkpoint verify-witness witness-bundle verify-bundle epoch-consistency verify-rotations rotate-key tamper-drill fuzz-drill fuzz-receipts evidence-bundle bundle-verify audit-js audit-rust audit-kronos audit-all native-lint native-test robustness-smoke fx1-coverage arch-guard
+.PHONY: help test test-full coverage lint typecheck doctor sync fmt security audit ci examples evidence native audit-obs docs docs-serve docs-consistency release-dry-run container-health health-smoke formal simtest simtest-large fx1-test fx1-lint fx1-corpus fx1-corpus-full fx1-eval fx1-gate mc-engine-smoke diffbacktest proofcore-test proofcore-coverage proof-integrity proof-verify leakage-scan reality-gate receipts-reverify receipt-integrity-scan audit-cli-mounts pretrade-bench stress-smoke market-sim-test parity-smoke demo-data lattice-check replay-sweep perf-record perf-check evidence-audit admission-gate stamp-epochs sign-pins anchor-pins checkpoint anchor-checkpoint witness-checkpoint verify-witness witness-bundle verify-bundle epoch-consistency verify-rotations rotate-key tamper-drill fuzz-drill fuzz-receipts evidence-bundle bundle-verify audit-js audit-rust audit-kronos audit-all native-lint native-test robustness-smoke fx1-coverage arch-guard
 
 .DEFAULT_GOAL := help
 
@@ -157,6 +157,27 @@ docs: ## Build the documentation site (strict)
 
 docs-serve: ## Serve the documentation site locally
 	uv run --only-group docs --frozen mkdocs serve --dev-addr 127.0.0.1:8000
+
+docs-consistency: ## Docs-vs-code: release/deploy paths, make targets, no live-trading claims
+	uv run python scripts/check_docs_release_consistency.py
+	uv run pytest tests/unit/test_docs_drift.py tests/unit/scripts/test_docs_release_consistency.py -q
+
+release-dry-run: ## Version/changelog + wheel + SBOM + checksums + container health (no tag/sign/publish)
+	uv run python scripts/release_dry_run.py
+
+container-health: ## Build runtime image and wait for Docker HEALTHCHECK (/health)
+	docker build --pull --tag dipcatcher-local .
+	docker rm --force dipcatcher-local >/dev/null 2>&1 || true
+	docker run --detach --name dipcatcher-local dipcatcher-local
+	@for _ in $$(seq 1 30); do \
+		status=$$(docker inspect --format='{{.State.Health.Status}}' dipcatcher-local); \
+		if [ "$$status" = "healthy" ]; then docker rm --force dipcatcher-local >/dev/null; exit 0; fi; \
+		if [ "$$status" = "unhealthy" ]; then docker logs dipcatcher-local; docker rm --force dipcatcher-local >/dev/null; exit 1; fi; \
+		sleep 2; \
+	done; docker logs dipcatcher-local; docker rm --force dipcatcher-local >/dev/null; exit 1
+
+health-smoke: ## In-process /health and /ready for the research evidence API
+	uv run python -c "from fastapi.testclient import TestClient; from quant_fund.api.research_api import create_app; c=TestClient(create_app()); h=c.get('/health'); r=c.get('/ready'); assert h.status_code==200 and r.status_code in (200,503), (h.status_code,r.status_code); print('health', h.json().get('status'), 'ready', r.json().get('status'))"
 
 simtest: ## Bounded deterministic-simulation tests and swarm (CI size)
 	uv run pytest tests/unit/simtest tests/regression/test_simtest_duplicate_bar_order.py -q -m "not slow"
