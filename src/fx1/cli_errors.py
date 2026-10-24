@@ -1,6 +1,6 @@
 """User-facing fx-1 CLI failures, plus --version on every command.
 
-Mirrors ``quant_fund.cli.user_errors`` without importing the harness. The
+Mirrors ``quant_fund.utils.cli_errors`` without importing the harness. The
 architecture boundary forbids that direction.
 """
 

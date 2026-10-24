@@ -65,6 +65,12 @@
     "cli_audit.py": {
       "status": "audited"
     },
+    "cli_errors.py": {
+      "status": "pending"
+    },
+    "cli_sources.py": {
+      "status": "pending"
+    },
     "doctor.py": {
       "doc": "docs/AUDIT_LEDGER.md",
       "status": "audited"

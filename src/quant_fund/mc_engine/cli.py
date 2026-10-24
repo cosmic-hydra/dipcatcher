@@ -12,7 +12,6 @@ from pathlib import Path
 import numpy as np
 import typer
 
-from quant_fund.cli.user_errors import McEngineTyperGroup
 from quant_fund.mc_engine.benchmark import scaling_benchmark
 from quant_fund.mc_engine.engine import EngineConfig, resume_simulation, run_simulation
 from quant_fund.mc_engine.scenario import (
@@ -21,6 +20,7 @@ from quant_fund.mc_engine.scenario import (
     VolTargetStrategyGenerator,
     generator_from_spec,
 )
+from quant_fund.utils.cli_errors import McEngineTyperGroup
 
 app = typer.Typer(
     cls=McEngineTyperGroup,

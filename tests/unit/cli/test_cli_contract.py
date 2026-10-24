@@ -21,11 +21,11 @@ from fx1.cli import app as fx1_app
 from fx1.cli_errors import user_error_message as fx1_user_error_message
 from fx1.interactive.app import app as fxi_app
 from quant_fund.cli.main import app as dipcatcher_app
-from quant_fund.cli.user_errors import user_error_message, version_requested
 from quant_fund.data.quality.cli import main as data_quality_main
 from quant_fund.live.gateway_arm import LIVE_CAPITAL_PHRASE
 from quant_fund.market_sim.__main__ import _parser as market_sim_parser
 from quant_fund.mc_engine.cli import app as mc_app
+from quant_fund.utils.cli_errors import user_error_message, version_requested
 
 _ROOT = Path(__file__).resolve().parents[3]
 _SRC = _ROOT / "src"
@@ -219,7 +219,7 @@ def test_user_error_messages_cover_the_claimed_cases() -> None:
 def test_unexpected_errors_still_propagate() -> None:
     from typer import Typer
 
-    from quant_fund.cli.user_errors import DipcatcherTyperGroup
+    from quant_fund.utils.cli_errors import DipcatcherTyperGroup
 
     mini = Typer(cls=DipcatcherTyperGroup)
 

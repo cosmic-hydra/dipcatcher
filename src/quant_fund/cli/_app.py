@@ -29,7 +29,6 @@ from quant_fund.cli.sota_cmds import (
     prospective_sota_app,
     sota_app,
 )
-from quant_fund.cli.user_errors import DipcatcherTyperGroup
 from quant_fund.hmm.cli import hmm_app as hmm_app
 from quant_fund.leakage.cli import leakage_app
 from quant_fund.lightspeed.cli import ls_app as ls_app
@@ -42,6 +41,7 @@ from quant_fund.research.allocation_cli import allocation_app
 from quant_fund.research.explainability_cli import explainability_app
 from quant_fund.research.research100_cli import research100_app
 from quant_fund.stress.cli import stress_app
+from quant_fund.utils.cli_errors import DipcatcherTyperGroup
 
 if TYPE_CHECKING:
     from quant_fund.config.models import AppConfig
