@@ -8,7 +8,6 @@ atomic-write failures, and promotion inputs that must not seal.
 from __future__ import annotations
 
 import json
-import os
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -192,7 +191,9 @@ def test_unreadable_chain_fails_trusted_head_check(tmp_path: Path) -> None:
     assert any(reason.startswith("chain:trusted_head_unreadable:") for reason in result.reasons)
 
 
-def test_committed_sidecar_checks_fail_closed(tmp_path: Path) -> None:
+def test_committed_sidecar_checks_fail_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     bundle, bundle_dir = mint_synthetic_bundle(tmp_path)
     reasons: list[str] = []
     _check_committed_sidecars(bundle, bundle_dir, None, reasons)
@@ -217,12 +218,19 @@ def test_committed_sidecar_checks_fail_closed(tmp_path: Path) -> None:
 
     link.unlink()
     link.write_text("{}\n")
-    os.chmod(link, 0)
+    # The unreadable-sidecar branch is the OSError handler. Inject the
+    # denial so the check is the same on Windows, where mode bits do not
+    # stop a read, and so the test file is never left world-readable.
+    real_read = Path.read_bytes
+
+    def _deny_committed_sidecar(self: Path) -> bytes:
+        if self == link:
+            raise PermissionError("denied")
+        return real_read(self)
+
+    monkeypatch.setattr(Path, "read_bytes", _deny_committed_sidecar)
     reasons = []
-    try:
-        _check_committed_sidecars(bundle, bundle_dir, config, reasons)
-    finally:
-        os.chmod(link, 0o644)
+    _check_committed_sidecars(bundle, bundle_dir, config, reasons)
     assert any(reason.startswith(f"sidecar:{kind}:unreadable:") for reason in reasons)
 
 

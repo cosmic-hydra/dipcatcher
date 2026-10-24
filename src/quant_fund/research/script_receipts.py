@@ -32,6 +32,20 @@ def _positive_int(value: object) -> bool:
     return isinstance(value, int) and not isinstance(value, bool) and value > 0
 
 
+def _count_int(value: object, *, positive: bool) -> int | None:
+    """Narrow a JSON count to a non-bool ``int``.
+
+    ``Mapping.get`` is ``Any | None``. Callers that divide or add those
+    counts need a value mypy can see is an ``int``; bool is an ``int``
+    subclass and is rejected, matching ``_positive_int``.
+    """
+    if isinstance(value, bool) or not isinstance(value, int):
+        return None
+    if positive and value <= 0:
+        return None
+    return value
+
+
 def _fraction(value: object) -> bool:
     f = _as_finite_float(value)
     return f is not None and 0.0 <= f <= 1.0
@@ -433,15 +447,9 @@ def _lobster_match_errors(recon: Mapping[str, Any]) -> tuple[list[str], float | 
     """Re-derive ``match_rate`` from ``n_match / n_compared``."""
     errors: list[str] = []
     match_rate = _as_finite_float(recon.get("match_rate"))
-    n_compared = recon.get("n_compared")
-    n_match = recon.get("n_match")
-    counts_ok = (
-        match_rate is not None
-        and _positive_int(n_compared)
-        and isinstance(n_match, int)
-        and not isinstance(n_match, bool)
-    )
-    if not counts_ok:
+    n_compared = _count_int(recon.get("n_compared"), positive=True)
+    n_match = _count_int(recon.get("n_match"), positive=False)
+    if match_rate is None or n_compared is None or n_match is None:
         errors.append("reconstruction_counts_bad")
     elif match_rate != (n_match / n_compared):
         errors.append("match_rate_not_n_match_over_n_compared")
@@ -450,23 +458,18 @@ def _lobster_match_errors(recon: Mapping[str, Any]) -> tuple[list[str], float | 
 
 def _lobster_resync_errors(recon: Mapping[str, Any], n_match: object) -> list[str]:
     """Re-derive ``resync_rate`` and the match/resync partition."""
-    n_compared = recon.get("n_compared")
-    n_resync = recon.get("n_resync_events")
+    n_compared = _count_int(recon.get("n_compared"), positive=True)
+    n_resync = _count_int(recon.get("n_resync_events"), positive=False)
     resync = _as_finite_float(recon.get("resync_rate"))
-    resync_ok = (
-        isinstance(n_resync, int)
-        and not isinstance(n_resync, bool)
-        and _positive_int(n_compared)
-        and resync is not None
-        and resync == (n_resync / n_compared)
-    )
-    if not resync_ok:
-        return ["resync_rate_not_n_resync_over_n_compared"]
     if (
-        isinstance(n_match, int)
-        and not isinstance(n_match, bool)
-        and n_match + n_resync != n_compared
+        n_resync is None
+        or n_compared is None
+        or resync is None
+        or resync != (n_resync / n_compared)
     ):
+        return ["resync_rate_not_n_resync_over_n_compared"]
+    matched = _count_int(n_match, positive=False)
+    if matched is not None and matched + n_resync != n_compared:
         return ["compared_events_not_partitioned"]
     return []
 
@@ -627,10 +630,8 @@ def _calibration_size_errors(
     if alpha is None or not 0.0 < alpha <= 1.0:
         errors.append("alpha_not_in_unit_interval")
     evidence = payload.get("evidence")
-    evidence_ok = isinstance(evidence, list) and bool(evidence)
-    if evidence_ok and any(not isinstance(item, str) or not item for item in evidence):
-        evidence_ok = False
-    if not evidence_ok:
+    evidence_items = evidence if isinstance(evidence, list) else None
+    if not evidence_items or any(not isinstance(item, str) or not item for item in evidence_items):
         errors.append("evidence_bad")
     return errors
 
