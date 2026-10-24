@@ -407,6 +407,187 @@ def joint_tune_v2_contract_errors(payload: Mapping[str, Any]) -> list[str]:
     return measurement_receipt_contract_errors(payload) + contract_errors(payload)
 
 
+def _sha256_hex(value: object) -> bool:
+    return (
+        isinstance(value, str) and len(value) == 64 and all(c in "0123456789abcdef" for c in value)
+    )
+
+
+def _git_sha(value: object) -> bool:
+    return (
+        isinstance(value, str) and len(value) == 40 and all(c in "0123456789abcdef" for c in value)
+    )
+
+
+def _forbidden_headline_errors(payload: Mapping[str, Any]) -> list[str]:
+    from quant_fund.research.catalog.registry import FORBIDDEN_RESEARCH_METRIC_KEYS
+
+    return [
+        f"forbidden_headline_metric:{key}"
+        for key in payload
+        if str(key).lower() in FORBIDDEN_RESEARCH_METRIC_KEYS
+    ]
+
+
+def lobster_replay_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """``lobster_replay.v1``: re-derive match rate and the engine-valid flag.
+
+    The sample label is the tape identity (``LOBSTER-{ticker}-…``), not the
+    measurement envelope's SYNTHETIC/MIXED/REAL tag. ``engine_valid_on_emitted``
+    is the writer's predicate on the embedded reconstruction counts.
+    """
+    errors: list[str] = []
+    if payload.get("research_only") is not True:
+        errors.append("research_only_not_true")
+    if payload.get("live_pnl_claim") not in (None, False):
+        errors.append("live_pnl_claim_not_false")
+    if not _git_sha(payload.get("git_revision")):
+        errors.append("git_revision_missing")
+    if not _sha256_hex(payload.get("receipt_sha256")) or not _sha256_hex(
+        payload.get("tape_sha256")
+    ):
+        errors.append("sha256_missing")
+    ticker = payload.get("ticker")
+    if not isinstance(ticker, str) or not ticker:
+        errors.append("ticker_missing")
+    elif payload.get("data_label") != f"LOBSTER-{ticker}-2012-06-21-sample":
+        errors.append("data_label_not_lobster_sample")
+    recon = payload.get("reconstruction")
+    if not isinstance(recon, Mapping):
+        return errors + ["reconstruction_missing"]
+    match_rate = _as_finite_float(recon.get("match_rate"))
+    n_compared = recon.get("n_compared")
+    n_match = recon.get("n_match")
+    if (
+        match_rate is None
+        or not _positive_int(n_compared)
+        or not isinstance(n_match, int)
+        or isinstance(n_match, bool)
+    ):
+        errors.append("reconstruction_counts_bad")
+    elif match_rate != (n_match / n_compared):
+        errors.append("match_rate_not_n_match_over_n_compared")
+    n_resync = recon.get("n_resync_events")
+    resync = _as_finite_float(recon.get("resync_rate"))
+    if (
+        not isinstance(n_resync, int)
+        or isinstance(n_resync, bool)
+        or not _positive_int(n_compared)
+        or resync is None
+        or resync != (n_resync / n_compared)
+    ):
+        errors.append("resync_rate_not_n_resync_over_n_compared")
+    elif (
+        isinstance(n_match, int)
+        and not isinstance(n_match, bool)
+        and n_match + n_resync != n_compared
+    ):
+        errors.append("compared_events_not_partitioned")
+    max_div = recon.get("max_divergence_len")
+    if not isinstance(max_div, int) or isinstance(max_div, bool) or max_div < 0:
+        errors.append("max_divergence_len_bad")
+    elif match_rate is not None:
+        expected = match_rate > 0.90 and max_div <= 5
+        if payload.get("engine_valid_on_emitted") is not expected:
+            errors.append("engine_valid_on_emitted_mismatch")
+    errors.extend(_forbidden_headline_errors(payload))
+    return errors
+
+
+def queue_priority_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """``queue_priority.v1``: headline comparison must copy the arm curves.
+
+    The producer stamps ``code_revision`` (not ``git_revision``) and seals
+    ``comparison`` by reading each arm's fill curve and survival table.
+    """
+    errors: list[str] = []
+    if payload.get("data_label") != "SYNTHETIC":
+        errors.append("data_label_not_synthetic")
+    if payload.get("research_only") is not True:
+        errors.append("research_only_not_true")
+    if payload.get("live_pnl_claim") is not False:
+        errors.append("live_pnl_claim_not_false")
+    if payload.get("claim") != "synthetic_simulator_diagnostic_only":
+        errors.append("claim_not_synthetic_diagnostic")
+    if not _git_sha(payload.get("code_revision")):
+        errors.append("code_revision_missing")
+    if not _sha256_hex(payload.get("receipt_sha256")):
+        errors.append("receipt_sha256_not_sha256_hex")
+    arms = payload.get("arms")
+    comparison = payload.get("comparison")
+    if not isinstance(arms, Mapping) or not isinstance(comparison, Mapping):
+        return errors + ["arms_or_comparison_missing"]
+    pairs = (
+        ("iid", "p_queue_ahead_zero_iid", "fill_curve", "p_queue_ahead_zero"),
+        ("markov_regime", "p_queue_ahead_zero_markov", "fill_curve", "p_queue_ahead_zero"),
+        ("iid", "p_fill_overall_iid", "queue_survival", "p_fill_overall"),
+        ("markov_regime", "p_fill_overall_markov", "queue_survival", "p_fill_overall"),
+        ("iid", "mean_fill_wait_seconds_iid", "fill_curve", "mean_fill_wait_seconds"),
+        ("markov_regime", "mean_fill_wait_seconds_markov", "fill_curve", "mean_fill_wait_seconds"),
+    )
+    for arm_name, headline, section, field in pairs:
+        arm = arms.get(arm_name)
+        block = arm.get(section) if isinstance(arm, Mapping) else None
+        detail = block.get(field) if isinstance(block, Mapping) else None
+        if not _finite_number(detail) or detail != comparison.get(headline):
+            errors.append(f"comparison_mismatch:{headline}")
+    errors.extend(_forbidden_headline_errors(payload))
+    return errors
+
+
+def calibration_audit_drill_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """``calibration_audit.drill.v1``: shard label and train/eval echo.
+
+    The drill stamps ``data_label`` from the Yahoo shard (``yahoo_eod``) and
+    ``generated_at_commit`` rather than the measurement envelope's
+    ``git_revision``. Train and eval lengths must match between ``drill``
+    and ``params`` — those are the sizes the e-process actually ran.
+    """
+    errors: list[str] = []
+    if payload.get("research_only") is not True:
+        errors.append("research_only_not_true")
+    if payload.get("live_pnl_claim") is not False:
+        errors.append("live_pnl_claim_not_false")
+    if payload.get("kind") != "calibration_audit.drill.v1":
+        errors.append("kind_mismatch")
+    if not _git_sha(payload.get("generated_at_commit")):
+        errors.append("generated_at_commit_not_sha")
+    if not _sha256_hex(payload.get("receipt_sha256")) or not _sha256_hex(
+        payload.get("inputs_sha256")
+    ):
+        errors.append("sha256_missing")
+    drill = payload.get("drill")
+    params = payload.get("params")
+    if not isinstance(drill, Mapping) or not isinstance(params, Mapping):
+        return errors + ["drill_or_params_missing"]
+    shard = drill.get("shard")
+    if not isinstance(shard, Mapping):
+        errors.append("shard_missing")
+    else:
+        label = payload.get("data_label")
+        if not isinstance(label, str) or not label or label != shard.get("data_label"):
+            errors.append("data_label_not_shard_label")
+        if shard.get("source") != "yahoo":
+            errors.append("shard_source_not_yahoo")
+    for key in ("n_train", "n_eval"):
+        if drill.get(key) != params.get(key) or not _positive_int(drill.get(key)):
+            errors.append(f"{key}_not_echoed")
+    if not _positive_int(payload.get("n_models")) or not _positive_int(payload.get("n_shards")):
+        errors.append("counts_not_positive_int")
+    alpha = _as_finite_float(params.get("alpha"))
+    if alpha is None or not 0.0 < alpha <= 1.0:
+        errors.append("alpha_not_in_unit_interval")
+    evidence = payload.get("evidence")
+    if (
+        not isinstance(evidence, list)
+        or not evidence
+        or any(not isinstance(item, str) or not item for item in evidence)
+    ):
+        errors.append("evidence_bad")
+    errors.extend(_forbidden_headline_errors(payload))
+    return errors
+
+
 #: The wave-21b tape/sim measurement lanes emit ``schema``-tagged receipts
 #: with a shared envelope; each registers the measurement contract so no
 #: committed receipt verifies on its seal alone.
@@ -531,6 +712,132 @@ _MEASUREMENT_SCHEMAS = (
     "zone_churn.v1",
     "zone_ttl.v1",
     "zone_stability.v1",
+    "alert_budget.v1",
+    "anthropic_sdk_audit.v1",
+    "api_audit.v1",
+    "api_fuzz.v1",
+    "asof_audit.v1",
+    "attestation_audit.v1",
+    "attribution.v1",
+    "auth_audit.v1",
+    "backend_parity.v1",
+    "bank_audit.v1",
+    "boundary_audit.v1",
+    "byok_audit.v1",
+    "cache_audit.v1",
+    "cancel_gradient.v1",
+    "cancel_lead.v1",
+    "cap_audit.v1",
+    "capability_audit.v1",
+    "causality_scan.v1",
+    "cli_audit.v1",
+    "client_audit.v1",
+    "contamination_audit.v1",
+    "contract_probe.v1",
+    "corpus_audit.v1",
+    "decay_watch.v1",
+    "dip_audit.v1",
+    "dip_run_audit.v1",
+    "disclosure_audit.v1",
+    "dispatch_audit.v1",
+    "diversity.v1",
+    "doctor_audit.v1",
+    "drain_audit.v1",
+    "ds_audit.v1",
+    "duration_check.v1",
+    "e2e_audit.v1",
+    "em_audit.v1",
+    "engine_fuzz.v1",
+    "error_shape.v1",
+    "eval_core_audit.v1",
+    "eval_lifecycle_audit.v1",
+    "ext_bench_audit.v1",
+    "fault_audit.v1",
+    "fifo_priority.v1",
+    "forecast_core_audit.v1",
+    "forecast_data_audit.v1",
+    "forecast_infra_audit.v1",
+    "fx1_contract_audit.v1",
+    "fx1_tail_audit.v1",
+    "grad_fidelity.v1",
+    "harness_audit.v1",
+    "hmm_stability.v1",
+    "hmm_verify.v1",
+    "honesty_audit.v1",
+    "hypotheses_audit.v1",
+    "imbalance_predict.v1",
+    "inherit_audit.v1",
+    "initiative_fade.v1",
+    "intraday_exec.v1",
+    "jobs_audit.v1",
+    "journal_audit.v1",
+    "kill_audit.v1",
+    "label_horizon_map.v1",
+    "label_stability.v1",
+    "ledger_audit.v1",
+    "lineage_dag.v1",
+    "lob_invariants.v1",
+    "map_parity.v1",
+    "masking_audit.v1",
+    "meta_model.v1",
+    "middleware_audit.v1",
+    "modelcard_audit.v1",
+    "mrm_audit.v1",
+    "native_conformance.v1",
+    "oai_sdk_audit.v1",
+    "ops_audit.v1",
+    "options_audit.v1",
+    "parity_audit.v1",
+    "parity_leak_audit.v1",
+    "perf_audit.v1",
+    "pipeline_audit.v1",
+    "pipeline_flat_audit.v1",
+    "promotion_gate.v1",
+    "quality_audit.v1",
+    "queue_class.v1",
+    "queue_fate.v1",
+    "queue_jump.v1",
+    "queue_occupancy.v1",
+    "quota2_audit.v1",
+    "receipts_audit.v1",
+    "replay_audit.v1",
+    "report_audit.v1",
+    "retrieval_audit.v1",
+    "reward_audit.v1",
+    "rt_audit.v1",
+    "rubric_audit.v1",
+    "run_audit.v1",
+    "sbom_audit.v1",
+    "schema_drift.v1",
+    "schema_fingerprint.v1",
+    "sdk_audit.v1",
+    "seed_audit.v1",
+    "seed_sweep_demo.v1",
+    "serve_audit.v1",
+    "side_imbalance.v1",
+    "sim_sensitivity.v1",
+    "sources_audit.v1",
+    "spec_audit.v1",
+    "stack_invariance.v1",
+    "stack_watch.v1",
+    "sweep_bound.v1",
+    "sweep_width.v1",
+    "tail_quota.v1",
+    "tape_surgery.v1",
+    "timepart_audit.v1",
+    "trade_decomp.v1",
+    "train_infra_audit.v1",
+    "train_receipt_audit.v1",
+    "trust_step.v1",
+    "ts_reasoning_audit.v1",
+    "usage_audit.v1",
+    "validator_fuzz.v1",
+    "vine_audit.v1",
+    "vine_dominance.v1",
+    "vine_panel.v1",
+    "vs_audit.v1",
+    "warmup_spec.v1",
+    "webhook_audit.v1",
 )
 
 
@@ -543,13 +850,22 @@ SCRIPT_RECEIPT_CONTRACTS: dict[str, Any] = {
     "fx1.dip_bench/v1": dip_bench_contract_errors,
     "deps_hygiene.v1": deps_hygiene_contract_errors,
     "joint_tune.v2": joint_tune_v2_contract_errors,
+    "lobster_replay.v1": lobster_replay_contract_errors,
+    "queue_priority.v1": queue_priority_contract_errors,
+    "calibration_audit.drill.v1": calibration_audit_drill_contract_errors,
     **{s: measurement_receipt_contract_errors for s in _MEASUREMENT_SCHEMAS},
 }
 
 
 def script_receipt_contract_errors(schema: object, payload: Mapping[str, Any]) -> list[str]:
-    """Re-derive a script receipt's headline claims; ``[]`` when unknown schema."""
-    check = SCRIPT_RECEIPT_CONTRACTS.get(str(schema))
+    """Re-derive a script receipt's headline claims; ``[]`` when unknown schema.
+
+    A numeric ``schema`` is a format version (the three ``schema: 1`` tape
+    receipts). Those dispatch on ``kind``, which is the lane id the writer
+    actually stamped.
+    """
+    key: object = schema if isinstance(schema, str) and schema else payload.get("kind")
+    check = SCRIPT_RECEIPT_CONTRACTS.get(str(key))
     if check is None:
         return []
     try:

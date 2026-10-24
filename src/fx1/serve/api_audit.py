@@ -1277,7 +1277,6 @@ def _api_audit_impl(_clk: dict[str, float]) -> dict[str, Any]:  # noqa: C901
         else:
             os.environ["FX1_WEBHOOK_ALLOW_PRIVATE_NETWORKS"] = saved_webhook_env
 
-    # --- rate limiting: per-client-host token bucket ----------------------------
     out["rate_limit_default_off"] = all(client.get("/health").status_code == 200 for _ in range(8))
     try:
         api_mod.create_app(rate_limit_rps=-1)
@@ -1318,8 +1317,9 @@ def _api_audit_impl(_clk: dict[str, float]) -> dict[str, Any]:  # noqa: C901
         and int(first.headers["x-ratelimit-reset"]) >= 0
         and int(second.headers["x-ratelimit-remaining"]) == 7
     )
-    while lc3.get("/harness/version").status_code == 200:
-        pass
+    for _ in range(16):
+        if lc3.get("/harness/version").status_code != 200:
+            break
     denied3 = lc3.get("/harness/version")
     out["rate_limit_headers_on_429"] = (
         denied3.status_code == 429
