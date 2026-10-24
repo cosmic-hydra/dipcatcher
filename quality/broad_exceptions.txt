@@ -51,4 +51,5 @@ src/quant_fund/research/vine_dominance.py 1
 src/quant_fund/research/vol_bench.py 1
 src/quant_fund/research/witness_scan.py 2
 src/quant_fund/simtest/swarm.py 2
+src/quant_fund/utils/cli_errors.py 1
 src/quant_fund/validation/regime_eval.py 1

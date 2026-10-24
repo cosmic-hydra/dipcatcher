@@ -61523,26 +61523,6 @@
       "src": "quant_fund.stress.vendor_cache"
     },
     {
-      "dst": "quant_fund.utils.atomicio",
-      "src": "quant_fund.utils"
-    },
-    {
-      "dst": "quant_fund.utils.hashing",
-      "src": "quant_fund.utils"
-    },
-    {
-      "dst": "quant_fund.utils.logging",
-      "src": "quant_fund.utils"
-    },
-    {
-      "dst": "quant_fund.utils.numeric",
-      "src": "quant_fund.utils"
-    },
-    {
-      "dst": "quant_fund.utils.seeds",
-      "src": "quant_fund.utils"
-    },
-    {
       "dst": "quant_fund",
       "src": "quant_fund.utils.cli_errors"
     },
@@ -77335,7 +77315,7 @@
     },
     {
       "dst": "quant_fund.utils",
-      "imports": 7,
+      "imports": 2,
       "src": "quant_fund.utils"
     },
     {
