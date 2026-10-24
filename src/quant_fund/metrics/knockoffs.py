@@ -304,10 +304,14 @@ def synth_linear(
     return x, y, np.sort(true_idx)
 
 
-def bench_knockoffs(seed: int = 20261231 + 153) -> dict[str, float]:
+def bench_knockoffs(
+    seed: int = 20261231 + 153,
+    *,
+    n_rep: int = 15,
+    null_rep: int = 10,
+) -> dict[str, float]:
     """SYNTHETIC FDR/power telemetry for the knockoff filter."""
     q = 0.2
-    n_rep = 15
     fdrs: list[float] = []
     powers: list[float] = []
     fdrs_sdp: list[float] = []
@@ -341,7 +345,6 @@ def bench_knockoffs(seed: int = 20261231 + 153) -> dict[str, float]:
     )
     # null case: no signal → selection empty with prob ≥ 1-q
     null_rej = 0
-    null_rep = 10
     for rep in range(null_rep):
         xn, _yn, _ = synth_linear(n=300, p=20, k=5, seed=seed + 2000 + rep)
         yn = np.random.default_rng(seed + 3000 + rep).standard_normal(300)

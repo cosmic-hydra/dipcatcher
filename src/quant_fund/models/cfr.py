@@ -126,11 +126,12 @@ def kuhn_exploitability(avg: dict[str, FloatArray]) -> float:
     return float(best_response(1) + best_response(2))
 
 
-def bench_cfr(seed: int = 20261231) -> dict[str, float]:
-    """SYNTHETIC: 200k CFR iterations on Kuhn poker — exploitability
-    shrinks toward the known equilibrium value (P1 EV = −1/18)."""
+def bench_cfr(seed: int = 20261231, *, n_iter: int = 60_000) -> dict[str, float]:
+    """SYNTHETIC: CFR on Kuhn poker — exploitability shrinks toward the
+    known equilibrium value (P1 EV = −1/18). The lane default is 60k
+    iterations; the research catalog passes a shorter run."""
     rng = np.random.default_rng(seed)
-    avg = cfr_kuhn(60_000, rng)
+    avg = cfr_kuhn(n_iter, rng)
     out: dict[str, float] = {}
     out["synthetic_cfr_exploitability"] = kuhn_exploitability(avg)
     # canonical equilibrium signature: P1 with card 0 (weakest) checks

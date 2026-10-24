@@ -63,11 +63,18 @@ def synth_mae_windows(n: int, win: int, rng: np.random.Generator) -> tuple[Float
     return x, reg
 
 
-def bench_mask_autoencoder(seed: int = 103) -> dict[str, float]:
+def bench_mask_autoencoder(
+    seed: int = 103,
+    *,
+    n: int = 5000,
+    steps: int = 600,
+    probe_steps: int = 300,
+    batch: int = 256,
+) -> dict[str, float]:
     rng = np.random.default_rng(seed)
     torch = _torch()
     torch.manual_seed(seed)
-    n, win, plen = 5000, 40, 8
+    win, plen = 40, 8
     n_p = win // plen
     x, reg = synth_mae_windows(n, win, rng)
     tr, tr_lab = int(n * 0.8), 60  # low-label regime
@@ -82,10 +89,10 @@ def bench_mask_autoencoder(seed: int = 103) -> dict[str, float]:
     mods = torch.nn.ModuleList([emb, enc, dec])
     opt = torch.optim.Adam(mods.parameters(), lr=2e-3)
 
-    for _ in range(600):
-        idx = torch.randint(0, tr, (256,))
+    for _ in range(steps):
+        idx = torch.randint(0, tr, (batch,))
         p = xs[idx].reshape(-1, n_p, plen)
-        mask = torch.rand(256, n_p) < 0.5
+        mask = torch.rand(batch, n_p) < 0.5
         mask[:, 0] = False  # keep at least one visible
         vis = torch.where(mask.unsqueeze(-1), torch.zeros_like(p), p)
         h = enc(emb(vis))
@@ -124,7 +131,7 @@ def bench_mask_autoencoder(seed: int = 103) -> dict[str, float]:
     mods2 = torch.nn.ModuleList([emb2, enc2, head2])
     opt2 = torch.optim.Adam(mods2.parameters(), lr=2e-3)
     tgt = torch.tensor(reg, dtype=torch.long)
-    for _ in range(300):
+    for _ in range(probe_steps):
         idx = torch.randint(0, tr_lab, (min(64, tr_lab),))
         p = xs[idx].reshape(-1, n_p, plen)
         logits = head2(enc2(emb2(p)).mean(1))

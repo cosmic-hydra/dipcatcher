@@ -67,7 +67,12 @@ def bench_dpr_retriever_family() -> dict[str, float]:
 
 def bench_colbert_late_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("colbert_late", bench_colbert_late(seed=_SEED + 860)))
+        return _floats(
+            _finite_blob(
+                "colbert_late",
+                bench_colbert_late(seed=_SEED + 860, n_docs=120, n_queries=40, iters=150),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

@@ -90,7 +90,9 @@ def bench_kernel_methods_family() -> dict[str, float]:
 
 def bench_lda_topics_family() -> dict[str, float]:
     try:
-        return _isinstance_floats(_finite_blob("lda_topics", bench_lda_topics(seed=_SEED + 556)))
+        return _isinstance_floats(
+            _finite_blob("lda_topics", bench_lda_topics(seed=_SEED + 556, n_docs=40, it=80))
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

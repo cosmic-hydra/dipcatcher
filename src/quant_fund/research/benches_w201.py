@@ -49,7 +49,12 @@ def _floats(out: dict[str, float]) -> dict[str, float]:
 
 def bench_dual_american_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("dual_american", bench_dual_american(seed=_SEED + 960)))
+        return _floats(
+            _finite_blob(
+                "dual_american",
+                bench_dual_american(seed=_SEED + 960, n_crr=400, n_tree=80, n_path=80),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

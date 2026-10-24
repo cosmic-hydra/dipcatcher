@@ -1330,9 +1330,33 @@ def _probe_client_surface() -> dict[str, bool]:
     return out
 
 
+def _hold_unconfigured_backend_env() -> dict[str, str | None]:
+    """Clear credential env for the whole battery, not only ``create_app``.
+
+    ``/health`` reads backend flags from the process environment at request
+    time. ``_make_app`` restores whatever it saved as soon as the app exists,
+    so an ambient or leaked ``MOONSHOT_API_KEY`` / BYOK / checkpoint setting
+    made ``health_backends_fail_closed_unconfigured`` observe a configured
+    backend. The probe's contract is the unconfigured process. Hold that
+    state until the battery returns, then restore the caller's environment.
+    """
+    saved = {key: os.environ.get(key) for key in _SWEPT_ENVS}
+    for key in _SWEPT_ENVS:
+        os.environ.pop(key, None)
+    return saved
+
+
+def _restore_env(saved: dict[str, str | None]) -> None:
+    for key, value in saved.items():
+        if value is None:
+            os.environ.pop(key, None)
+        else:
+            os.environ[key] = value
+
+
 def observe_audit() -> dict[str, Any]:
     """Run the ops-instrumentation battery; results are literal bools."""
-    prev = os.environ.pop(_API_KEY_ENV, None)
+    saved = _hold_unconfigured_backend_env()
     out: dict[str, Any] = {}
     try:
         with _audit_resources():
@@ -1353,8 +1377,7 @@ def observe_audit() -> dict[str, Any]:
             ):
                 out.update(section())
     finally:
-        if prev is not None:
-            os.environ[_API_KEY_ENV] = prev
+        _restore_env(saved)
     return out
 
 

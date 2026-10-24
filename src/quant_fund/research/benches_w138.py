@@ -49,7 +49,9 @@ def _floats(out: dict[str, float]) -> dict[str, float]:
 
 def bench_reformer_lsh_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("reformer_lsh", bench_reformer_lsh(seed=_SEED + 816)))
+        return _floats(
+            _finite_blob("reformer_lsh", bench_reformer_lsh(seed=_SEED + 816, iters=200))
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -59,7 +61,10 @@ def bench_reformer_lsh_family() -> dict[str, float]:
 def bench_memorizing_transformer_family() -> dict[str, float]:
     try:
         return _floats(
-            _finite_blob("memorizing_transformer", bench_memorizing_transformer(seed=_SEED + 817))
+            _finite_blob(
+                "memorizing_transformer",
+                bench_memorizing_transformer(seed=_SEED + 817, iters=200),
+            )
         )
     except ImportError:
         raise
@@ -69,7 +74,7 @@ def bench_memorizing_transformer_family() -> dict[str, float]:
 
 def bench_ntm_memory_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("ntm_memory", bench_ntm_memory(seed=_SEED + 818)))
+        return _floats(_finite_blob("ntm_memory", bench_ntm_memory(seed=_SEED + 818, iters=160)))
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -78,7 +83,7 @@ def bench_ntm_memory_family() -> dict[str, float]:
 
 def bench_dnc_memory_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("dnc_memory", bench_dnc_memory(seed=_SEED + 819)))
+        return _floats(_finite_blob("dnc_memory", bench_dnc_memory(seed=_SEED + 819, iters=160)))
     except ImportError:
         raise
     except _BENCH_EXC as exc:

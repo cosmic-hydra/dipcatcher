@@ -121,7 +121,7 @@ def e_divisive(
     }
 
 
-def bench_e_divisive(seed: int = 20261231 + 461) -> dict[str, float]:
+def bench_e_divisive(seed: int = 20261231 + 461, *, n_perm: int = 99) -> dict[str, float]:
     """SYNTHETIC check — detects two planted mean shifts."""
     rng = np.random.default_rng(seed)
     y = np.concatenate(
@@ -131,7 +131,7 @@ def bench_e_divisive(seed: int = 20261231 + 461) -> dict[str, float]:
             rng.normal(-0.8, 0.5, size=100),
         ]
     )
-    out = e_divisive(y, r=99, seed=seed)
+    out = e_divisive(y, r=n_perm, seed=seed)
     cps = np.asarray(out["changepoints"], dtype=np.float64)
     if cps.size < 2:
         raise ValueError(f"edivisive missed splits: {cps.tolist()}")

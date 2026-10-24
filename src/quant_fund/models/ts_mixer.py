@@ -51,11 +51,19 @@ def synth_mixer_panel(n: int, rng: np.random.Generator) -> FloatArray:
     return x
 
 
-def bench_ts_mixer(seed: int = 91) -> dict[str, float]:
+def bench_ts_mixer(
+    seed: int = 91,
+    *,
+    t_len: int = 3000,
+    win: int = 40,
+    steps: int = 600,
+    mlp_steps: int = 300,
+    batch: int = 256,
+) -> dict[str, float]:
     rng = np.random.default_rng(seed)
     torch = _torch()
     torch.manual_seed(seed)
-    T, win = 3000, 40
+    T = t_len
     x = synth_mixer_panel(T, rng)
     xs = torch.tensor(np.array([x[t - win : t] for t in range(win, T)]), dtype=torch.float32)
     ys = torch.tensor(x[win:], dtype=torch.float32)
@@ -77,8 +85,8 @@ def bench_ts_mixer(seed: int = 91) -> dict[str, float]:
         return head(h.transpose(1, 2)).squeeze(-1)  # (B, C)
 
     opt = torch.optim.Adam(mods.parameters(), lr=2e-3)
-    for _ in range(600):
-        idx = torch.randint(0, tr, (256,))
+    for _ in range(steps):
+        idx = torch.randint(0, tr, (batch,))
         loss = torch.mean(torch.abs(forward(xs[idx]) - ys[idx]))
         opt.zero_grad()
         loss.backward()
@@ -92,8 +100,8 @@ def bench_ts_mixer(seed: int = 91) -> dict[str, float]:
     )
     mopt = torch.optim.Adam(mlp.parameters(), lr=1e-3)
     xf = xs.reshape(len(xs), -1)
-    for _ in range(300):
-        idx = torch.randint(0, tr, (256,))
+    for _ in range(mlp_steps):
+        idx = torch.randint(0, tr, (batch,))
         loss = torch.mean(torch.abs(mlp(xf[idx]) - ys[idx]))
         mopt.zero_grad()
         loss.backward()

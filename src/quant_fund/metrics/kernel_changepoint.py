@@ -273,17 +273,22 @@ def synth_stream(
     return x
 
 
-def bench_kernel_changepoint(seed: int = 20260202) -> dict[str, float]:
+def bench_kernel_changepoint(
+    seed: int = 20260202,
+    *,
+    trials: int = 8,
+    n_perm: int = 60,
+    reps: int = 6,
+) -> dict[str, float]:
     """SYNTHETIC bench: size under null, detection rate and delay vs
     planted shift size, MMD vs parametric CUSUM comparison."""
     out: dict[str, float] = {}
     rng = np.random.default_rng(seed)
     # --- size under the null (stationary stream)
     alarms = 0
-    trials = 8
     for rep in range(trials):
         x = rng.standard_normal(240)
-        thr = permutation_threshold(x, alpha=0.05, n_perm=60, seed=seed + rep)
+        thr = permutation_threshold(x, alpha=0.05, n_perm=n_perm, seed=seed + rep)
         _, stat = mmd_scan(x, min_seg=30)
         if np.nanmax(stat) > thr:
             alarms += 1
@@ -292,11 +297,13 @@ def bench_kernel_changepoint(seed: int = 20260202) -> dict[str, float]:
     for j, sz in enumerate([0.3, 0.8, 1.5]):
         det = 0
         delay_sum = 0.0
-        reps = 6
         for rep in range(reps):
             x = synth_stream(300, cp=150, kind="mean", size=sz, seed=seed + 100 + rep)
             thr = permutation_threshold(
-                synth_stream(300, None, seed=seed + rep), alpha=0.05, n_perm=60, seed=seed + rep
+                synth_stream(300, None, seed=seed + rep),
+                alpha=0.05,
+                n_perm=n_perm,
+                seed=seed + rep,
             )
             cp_hat, stat = mmd_scan(x, min_seg=30)
             if np.nanmax(stat) > thr and abs(cp_hat - 150) < 60:

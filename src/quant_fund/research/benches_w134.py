@@ -67,7 +67,12 @@ def bench_cvxpy_layer_family() -> dict[str, float]:
 
 def bench_input_convex_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("input_convex", bench_input_convex(seed=_SEED + 794)))
+        return _floats(
+            _finite_blob(
+                "input_convex",
+                bench_input_convex(seed=_SEED + 794, n_train=800, n_test=200, iters=400),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:
@@ -94,7 +99,9 @@ def bench_spd_net_family() -> dict[str, float]:
 
 def bench_diff_mpc_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("diff_mpc", bench_diff_mpc(seed=_SEED + 797)))
+        return _floats(
+            _finite_blob("diff_mpc", bench_diff_mpc(seed=_SEED + 797, iters=80, t_final=16))
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

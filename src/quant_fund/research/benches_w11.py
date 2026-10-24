@@ -83,7 +83,10 @@ def bench_optimal_transport() -> dict[str, float]:
     separate same-law from shifted samples."""
     try:
         rng = np.random.default_rng(_SEED)
-        n = 2000
+        # W1 of a unit shift is exact at any n. Sinkhorn is O(n^2) and the
+        # separation claim (shifted divergence >> same-law) holds at n=500;
+        # n=2000 was ~12s inside every research sweep.
+        n = 500
         a = rng.standard_normal(n)
         b = a + 1.0
         c = rng.standard_normal(n)

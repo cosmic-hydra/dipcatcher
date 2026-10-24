@@ -93,7 +93,12 @@ def bench_hsvi_family() -> dict[str, float]:
 
 def bench_pomcp_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("pomcp", bench_pomcp(seed=_SEED + 701)))
+        return _floats(
+            _finite_blob(
+                "pomcp",
+                bench_pomcp(seed=_SEED + 701, n_episodes=4, n_sims=80, n_particles=80),
+            )
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

@@ -69,9 +69,15 @@ def _dual_bound(seed: int, n_tree: int = 200, n_path: int = 400) -> tuple[float,
     return float(duals.mean()), float(duals.std() / np.sqrt(n_path))
 
 
-def bench_dual_american(seed: int = 4109) -> dict[str, float]:
-    ref, _ = crr_price(2000)
-    dual, se = _dual_bound(seed)
+def bench_dual_american(
+    seed: int = 4109,
+    *,
+    n_crr: int = 2000,
+    n_tree: int = 200,
+    n_path: int = 400,
+) -> dict[str, float]:
+    ref, _ = crr_price(n_crr)
+    dual, se = _dual_bound(seed, n_tree=n_tree, n_path=n_path)
     eur = european_put()
     return {
         "synthetic_dual_bound": dual,

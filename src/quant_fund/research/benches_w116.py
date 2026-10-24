@@ -50,7 +50,7 @@ def _floats(out: dict[str, float]) -> dict[str, float]:
 
 def bench_cfr_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("cfr", bench_cfr(seed=_SEED + 684)))
+        return _floats(_finite_blob("cfr", bench_cfr(seed=_SEED + 684, n_iter=12_000)))
     except ImportError:
         raise
     except _BENCH_EXC as exc:

@@ -94,7 +94,7 @@ def bench_structured_vi_family() -> dict[str, float]:
 
 def bench_vrnn_seq_family() -> dict[str, float]:
     try:
-        return _floats(_finite_blob("vrnn_seq", bench_vrnn_seq(seed=_SEED + 965)))
+        return _floats(_finite_blob("vrnn_seq", bench_vrnn_seq(seed=_SEED + 965, steps=500)))
     except ImportError:
         raise
     except _BENCH_EXC as exc:

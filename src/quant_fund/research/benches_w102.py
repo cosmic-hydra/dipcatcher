@@ -65,7 +65,9 @@ def bench_stochastic_bandits_family() -> dict[str, float]:
 
 def bench_kl_bandits_family() -> dict[str, float]:
     try:
-        return _isinstance_floats(_finite_blob("kl_bandits", bench_kl_bandits(seed=_SEED + 601)))
+        return _isinstance_floats(
+            _finite_blob("kl_bandits", bench_kl_bandits(seed=_SEED + 601, steps=600, runs=4))
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

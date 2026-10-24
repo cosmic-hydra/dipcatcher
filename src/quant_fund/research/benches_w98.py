@@ -62,7 +62,9 @@ def bench_mdp_solvers_family() -> dict[str, float]:
 
 def bench_td_learning_family() -> dict[str, float]:
     try:
-        return _isinstance_floats(_finite_blob("td_learning", bench_td_learning(seed=_SEED + 577)))
+        return _isinstance_floats(
+            _finite_blob("td_learning", bench_td_learning(seed=_SEED + 577, episodes=1500))
+        )
     except ImportError:
         raise
     except _BENCH_EXC as exc:

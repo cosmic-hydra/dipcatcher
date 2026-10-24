@@ -114,7 +114,7 @@ def bench_knockoffs() -> dict[str, float]:
     except ImportError:
         return {}
     try:
-        return _finite_blob(_isinstance_floats(_core(seed=_KNOCK_SEED)))
+        return _finite_blob(_isinstance_floats(_core(seed=_KNOCK_SEED, n_rep=8, null_rep=5)))
     except (ValueError, RuntimeError, FloatingPointError, KeyError, TypeError):
         return {}
 

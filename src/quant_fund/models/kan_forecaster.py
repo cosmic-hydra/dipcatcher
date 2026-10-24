@@ -52,11 +52,18 @@ def synth_nonlinear(n: int, lag: int, rng: np.random.Generator) -> tuple[FloatAr
     return xs, y
 
 
-def bench_kan_forecaster(seed: int = 89) -> dict[str, float]:
+def bench_kan_forecaster(
+    seed: int = 89,
+    *,
+    n: int = 4000,
+    steps: int = 1500,
+    mlp_steps: int = 800,
+    batch: int = 256,
+) -> dict[str, float]:
     rng = np.random.default_rng(seed)
     torch = _torch()
     torch.manual_seed(seed)
-    lag, n, tr = 8, 4000, 3200
+    lag, tr = 8, int(n * 0.8)
     xs_np, y = synth_nonlinear(n, lag, rng)
     xs_np = (xs_np - xs_np[:tr].mean(0)) / (xs_np[:tr].std(0) + 1e-9)
     xs = torch.tensor(xs_np, dtype=torch.float32)
@@ -79,8 +86,8 @@ def bench_kan_forecaster(seed: int = 89) -> dict[str, float]:
         return kan_edges(h, w2).squeeze(-1)
 
     opt = torch.optim.Adam([w1, w2], lr=5e-3)
-    for _ in range(1500):
-        idx = torch.randint(0, tr, (256,))
+    for _ in range(steps):
+        idx = torch.randint(0, tr, (batch,))
         loss = torch.mean((kan(xs[idx]) - ys[idx]) ** 2)
         opt.zero_grad()
         loss.backward()
@@ -94,8 +101,8 @@ def bench_kan_forecaster(seed: int = 89) -> dict[str, float]:
         torch.nn.Linear(32, 1),
     )
     mopt = torch.optim.Adam(mlp.parameters(), lr=3e-3)
-    for _ in range(800):
-        idx = torch.randint(0, tr, (256,))
+    for _ in range(mlp_steps):
+        idx = torch.randint(0, tr, (batch,))
         loss = torch.mean((mlp(xs[idx]).squeeze(-1) - ys[idx]) ** 2)
         mopt.zero_grad()
         loss.backward()
