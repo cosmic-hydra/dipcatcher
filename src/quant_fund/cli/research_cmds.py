@@ -1390,13 +1390,9 @@ def corpus(
         help="Receipt schema version: 1 = corpus_inference.v1 (default), 2 = unified receipt.v2 envelope.",
     ),
 ) -> None:
-    """Pool every committed receipt's claims into one BH-FDR family.
+    """Pool claims into a BH-FDR corpus_inference.v1 receipt.
 
-    Harvests the p/e-value findings across ``--receipts-dir`` and writes a
-    sealed ``corpus_inference.v1`` receipt naming which claims survive the
-    corpus-level FDR correction — the selection-bias check lifted to the
-    whole evidence store. Correctness evidence, never a market or P&L claim.
-    """
+    Correctness evidence, never a market or P&L claim."""
     try:
         from quant_fund.research.corpus_inference import corpus_audit, write_corpus_receipt
     except ImportError as exc:
@@ -1405,7 +1401,11 @@ def corpus(
     try:
         receipt = corpus_audit(receipts_dir, q=q)
     except ValueError as exc:
-        raise typer.BadParameter(str(exc)) from exc
+        message = str(exc)
+        # Lead with the phrase so Rich cannot split "does not exist".
+        if message.endswith("does not exist"):
+            message = f"does not exist: {receipts_dir}"
+        raise typer.BadParameter(message) from exc
     try:
         path = write_corpus_receipt(receipt, out_dir, receipt_version=receipt_version)
     except ValueError as exc:
@@ -1462,7 +1462,7 @@ def online_fdr_cmd(
 
     root = Path(receipts_dir)
     if not root.is_dir():
-        raise typer.BadParameter(f"receipts dir {root} does not exist")
+        raise typer.BadParameter(f"does not exist: {root}")
     try:
         controller = OnlineFDR(level=level)
     except ValueError as exc:
@@ -1688,7 +1688,7 @@ def lattice_cmd(
 
     root = Path(receipts_dir)
     if not root.is_dir():
-        raise typer.BadParameter(f"receipts dir {root} does not exist")
+        raise typer.BadParameter(f"does not exist: {root}")
     pins: dict[str, str] | None = None
     if known_inconsistent is not None:
         if not known_inconsistent.is_file():

@@ -314,6 +314,28 @@ def test_factor_covariance_rejects_invalid_inputs() -> None:
         factor_cov(np.eye(2), np.array([[1.0, 2.0], [2.0, 1.0]]), np.ones(2))
 
 
+def _stationary_garch_panel(seed: int = 11) -> np.ndarray:
+    """Planted GARCH(1,1) panel with persistence 0.95.
+
+    White noise at this length sits on the IGARCH boundary for some
+    BLAS/Python builds (arch reports ``nonstationary_persistence`` and
+    DCC correctly fails closed). A stationary DGP keeps the finite-covariance
+    assertion meaningful on every platform without relaxing it.
+    """
+    rng = np.random.default_rng(seed)
+    n_obs, n_assets = 240, 4
+    omega, alpha, beta = 1e-6, 0.05, 0.90
+    out = np.empty((n_obs, n_assets))
+    unconditional = omega / (1.0 - alpha - beta)
+    for asset in range(n_assets):
+        variance = unconditional
+        shocks = rng.normal(size=n_obs)
+        for t in range(n_obs):
+            out[t, asset] = np.sqrt(variance) * shocks[t]
+            variance = omega + alpha * out[t, asset] ** 2 + beta * variance
+    return out
+
+
 def test_ewma_rejects_invalid_lambda_and_dcc_is_finite() -> None:
     with np.testing.assert_raises(ValueError):
         ewma_variance_1d(np.ones(3), lam=1.1)
@@ -326,8 +348,7 @@ def test_ewma_rejects_invalid_lambda_and_dcc_is_finite() -> None:
         # `nonstationary_persistence`. macOS-only; identical code passes on
         # Linux and Windows. Mirrored disclosure in PROOF.md.
         pytest.xfail("arch 8.0.0 DCC boundary on macOS arm64 (fail-closed path)")
-    rng = np.random.default_rng(11)
-    sigma, params = dcc_gaussian(rng.normal(size=(240, 4)) * 0.01)
+    sigma, params = dcc_gaussian(_stationary_garch_panel())
     assert np.isfinite(sigma).all()
     assert min_eigenvalue(sigma) >= -1e-8
     assert 0.0 <= float(params["a"]) + float(params["b"]) < 0.999

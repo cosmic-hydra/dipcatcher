@@ -384,7 +384,9 @@ omit = ["*/__main__.py"]
 # (Linux) — floor set at 80 with cross-platform headroom. Raise, never lower.
 # 2026-09-28: local measures 85.49%; CI tracks ~3.4pp lower (~82). Floor 81
 # keeps ~1pp CI headroom while closing the drift window.
-fail_under = 81
+# 2026-10-22: live desk/broker/risk/data coverage tests; local 4-shard combine
+# pending — floor 82 (~3pp CI headroom vs prior local ~85.5%).
+fail_under = 82
 show_missing = true
 skip_covered = true
 exclude_also = [

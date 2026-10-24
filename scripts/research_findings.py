@@ -587,6 +587,10 @@ def collect_batches(root: Path) -> tuple[list[BatchRow], list[str]]:
     metadata = root / "data" / "metadata"
     if metadata.is_dir():
         for manifest_path in sorted(metadata.glob("**/manifest.json")):
+            # Windows glob is case-insensitive, so MANIFEST.json would
+            # otherwise become a scan note Linux never emits.
+            if manifest_path.name != "manifest.json":
+                continue
             row = tournament_row(root, manifest_path)
             if row is None:
                 notes.append(

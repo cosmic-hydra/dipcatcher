@@ -1,0 +1,94 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "8c941272227191e606f675de39ebec7d2b2c3511abc4092f4e94de90ba8c4f7e",
+  "inputs_sha256": "9e01384f48c1fbcff2a179ae1cf15cde0d0b606ab8855ac0787a7f93f2006254",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "bc8964a256ef94df09e26921fd79acacd4deb3f47212d5442ce2af8dc85c96ed",
+  "members": [
+    {
+      "name": "corpus_epoch_418473661e43b332.json",
+      "sha256": "73ecaeeda9fb228ef90ecb32625cd84ceb32e0687a63bffaf86ac39851441a92"
+    },
+    {
+      "name": "corpus_epoch_54655917bf13602b.json",
+      "sha256": "e4b35f4804d235bb6ee75b8406420f5dd402dd205860840f2347de897b43e1a9"
+    },
+    {
+      "name": "corpus_epoch_8d5a287b33fc0d3b.json",
+      "sha256": "fcfab8f673572307a8ae0ddc4d07dfb9e97d32bcd6d08c843575543e454df236"
+    },
+    {
+      "name": "corpus_epoch_ba4dfc5e9539492b.json",
+      "sha256": "83aeacb1b785346cbc7099e2aea6e97e27279a6712725ca5468809855813cf33"
+    },
+    {
+      "name": "corpus_epoch_c2f0991bd13465d2.json",
+      "sha256": "1505acada8aa13468c79fb7128dbe96b8ceb9bc8a8eba59b3746c778cbde245e"
+    },
+    {
+      "name": "typescript/README.md",
+      "sha256": "36f5d39a3a0d33808055337927edb430fc1e3f6c96e3469838ca9ab84184a03f"
+    },
+    {
+      "name": "typescript/client.ts",
+      "sha256": "3a1c659be32ed94101ac92b15f2cacdecef4b51e5117c79c47245439fd2fe03f"
+    },
+    {
+      "name": "typescript/fx1/README.md",
+      "sha256": "5643bb1c6eab35b841a8cf3a27091a380fc871ddca2cf004c4bf784b21f46e43"
+    },
+    {
+      "name": "typescript/fx1/client.ts",
+      "sha256": "c4ea38678aff34c421d4af6f49072b0bb9540eaf60dba4c4de7e827e5d8b1e9a"
+    },
+    {
+      "name": "typescript/fx1/openapi.json",
+      "sha256": "f0ef22d3b4e6af31c93600985e957821cf14be0f81c8ac96a9c95cd54cde24ae"
+    },
+    {
+      "name": "typescript/fx1/package-lock.json",
+      "sha256": "381a6defac1828fb365e80fb29c3022d760f1d9a2f829a998aa1cdd3762410df"
+    },
+    {
+      "name": "typescript/fx1/package.json",
+      "sha256": "35626f8eecc11dc7c54fb53048faaa3daba0512ea9f3fd4131527f6a58462418"
+    },
+    {
+      "name": "typescript/fx1/schema.d.ts",
+      "sha256": "c5321f3af327ba84764f828cb42b1d3bfc5f375af2d334d522363e5deab514fb"
+    },
+    {
+      "name": "typescript/openapi.json",
+      "sha256": "9e8e7b9240f3ab928009282b75f85127d52dc6215fa6d633386bc2caf651dc8a"
+    },
+    {
+      "name": "typescript/package-lock.json",
+      "sha256": "0a8b595d6df873403ade4bde46082115f75c2888fc840a67e24455107206c212"
+    },
+    {
+      "name": "typescript/package.json",
+      "sha256": "228ee04275b7894efaa19ecb888dc121e9fb211dc3efffeb0f04683bec227ce1"
+    },
+    {
+      "name": "typescript/schema.d.ts",
+      "sha256": "f4a32590d0cb5587d0922ed83ec02474433d61f0f4f7cb4b4be4fe5eb43aaaab"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_8d5a287b33fc0d3b.json"
+  ],
+  "members_removed": [],
+  "n_members": 17,
+  "params": {
+    "head_sha": "d5ead64a04dabcde7348147282c648c71d90f0a1",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_8d5a287b33fc0d3b.json",
+  "prev_epoch_sha256": "0cf22ddf11788d4d4c4b3b865e7904e40355eded496180388cf8e8bf0ea872b8",
+  "receipt_sha256": "6d1da5fa185d6920e193d6d7b6d56349a70f25dbdee5323c06a79caa2adb9cd4",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

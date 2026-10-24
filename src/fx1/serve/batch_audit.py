@@ -481,16 +481,39 @@ def _wait_hits(sink: _Sink, n: int, timeout: float = _WAIT_S) -> None:
         time.sleep(0.03)
 
 
-def _busy_executor(app: Any, slots: int | None = None, sleep_s: float = 1.2) -> None:
-    """Occupy every worker thread with a sleeper so a submitted batch
-    stays ``validating`` — the deterministic way to reach pre-start
-    cancel/expiry/restart states. Defaults to filling the pool."""
+def _busy_executor(app: Any, slots: int | None = None, sleep_s: float = 1.2) -> threading.Event:
+    """Occupy every worker so a submitted batch stays queued.
+
+    Returns the release event. The hold starts only once every worker is
+    inside it — a fixed sleep after ``submit`` loses the race on a loaded
+    runner, and the batch then runs to completion before a restart probe
+    can crash the pool. ``sleep_s`` is the backstop if the caller never
+    releases. Callers that cancel the pool must ``shutdown(...,
+    cancel_futures=True)`` before ``release.set()``: setting the event
+    first frees a worker, which then runs the batch the probe meant to
+    interrupt.
+    """
     executor = app.state.jobs_executor
     n = int(slots or executor._max_workers)  # noqa: SLF001 — audit reads pool depth
     release = threading.Event()
+    occupied = threading.Event()
+    started = 0
+    lock = threading.Lock()
+
+    def _hold() -> None:
+        nonlocal started
+        with lock:
+            started += 1
+            if started >= n:
+                occupied.set()
+        release.wait(timeout=sleep_s)
+
     for _ in range(n):
-        executor.submit(lambda: release.wait(timeout=sleep_s))
-    time.sleep(0.05)
+        executor.submit(_hold)
+    if n > 0 and not occupied.wait(timeout=5):
+        release.set()
+        raise RuntimeError(f"executor did not occupy {n} workers")
+    return release
 
 
 _VOLATILE_KEYS = frozenset({"id", "created", "created_at"})
@@ -1380,9 +1403,14 @@ def _probe_durability(workdir: Path, sink: _Sink) -> dict[str, bool]:
     # OpenAI: batch journaled validating, workers occupied, then "crash"
     sd = workdir / "state-openai"
     c1, app1 = _client(state_dir=sd)
-    _busy_executor(app1)
-    b = _batch_create(c1, [_line("d1", _chat_body("dur"))])
-    app1.state.jobs_executor.shutdown(wait=True, cancel_futures=True)
+    # Hold past create. A 1.2s sleeper can expire while create is still
+    # on the wire under load, and the batch then completes before the crash.
+    hold1 = _busy_executor(app1, sleep_s=30)
+    try:
+        b = _batch_create(c1, [_line("d1", _chat_body("dur"))])
+        app1.state.jobs_executor.shutdown(wait=False, cancel_futures=True)
+    finally:
+        hold1.set()
     c1.close()
     c2, _ = _client(state_dir=sd)
     rec = c2.get(f"/v1/batches/{b['id']}", headers=h).json()
@@ -1423,9 +1451,12 @@ def _probe_durability(workdir: Path, sink: _Sink) -> dict[str, bool]:
     # Anthropic: mid-flight batch recovers ended with restart errored rows
     sd3 = workdir / "state-abatch"
     c5, app5 = _client(state_dir=sd3)
-    _busy_executor(app5)
-    ab = _abatch_create(c5, [_abatch_item("r1"), _abatch_item("r2")])
-    app5.state.jobs_executor.shutdown(wait=True, cancel_futures=True)
+    hold5 = _busy_executor(app5, sleep_s=30)
+    try:
+        ab = _abatch_create(c5, [_abatch_item("r1"), _abatch_item("r2")])
+        app5.state.jobs_executor.shutdown(wait=False, cancel_futures=True)
+    finally:
+        hold5.set()
     c5.close()
     c6, _ = _client(state_dir=sd3)
     rec3 = c6.get(

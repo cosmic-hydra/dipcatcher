@@ -77,7 +77,7 @@ src/fx1/serve/api.py:_mount_complete_routes.openai_batches_create 13
 src/fx1/serve/api.py:_mount_complete_routes.openai_chat_completions 16
 src/fx1/serve/api.py:_mount_complete_routes.openai_completions 16
 src/fx1/serve/api.py:_mount_complete_routes.openai_responses 39
-src/fx1/serve/api.py:_mount_job_routes 22
+src/fx1/serve/api.py:_mount_job_routes 16
 src/fx1/serve/api.py:_mount_key_lifecycle 23
 src/fx1/serve/api.py:_mount_receipt_routes 16
 src/fx1/serve/api.py:_resolve_auth 12

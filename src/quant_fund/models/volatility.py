@@ -50,18 +50,28 @@ def _ewma_variance_nb(r: np.ndarray, lam: float) -> np.ndarray:
 _GARCH_FIT_CACHE = FitCache(max_entries=64)
 
 
+def load_arch_model(*args: Any, **kwargs: Any) -> Any:
+    """Call ``arch.arch_model``. Tests patch this seam.
+
+    Patching ``arch.arch_model`` is not visible to every 3.14 import
+    specialization, and the fit cache would then replay a real
+    ``nonconvergence`` snapshot into the non-finite-parameter case.
+    """
+    from arch import arch_model
+
+    return arch_model(*args, **kwargs)
+
+
 def _garch_fit_cache_key(model: Any, raw: object) -> str | None:
     try:
         values = np.asarray(raw, dtype=float).reshape(-1)
     except (TypeError, ValueError):
         return None
     finite = np.ascontiguousarray(values[np.isfinite(values)], dtype=np.float64)
-    # The fitter identity is part of the key so a patched ``arch.arch_model``
+    # The fitter identity is part of the key so a patched ``load_arch_model``
     # cannot reuse a real fit, and a real fit cannot reuse a patched one.
     try:
-        import arch
-
-        fitter_id = id(arch.arch_model)
+        fitter_id = id(load_arch_model)
     except ImportError:
         fitter_id = 0
     return _GARCH_FIT_CACHE.hash_key(
@@ -333,8 +343,6 @@ class GARCHVol(JoblibMixin):
     def _fit_uncached(
         self, x: NDArray[np.float64], y: NDArray[np.float64], **kwargs: Any
     ) -> GARCHVol:
-        from arch import arch_model
-
         raw = kwargs.pop("returns")
         try:
             values = np.asarray(raw, dtype=float).reshape(-1)
@@ -350,14 +358,14 @@ class GARCHVol(JoblibMixin):
             return self._fallback(returns_percent, "zero_variance")
         arch_vol, o = _ALLOWED_GARCH_VOLS[self.vol]
         try:
-            am = arch_model(
+            am = load_arch_model(
                 returns_percent,
-                vol=arch_vol,  # type: ignore[arg-type]
+                vol=arch_vol,
                 p=self.p,
                 o=o,
                 q=self.q,
-                dist=self.dist,  # type: ignore[arg-type]
-                mean=self.mean,  # type: ignore[arg-type]
+                dist=self.dist,
+                mean=self.mean,
                 power=self.power,
                 rescale=False,
             )
