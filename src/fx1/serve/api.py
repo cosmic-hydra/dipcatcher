@@ -3091,7 +3091,14 @@ def _mount_job_routes(
                     last = snap
                     yield f"event: job\ndata: {snap}\n\n"
                 now = time.monotonic()
-                if cur.status in _TERMINAL_JOB_STATUS or now >= deadline:
+                if cur.status in _TERMINAL_JOB_STATUS:
+                    # A closer comment keeps the terminal event frame from
+                    # being the last yield. Some ASGI clients drop the tail
+                    # chunk when the generator returns on that yield, so a
+                    # finished job looked like a stream that never ended.
+                    yield ": end\n\n"
+                    return
+                if now >= deadline:
                     return
                 if now >= next_keep:
                     yield ": keepalive\n\n"

@@ -68,9 +68,11 @@ jobs:
     name: ${{ matrix.os }} / py${{ matrix.python }} / shard${{ matrix.shard }}
     runs-on: ${{ matrix.os }}
     # macOS/Windows shards regularly brush the old 45-min ceiling after
-    # uv sync --all-extras + collect + full not-network suite. Raise
-    # modestly; do not drop tests or shrink the OS/Python band.
-    timeout-minutes: 60
+    # uv sync --all-extras + collect + full not-network suite. Ubuntu
+    # shards of ~1400 files were still advancing (pytest progress, not a
+    # hang) when the 60-minute job timeout cancelled them. Raise so a
+    # shard can finish; do not drop tests or shrink the OS/Python band.
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:

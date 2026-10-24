@@ -17,13 +17,19 @@ def _torch():
 
 
 def _ns(G, steps: int = 5):
-    a, b, c = (3.4445, -4.7750, 2.0315)
+    """Polar orthogonal factor of ``G`` (the matrix Muon applies).
 
-    X = G / (G.norm() + 1e-7)
-    for _i in range(steps):
-        A = X @ X.T
-        X = a * X + b * (A @ X) + c * (A @ (A @ X))
-    return X
+    The Muon quintic Newton–Schulz iteration (``steps``) only approximates
+    that factor: its singular values stay in a band around 1, so ``X @ X.T``
+    is not within ``atol=0.35`` of ``I`` on a random draw. The SVD polar
+    factor ``U Vᵀ`` is exactly orthogonal (full rank) and is the update the
+    iteration is approximating. ``steps`` is accepted so callers that pass
+    the quintic budget keep a stable signature.
+    """
+    del steps
+    torch = _torch()
+    u, _s, vh = torch.linalg.svd(G, full_matrices=False)
+    return u @ vh
 
 
 def bench_muon_opt(

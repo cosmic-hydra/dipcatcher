@@ -120,7 +120,7 @@ def test_garch_higher_order_p_q_fits() -> None:
 def test_garch_fit_optimizer_exception_falls_back() -> None:
     m = GARCHVol()
     r = _returns(150)
-    with patch("arch.arch_model") as fake_factory:
+    with patch("quant_fund.models.volatility.load_arch_model") as fake_factory:
         fake = MagicMock()
         fake.fit.side_effect = RuntimeError("boom")
         fake_factory.return_value = fake

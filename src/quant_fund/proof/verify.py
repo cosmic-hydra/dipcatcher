@@ -162,6 +162,11 @@ def _check_sidecars(
         if not path.exists():
             reasons.append(f"sidecar:{kind}:missing")
             continue
+        if path.is_dir():
+            # Windows read_bytes on a directory raises PermissionError.
+            # The contract name is the POSIX error a directory read produces.
+            reasons.append(f"sidecar:{kind}:unreadable:IsADirectoryError")
+            continue
         try:
             data = path.read_bytes()
         except OSError as exc:
@@ -217,6 +222,9 @@ def _check_committed_sidecars(
             continue
         if not path.exists():
             reasons.append(f"sidecar:{kind}:missing")
+            continue
+        if path.is_dir():
+            reasons.append(f"sidecar:{kind}:unreadable:IsADirectoryError")
             continue
         try:
             data = path.read_bytes()

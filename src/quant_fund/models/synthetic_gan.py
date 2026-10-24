@@ -100,7 +100,10 @@ class Discriminator:
 
 
 def garch_windows(n: int, w: int, rng: np.random.Generator) -> FloatArray:
-    r = np.empty(n + w)
+    # r[0] is the lag for the first variance update and the first window.
+    # np.empty leaves that element as heap garbage, which is often zero on
+    # Linux and non-finite on Windows, so the critic loss diverges there.
+    r = np.zeros(n + w)
     v = np.empty(n + w)
     v[0] = 1e-4
     for t in range(1, n + w):

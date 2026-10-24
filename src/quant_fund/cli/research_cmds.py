@@ -1405,7 +1405,13 @@ def corpus(
     try:
         receipt = corpus_audit(receipts_dir, q=q)
     except ValueError as exc:
-        raise typer.BadParameter(str(exc)) from exc
+        message = str(exc)
+        # Rich wraps a long path in front of the phrase, so the contiguous
+        # "does not exist" the operator (and the CLI contract) require is
+        # split across lines. Lead with the phrase.
+        if message.endswith("does not exist"):
+            message = f"does not exist: {receipts_dir}"
+        raise typer.BadParameter(message) from exc
     try:
         path = write_corpus_receipt(receipt, out_dir, receipt_version=receipt_version)
     except ValueError as exc:
@@ -1462,7 +1468,7 @@ def online_fdr_cmd(
 
     root = Path(receipts_dir)
     if not root.is_dir():
-        raise typer.BadParameter(f"receipts dir {root} does not exist")
+        raise typer.BadParameter(f"does not exist: {root}")
     try:
         controller = OnlineFDR(level=level)
     except ValueError as exc:
@@ -1688,7 +1694,7 @@ def lattice_cmd(
 
     root = Path(receipts_dir)
     if not root.is_dir():
-        raise typer.BadParameter(f"receipts dir {root} does not exist")
+        raise typer.BadParameter(f"does not exist: {root}")
     pins: dict[str, str] | None = None
     if known_inconsistent is not None:
         if not known_inconsistent.is_file():
