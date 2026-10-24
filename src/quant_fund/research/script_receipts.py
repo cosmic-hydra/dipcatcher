@@ -429,6 +429,63 @@ def _forbidden_headline_errors(payload: Mapping[str, Any]) -> list[str]:
     ]
 
 
+def _lobster_match_errors(recon: Mapping[str, Any]) -> tuple[list[str], float | None, object]:
+    """Re-derive ``match_rate`` from ``n_match / n_compared``."""
+    errors: list[str] = []
+    match_rate = _as_finite_float(recon.get("match_rate"))
+    n_compared = recon.get("n_compared")
+    n_match = recon.get("n_match")
+    counts_ok = (
+        match_rate is not None
+        and _positive_int(n_compared)
+        and isinstance(n_match, int)
+        and not isinstance(n_match, bool)
+    )
+    if not counts_ok:
+        errors.append("reconstruction_counts_bad")
+    elif match_rate != (n_match / n_compared):
+        errors.append("match_rate_not_n_match_over_n_compared")
+    return errors, match_rate, n_match
+
+
+def _lobster_resync_errors(recon: Mapping[str, Any], n_match: object) -> list[str]:
+    """Re-derive ``resync_rate`` and the match/resync partition."""
+    n_compared = recon.get("n_compared")
+    n_resync = recon.get("n_resync_events")
+    resync = _as_finite_float(recon.get("resync_rate"))
+    resync_ok = (
+        isinstance(n_resync, int)
+        and not isinstance(n_resync, bool)
+        and _positive_int(n_compared)
+        and resync is not None
+        and resync == (n_resync / n_compared)
+    )
+    if not resync_ok:
+        return ["resync_rate_not_n_resync_over_n_compared"]
+    if (
+        isinstance(n_match, int)
+        and not isinstance(n_match, bool)
+        and n_match + n_resync != n_compared
+    ):
+        return ["compared_events_not_partitioned"]
+    return []
+
+
+def _lobster_engine_flag_errors(
+    payload: Mapping[str, Any], recon: Mapping[str, Any], match_rate: float | None
+) -> list[str]:
+    """``engine_valid_on_emitted`` is the writer's predicate on the counts."""
+    max_div = recon.get("max_divergence_len")
+    if not isinstance(max_div, int) or isinstance(max_div, bool) or max_div < 0:
+        return ["max_divergence_len_bad"]
+    if match_rate is None:
+        return []
+    expected = match_rate > 0.90 and max_div <= 5
+    if payload.get("engine_valid_on_emitted") is not expected:
+        return ["engine_valid_on_emitted_mismatch"]
+    return []
+
+
 def lobster_replay_contract_errors(payload: Mapping[str, Any]) -> list[str]:
     """``lobster_replay.v1``: re-derive match rate and the engine-valid flag.
 
@@ -455,41 +512,10 @@ def lobster_replay_contract_errors(payload: Mapping[str, Any]) -> list[str]:
     recon = payload.get("reconstruction")
     if not isinstance(recon, Mapping):
         return errors + ["reconstruction_missing"]
-    match_rate = _as_finite_float(recon.get("match_rate"))
-    n_compared = recon.get("n_compared")
-    n_match = recon.get("n_match")
-    if (
-        match_rate is None
-        or not _positive_int(n_compared)
-        or not isinstance(n_match, int)
-        or isinstance(n_match, bool)
-    ):
-        errors.append("reconstruction_counts_bad")
-    elif match_rate != (n_match / n_compared):
-        errors.append("match_rate_not_n_match_over_n_compared")
-    n_resync = recon.get("n_resync_events")
-    resync = _as_finite_float(recon.get("resync_rate"))
-    if (
-        not isinstance(n_resync, int)
-        or isinstance(n_resync, bool)
-        or not _positive_int(n_compared)
-        or resync is None
-        or resync != (n_resync / n_compared)
-    ):
-        errors.append("resync_rate_not_n_resync_over_n_compared")
-    elif (
-        isinstance(n_match, int)
-        and not isinstance(n_match, bool)
-        and n_match + n_resync != n_compared
-    ):
-        errors.append("compared_events_not_partitioned")
-    max_div = recon.get("max_divergence_len")
-    if not isinstance(max_div, int) or isinstance(max_div, bool) or max_div < 0:
-        errors.append("max_divergence_len_bad")
-    elif match_rate is not None:
-        expected = match_rate > 0.90 and max_div <= 5
-        if payload.get("engine_valid_on_emitted") is not expected:
-            errors.append("engine_valid_on_emitted_mismatch")
+    match_errors, match_rate, n_match = _lobster_match_errors(recon)
+    errors.extend(match_errors)
+    errors.extend(_lobster_resync_errors(recon, n_match))
+    errors.extend(_lobster_engine_flag_errors(payload, recon, match_rate))
     errors.extend(_forbidden_headline_errors(payload))
     return errors
 
@@ -517,6 +543,14 @@ def queue_priority_contract_errors(payload: Mapping[str, Any]) -> list[str]:
     comparison = payload.get("comparison")
     if not isinstance(arms, Mapping) or not isinstance(comparison, Mapping):
         return errors + ["arms_or_comparison_missing"]
+    errors.extend(_queue_comparison_errors(arms, comparison))
+    errors.extend(_forbidden_headline_errors(payload))
+    return errors
+
+
+def _queue_comparison_errors(arms: Mapping[str, Any], comparison: Mapping[str, Any]) -> list[str]:
+    """Each comparison headline must copy the named arm curve field."""
+    errors: list[str] = []
     pairs = (
         ("iid", "p_queue_ahead_zero_iid", "fill_curve", "p_queue_ahead_zero"),
         ("markov_regime", "p_queue_ahead_zero_markov", "fill_curve", "p_queue_ahead_zero"),
@@ -531,7 +565,6 @@ def queue_priority_contract_errors(payload: Mapping[str, Any]) -> list[str]:
         detail = block.get(field) if isinstance(block, Mapping) else None
         if not _finite_number(detail) or detail != comparison.get(headline):
             errors.append(f"comparison_mismatch:{headline}")
-    errors.extend(_forbidden_headline_errors(payload))
     return errors
 
 
@@ -560,15 +593,31 @@ def calibration_audit_drill_contract_errors(payload: Mapping[str, Any]) -> list[
     params = payload.get("params")
     if not isinstance(drill, Mapping) or not isinstance(params, Mapping):
         return errors + ["drill_or_params_missing"]
+    errors.extend(_calibration_shard_errors(payload, drill))
+    errors.extend(_calibration_size_errors(payload, drill, params))
+    errors.extend(_forbidden_headline_errors(payload))
+    return errors
+
+
+def _calibration_shard_errors(payload: Mapping[str, Any], drill: Mapping[str, Any]) -> list[str]:
+    """``data_label`` must echo the Yahoo shard the drill names."""
     shard = drill.get("shard")
     if not isinstance(shard, Mapping):
-        errors.append("shard_missing")
-    else:
-        label = payload.get("data_label")
-        if not isinstance(label, str) or not label or label != shard.get("data_label"):
-            errors.append("data_label_not_shard_label")
-        if shard.get("source") != "yahoo":
-            errors.append("shard_source_not_yahoo")
+        return ["shard_missing"]
+    errors: list[str] = []
+    label = payload.get("data_label")
+    if not isinstance(label, str) or not label or label != shard.get("data_label"):
+        errors.append("data_label_not_shard_label")
+    if shard.get("source") != "yahoo":
+        errors.append("shard_source_not_yahoo")
+    return errors
+
+
+def _calibration_size_errors(
+    payload: Mapping[str, Any], drill: Mapping[str, Any], params: Mapping[str, Any]
+) -> list[str]:
+    """Train/eval lengths, model counts, alpha, and the evidence list."""
+    errors: list[str] = []
     for key in ("n_train", "n_eval"):
         if drill.get(key) != params.get(key) or not _positive_int(drill.get(key)):
             errors.append(f"{key}_not_echoed")
@@ -578,13 +627,11 @@ def calibration_audit_drill_contract_errors(payload: Mapping[str, Any]) -> list[
     if alpha is None or not 0.0 < alpha <= 1.0:
         errors.append("alpha_not_in_unit_interval")
     evidence = payload.get("evidence")
-    if (
-        not isinstance(evidence, list)
-        or not evidence
-        or any(not isinstance(item, str) or not item for item in evidence)
-    ):
+    evidence_ok = isinstance(evidence, list) and bool(evidence)
+    if evidence_ok and any(not isinstance(item, str) or not item for item in evidence):
+        evidence_ok = False
+    if not evidence_ok:
         errors.append("evidence_bad")
-    errors.extend(_forbidden_headline_errors(payload))
     return errors
 
 
@@ -712,132 +759,6 @@ _MEASUREMENT_SCHEMAS = (
     "zone_churn.v1",
     "zone_ttl.v1",
     "zone_stability.v1",
-    "alert_budget.v1",
-    "anthropic_sdk_audit.v1",
-    "api_audit.v1",
-    "api_fuzz.v1",
-    "asof_audit.v1",
-    "attestation_audit.v1",
-    "attribution.v1",
-    "auth_audit.v1",
-    "backend_parity.v1",
-    "bank_audit.v1",
-    "boundary_audit.v1",
-    "byok_audit.v1",
-    "cache_audit.v1",
-    "cancel_gradient.v1",
-    "cancel_lead.v1",
-    "cap_audit.v1",
-    "capability_audit.v1",
-    "causality_scan.v1",
-    "cli_audit.v1",
-    "client_audit.v1",
-    "contamination_audit.v1",
-    "contract_probe.v1",
-    "corpus_audit.v1",
-    "decay_watch.v1",
-    "dip_audit.v1",
-    "dip_run_audit.v1",
-    "disclosure_audit.v1",
-    "dispatch_audit.v1",
-    "diversity.v1",
-    "doctor_audit.v1",
-    "drain_audit.v1",
-    "ds_audit.v1",
-    "duration_check.v1",
-    "e2e_audit.v1",
-    "em_audit.v1",
-    "engine_fuzz.v1",
-    "error_shape.v1",
-    "eval_core_audit.v1",
-    "eval_lifecycle_audit.v1",
-    "ext_bench_audit.v1",
-    "fault_audit.v1",
-    "fifo_priority.v1",
-    "forecast_core_audit.v1",
-    "forecast_data_audit.v1",
-    "forecast_infra_audit.v1",
-    "fx1_contract_audit.v1",
-    "fx1_tail_audit.v1",
-    "grad_fidelity.v1",
-    "harness_audit.v1",
-    "hmm_stability.v1",
-    "hmm_verify.v1",
-    "honesty_audit.v1",
-    "hypotheses_audit.v1",
-    "imbalance_predict.v1",
-    "inherit_audit.v1",
-    "initiative_fade.v1",
-    "intraday_exec.v1",
-    "jobs_audit.v1",
-    "journal_audit.v1",
-    "kill_audit.v1",
-    "label_horizon_map.v1",
-    "label_stability.v1",
-    "ledger_audit.v1",
-    "lineage_dag.v1",
-    "lob_invariants.v1",
-    "map_parity.v1",
-    "masking_audit.v1",
-    "meta_model.v1",
-    "middleware_audit.v1",
-    "modelcard_audit.v1",
-    "mrm_audit.v1",
-    "native_conformance.v1",
-    "oai_sdk_audit.v1",
-    "ops_audit.v1",
-    "options_audit.v1",
-    "parity_audit.v1",
-    "parity_leak_audit.v1",
-    "perf_audit.v1",
-    "pipeline_audit.v1",
-    "pipeline_flat_audit.v1",
-    "promotion_gate.v1",
-    "quality_audit.v1",
-    "queue_class.v1",
-    "queue_fate.v1",
-    "queue_jump.v1",
-    "queue_occupancy.v1",
-    "quota2_audit.v1",
-    "receipts_audit.v1",
-    "replay_audit.v1",
-    "report_audit.v1",
-    "retrieval_audit.v1",
-    "reward_audit.v1",
-    "rt_audit.v1",
-    "rubric_audit.v1",
-    "run_audit.v1",
-    "sbom_audit.v1",
-    "schema_drift.v1",
-    "schema_fingerprint.v1",
-    "sdk_audit.v1",
-    "seed_audit.v1",
-    "seed_sweep_demo.v1",
-    "serve_audit.v1",
-    "side_imbalance.v1",
-    "sim_sensitivity.v1",
-    "sources_audit.v1",
-    "spec_audit.v1",
-    "stack_invariance.v1",
-    "stack_watch.v1",
-    "sweep_bound.v1",
-    "sweep_width.v1",
-    "tail_quota.v1",
-    "tape_surgery.v1",
-    "timepart_audit.v1",
-    "trade_decomp.v1",
-    "train_infra_audit.v1",
-    "train_receipt_audit.v1",
-    "trust_step.v1",
-    "ts_reasoning_audit.v1",
-    "usage_audit.v1",
-    "validator_fuzz.v1",
-    "vine_audit.v1",
-    "vine_dominance.v1",
-    "vine_panel.v1",
-    "vs_audit.v1",
-    "warmup_spec.v1",
-    "webhook_audit.v1",
 )
 
 
