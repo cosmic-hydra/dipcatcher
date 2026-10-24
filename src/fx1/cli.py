@@ -5376,7 +5376,6 @@ def dipbench_demo(
     )
 
 
-
 @app.command("infer")
 def infer_cmd(
     config: Path = typer.Option(..., "--config", help="Harness YAML or JSON config."),
