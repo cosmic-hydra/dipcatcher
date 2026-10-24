@@ -766,14 +766,36 @@ _MEASUREMENT_SCHEMAS = (
 )
 
 
-def _bool_ok_errors(claim: Mapping[str, Any]) -> list[str]:
-    """``ok`` and probe counts must copy a flat bool ``results`` map."""
+# Audits whose ``ok`` is "the registered battery is present and every probe
+# is literal True". A shorter all-true map is an honest defect, not a
+# forged headline. Counts match the writers (quota2, retrieval, vs).
+_COMPLETE_PROBE_COUNTS: dict[str, int] = {
+    "quota2_audit.v1": 107,
+    "retrieval_audit.v1": 136,
+    "vs_audit.v1": 277,
+}
+
+
+def _derived_bool_ok(results: Mapping[str, Any], required_probes: int | None) -> bool:
+    """``ok`` copied from a flat bool map, plus a registered battery size."""
+    every_true = all(results.values())
+    if required_probes is None:
+        return every_true
+    return len(results) == required_probes and every_true
+
+
+def _bool_ok_errors(claim: Mapping[str, Any], *, required_probes: int | None = None) -> list[str]:
+    """``ok`` and probe counts must copy a flat bool ``results`` map.
+
+    Cardinality-gated audits pass ``required_probes``: ``ok`` is true only
+    when the map has that many probes and every value is true.
+    """
     results = claim.get("results")
     if not isinstance(results, dict) or not results or "ok" not in claim:
         return []
     if not all(isinstance(value, bool) for value in results.values()):
         return []
-    if claim.get("ok") is not all(results.values()):
+    if claim.get("ok") is not _derived_bool_ok(results, required_probes):
         return ["ok_not_all_results"]
     n_probes = claim.get("n_probes")
     if isinstance(n_probes, int) and not isinstance(n_probes, bool) and n_probes != len(results):
@@ -904,8 +926,10 @@ def audit_claim_contract_errors(payload: Mapping[str, Any]) -> list[str]:
 
     The honesty envelope still applies. On top of it, a flat boolean
     ``results`` map defines ``ok`` and the probe counts, and every count
-    field has to equal the list or map it summarizes. A string claim has
-    to be non-empty — there is no numeric detail to divide.
+    field has to equal the list or map it summarizes. Schemas in
+    ``_COMPLETE_PROBE_COUNTS`` also require that battery size: a shorter
+    all-true map keeps ``ok`` false. A string claim has to be non-empty —
+    there is no numeric detail to divide.
     """
     errors = measurement_receipt_contract_errors(payload)
     claim = payload.get("claim")
@@ -921,7 +945,9 @@ def audit_claim_contract_errors(payload: Mapping[str, Any]) -> list[str]:
     if not isinstance(claim, dict):
         errors.append("claim_unexpected_type")
         return errors
-    errors.extend(_bool_ok_errors(claim))
+    schema = payload.get("schema")
+    required = _COMPLETE_PROBE_COUNTS.get(schema) if isinstance(schema, str) else None
+    errors.extend(_bool_ok_errors(claim, required_probes=required))
     errors.extend(_len_echo_errors(claim))
     errors.extend(_share_echo_errors(claim))
     errors.extend(_status_echo_errors(claim))

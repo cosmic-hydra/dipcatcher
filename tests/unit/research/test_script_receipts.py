@@ -325,3 +325,38 @@ def test_audit_claim_forged_ok_caught() -> None:
     forged["claim"]["ok"] = not forged["claim"]["ok"]
     errors = script_receipt_contract_errors(forged["schema"], forged)
     assert "ok_not_all_results" in errors
+
+
+def _cardinality_envelope(schema: str, results: dict[str, bool], ok: bool) -> dict:
+    return {
+        "kind": schema.removesuffix(".v1"),
+        "schema": schema,
+        "git_revision": "test",
+        "data_label": "SYNTHETIC",
+        "research_only": True,
+        "claim": {"results": results, "ok": ok},
+        "receipt_sha256": "ab" * 32,
+    }
+
+
+def test_cardinality_gated_audit_accepts_short_all_true_defect() -> None:
+    """A short all-true map is a defect receipt, and a forged ok on it is not."""
+    short = _cardinality_envelope("quota2_audit.v1", {"probe": True}, False)
+    assert script_receipt_contract_errors(short["schema"], short) == []
+    forged = copy.deepcopy(short)
+    forged["claim"]["ok"] = True
+    errors = script_receipt_contract_errors(forged["schema"], forged)
+    assert "ok_not_all_results" in errors
+
+
+@pytest.mark.parametrize(
+    "name",
+    ["fx1_quota2_audit.json", "fx1_retrieval_audit.json", "fx1_vs_audit.json"],
+)
+def test_cardinality_gated_committed_receipt_rejects_flipped_ok(name: str) -> None:
+    payload = _load(name)
+    assert script_receipt_contract_errors(payload["schema"], payload) == []
+    forged = copy.deepcopy(payload)
+    forged["claim"]["ok"] = False
+    errors = script_receipt_contract_errors(forged["schema"], forged)
+    assert "ok_not_all_results" in errors
