@@ -17,6 +17,8 @@ from typing import TYPE_CHECKING, Any, NoReturn, cast
 
 import typer
 
+from fx1.cli_errors import Fx1TyperGroup
+
 if TYPE_CHECKING:
     from fx1.eval.suite import ModelFn
     from fx1.harness import HarnessRole
@@ -252,8 +254,12 @@ def _emit_anthropic_deltas(events: Iterable[Any]) -> None:
 
 
 app = typer.Typer(
+    cls=Fx1TyperGroup,
     name="fx1",
-    help="fx-1 — the quant LLM. dipcatcher is the harness that builds, evaluates, and verifies it.",
+    help=(
+        "fx-1 — the quant LLM. dipcatcher is the harness that builds, evaluates, and verifies it. "
+        "--version on any command prints the version and exits."
+    ),
     add_completion=False,
 )
 
@@ -262,7 +268,11 @@ app = typer.Typer(
 def _main(
     ctx: typer.Context,
     version: bool = typer.Option(
-        False, "--version", help="Show the fx-1 package version and exit.", is_eager=True
+        False,
+        "--version",
+        "-V",
+        help="Show the fx-1 package version and exit.",
+        is_eager=True,
     ),
 ) -> None:
     if version:

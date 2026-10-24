@@ -12,6 +12,7 @@ from pathlib import Path
 import numpy as np
 import typer
 
+from quant_fund.cli.user_errors import McEngineTyperGroup
 from quant_fund.mc_engine.benchmark import scaling_benchmark
 from quant_fund.mc_engine.engine import EngineConfig, resume_simulation, run_simulation
 from quant_fund.mc_engine.scenario import (
@@ -22,9 +23,11 @@ from quant_fund.mc_engine.scenario import (
 )
 
 app = typer.Typer(
+    cls=McEngineTyperGroup,
     help=(
         "Monte Carlo scenario risk. Research simulation only. "
-        "Does not submit orders and does not claim live profit."
+        "Does not submit orders and does not claim live profit. "
+        "--version on any command prints the version and exits."
     ),
     no_args_is_help=True,
 )
