@@ -358,8 +358,12 @@ stamp-epochs: ## Re-stamp all corpus-epoch chains + head pin after touching any 
 	  uv run dipcatcher corpus-epoch --corpus-dir "$$spec" --glob '*' --out-dir "$$spec" --heads-pin quality/epoch_heads.json || exit 1; \
 	done
 
-sign-pins: ## Ed25519-sign the integrity pins (needs GATE_SIGNING_KEY or --key-file); run LAST, after stamp-epochs
-	uv run dipcatcher sign-pins
+sign-pins: ## Ed25519-sign the integrity pins; run LAST, after stamp-epochs. gate_quorum.json → quorum-sign (GATE_QUORUM_KEYS), else sign-pins (GATE_SIGNING_KEY)
+	@if [ -e quality/gate_quorum.json ]; then \
+	  uv run dipcatcher quorum-sign; \
+	else \
+	  uv run dipcatcher sign-pins; \
+	fi
 
 anchor-pins: ## RFC 3161 timestamp-anchor both pin files via FreeTSA (network); run after sign-pins, at quiet points only — every stamp-epochs stales the anchors
 	uv run dipcatcher anchor-timestamp --file quality/epoch_heads.json
