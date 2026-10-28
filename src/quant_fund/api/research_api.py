@@ -127,6 +127,18 @@ class HealthResponse(_Model):
     claim: Literal["research_only"] = "research_only"
 
 
+class ReadyResponse(_Model):
+    """Fail-closed readiness: evidence roots must exist as directories."""
+
+    status: Literal["ready", "not_ready"]
+    service: str = "dipcatcher-research-api"
+    firm: str = __firm__
+    version: str = __version__
+    mode: Literal["read_only"] = "read_only"
+    checks: dict[str, bool]
+    claim: Literal["research_only"] = "research_only"
+
+
 class RunSummary(_Model):
     """Summary of one ``metadata/research/runs/<run_id>.json`` notebook."""
 
@@ -728,6 +740,28 @@ def create_app(settings: ResearchApiSettings | None = None) -> FastAPI:  # noqa:
             receipts_dir_present=cfg.receipts_dir.is_dir(),
             verifier_dir_present=cfg.verifier_dir.is_dir(),
             artifacts_dir_present=cfg.artifacts_dir.is_dir(),
+        )
+
+    @app.get("/ready", response_model=ReadyResponse)
+    def ready() -> ReadyResponse | JSONResponse:
+        """Readiness probe: evidence directories must be present (fail closed).
+
+        Unlike ``/health`` (always 200 while the process is up), this returns
+        503 when a configured root is missing. Auth follows the same
+        loopback-or-key gate as other non-public routes; Docker HEALTHCHECK
+        continues to use ``/health``.
+        """
+        checks = {
+            "data_root": cfg.data_root.is_dir(),
+            "receipts_dir": cfg.receipts_dir.is_dir(),
+            "verifier_dir": cfg.verifier_dir.is_dir(),
+            "artifacts_dir": cfg.artifacts_dir.is_dir(),
+        }
+        if all(checks.values()):
+            return ReadyResponse(status="ready", checks=checks)
+        return JSONResponse(
+            status_code=503,
+            content=ReadyResponse(status="not_ready", checks=checks).model_dump(),
         )
 
     @app.get("/runs", response_model=RunListResponse)
