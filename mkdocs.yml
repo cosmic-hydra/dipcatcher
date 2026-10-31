@@ -229,6 +229,7 @@ nav:
   - Operations:
       - Platform matrix: PLATFORM_MATRIX.md
       - Runbook: OPERATIONS_RUNBOOK.md
+      - Production checklist: PRODUCTION.md
       - Ultra plan — production readiness: ULTRA_PROD_READINESS.md
       - Audit ledger and observability: AUDIT_OBSERVABILITY.md
       - Paper and shadow: PAPER_SHADOW.md
