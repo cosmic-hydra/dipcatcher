@@ -2730,7 +2730,7 @@ A** and is honest about the distance to the other two.
 | Tier | What it means | Reachable by code? | Status here |
 |---|---|---|---|
 | **A — Research platform** | Internal analysts can trust a receipt: gates return verdicts, claims reproduce from one SHA, docs match code, no live claims. | **Yes** | Where this repo is working. Not yet *verified* — see the CI status note below. |
-| **B — Distributed platform** | Tier A plus signed releases, third-party security review, a real install path, and onboarding. | **Mostly** | Not reached. `git tag -l 'v*' | wc -l` → **0**: SBOM/Sigstore/SLSA are defined but never exercised. No `pip install` route exists. |
+| **B — Distributed platform** | Tier A plus signed releases, third-party security review, a real install path, and onboarding. | **Mostly** | Not reached. `git tag -l 'v*' | wc -l` → **0**: SBOM/Sigstore/SLSA are defined but never exercised. No published install route exists: `install.sh` defaults to the `v0.4.0` GitHub release asset, but no `v*` tag has been cut, so the clone-and-`uv` path in [Quick start](#quick-start) is the only working install. |
 | **C — Live trading** | Authorized licensed PIT data, authenticated broker reconciliation, venue cost measurements, a non-synthetic forward record, a signed promotion receipt. | **No** | **Blocked, and it is not a code problem.** Conditions 1 and 2 require a purchased entitlement and a broker authorization. |
 
 Tier C is gated by the five minimum-evidence conditions in
@@ -2956,6 +2956,10 @@ The FastAPI service (`dipcatcher api`, default host `127.0.0.1`):
   with a healthcheck, and CI builds the image and waits on that
   healthcheck before passing.
 
+The deploy, environment-configuration, and CI checklist lives in
+[`docs/PRODUCTION.md`](docs/PRODUCTION.md). Pin re-signing is not a
+contributor step: it needs `GATE_SIGNING_KEY` held by the key holder.
+
 Beyond the API surface, repository-wide security posture is CI-gated, not
 aspirational: a locked-dependency `pip-audit` report (`make audit`), a
 medium/high [Bandit](https://bandit.readthedocs.io/) static-analysis gate
@@ -3022,7 +3026,7 @@ third-party badge.
 | `make test-full` | Full offline lab suite, including slow tests |
 | `make parity-smoke` | SYNTHETIC backtest/shadow parity smoke (simulated broker only) |
 | `make coverage` | PR-gate tests + coverage (threshold in pyproject) |
-| `make lint` | Ruff check + format check on src/ and tests/ |
+| `make lint` | Ruff check + format check repo-wide, plus the mypy and McCabe ratchet scripts |
 | `make fmt` | Auto-fix lint + format |
 | `make typecheck` | mypy on the harness (public modules are strict; see pyproject) |
 | `make diffbacktest` | Differentiable backtest (optional JAX extra, CPU) |
@@ -3062,7 +3066,7 @@ third-party badge.
 | `make lattice-check` | CI gate: cross-receipt consistency lattice; fails on 'inconsistent' verdicts |
 | `make market-sim-test` | Matching engine and agent-market tests |
 
-Total: **45** self-documented targets — run `make help` for the live list.
+Total: **78** self-documented targets — the 45 most-used are listed here; run `make help` for the live list.
 </details>
 
 ### Continuous integration
@@ -3082,8 +3086,10 @@ Total: **45** self-documented targets — run `make help` for the live list.
 > findings, mechanism, and the remediation plan are in
 > [`docs/ULTRA_PROD_READINESS.md`](docs/ULTRA_PROD_READINESS.md) (Phase 0).
 > Until that gate returns verdicts, treat every CI-enforced claim in this
-> README as *specified but unconfirmed*. Local `make lint` is green as of
-> 2026-10-08 (`ruff check src tests` → "All checks passed!").
+> README as *specified but unconfirmed*. Local `make lint` was green when
+> last checked (2026-10-31): `uv run ruff check .` reported "All checks
+> passed!" and `uv run ruff format --check .` reported every file
+> already formatted.
 
 **22** workflow files under [`.github/workflows/`](.github/workflows/).
 CI runs the PR-gate test matrix on Python **3.12 and 3.13**; the separate
