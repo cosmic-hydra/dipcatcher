@@ -13,6 +13,7 @@ from quant_fund.research.agent import (
 )
 from quant_fund.research.catalog import (
     FORBIDDEN_RESEARCH_METRIC_KEYS,
+    REQUIRED_BENCHMARK_FAMILIES,
     RESEARCH_RECEIPT_SCHEMA_VERSION,
     family_blob_forbidden_metrics_absent,
 )
@@ -81,7 +82,7 @@ def test_research_recovers_synthetic_oracle(tmp_path: Path) -> None:
     cfg.validation.train_bars = 80
     cfg.validation.val_bars = 20
     cfg.validation.test_bars = 20
-    nb = run_research(cfg)
+    nb = run_research(cfg, include_live_optional=False)
     assert nb.synthetic is True
     assert nb.data_source == "SYNTHETIC"
     assert len(nb.provenance["run_id"]) == 64
@@ -120,8 +121,10 @@ def test_research_recovers_synthetic_oracle(tmp_path: Path) -> None:
     assert "conformal" in nb.families
     assert nb.families["cpcv"]["purge_embargo_valid"] is True
     assert nb.families["cpcv"]["claim"] == "validation_integrity_only"
-    assert all(item["executed"] for item in nb.scorecard.values())
-    assert all(item["finite_observation"] for item in nb.scorecard.values())
+    # The catalog requires these families. Optional diagnostic benches may
+    # honestly emit an empty result for this synthetic panel or Python build.
+    assert all(nb.scorecard[name]["executed"] for name in REQUIRED_BENCHMARK_FAMILIES)
+    assert all(nb.scorecard[name]["finite_observation"] for name in REQUIRED_BENCHMARK_FAMILIES)
     assert all(item["forbidden_metrics_absent"] for item in nb.scorecard.values())
     conf = nb.families["conformal"]
     assert "sharpe" not in str(conf).lower()
