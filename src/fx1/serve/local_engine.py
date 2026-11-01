@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import ipaddress
 import json
 import math
 import os
@@ -557,6 +558,12 @@ def _watch_orphan(spawner_ppid: int) -> None:
 
 def serve(engine: LocalWeightsEngine, host: str, port: int, *, watch_orphan: bool = True) -> int:
     """Serve forever on a real socket; returns 0 on a clean shutdown."""
+    try:
+        loopback = ipaddress.ip_address(host).is_loopback
+    except ValueError:
+        loopback = False
+    if not loopback:
+        raise ValueError("local weights engine must bind to a literal loopback address")
     srv = _EngineHTTPServer((host, port), _Handler)
     srv.engine = engine
     if watch_orphan:
