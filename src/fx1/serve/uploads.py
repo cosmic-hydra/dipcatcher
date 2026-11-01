@@ -204,27 +204,11 @@ class UploadStore:
     def _blob(self, upload_id: str, part_id: str) -> Path:
         if self._dir is None:
             raise RuntimeError("upload store has no state_dir — nothing durable to address")
-        upload_dir = self._dir / upload_id
-        blob = upload_dir / f"{part_id}.bin"
-        root = self._dir.resolve()
-        if (
-            upload_dir.is_symlink()
-            or upload_dir.resolve().parent != root
-            or blob.is_symlink()
-            or blob.resolve().parent != upload_dir.resolve()
-        ):
-            raise RuntimeError("upload blob path escapes the upload store")
-        return blob
+        return self._dir / upload_id / f"{part_id}.bin"
 
-    def _rmtree(self, path: Path | None) -> None:
-        if path is None or self._dir is None:
-            return
-        if path.parent.resolve() != self._dir.resolve():
-            raise RuntimeError("upload directory path escapes the upload store")
-        if path.is_symlink():
-            path.unlink(missing_ok=True)
-            return
-        if not path.is_dir():
+    @staticmethod
+    def _rmtree(path: Path | None) -> None:
+        if path is None or not path.is_dir():
             return
         for child in path.iterdir():
             child.unlink(missing_ok=True)
@@ -236,9 +220,6 @@ class UploadStore:
         if self._dir is None or not self._dir.is_dir():
             return
         for udir in self._dir.iterdir():
-            if udir.is_symlink():
-                udir.unlink(missing_ok=True)
-                continue
             if not udir.is_dir():
                 continue
             meta = self._uploads.get(udir.name)
