@@ -1208,10 +1208,11 @@ def _stream_probes() -> dict[str, bool]:
     )
     jb = client.post("/harness/jobs", json={"command": "doctor"}, headers=_h())
     jid = str(jb.json()["job_id"])
+    # A loaded executor may leave this job queued past the SSE deadline.
+    # Replay a completed job here; jobs_audit covers live transitions.
+    assert _wait_job(client, jid, timeout=60.0).get("status") in _TERMINAL_JOB
     frames: list[str] = []
     terminal_seen = False
-    # _WAIT_S, not a 3s slice: the access log stamps response start, and a
-    # loaded runner can still be queued when a short stream hits its deadline.
     with client.stream(
         "GET", f"/harness/jobs/{jid}/events", params={"timeout_s": _WAIT_S}, headers=_h()
     ) as s:
