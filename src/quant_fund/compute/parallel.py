@@ -6,15 +6,20 @@ completion order. Callers that draw random numbers must use that seed.
 Callers whose existing math is deterministic ignore it so published numbers
 stay on the original formula.
 
-Linux uses ``fork`` so workers inherit the already-imported parent. A pool
-that cannot start falls back to the calling process; task exceptions still
-propagate. Below ``min_items`` the map stays inline.
+Linux uses ``fork`` so workers inherit the already-imported parent. macOS
+and Windows use ``spawn``: ``fork`` after Objective-C or a BLAS pool is
+initialized can deadlock, and Windows has no fork. A pool that cannot start,
+or a task that cannot be pickled for spawn, falls back to the calling
+process. Task exceptions still propagate. Below ``min_items`` the map stays
+inline.
 """
 
 from __future__ import annotations
 
 import multiprocessing
 import os
+import pickle
+import sys
 from collections.abc import Callable, Sequence
 from concurrent.futures import ProcessPoolExecutor
 
@@ -37,6 +42,18 @@ def derive_seed(base_seed: int, index: int) -> int:
 def _invoke[T, R](payload: tuple[Callable[[T, int], R], int, T]) -> R:
     fn, seed, item = payload
     return fn(item, seed)
+
+
+def _process_start_method() -> str:
+    """``fork`` on Linux; ``spawn`` everywhere else.
+
+    Spawn workers re-import the callable, so it must be a module-level
+    function. ``_invoke`` is. Callables that cannot be pickled fall back
+    to the parent process inside ``process_map``.
+    """
+    if sys.platform == "linux":
+        return "fork"
+    return "spawn"
 
 
 def process_map[T, R](
@@ -63,12 +80,17 @@ def process_map[T, R](
         return _serial()
     payloads = [(fn, seed, item) for seed, item in zip(seeds, sequenced, strict=True)]
     try:
-        ctx = multiprocessing.get_context("fork")
+        ctx = multiprocessing.get_context(_process_start_method())
         pool = ProcessPoolExecutor(max_workers=workers, mp_context=ctx)
     except (OSError, ValueError):
-        # fork is unavailable, or the pool cannot be created.
+        # The start method is unavailable, or the pool cannot be created.
         return _serial()
     try:
-        return list(pool.map(_invoke, payloads))
+        try:
+            return list(pool.map(_invoke, payloads))
+        except pickle.PicklingError:
+            # Spawn cannot ship a closure or a test-local callable. The
+            # serial map is the same function of (item, seed).
+            return _serial()
     finally:
         pool.shutdown(wait=True)

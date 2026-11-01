@@ -204,6 +204,50 @@ def test_cli_fail_closed_paths_exit_nonzero(tiny_sizes, tmp_path, monkeypatch, c
     assert "error:" in capsys.readouterr().err
 
 
+def test_time_bench_caps_wide_numeric_pools(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen: dict[str, object] = {}
+
+    class _Ctx:
+        def __enter__(self) -> _Ctx:
+            seen["entered"] = True
+            return self
+
+        def __exit__(self, *args: object) -> bool:
+            seen["exited"] = True
+            return False
+
+    def fake_limits(**kwargs: object) -> _Ctx:
+        seen["limits"] = kwargs.get("limits")
+        return _Ctx()
+
+    import threadpoolctl
+
+    monkeypatch.setattr(threadpoolctl, "threadpool_info", lambda: [{"num_threads": 8}])
+    monkeypatch.setattr(threadpoolctl, "threadpool_limits", fake_limits)
+    monkeypatch.setattr(pb, "REPEATS", 1)
+    monkeypatch.setattr(pb, "_CALIBRATION_N", 8)
+    monkeypatch.setattr(pb, "_CALIBRATION_REPS", 1)
+    pb._time_bench(lambda rng, n: 0, 1, 4)
+    assert seen["limits"] == 1
+    assert seen["entered"] is True
+    assert seen["exited"] is True
+
+
+def test_time_bench_leaves_single_thread_pools_alone(monkeypatch: pytest.MonkeyPatch) -> None:
+    import threadpoolctl
+
+    def fail_limits(**kwargs: object) -> None:
+        raise AssertionError(kwargs)
+
+    monkeypatch.setattr(threadpoolctl, "threadpool_info", lambda: [{"num_threads": 1}])
+    monkeypatch.setattr(threadpoolctl, "threadpool_limits", fail_limits)
+    monkeypatch.setattr(pb, "REPEATS", 1)
+    monkeypatch.setattr(pb, "_CALIBRATION_N", 8)
+    monkeypatch.setattr(pb, "_CALIBRATION_REPS", 1)
+    best, normalized, cal = pb._time_bench(lambda rng, n: 0, 1, 4)
+    assert best > 0.0 and normalized > 0.0 and cal > 0.0
+
+
 def test_registry_and_size_hooks_stay_in_sync() -> None:
     assert set(pb.BENCHES) == set(pb.BENCH_SIZES) == set(pb.BENCH_SEEDS)
     for name, size in pb.BENCH_SIZES.items():

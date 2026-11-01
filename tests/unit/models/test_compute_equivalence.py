@@ -326,6 +326,17 @@ def test_process_map_matches_serial_seeds_and_order() -> None:
     assert parallel == serial
 
 
+def test_process_start_method_is_spawn_off_linux(monkeypatch: pytest.MonkeyPatch) -> None:
+    import quant_fund.compute.parallel as parallel
+
+    monkeypatch.setattr(parallel.sys, "platform", "darwin")
+    assert parallel._process_start_method() == "spawn"
+    monkeypatch.setattr(parallel.sys, "platform", "win32")
+    assert parallel._process_start_method() == "spawn"
+    monkeypatch.setattr(parallel.sys, "platform", "linux")
+    assert parallel._process_start_method() == "fork"
+
+
 def test_process_map_falls_back_when_fork_is_unavailable(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -333,6 +344,29 @@ def test_process_map_falls_back_when_fork_is_unavailable(
         raise ValueError("cannot find context for fork")
 
     monkeypatch.setattr("quant_fund.compute.parallel.multiprocessing.get_context", unsupported_fork)
+    items = [(i, np.ones(4)) for i in range(4)]
+    expected = [_seeded_dot(item, derive_seed(3, i)) for i, item in enumerate(items)]
+    assert process_map(_seeded_dot, items, base_seed=3, max_workers=2) == expected
+
+
+def test_process_map_falls_back_when_task_cannot_be_pickled(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    import pickle
+
+    import quant_fund.compute.parallel as parallel
+
+    class FakePool:
+        def __init__(self, *args: object, **kwargs: object) -> None:
+            pass
+
+        def map(self, fn: object, payloads: object) -> list[object]:
+            raise pickle.PicklingError("unpicklable task")
+
+        def shutdown(self, wait: bool = True) -> None:
+            return None
+
+    monkeypatch.setattr(parallel, "ProcessPoolExecutor", FakePool)
     items = [(i, np.ones(4)) for i in range(4)]
     expected = [_seeded_dot(item, derive_seed(3, i)) for i, item in enumerate(items)]
     assert process_map(_seeded_dot, items, base_seed=3, max_workers=2) == expected

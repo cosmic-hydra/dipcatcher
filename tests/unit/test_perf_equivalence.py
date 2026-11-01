@@ -291,6 +291,66 @@ def test_perf_ci_presence_requires_exact_benchmark_id(
     assert check_regression.main([str(current), str(baseline), "--ci"]) == 1
 
 
+def test_regression_ignores_matmul_that_outruns_the_bench_pack() -> None:
+    """Xeon Platinum shape: gemm slightly faster, benches moved together.
+
+    The 2026-10-30 perf job failed three benches at 1.51× because the 512
+    gemm (3.77 ms vs a 4.00 ms baseline) did not slow down with them. The
+    same tree passed the next day when the gemm slowed with the benches.
+    Factors are current/baseline medians from that job.
+    """
+    factors = [
+        1.4244,
+        1.3447,
+        1.3245,
+        1.2546,
+        1.3254,
+        1.4186,
+        1.3115,
+        1.2133,
+        1.4474,
+    ]
+    pack = sorted(factors)[len(factors) // 2]
+    cal = 3.770 / 4.004
+    assert pack / cal <= 1.50
+    for factor in factors:
+        assert check_regression._is_regression(factor, pack, cal, 0.50) is False
+
+
+def test_regression_flags_uniform_and_isolated_slowdowns() -> None:
+    assert check_regression._is_regression(2.0, 2.0, 1.0, 0.50) is True
+    assert check_regression._is_regression(2.0, 1.0, 1.0, 0.50) is True
+    assert check_regression._is_regression(1.2, 1.1, 1.0, 0.50) is False
+
+
+def test_regression_cli_passes_when_gemm_outruns_pack(tmp_path: Path) -> None:
+    def _payload(medians: dict[str, float]) -> dict[str, object]:
+        rows = [
+            {"fullname": f"tests/perf/test_benchmarks.py::{name}", "stats": {"median": median}}
+            for name, median in medians.items()
+        ]
+        return {"benchmarks": rows}
+
+    # Pack stays within 1.5× of the fast gemm; one bench's raw ratio is over.
+    matched = {
+        "test_calibration_matmul": 0.94,
+        "test_backtest[8sym-126d]": 1.30,
+        "test_security_master[8sym-20d]": 1.42,
+        "test_dip_detect[40sym-1000d]": 1.25,
+    }
+    current = tmp_path / "current.json"
+    baseline = tmp_path / "baseline.json"
+    current.write_text(json.dumps(_payload(matched)), encoding="utf-8")
+    baseline.write_text(
+        json.dumps(_payload({name: 1.0 for name in matched})),
+        encoding="utf-8",
+    )
+    assert check_regression.main([str(current), str(baseline), "--threshold", "0.50"]) == 0
+    slowed = {name: (1.0 if "calibration" in name else 2.0) for name in matched}
+    current.write_text(json.dumps(_payload(slowed)), encoding="utf-8")
+    assert check_regression.main([str(current), str(baseline), "--threshold", "0.50"]) == 1
+
+
 def test_backtest_skips_fast_path_when_overlay_artifact_exists(tmp_path: object) -> None:
     from pathlib import Path
 

@@ -87,14 +87,28 @@ def _run_once(root: Path, hashseed: str) -> Path:
     return Path(out.stdout.decode().strip())
 
 
+def _scrub_root(text: str, root: Path) -> str:
+    """Replace both the given root and its realpath.
+
+    macOS resolves ``/tmp`` and ``/var`` to ``/private/tmp`` and
+    ``/private/var``. A receipt that stores ``Path.resolve()`` would not
+    match ``str(root)`` and the two hash seeds would look divergent.
+    Longer spellings are replaced first so a prefix is not left behind.
+    """
+    variants = {str(root), str(root.resolve())}
+    for variant in sorted(variants, key=len, reverse=True):
+        text = text.replace(variant, "$ROOT")
+    return text
+
+
 def test_sim_live_receipt_is_byte_identical_across_hash_seeds(tmp_path: Path) -> None:
     root_a, root_b = tmp_path / "a", tmp_path / "b"
     path_a = _run_once(root_a, "1")
     path_b = _run_once(root_b, "2")
     # Normalizing the machine-local absolute paths (which legitimately differ
     # between run roots), the two runs must produce identical receipt content.
-    text_a = path_a.read_text(encoding="utf-8").replace(str(root_a), "$ROOT")
-    text_b = path_b.read_text(encoding="utf-8").replace(str(root_b), "$ROOT")
+    text_a = _scrub_root(path_a.read_text(encoding="utf-8"), root_a)
+    text_b = _scrub_root(path_b.read_text(encoding="utf-8"), root_b)
     obj_a, obj_b = json.loads(text_a), json.loads(text_b)
     for obj in (obj_a, obj_b):
         obj.pop("receipt_sha256", None)

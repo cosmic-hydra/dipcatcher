@@ -162,6 +162,20 @@ class WorkspaceReader(io.RawIOBase):
                 super().close()
 
 
+def _workspace_realpath(root: Path) -> Path:
+    """Collapse ancestor symlinks; do not follow the final path component.
+
+    macOS maps ``/tmp`` to ``/private/tmp`` and ``/var`` to ``/private/var``.
+    ``Path.resolve`` follows those ancestors, while ``os.path.abspath`` does
+    not, so a containment check of a resolved file against an abspath root
+    rejects every file in a pytest workspace. Keeping the final component
+    lexical still rejects a workspace directory that was swapped for a symlink.
+    """
+    absolute = Path(os.path.abspath(root))
+    parent = os.path.realpath(absolute.parent)
+    return Path(parent) / absolute.name
+
+
 @dataclass(frozen=True)
 class OperationContext:
     """Authority supplied by the host, never by model-generated arguments."""
@@ -178,7 +192,14 @@ class OperationContext:
         path = _relative_data_path(relative_path, suffixes)
         root = self.workspace_root
         resolved = (root / path).resolve(strict=True)
-        if not resolved.is_relative_to(root) or not resolved.is_file():
+        # ``root`` is abspath, not realpath, so a workspace under /tmp or
+        # /var keeps that spelling while the file realpath is /private/tmp
+        # or /private/var on macOS. Compare against the parent realpath plus
+        # the lexical final component: ancestor symlinks collapse, and
+        # replacing the workspace directory itself with a symlink still
+        # fails closed.
+        contained = _workspace_realpath(root)
+        if not resolved.is_relative_to(contained) or not resolved.is_file():
             raise ValueError("path must identify a regular file inside the workspace")
         if resolved.suffix.lower() not in suffixes:
             raise ValueError(f"file extension must be one of {suffixes}")

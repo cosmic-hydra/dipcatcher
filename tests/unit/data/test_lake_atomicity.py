@@ -164,7 +164,24 @@ def test_rename_lock_preserves_posix_case_sensitivity(tmp_path: Path) -> None:
     if os.name == "nt":
         pytest.skip("POSIX case-sensitive lock policy")
     lake = Lake(tmp_path)
-    assert lake._rename_lock(lake._resolve("silver/Bars.parquet")) is not lake._rename_lock(
+    upper = lake._rename_lock(lake._resolve("silver/Bars.parquet"))
+    lower = lake._rename_lock(lake._resolve("silver/bars.parquet"))
+    # Case-sensitive volumes keep distinct keys. Case-insensitive volumes
+    # (default APFS) must share one lock, or the two names race on one inode.
+    if lake._folds_case():
+        assert upper is lower
+    else:
+        assert upper is not lower
+
+
+def test_rename_lock_folds_case_when_volume_does(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import quant_fund.data.lake as lake_module
+
+    monkeypatch.setattr(lake_module, "_directory_folds_case", lambda directory: True)
+    lake = Lake(tmp_path)
+    assert lake._rename_lock(lake._resolve("silver/Bars.parquet")) is lake._rename_lock(
         lake._resolve("silver/bars.parquet")
     )
 

@@ -180,6 +180,33 @@ def _check_registry() -> None:
         )
 
 
+def _single_thread_numeric():
+    """Cap BLAS and OpenMP at one thread when a pool is wider than that.
+
+    The calibration workload is a single-threaded sort. ``energy_score``
+    calls ``scipy.spatial.distance.cdist``, which can sit on a multithreaded
+    BLAS. Extra cores then speed that bench up, or a noisy neighbor makes
+    the pool collapse, and the normalized ratio crosses the 1.5× gate with
+    no kernel change. Pools already at one thread are left alone, so a
+    baseline recorded under ``OMP_NUM_THREADS=1`` still matches.
+    """
+    from contextlib import nullcontext
+
+    try:
+        from threadpoolctl import threadpool_info, threadpool_limits
+    except ImportError:
+        return nullcontext()
+    wider = False
+    for info in threadpool_info():
+        threads = info.get("num_threads")
+        if isinstance(threads, int) and not isinstance(threads, bool) and threads > 1:
+            wider = True
+            break
+    if not wider:
+        return nullcontext()
+    return threadpool_limits(limits=1)
+
+
 def _time_bench(fn: BenchFn, seed: int, size: int) -> tuple[float, float, float]:
     """Time *fn* for ``REPEATS`` iterations, interleaved with calibration runs.
 
@@ -190,14 +217,15 @@ def _time_bench(fn: BenchFn, seed: int, size: int) -> tuple[float, float, float]
     timings: list[float] = []
     cal_timings: list[float] = []
     ratios: list[float] = []
-    for _ in range(REPEATS):
-        start = time.perf_counter()
-        fn(rng, size)
-        timings.append(time.perf_counter() - start)
-        start = time.perf_counter()
-        _bench_calibration(rng)
-        cal_timings.append(time.perf_counter() - start)
-        ratios.append(timings[-1] / cal_timings[-1])
+    with _single_thread_numeric():
+        for _ in range(REPEATS):
+            start = time.perf_counter()
+            fn(rng, size)
+            timings.append(time.perf_counter() - start)
+            start = time.perf_counter()
+            _bench_calibration(rng)
+            cal_timings.append(time.perf_counter() - start)
+            ratios.append(timings[-1] / cal_timings[-1])
     best = float(min(timings))
     normalized = float(statistics.median(ratios))
     cal_best = float(min(cal_timings))

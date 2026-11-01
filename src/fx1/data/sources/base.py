@@ -16,11 +16,14 @@ Honesty contract (mirrors the lab's fail-closed discipline):
 from __future__ import annotations
 
 import hashlib
+import locale
 import os
 import re
 import subprocess
+import threading
 from abc import ABC, abstractmethod
 from collections.abc import Callable
+from contextlib import suppress
 from datetime import UTC, date, datetime
 from enum import StrEnum
 from pathlib import Path
@@ -29,6 +32,43 @@ from pydantic import BaseModel, Field, field_validator
 
 MAX_OUTPUT_CHARS = 200_000
 DEFAULT_TIMEOUT_S = 120.0
+
+# glibc provides C.UTF-8. macOS rejects that name and then a child that
+# calls setlocale(LC_ALL, "") fails. Probe once, in this order.
+_UTF8_LOCALE_CANDIDATES = ("C.UTF-8", "en_US.UTF-8", "UTF-8")
+_locale_lock = threading.Lock()
+_locale_cached: str | None = None
+_locale_ready = False
+
+
+def _preferred_utf8_locale() -> str | None:
+    """A UTF-8 locale this process can activate, or None when none is installed."""
+    global _locale_cached, _locale_ready
+    if _locale_ready:
+        return _locale_cached
+    with _locale_lock:
+        if _locale_ready:
+            return _locale_cached
+        chosen: str | None = None
+        try:
+            previous = locale.setlocale(locale.LC_ALL)
+        except locale.Error:
+            previous = None
+        try:
+            for candidate in _UTF8_LOCALE_CANDIDATES:
+                try:
+                    locale.setlocale(locale.LC_ALL, candidate)
+                except locale.Error:
+                    continue
+                chosen = candidate
+                break
+        finally:
+            if previous is not None:
+                with suppress(locale.Error):
+                    locale.setlocale(locale.LC_ALL, previous)
+        _locale_cached = chosen
+        _locale_ready = True
+        return chosen
 
 
 class SourceKind(StrEnum):
@@ -148,7 +188,13 @@ def default_runner(
         for k in ("PATH", "HOME", "LANG", "LC_ALL", "PYTHONPATH")
         if k in os.environ
     }
-    env.setdefault("LANG", "C.UTF-8")
+    # UTF-8 mode does not require a glibc locale name. Set LANG only when
+    # this host actually has a UTF-8 locale; C.UTF-8 is not one of them on macOS.
+    env.setdefault("PYTHONUTF8", "1")
+    if "LANG" not in env:
+        lang = _preferred_utf8_locale()
+        if lang is not None:
+            env["LANG"] = lang
     if extra_env:
         env.update(extra_env)
     try:

@@ -88,6 +88,21 @@ def test_relative_path_accepts_case_folded_suffix() -> None:
 # ------------------------------ resolve_file ---------------------------------
 
 
+def test_resolve_file_accepts_ancestor_symlink(tmp_path: Path) -> None:
+    """``/tmp`` and ``/var`` are symlinks on macOS; files under them stay inside."""
+    real_parent = tmp_path / "private"
+    real_parent.mkdir()
+    workspace = real_parent / "work"
+    workspace.mkdir()
+    (workspace / "inside.csv").write_text("ok", encoding="utf-8")
+    link_parent = tmp_path / "var"
+    link_parent.symlink_to(real_parent, target_is_directory=True)
+    ctx = OperationContext(workspace_root=link_parent / "work")
+    found = ctx.resolve_file("inside.csv", suffixes=(".csv",))
+    assert found == (workspace / "inside.csv").resolve()
+    assert found.read_text(encoding="utf-8") == "ok"
+
+
 def test_resolve_file_rejects_symlink_escaping_workspace(
     ctx: OperationContext, tmp_path: Path
 ) -> None:

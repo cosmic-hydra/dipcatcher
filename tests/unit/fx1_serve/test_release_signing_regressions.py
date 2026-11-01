@@ -274,10 +274,18 @@ def test_oversized_manifest_is_not_published(
     assert path.read_bytes() == before
 
 
+def _descriptor_dir() -> Path | None:
+    """``/dev/fd`` exists on macOS and Linux; ``/proc/self/fd`` is Linux-only."""
+    for candidate in (Path("/dev/fd"), Path("/proc/self/fd")):
+        if candidate.is_dir():
+            return candidate
+    return None
+
+
 def test_hash_failure_closes_descriptor(checkpoint: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    proc_fds = Path("/proc/self/fd")
-    if not proc_fds.is_dir():
-        pytest.skip("descriptor-count probe requires /proc/self/fd")
+    proc_fds = _descriptor_dir()
+    if proc_fds is None:
+        pytest.skip("descriptor-count probe requires /dev/fd or /proc/self/fd")
 
     def failed_digest(*args: object, **kwargs: object) -> object:
         raise OSError("SYNTHETIC digest failure")

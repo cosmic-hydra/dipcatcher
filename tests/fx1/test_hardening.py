@@ -104,6 +104,40 @@ def test_finance_fetch_flag_args_and_bool_params():
 # --------------------------------------------------------------------------
 # Runner failure modes (base.py)
 # --------------------------------------------------------------------------
+def test_default_runner_lang_is_an_installed_utf8_locale(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Do not force glibc's C.UTF-8 on a host that rejects that locale name."""
+    import fx1.data.sources.base as base
+
+    captured: dict[str, dict[str, str]] = {}
+
+    class _Proc:
+        returncode = 0
+        stdout = ""
+        stderr = ""
+
+    def fake_run(argv: list[str], **kwargs: object) -> _Proc:
+        env = kwargs["env"]
+        assert isinstance(env, dict)
+        captured["env"] = env
+        return _Proc()
+
+    monkeypatch.setattr(base.subprocess, "run", fake_run)
+    monkeypatch.delenv("LANG", raising=False)
+    monkeypatch.delenv("LC_ALL", raising=False)
+    monkeypatch.setattr(base, "_preferred_utf8_locale", lambda: None)
+    base.default_runner(["/bin/true"], timeout_s=1)
+    assert "LANG" not in captured["env"]
+    assert captured["env"]["PYTHONUTF8"] == "1"
+
+    monkeypatch.setattr(base, "_preferred_utf8_locale", lambda: "en_US.UTF-8")
+    base.default_runner(["/bin/true"], timeout_s=1)
+    assert captured["env"]["LANG"] == "en_US.UTF-8"
+
+    monkeypatch.setattr(base, "_preferred_utf8_locale", lambda: "C.UTF-8")
+    base.default_runner(["/bin/true"], timeout_s=1)
+    assert captured["env"]["LANG"] == "C.UTF-8"
+
+
 def test_default_runner_missing_binary_is_honest():
     outcome = default_runner(["/nonexistent/fx1-binary-xyz"], timeout_s=5)
     assert outcome.returncode == 127

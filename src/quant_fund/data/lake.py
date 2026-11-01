@@ -4,11 +4,33 @@ from __future__ import annotations
 
 import os
 import threading
+from contextlib import suppress
 from pathlib import Path
 
 import polars as pl
 
 from quant_fund.config.models import AppConfig
+
+
+def _directory_folds_case(directory: Path) -> bool:
+    """True when ``directory`` treats different spellings of case as one file.
+
+    ``os.path.normcase`` folds case on Windows and leaves POSIX unchanged.
+    Default APFS is case-insensitive, so two POSIX lock keys would cover
+    one inode and concurrent writers could race.
+    """
+    token = f".dipcatcher_case_{os.getpid()}_{threading.get_ident()}"
+    probe = directory / token
+    folded = directory / token.swapcase()
+    try:
+        probe.write_bytes(b"a")
+    except OSError:
+        return False
+    try:
+        return folded.exists()
+    finally:
+        with suppress(OSError):
+            probe.unlink(missing_ok=True)
 
 
 def _fsync_dir(path: Path) -> None:
@@ -35,12 +57,23 @@ class Lake:
         # or separate Lake instances.
         self._rename_locks: dict[str, threading.Lock] = {}
         self._rename_locks_guard = threading.Lock()
+        self._case_fold: bool | None = None
+
+    def _folds_case(self) -> bool:
+        cached = self._case_fold
+        if cached is None:
+            cached = _directory_folds_case(self.root)
+            self._case_fold = cached
+        return cached
 
     def _rename_lock(self, path: Path) -> threading.Lock:
         # Use the validated destination, not the caller's spelling. normcase
-        # also folds case on Windows, while preserving POSIX case sensitivity.
+        # folds case on Windows. On a case-insensitive POSIX volume (APFS)
+        # fold here too. A case-sensitive volume keeps distinct keys.
         # Do not resolve the final symlink: os.replace replaces that entry.
         key = os.path.normcase(os.path.abspath(path))
+        if self._folds_case():
+            key = key.casefold()
         with self._rename_locks_guard:
             lock = self._rename_locks.get(key)
             if lock is None:

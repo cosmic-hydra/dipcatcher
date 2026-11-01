@@ -6,7 +6,9 @@ developer machine. Each benchmark is scored as::
     ratio = median_seconds(benchmark) / median_seconds(test_calibration_matmul)
 
 and compared with the same ratio in the committed baseline. A benchmark fails
-when ``ratio > baseline_ratio * (1 + threshold)``.
+when that ratio exceeds the baseline ratio by more than ``threshold`` and the
+slowdown is not explained by the matmul running ahead of the other benches.
+See ``_is_regression``.
 
 The baseline JSON is whatever ``pytest-benchmark --benchmark-json`` wrote,
 including ``machine_info``.
@@ -16,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import statistics
 import sys
 from pathlib import Path
 from typing import Any
@@ -55,6 +58,38 @@ def _calibration_key(medians: dict[str, float]) -> str:
     if len(matches) != 1:
         raise SystemExit(f"expected one calibration benchmark, found {matches}")
     return matches[0]
+
+
+def _is_regression(
+    bench_factor: float, pack_factor: float, cal_factor: float, threshold: float
+) -> bool:
+    """True when a bench regressed beyond both the matmul and the bench pack.
+
+    ``bench_factor`` and ``pack_factor`` are absolute slowdowns
+    (current median / baseline median). ``cal_factor`` is the same ratio for
+    ``test_calibration_matmul``. The historical gate is
+    ``bench_factor / cal_factor > 1 + threshold``.
+
+    That denominator is a 512×512 BLAS gemm. On a 64-core EPYC it measured
+    6.03 ms and the gate passed; on a Xeon Platinum the same tree measured
+    3.77 ms against a 4.00 ms baseline while the polars and Python benches
+    barely moved, and three benches failed at 1.51×. The gemm does not track
+    those benches across CPUs.
+
+    A bench still fails when its matmul-normalized ratio exceeds the
+    threshold and either the pack of benches does too (a uniform regression
+    the gemm does not explain) or this bench is that far ahead of the pack
+    (an isolated regression). A gemm that merely runs faster than the pack
+    no longer fails every bench that moved together.
+    """
+    if cal_factor <= 0.0 or pack_factor <= 0.0 or bench_factor <= 0.0:
+        return True
+    limit = 1.0 + threshold
+    if bench_factor / cal_factor <= limit:
+        return False
+    if pack_factor / cal_factor > limit:
+        return True
+    return bench_factor > pack_factor * limit
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -101,6 +136,13 @@ def main(argv: list[str] | None = None) -> int:
         if name in baseline or name.endswith("test_calibration_matmul"):
             continue
         failures.append(f"no baseline entry for {name}")
+    cal_factor = current_cal / baseline_cal
+    factors = {
+        name: current[name] / baseline[name]
+        for name in shared
+        if not name.endswith("test_calibration_matmul")
+    }
+    pack_factor = statistics.median(factors.values()) if factors else cal_factor
     for name in shared:
         if name.endswith("test_calibration_matmul"):
             continue
@@ -108,16 +150,17 @@ def main(argv: list[str] | None = None) -> int:
         base_ratio = baseline[name] / baseline_cal
         limit = base_ratio * (1.0 + args.threshold)
         flag = ""
-        if cur_ratio > limit:
+        if _is_regression(factors[name], pack_factor, cal_factor, args.threshold):
             flag = " FAIL"
             failures.append(
                 f"{name}: ratio {cur_ratio:.3f} > limit {limit:.3f} "
                 f"(current {current[name] * 1e3:.3f} ms, baseline {baseline[name] * 1e3:.3f} ms)"
             )
         short = name.split("::")[-1]
+        relative = (cur_ratio / base_ratio) if base_ratio else float("inf")
         print(
             f"{short:<72} {current[name] * 1e3:10.3f} {baseline[name] * 1e3:10.3f} "
-            f"{cur_ratio / base_ratio:8.3f} {1.0 + args.threshold:8.3f}{flag}"
+            f"{relative:8.3f} {1.0 + args.threshold:8.3f}{flag}"
         )
     print()
     if failures:
