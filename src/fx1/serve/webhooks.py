@@ -242,13 +242,14 @@ def check_callback_url(url: str | None) -> str | None:
         or parsed.password is not None
     ):
         raise ValueError(
-            "callback_url must be an http(s) URL with a host and no userinfo credentials"
+            f"callback_url must be an http(s) URL with a host and no "
+            f"userinfo credentials, got {url!r}"
         )
     try:
         if parsed.port == 0:
             raise ValueError("port zero is not a callback destination")
-    except ValueError:
-        raise ValueError("callback_url has an invalid port") from None
+    except ValueError as exc:
+        raise ValueError(f"callback_url has an invalid port, got {url!r}") from exc
     _validate_literal_host(parsed.hostname)
     return url
 
