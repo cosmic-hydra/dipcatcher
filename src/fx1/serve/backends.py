@@ -1735,10 +1735,10 @@ class LocalFx1Backend(_UsageTracker):
             return subprocess.Popen(  # noqa: S603 — argv list, no shell  # nosec B603
                 argv, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
             )
-        except OSError as exc:
-            raise RuntimeError(
-                f"failed to spawn local fx-1 engine {self._serve_cmd!r}: {exc}"
-            ) from exc
+        except OSError:
+            raise RuntimeError("failed to spawn local fx-1 engine") from OSError(
+                "engine process could not be started"
+            )
 
     def _wait_for_engine(self, proc: subprocess.Popen[bytes]) -> None:
         """Verify startup, retaining the child's exit status before cleanup."""
