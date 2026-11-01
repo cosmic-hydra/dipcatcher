@@ -900,20 +900,24 @@ def _transport_fault_probes() -> dict[str, bool]:  # NOSONAR(S3776)
     out["conn_refused_transport_error"] = (
         type(exc).__name__ == "HarnessTransportError" and time.monotonic() - t0 < 5
     )
-    with mock.patch("urllib.request.urlopen", side_effect=urllib.error.URLError("no dns")):
+    with mock.patch(
+        "urllib.request.OpenerDirector.open", side_effect=urllib.error.URLError("no dns")
+    ):
         exc = _exc(lambda: _urllib_transport("GET", "http://dead.invalid/x", None, {}, 1.0))
     out["dns_failure_transport_error"] = type(exc).__name__ == "HarnessTransportError"
-    with mock.patch("urllib.request.urlopen", side_effect=OSError("socket reset")):
+    with mock.patch("urllib.request.OpenerDirector.open", side_effect=OSError("socket reset")):
         exc = _exc(lambda: _urllib_transport("GET", _BASE, None, {}, 1.0))
     out["oserror_wrapped_transport"] = type(exc).__name__ == "HarnessTransportError"
-    with mock.patch("urllib.request.urlopen", side_effect=_http.HTTPException("broken")):
+    with mock.patch(
+        "urllib.request.OpenerDirector.open", side_effect=_http.HTTPException("broken")
+    ):
         exc = _exc(lambda: _urllib_transport("GET", _BASE, None, {}, 1.0))
     out["httpexception_wrapped_transport"] = type(exc).__name__ == "HarnessTransportError"
     # HTTPError is not a fault — it owns the refused response and
     # returns it for mapping (the wire gets a status, not an exception).
     hdrs = email.message.Message()
     http_err = urllib.error.HTTPError(_BASE, 418, "teapot", hdrs, None)
-    with mock.patch("urllib.request.urlopen", side_effect=http_err):
+    with mock.patch("urllib.request.OpenerDirector.open", side_effect=http_err):
         tr_res = _urllib_transport("GET", _BASE, None, {}, 1.0)
     out["http_error_returns_status"] = tr_res[0] == 418
 
