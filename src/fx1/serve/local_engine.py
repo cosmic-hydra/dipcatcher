@@ -59,6 +59,7 @@ EOS_ID = 257
 PAD_ID = 258
 
 _DEFAULT_HOST = "127.0.0.1"
+_MAX_REQUEST_BYTES = 1 << 20
 _DEFAULT_MAX_NEW = 48
 _ENGINE_TAG = "fx1-local-weights/1"
 
@@ -458,7 +459,27 @@ class _Handler(BaseHTTPRequestHandler):
         self.wfile.write(payload)
 
     def _read_body(self) -> dict[str, Any] | None:
-        n = int(self.headers.get("Content-Length", "0"))
+        lengths = self.headers.get_all("Content-Length", [])
+        if self.headers.get("Transfer-Encoding") is not None:
+            self.close_connection = True
+            self._respond_json(400, {"error": {"message": "transfer encoding is unsupported"}})
+            return None
+        try:
+            if len(lengths) != 1 or not lengths[0].isascii() or not lengths[0].isdigit():
+                raise ValueError("missing length")
+            n = int(lengths[0])
+        except ValueError:
+            self.close_connection = True
+            self._respond_json(400, {"error": {"message": "invalid Content-Length"}})
+            return None
+        if n < 0:
+            self.close_connection = True
+            self._respond_json(400, {"error": {"message": "invalid Content-Length"}})
+            return None
+        if n > _MAX_REQUEST_BYTES:
+            self.close_connection = True
+            self._respond_json(413, {"error": {"message": "request body too large"}})
+            return None
         try:
             body = json.loads(self.rfile.read(n) or b"{}")
         except (UnicodeDecodeError, json.JSONDecodeError):
