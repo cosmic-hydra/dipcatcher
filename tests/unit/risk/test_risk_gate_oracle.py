@@ -16,6 +16,7 @@ from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
 from quant_fund.config.loader import load_config
+from quant_fund.config.models import AppConfig
 from quant_fund.portfolio.risk_gate import check_order, exceeds_limit
 from quant_fund.risk.overlay import BookRiskOverlay
 from quant_fund.schemas.errors import RiskGateRejected
@@ -24,8 +25,17 @@ from quant_fund.schemas.orders import Order, OrderSide, OrderStatus
 _T = datetime(2024, 1, 2, tzinfo=UTC)
 
 
-def _cfg(tmp_path: Path) -> object:
-    cfg = load_config("configs/paper.yaml")
+# paper.yaml is a large inherited model. Hypothesis calls _cfg once per
+# example (hundreds of times); re-parsing YAML dominated the test. A deep
+# copy keeps each example's mutations off the shared original.
+_PAPER_CONFIG: AppConfig | None = None
+
+
+def _cfg(tmp_path: Path) -> AppConfig:
+    global _PAPER_CONFIG
+    if _PAPER_CONFIG is None:
+        _PAPER_CONFIG = load_config("configs/paper.yaml")
+    cfg = _PAPER_CONFIG.model_copy(deep=True)
     cfg.data.root = tmp_path
     return cfg
 

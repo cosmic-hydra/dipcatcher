@@ -74,11 +74,12 @@ def figarch_variance(
     omega_bar = s0 * max(1.0 - beta, 1e-6)  # unconditional anchor
     sigma2 = np.empty(n)
     sigma2[0] = s0
-    for t in range(1, n):
-        acc = omega_bar
-        for k in range(1, t + 1):
-            acc += lam[k - 1] * e2[t - k]
-        sigma2[t] = max(acc, 1e-12)
+    # sigma2[t] = omega_bar + sum_{j=0}^{t-1} lam[j] * e2[t-1-j], i.e. the
+    # length-(n-1) prefix of convolve(e2, lam). Same weights as the nested
+    # accumulation; the convolution is what QMLE evaluates hundreds of times.
+    if n > 1:
+        conv = np.convolve(e2, lam, mode="full")[: n - 1]
+        sigma2[1:] = np.maximum(omega_bar + conv, 1e-12)
     return sigma2
 
 

@@ -36,6 +36,11 @@ def _q_path(y: Array, beta: Array, spec: str, tau: float) -> Array | None:
     n = y.size
     q = np.empty(n)
     q[0] = float(np.quantile(y[: max(n // 4, 20)], tau))
+    # IG multiplies every step by the sign of the unconditional quantile.
+    # That sign does not depend on t; leaving the quantile inside the
+    # recursion repeated an O(n log n) reduction on every observation of
+    # every Powell evaluation.
+    ig_sign = np.sign(float(np.quantile(y, tau))) if spec == "ig" else 0.0
     for t in range(1, n):
         if spec == "sav":
             q[t] = beta[0] + beta[1] * q[t - 1] + beta[2] * abs(y[t - 1])
@@ -50,7 +55,7 @@ def _q_path(y: Array, beta: Array, spec: str, tau: float) -> Array | None:
             inner = beta[0] + beta[1] * q[t - 1] ** 2 + beta[2] * y[t - 1] ** 2
             if inner <= 0:
                 return None
-            q[t] = np.sign(float(np.quantile(y, tau))) * np.sqrt(inner)
+            q[t] = ig_sign * np.sqrt(inner)
         elif spec == "adaptive":
             q[t] = q[t - 1] + beta[0] / (1.0 + np.exp(10.0 * (y[t - 1] - q[t - 1])))
         else:

@@ -8,13 +8,19 @@ from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 
 from quant_fund.config.loader import load_config
+from quant_fund.config.models import AppConfig
 from quant_fund.execution.simulated_broker import RejectReason, SimulatedBroker
 from quant_fund.monitoring.kill_switch import HALT_NEW_ORDERS
 from quant_fund.schemas.orders import Order, OrderSide, OrderStatus
 
+_PAPER_CONFIG: AppConfig | None = None
 
-def _cfg(tmp_path: Path, *, max_order_notional: float = 1e12):
-    cfg = load_config("configs/paper.yaml")
+
+def _cfg(tmp_path: Path, *, max_order_notional: float = 1e12) -> AppConfig:
+    global _PAPER_CONFIG
+    if _PAPER_CONFIG is None:
+        _PAPER_CONFIG = load_config("configs/paper.yaml")
+    cfg = _PAPER_CONFIG.model_copy(deep=True)
     cfg.data.root = tmp_path
     cfg.risk_gate.max_name = 1.0
     cfg.risk_gate.max_net = 1.0

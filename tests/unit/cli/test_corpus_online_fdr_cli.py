@@ -25,6 +25,26 @@ from quant_fund.research.receipt_v2 import verify_receipt_file
 
 runner = CliRunner()
 
+
+def _error_text(text: str) -> str:
+    """Join a Rich error panel so a long temp path cannot split a phrase.
+
+    Typer wraps ``BadParameter`` to the console width. A pytest tmp path
+    under ``/tmp`` or macOS ``/private/var`` pushes ``does not exist`` onto
+    the next line, so the words are no longer contiguous in ``result.output``.
+    """
+    lines: list[str] = []
+    for line in text.splitlines():
+        stripped = line.strip()
+        if not stripped or stripped[0] in {"╭", "╰"}:
+            continue
+        if stripped.startswith("│") and stripped.endswith("│"):
+            stripped = stripped[1:-1].strip()
+        if stripped:
+            lines.append(stripped)
+    return " ".join(lines)
+
+
 CORPUS_MODULE = "quant_fund.research.corpus_inference"
 ONLINE_MODULE = "quant_fund.research.online_fdr"
 
@@ -187,7 +207,7 @@ def test_corpus_missing_dir_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatc
     _install_corpus_module(monkeypatch)
     result = runner.invoke(app, ["corpus", "--receipts-dir", str(tmp_path / "nope")])
     assert result.exit_code != 0
-    assert "does not exist" in result.output
+    assert "does not exist" in _error_text(result.output)
 
 
 def test_online_fdr_per_finding_default(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -370,4 +390,4 @@ def test_online_fdr_missing_dir_fails(tmp_path: Path, monkeypatch: pytest.Monkey
     _install_online_module(monkeypatch)
     result = runner.invoke(app, ["online-fdr", "--receipts-dir", str(tmp_path / "nope")])
     assert result.exit_code != 0
-    assert "does not exist" in result.output
+    assert "does not exist" in _error_text(result.output)
