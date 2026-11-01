@@ -111,22 +111,6 @@ class HarnessCompatError(RuntimeError):
         self.code = code
 
 
-class _RefuseRedirects(urllib.request.HTTPRedirectHandler):
-    """Never forward a harness API key to a redirect destination."""
-
-    def redirect_request(
-        self,
-        req: urllib.request.Request,
-        fp: Any,
-        code: int,
-        msg: str,
-        headers: Any,
-        newurl: str,
-    ) -> None:
-        del req, fp, code, msg, headers, newurl
-        return None
-
-
 def _urllib_transport(
     method: str,
     url: str,
@@ -144,9 +128,8 @@ def _urllib_transport(
         data = json.dumps(payload).encode()
         req_headers["Content-Type"] = "application/json"
     req = urllib.request.Request(url, data=data, headers=req_headers, method=method)
-    opener = urllib.request.build_opener(_RefuseRedirects())
     try:
-        with opener.open(req, timeout=timeout_s) as resp:  # noqa: S310 — URL is validated at construction  # nosec B310
+        with urllib.request.urlopen(req, timeout=timeout_s) as resp:  # noqa: S310 — URL is validated at construction  # nosec B310
             return resp.status, dict(resp.headers), resp.read()
     except urllib.error.HTTPError as exc:
         # HTTPError owns the rejected response/socket.  The normal ``with``
