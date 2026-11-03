@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import os
 import uuid
 from collections.abc import Mapping
@@ -427,7 +428,9 @@ class LiveDesk:
         for event in events:
             if event.event_id in self.seen:
                 continue
-            applied.append(self._apply_event(event, ts_ns))
+            result = self._apply_event(event, ts_ns)
+            self.seen.add(event.event_id)
+            applied.append(result)
             if self._integrity_frozen:
                 break
             self._save()
@@ -451,7 +454,6 @@ class LiveDesk:
         return self._envelope(flatten=reports)
 
     def _apply_event(self, event: BrokerEvent, ts_ns: int) -> dict[str, object]:
-        self.seen.add(event.event_id)
         order = self.orders.get(event.order_id)
         if order is None:
             self.orphans.append({"order_id": event.order_id, "event_id": event.event_id})
@@ -478,6 +480,19 @@ class LiveDesk:
             self._sync_order(order)
             self._journal("cancel", {"order_id": order.order_id})
             return {"event_id": event.event_id, "result": "cancel"}
+        if (
+            event.kind != "fill"
+            or any(
+                isinstance(value, bool) or not math.isfinite(value)
+                for value in (event.qty, event.price, event.fee)
+            )
+            or event.qty <= _EPS
+            or event.price <= 0.0
+            or event.fee < 0.0
+        ):
+            self._latch(f"malformed fill {event.event_id}")
+            self._journal("unapplied", {"event_id": event.event_id, "order_id": event.order_id})
+            return {"event_id": event.event_id, "result": "unapplied"}
         remaining = order.qty - order.filled_qty
         if event.qty > remaining + _EPS:
             self._latch(f"fill {event.event_id} exceeds remaining quantity")

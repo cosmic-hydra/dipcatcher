@@ -372,7 +372,9 @@ class LiveSession:
             except BrokerRejected as exc:
                 row["reason"] = str(exc)
                 self._persist()
-                return _public_order(row, venue=self.venue, replayed=False)
+                rejected = _public_order(row, venue=self.venue, replayed=False)
+                rejected["ok"] = False
+                return rejected
             self._apply_ack(row, ack, ts)
             self._persist()
             self._audit(
@@ -575,32 +577,110 @@ class LiveSession:
             return None
 
     def _apply_ack(self, row: dict[str, Any], ack: BrokerAck, ts: int) -> None:
+        client = str(row["client_order_id"])
+        if ack.client_order_id != client:
+            raise LiveGateError("broker ack client order id does not match the session order")
+        broker_id = str(row["broker_order_id"])
+        if broker_id and ack.broker_order_id != broker_id:
+            raise LiveGateError("broker ack order id does not match the session order")
+        filled = float(ack.filled_quantity)
+        quantity = float(row["quantity"])
+        if not math.isfinite(filled) or filled < 0.0 or filled > quantity + 1e-9:
+            raise LiveGateError("broker ack filled quantity is invalid")
+        if filled + 1e-9 < float(row["filled_quantity"]):
+            raise LiveGateError("broker ack filled quantity regressed")
+        if ack.fill_price is not None:
+            _positive(ack.fill_price, "broker ack fill price")
+        increments: list[BrokerFill] = []
+        for fill in ack.fills:
+            if fill.client_order_id != client:
+                raise LiveGateError("broker fill client order id does not match the ack")
+            if fill.fill_id.startswith("order:") and abs(fill.quantity - filled) > 1e-9:
+                raise LiveGateError("broker cumulative fill does not match the ack")
+            increment = self._incremental_ack_fill(fill, ts)
+            if increment is None:
+                continue
+            ledger_fill, order = self._checked_fill(increment, ts)
+            self._check_fill_capacity(ledger_fill, order)
+            increments.append(increment)
         row["broker_order_id"] = ack.broker_order_id
         status = map_broker_status(ack.status)
         row["status"] = status
-        row["filled_quantity"] = float(ack.filled_quantity)
+        row["filled_quantity"] = filled
         row["fill_price"] = ack.fill_price
         row["reason"] = ack.reason
         if status == "unmapped" and not row["reason"]:
             row["reason"] = f"unmapped broker status {ack.status}"
-        expects = ack.status in {"filled", "partially_filled"}
+        expects = bool(ack.fills) or filled > 0.0 or status in {"filled", "partially_filled"}
         row["expects_fill"] = expects
-        self.ledger.set_expects_fill(str(row["client_order_id"]), expects)
-        for fill in ack.fills:
+        self.ledger.set_expects_fill(client, expects)
+        for fill in increments:
             self._record_fill(fill, ts)
 
-    def _record_fill(self, fill: BrokerFill, ts: int) -> str:
+    def _incremental_ack_fill(self, fill: BrokerFill, ts: int) -> BrokerFill | None:
+        self._checked_fill(fill, ts)
+        if not fill.fill_id.startswith("order:"):
+            return fill
+        prior = [
+            item for item in self.ledger.fills() if item.client_order_id == fill.client_order_id
+        ]
+        previous_qty = sum(item.quantity for item in prior)
+        if fill.quantity <= previous_qty + 1e-9:
+            return None
+        increment_qty = fill.quantity - previous_qty
+        previous_cost = sum(item.quantity * item.price for item in prior)
+        increment_price = _positive(
+            (fill.quantity * fill.price - previous_cost) / increment_qty,
+            "broker incremental fill price",
+        )
+        fill_id = fill.fill_id
+        if prior:
+            fill_id = f"{fill.fill_id}:{format(float(fill.quantity), '.17g')}"
+        return BrokerFill(
+            fill_id=fill_id,
+            client_order_id=fill.client_order_id,
+            symbol=fill.symbol,
+            side=fill.side,
+            quantity=increment_qty,
+            price=increment_price,
+            fill_time_ns=fill.fill_time_ns,
+        )
+
+    def _checked_fill(self, fill: BrokerFill, ts: int) -> tuple[LedgerFill, dict[str, Any] | None]:
         if fill.side not in {"buy", "sell"}:
             raise LiveGateError("broker fill side is not buy or sell")
-        ledger_fill = LedgerFill(
+        quantity = _positive(fill.quantity, "broker fill quantity")
+        price = _positive(fill.price, "broker fill price")
+        row = self._find(fill.client_order_id)
+        if row is not None and (fill.symbol != row["symbol"] or fill.side != row["side"]):
+            raise LiveGateError("broker fill does not match the session order")
+        return LedgerFill(
             fill_id=fill.fill_id,
             client_order_id=fill.client_order_id,
             symbol=fill.symbol,
             side=fill.side,
-            quantity=fill.quantity,
-            price=fill.price,
+            quantity=quantity,
+            price=price,
             fill_time_ns=fill.fill_time_ns if fill.fill_time_ns > 0 else ts,
-        )
+        ), row
+
+    def _check_fill_capacity(
+        self, fill: LedgerFill, row: dict[str, Any] | None
+    ) -> None:
+        if row is None:
+            return
+        prior = [item for item in self.ledger.fills() if item.client_order_id == fill.client_order_id]
+        if any(item.fill_id == fill.fill_id for item in prior):
+            return
+        if not fill.fill_id.startswith("order:"):
+            prior = [item for item in prior if not item.fill_id.startswith("order:")]
+        filled = sum(item.quantity for item in prior) + fill.quantity
+        if filled > float(row["quantity"]) + 1e-9:
+            raise LiveGateError("broker fill exceeds the session order quantity")
+
+    def _record_fill(self, fill: BrokerFill, ts: int) -> str:
+        ledger_fill, row = self._checked_fill(fill, ts)
+        self._check_fill_capacity(ledger_fill, row)
         verdict = self.ledger.record_fill(ledger_fill)
         if verdict in {"duplicate_fill", "orphan_fill"}:
             return verdict

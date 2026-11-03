@@ -482,12 +482,21 @@ class AlpacaBroker:
         filled = _money(payload.get("filled_qty") or 0, "filled quantity")
         raw_price = payload.get("filled_avg_price")
         fill_price = None if raw_price in (None, "") else _money(raw_price, "average price")
+        if filled < 0.0:
+            raise BrokerRejected("broker filled quantity was negative")
+        raw_order_qty = payload.get("qty")
+        if raw_order_qty not in (None, ""):
+            order_qty = _money(raw_order_qty, "order quantity")
+            if filled > order_qty:
+                raise BrokerRejected("broker filled quantity exceeded order quantity")
         client = str(payload.get("client_order_id") or "")
         broker_id = str(payload.get("id") or "")
         symbol = str(payload.get("symbol") or "")
         side = str(payload.get("side") or "")
         fills: tuple[BrokerFill, ...] = ()
-        if status in {"filled", "partially_filled"} and filled > 0.0 and fill_price is not None:
+        if filled > 0.0:
+            if fill_price is None or fill_price <= 0.0:
+                raise BrokerRejected("broker filled quantity had no positive average price")
             when = (
                 payload.get("filled_at") or payload.get("updated_at") or payload.get("submitted_at")
             )
