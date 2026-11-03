@@ -34,8 +34,8 @@ def set_log_sink(sink: list[dict[str, Any]] | None) -> None:
 def log_event(event: str, **fields: Any) -> None:
     """Emit one JSON object. Returns immediately when observability is off.
 
-    Field names ending in ``_key``, ``_token``, or ``_secret``, and names
-    containing ``password``, are replaced with ``[redacted]``.
+    Credential-shaped field names are replaced with ``[redacted]`` recursively
+    through nested dictionaries and lists.
     """
     if not observe_enabled():
         return
@@ -47,26 +47,42 @@ def log_event(event: str, **fields: Any) -> None:
         "service": "dipcatcher",
     }
     for key, value in fields.items():
-        record[str(key)] = "[redacted]" if _secret_field(str(key)) else value
+        record[str(key)] = "[redacted]" if _secret_field(str(key)) else _redact_value(value)
     if _sink is not None:
         _sink.append(record)
         return
     sys.stderr.write(json.dumps(record, sort_keys=True, default=str) + "\n")
 
 
+def _redact_value(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {
+            str(key): "[redacted]" if _secret_field(str(key)) else _redact_value(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, (list, tuple)):
+        return [_redact_value(item) for item in value]
+    return value
+
+
 def _secret_field(key: str) -> bool:
     lowered = key.lower().replace("-", "_")
-    if "password" in lowered or lowered in {
+    normalized = "".join(char for char in lowered if char.isalnum())
+    if normalized in {
         "key",
         "token",
         "secret",
         "authorization",
         "apikey",
-        "api_key",
-        "private_key",
         "privatekey",
-        "session_key",
-        "access_token",
+        "sessionkey",
+        "accesstoken",
+        "refreshtoken",
+        "secretkey",
+        "credentials",
+        "credential",
     }:
         return True
-    return lowered.endswith(("_key", "_token", "_secret"))
+    return normalized.endswith(("token", "secret", "password")) or lowered.endswith(
+        ("_key", "_token", "_secret")
+    )
