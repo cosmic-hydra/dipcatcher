@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator
 
 from quant_fund.pretrade.config import PretradeConfig, SessionConfig, load_pretrade_config
 
@@ -24,29 +24,63 @@ class LiveConfig(BaseModel):
     starting_cash: float = Field(gt=0.0, allow_inf_nan=False)
     calendar: CalendarName = "us_rth"
     pretrade_config: str
-    state_dir: str = "data/live/default"
+    state_dir: str = Field(min_length=1)
     cash_tolerance: float = Field(default=1e-6, ge=0.0, allow_inf_nan=False)
     position_tolerance: float = Field(default=1e-6, ge=0.0, allow_inf_nan=False)
 
+    @field_validator("state_dir")
+    @classmethod
+    def _state_dir_is_not_blank(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("state_dir must not be blank")
+        return value
+
+
+def _safe_validation_error(exc: ValidationError) -> ValueError:
+    details: list[str] = []
+    errors = exc.errors(include_url=False, include_context=False, include_input=False)
+    for error in errors[:8]:
+        location = error["loc"]
+        if error["type"] == "extra_forbidden":
+            detail = "extra keys are not permitted"
+        elif (
+            len(location) == 1
+            and isinstance(location[0], str)
+            and location[0] in LiveConfig.model_fields
+        ):
+            detail = f"{location[0]}: {error['msg']}"
+        else:
+            continue
+        if detail not in details:
+            details.append(detail)
+    message = "live config validation failed"
+    if details:
+        message = f"{message}: {'; '.join(details)}"
+    return ValueError(message[:512])
+
 
 def load_live_config(path: str | Path) -> LiveConfig:
-    """Load YAML and reject unknown keys, versions, and non-finite limits."""
+    """Load YAML without reflecting configuration content in errors."""
     text = Path(path).read_text(encoding="utf-8")
-    raw = yaml.safe_load(text)
+    try:
+        raw = yaml.safe_load(text)
+    except yaml.YAMLError:
+        raise ValueError("live config contains invalid YAML") from None
     if not isinstance(raw, dict):
         raise ValueError("live config must be a YAML mapping")
-    return LiveConfig.model_validate(raw)
+    try:
+        return LiveConfig.model_validate(raw)
+    except ValidationError as exc:
+        raise _safe_validation_error(exc) from None
 
 
 def resolve_pretrade_path(config: LiveConfig, config_path: str | Path) -> Path:
-    """Resolve the pre-trade file from the working directory, then beside the live file."""
+    """Resolve and validate the pre-trade file relative to the live config file."""
     raw = Path(config.pretrade_config)
-    if raw.is_absolute():
-        return raw
-    from_cwd = Path.cwd() / raw
-    if from_cwd.exists():
-        return from_cwd
-    return Path(config_path).resolve().parent / raw
+    path = raw if raw.is_absolute() else Path(config_path).resolve().parent / raw
+    if not path.is_file():
+        raise ValueError("pretrade config path must be an existing file")
+    return path
 
 
 def load_gateway_pretrade(

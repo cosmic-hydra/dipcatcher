@@ -8,7 +8,7 @@ schema_version: 1
 venue: loopback
 starting_cash: 100000
 calendar: us_rth
-pretrade_config: configs/pretrade_risk.yaml
+pretrade_config: pretrade_risk.yaml
 state_dir: data/live/default
 cash_tolerance: 0.01
 position_tolerance: 0.000000001

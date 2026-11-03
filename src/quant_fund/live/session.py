@@ -1018,13 +1018,13 @@ def open_session(
     transport: Any = None,
 ) -> LiveSession:
     """Open or create the session directory for ``config``."""
+    if broker is None:
+        broker = _default_broker(config, transport=transport)
     root = Path(state_dir) if state_dir is not None else Path(config.state_dir)
     root.mkdir(parents=True, exist_ok=True)
     key = load_hmac_key(root / "hmac.key")
     pretrade, digest, _signature = load_gateway_pretrade(config, config_path, hmac_key=key)
     clock = now_ns or _wall_ns
-    if broker is None:
-        broker = _default_broker(config, transport=transport)
     return LiveSession(
         config,
         state_dir=root,
@@ -1038,7 +1038,10 @@ def open_session(
 def _default_broker(config: LiveConfig, *, transport: Any) -> Broker:
     if config.venue == "loopback":
         return LoopbackBroker(cash=float(config.starting_cash))
-    return AlpacaBroker(config.venue, alpaca_credentials(), transport=transport)
+    credentials = alpaca_credentials()
+    if credentials is None:
+        raise LiveGateError("broker credentials are not set")
+    return AlpacaBroker(config.venue, credentials, transport=transport)
 
 
 def _hmac_for_engine(state_dir: Path) -> bytes:

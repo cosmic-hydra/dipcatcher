@@ -219,21 +219,14 @@ def test_alpaca_live_requires_the_phrase_and_refuses_a_backdated_clock(
     monkeypatch.delenv("ALPACA_API_SECRET_KEY", raising=False)
     monkeypatch.delenv("APCA_API_KEY_ID", raising=False)
     monkeypatch.delenv("APCA_API_SECRET_KEY", raising=False)
+    monkeypatch.setenv("ALPACA_API_KEY_ID", "synthetic-key-id")
+    monkeypatch.setenv("ALPACA_API_SECRET_KEY", "synthetic-secret")
     session = _open(tmp_path, venue="alpaca-live")
     with pytest.raises(LiveGateError, match="confirm-live-capital"):
         session.arm(actor="ada", confirm_live_capital="please")
     session.arm(actor="ada", confirm_live_capital=LIVE_CAPITAL_PHRASE)
     with pytest.raises(LiveGateError, match="refused for alpaca-live"):
         _buy(session, quantity=1.0)
-    with pytest.raises(LiveGateError, match="credentials"):
-        session.submit(
-            symbol="AAPL",
-            side="buy",
-            quantity=1.0,
-            limit_price=100.0,
-            mark=100.0,
-            actor="ada",
-        )
 
 
 def test_alpaca_paper_posts_only_to_the_paper_host(tmp_path: Path) -> None:

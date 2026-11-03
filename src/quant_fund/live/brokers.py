@@ -120,18 +120,30 @@ class Broker(Protocol):
 
 
 def alpaca_credentials() -> tuple[str, str] | None:
-    """Read Alpaca keys from the environment. Both names Alpaca documents are accepted."""
-    key = os.environ.get("ALPACA_API_KEY_ID") or os.environ.get("APCA_API_KEY_ID") or ""
-    secret = os.environ.get("ALPACA_API_SECRET_KEY") or os.environ.get("APCA_API_SECRET_KEY") or ""
-    key = key.strip()
-    secret = secret.strip()
-    if not key and not secret:
+    """Read one consistent pair; identical stripped duplicates in both namespaces are allowed."""
+    namespaces = (
+        ("ALPACA_API_KEY_ID", "ALPACA_API_SECRET_KEY"),
+        ("APCA_API_KEY_ID", "APCA_API_SECRET_KEY"),
+    )
+    pairs = [
+        (os.environ.get(key_name, "").strip(), os.environ.get(secret_name, "").strip())
+        for key_name, secret_name in namespaces
+    ]
+    if not any(key or secret for key, secret in pairs):
         return None
-    if not key or not secret or len(key) > 200 or len(secret) > 200:
-        raise LiveGateError("broker credentials are incomplete")
-    if any(char in key or char in secret for char in "\r\n\x00"):
-        raise LiveGateError("broker credentials are malformed")
-    return key, secret
+
+    complete_pairs: list[tuple[str, str]] = []
+    for key, secret in pairs:
+        if not key and not secret:
+            continue
+        if not key or not secret or len(key) > 200 or len(secret) > 200:
+            raise LiveGateError("broker credentials are incomplete")
+        if any(char in key or char in secret for char in "\r\n\x00"):
+            raise LiveGateError("broker credentials are malformed")
+        complete_pairs.append((key, secret))
+    if len(set(complete_pairs)) > 1:
+        raise LiveGateError("broker credentials conflict across namespaces")
+    return complete_pairs[0]
 
 
 def urllib_transport(
