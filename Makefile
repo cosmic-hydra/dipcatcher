@@ -394,8 +394,10 @@ lattice-check: ## CI gate: cross-receipt consistency lattice; fails on 'inconsis
 		--known-inconsistent quality/lattice_known_inconsistent.json \
 		--out-dir "$${RUNNER_TEMP:-/tmp}/lattice"
 
+# --timeout bounds each lane, not the verdict: bytes must still match. The
+# mcs_vol lane alone runs ~130 s on a 4-vCPU box, past the 120 s default.
 replay-sweep: ## CI gate: replay every replayable carrier; fail on divergence or all-skip
-	uv run dipcatcher replay-all --strict \
+	uv run dipcatcher replay-all --strict --timeout 300 \
 		--out "$${RUNNER_TEMP:-/tmp}/replay_coverage.json"
 
 ADMISSION_BASE ?= origin/main
