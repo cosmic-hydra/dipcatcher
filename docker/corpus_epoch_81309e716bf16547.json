@@ -1,0 +1,62 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "d00a0fad0533af5e2b90c62f44ddf5a17c76745833e628ab4dc99c20ced73ecf",
+  "inputs_sha256": "548edc443b69522bbd22cbe60f718858a1e2fa28b8d5ef3494394e0badf90c8a",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "5574f2f6bfa7d599f616579e6bd7706ec7de16909caf7e6b64ee872c10408e0a",
+  "members": [
+    {
+      "name": "corpus_epoch_11e383b7e55891b3.json",
+      "sha256": "5f4714ec0e0428a7e5902c67ae23236f50ea4b1d7ca6d592ded45a268f963d8a"
+    },
+    {
+      "name": "corpus_epoch_7a73f2e29e6fa074.json",
+      "sha256": "6b81b06c0481ef619141270b087fb51ea8e20841ef39f8edbefefc94c83c0195"
+    },
+    {
+      "name": "corpus_epoch_7c6505e4a08cfae2.json",
+      "sha256": "a172f4f6ff0479d17c1083bd0345615a86d0eeecd40d5778874b9792b9cb6503"
+    },
+    {
+      "name": "corpus_epoch_7fe42e9850974d16.json",
+      "sha256": "64ac1df309967bdd383c48c3e088926d9743eb4305fd1ddf03b93b89f00d2a18"
+    },
+    {
+      "name": "corpus_epoch_d0f02ae81847cd75.json",
+      "sha256": "c7e1e6071b6907bf6f5de1b94585866df77872724b336d1a5213be168ff87094"
+    },
+    {
+      "name": "corpus_epoch_d2b64dd55c2a67a8.json",
+      "sha256": "aa2d84ab4002259798efcf3bb8eacb911d272dceb81513ca25d5b37321045ab0"
+    },
+    {
+      "name": "corpus_epoch_e4020fed5b8b9224.json",
+      "sha256": "3ea1b2b3dc00f3d0aa6e7faaa7af3a81336b85917c4667b8f76c4aec00da8426"
+    },
+    {
+      "name": "corpus_epoch_f3099353b8aa10b3.json",
+      "sha256": "fb5533d27c8af7499440a15f3b0b72c2413a99c1ac65307298188b44f64b392f"
+    },
+    {
+      "name": "research-api.Dockerfile",
+      "sha256": "c7538d4e7e420d30affea0ae501e950b8fba24ba99e51a9878db078ef129b9d7"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_d0f02ae81847cd75.json"
+  ],
+  "members_removed": [],
+  "n_members": 9,
+  "params": {
+    "head_sha": "1df495b0872a2bf1afa726ad825f260a52a87937",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_d0f02ae81847cd75.json",
+  "prev_epoch_sha256": "530586baaf79000c2f212d7834b87c6bf9f0bb7032059bfdcee6fdb96b770d05",
+  "receipt_sha256": "81309e716bf165478026a9f454a3ea0882cba95561289e8ecc1e8976fdd36fff",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

@@ -58,7 +58,7 @@
     "src/quant_fund/research/gate_signatures.py": "d9c7bdab3bcd27667763f14594a7199fa3ef83a5cb877c9594aa66ad5e1fe14d",
     "src/quant_fund/research/integrity_checkpoint.py": "8ae2c64e2aeccd4bc0782fc1fb7296936b4588ec58cb53ffcedc16045a61687b",
     "src/quant_fund/research/integrity_witness.py": "85586dd844821086be097e8be69effd16e6480e649de4ab0d83381e8d2646e08",
-    "src/quant_fund/research/key_reset.py": "485835f8860f5ee0be12becb4f0414b99225b14dcb315a085ff068922c1e2886",
+    "src/quant_fund/research/key_reset.py": "c3f73055c1998efab83d8e2dd85359ac13c59c95f9e7fb98aa689339bab1cc47",
     "src/quant_fund/research/key_rotation.py": "226d56faaa8ca02e785fd43e36801f710b94561e8226820f35a342ce4717aad2",
     "src/quant_fund/research/lane_contracts.py": "bc7b2f14ac6f606e81545f83a4c683d8294809168d80b0aa03b9f1eaec42e1c8",
     "src/quant_fund/research/ots_anchor.py": "7e9e2c10a47c3e71664e1e352034036336f9b5b31f49ab7d7f0be1cd8d432ac6",
