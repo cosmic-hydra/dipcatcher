@@ -283,7 +283,9 @@ def test_research_receipt_records_runtime_fingerprint(
     cfg.universe.min_history_bars = 10
     # Only the runtime provenance is asserted; the live-optional benches are
     # covered by test_research_recovers_synthetic_oracle's scorecard.
-    monkeypatch.setattr("quant_fund.research.agent._live_optional_family_blobs", lambda **_kw: {})
+    monkeypatch.setattr(
+        "quant_fund.research.live_optional_pool._live_optional_family_blobs", lambda **_kw: {}
+    )
     nb = run_research(cfg)
 
     runtime = nb.provenance["runtime"]

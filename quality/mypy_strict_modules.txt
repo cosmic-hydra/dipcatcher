@@ -769,6 +769,7 @@ src/quant_fund/research/forward_evidence.py
 src/quant_fund/research/forward_shadow.py
 src/quant_fund/research/garch_benchmark.py
 src/quant_fund/research/identity_sweep.py
+src/quant_fund/research/live_optional_pool.py
 src/quant_fund/research/mean_eprocess.py
 src/quant_fund/research/net_replay.py
 src/quant_fund/research/net_tournament.py

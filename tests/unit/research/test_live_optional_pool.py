@@ -10,7 +10,8 @@ import json
 
 import pytest
 
-from quant_fund.research.agent import _live_optional_benches, _run_live_optional
+from quant_fund.research.agent import _live_optional_benches
+from quant_fund.research.live_optional_pool import _run_live_optional
 
 _CHEAP = ("rough_paths", "distributional_ml", "leakage_redteam")
 

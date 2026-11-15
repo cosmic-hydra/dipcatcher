@@ -15,7 +15,7 @@ import json
 import os
 import platform
 import sys
-from collections.abc import Callable, Sequence
+from collections.abc import Callable
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from importlib.metadata import PackageNotFoundError, version
@@ -2363,6 +2363,7 @@ from quant_fund.research.catalog import (
     tail_es_battery_keys_present,
     tail_var_battery_keys_present,
 )
+from quant_fund.research.live_optional_pool import _merge_live_optional
 from quant_fund.utils.hashing import canonical_frame_fingerprint, hash_bytes, hash_file
 from quant_fund.utils.reproducibility import git_revision, git_worktree_sha256
 from quant_fund.utils.seeds import set_global_seed
@@ -5613,81 +5614,10 @@ def _live_optional_benches() -> dict[str, Callable[[], Any]]:
     }
 
 
-def _run_live_optional_bench(name: str, seed: int) -> Any:
-    """Run one live-optional bench from freshly seeded process RNGs.
-
-    Reseeding per bench makes a blob independent of whatever ran before it in
-    the same process, which is what lets ``jobs`` reorder the benches.
-    """
-    set_global_seed(seed)
-    return _live_optional_benches()[name]()
-
-
-def _live_optional_worker_init(seed: int) -> None:
-    """One BLAS / OpenMP / torch thread per pool worker: the pool is the parallelism.
-
-    The env vars cover libraries a bench loads later; ``threadpool_limits``
-    covers the ones already loaded (including torch, imported by the seeding).
-    """
-    from threadpoolctl import threadpool_limits
-
-    for var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS"):
-        os.environ[var] = "1"
-    set_global_seed(seed)
-    threadpool_limits(limits=1)
-
-
-def _run_live_optional(names: Sequence[str], *, jobs: int, seed: int) -> dict[str, Any]:
-    """Run the named live-optional benches over ``jobs`` processes; blobs in ``names`` order.
-
-    ``jobs > 1`` uses a spawn-context pool (not fork: the parent may already
-    hold BLAS / torch thread pools). A failing bench still raises.
-    """
-    if jobs <= 1:
-        return {name: _run_live_optional_bench(name, seed) for name in names}
-    import multiprocessing
-    from concurrent.futures import ProcessPoolExecutor
-    from itertools import repeat
-
-    with ProcessPoolExecutor(
-        max_workers=min(jobs, max(len(names), 1)),
-        mp_context=multiprocessing.get_context("spawn"),
-        initializer=_live_optional_worker_init,
-        initargs=(seed,),
-    ) as pool:
-        blobs = list(pool.map(_run_live_optional_bench, names, repeat(seed)))
-    return dict(zip(names, blobs, strict=True))
-
-
-def _live_optional_family_blobs(*, jobs: int = 1, seed: int = 0) -> dict[str, Any]:
-    """Seeded live-optional benches. Default ``run_research`` still runs them.
-
-    Every bench starts from ``seed``, so ``jobs`` changes the wall clock, not a
-    blob (tests/unit/research/test_live_optional_pool.py), and the parent is
-    reseeded afterwards so the steps that follow see one RNG state for any
-    ``jobs``.
-    """
-    blobs = _run_live_optional(tuple(_live_optional_benches()), jobs=jobs, seed=seed)
-    set_global_seed(seed)
-    return blobs
-
-
-def _merge_live_optional(
-    families: dict[str, Any], *, include: bool, jobs: int = 1, seed: int = 0
-) -> None:
-    if include:
-        families.update(_live_optional_family_blobs(jobs=jobs, seed=seed))
-
-
 def run_research(
     config: AppConfig, *, include_live_optional: bool = True, jobs: int = 1
 ) -> ResearchNotebook:
-    """Run every research family and write the immutable notebook receipt.
-
-    ``jobs`` only schedules the seeded live-optional benches over that many
-    worker processes; the families, scorecard, and receipt contract are the
-    same for any value.
-    """
+    """Run every research family; ``jobs`` only schedules the live-optional benches."""
     set_global_seed(config.train.random_seed)
     build_gold(config, refresh=config.data.source == "synthetic")
     df = panel(config)
@@ -5761,12 +5691,7 @@ def run_research(
         "roughness": bench_roughness(df),
         "serial_randomness": bench_serial_randomness(df),
     }
-    _merge_live_optional(
-        families,
-        include=include_live_optional,
-        jobs=jobs,
-        seed=config.train.random_seed,
-    )
+    _merge_live_optional(families, include_live_optional, jobs, config)
 
     hyps = _build_hypotheses(families, rankers)
     scorecard = _benchmark_scorecard(families)

@@ -35,7 +35,9 @@ def test_research_cli_echoes_every_session_receipt_key(monkeypatch: pytest.Monke
     # Only the northset family's echo is asserted here. The 1400+ seeded
     # live-optional benches it would otherwise run are covered, family by
     # family, by test_research_agent's scorecard assertions and the CI smoke.
-    monkeypatch.setattr("quant_fund.research.agent._live_optional_family_blobs", lambda **_kw: {})
+    monkeypatch.setattr(
+        "quant_fund.research.live_optional_pool._live_optional_family_blobs", lambda **_kw: {}
+    )
     result = CliRunner().invoke(app, ["research", "--config", str(config)])
     # research may be slower / exit non-zero on soft fails — require session keys if northset family printed
     if "northset " not in result.output and "mean_session_" not in result.output:
