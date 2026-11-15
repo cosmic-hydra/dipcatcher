@@ -58,6 +58,7 @@ def test_build_bundle_contains_all_members(tmp_path: Path) -> None:
                 "quality/witness/",
                 "quality/rotation_",
                 "quality/quorum_rotations/",
+                "quality/key_reset_",
             )
         )
     }

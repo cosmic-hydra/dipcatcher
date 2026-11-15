@@ -69,6 +69,9 @@ SPINE_PREFIXES: tuple[str, ...] = (
     # them a post-rotation bundle fails era signature resolution, and a
     # swapped registry can't be told apart from an authorized rotation.
     "quality/quorum_rotations/",
+    # Key-reset records: the one sanctioned break in key custody. Without
+    # them a post-reset bundle cannot resolve the lost era's keys.
+    "quality/key_reset_",
 )
 
 
@@ -117,6 +120,8 @@ def build_bundle(root: str | Path, out: str | Path) -> Path:
         members.append(f"quality/{sub.name}")
     for sub in sorted((root_path / "quality/quorum_rotations").glob("rotation_*.json")):
         members.append(f"quality/quorum_rotations/{sub.name}")
+    for sub in sorted(root_path.glob("quality/key_reset_*.json")):
+        members.append(f"quality/{sub.name}")
     files = {rel: base64.b64encode((root_path / rel).read_bytes()).decode() for rel in members}
     bundle = {
         "schema": BUNDLE_SCHEMA,
@@ -288,7 +293,11 @@ def verify_bundle(
             for e in rot.get("errors", []):
                 errors.append(f"rotation:{e}")
 
-            quorum_rot_rels = [r for r in decoded if r.startswith("quality/quorum_rotations/")]
+            quorum_rot_rels = [
+                r
+                for r in decoded
+                if r.startswith(("quality/quorum_rotations/", "quality/key_reset_"))
+            ]
             if quorum_rot_rels:
                 from quant_fund.research.quorum_rotation import verify_quorum_rotations
 

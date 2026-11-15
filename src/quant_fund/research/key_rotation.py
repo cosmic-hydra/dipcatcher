@@ -19,6 +19,12 @@ The verifier exports ``load_keyring``: every key that was ever authorized
 (genesis + each rotation), so ``checkpoint_spine`` can verify records signed
 by retired keys instead of rejecting them under the live pubkey.
 
+Key resets (``key_reset``) are the one exception to "the old key signs the
+new": when the outgoing key is lost, a verified reset record joins the chain
+as a link of kind ``reset``, its boundary checkpoint anchors the lost key,
+and the verdict says ``reset`` instead of ``intact`` so the custody break is
+never silent.
+
 Provenance evidence only; never a market or P&L claim.
 """
 
@@ -119,11 +125,61 @@ def load_keyring(root: str | Path) -> dict[str, str]:
             pub = str(payload.get(key, ""))
             if pub:
                 ring.setdefault(_key_id(pub), pub)
+    from quant_fund.research.key_reset import gate_keys, load_resets
+
+    for kid, pub in gate_keys(load_resets(root_path)).items():
+        ring.setdefault(kid, pub)
     return ring
 
 
+def _genesis_anchor(
+    root_path: Path,
+    genesis_pub: str,
+    resets: list[dict[str, Any]],
+    errors: list[str],
+    notes: list[str],
+) -> None:
+    """The first outgoing key must have signed a spine member — or, when it
+    is a reset's lost key, the boundary checkpoint that reset embeds."""
+    from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+
+    from quant_fund.research.checkpoint_chain import collect_spine_records
+    from quant_fund.research.key_reset import boundary_anchors_gate, signed_by
+
+    anchored = False
+    try:
+        Ed25519PublicKey.from_public_bytes(bytes.fromhex(genesis_pub))
+        records = collect_spine_records(root_path)
+        anchored = any(
+            rec.get("payload") is not None and signed_by(rec.get("body"), genesis_pub)
+            for rec in records.values()
+        ) or boundary_anchors_gate(resets, genesis_pub)
+    except ValueError:
+        errors.append("genesis_pubkey_malformed")
+    if anchored:
+        return
+    if root_path.joinpath("quality/checkpoint.json").is_file() or any(
+        root_path.glob("quality/checkpoints/*.json")
+    ):
+        errors.append("unanchored_genesis")
+    else:
+        notes.append("no_spine_anchor_available")
+
+
 def verify_rotations(root: str | Path = ".") -> dict[str, Any]:
-    """Verify the rotation chain: dual signatures, links, genesis anchor."""
+    """Verify the rotation chain: dual signatures, links, genesis anchor.
+
+    Verified key resets join the chain as ``reset`` links; their authority is
+    the reset record (boundary under the lost key, possession under the new),
+    not an outgoing-key signature. Invalid reset records are errors.
+    """
+    from quant_fund.research.key_reset import (
+        gate_links,
+        lineage_verdict,
+        load_resets,
+        reset_record_errors,
+    )
+
     root_path = Path(root)
     errors: list[str] = []
     notes: list[str] = []
@@ -138,12 +194,17 @@ def verify_rotations(root: str | Path = ".") -> dict[str, Any]:
         errors.append(f"rotation_malformed:{malformed}")
     for rec in recs:
         _verify_dual_signatures(rec, errors, "rotation")
+    n_rotations = len(recs)
+    resets = load_resets(root_path)
+    errors.extend(reset_record_errors(resets))
+    recs.extend(gate_links(resets))
 
     if not recs:
         return {
             "ok": not errors,
             "verdict": "no_rotations",
             "n_rotations": 0,
+            "n_resets": 0,
             "current_key_id": _key_id(_live_pubkey_hex(root_path) or ""),
             "lineage": [],
             "errors": errors,
@@ -181,6 +242,7 @@ def verify_rotations(root: str | Path = ".") -> dict[str, Any]:
             lineage.append(
                 {
                     "file": cur["file"],
+                    "kind": cur.get("kind", "rotation"),
                     "at": payload.get("at"),
                     "old_key_id": _key_id(old_pub),
                     "new_key_id": _key_id(new_pub),
@@ -202,48 +264,13 @@ def verify_rotations(root: str | Path = ".") -> dict[str, Any]:
 
     # Genesis anchor: the first outgoing key must have signed a spine member.
     if genesis_pub:
-        from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
-
-        anchored = False
-        try:
-            from quant_fund.research.checkpoint_chain import collect_spine_records
-
-            records = collect_spine_records(root_path)
-            pub = Ed25519PublicKey.from_public_bytes(bytes.fromhex(genesis_pub))
-            for rec in records.values():
-                body, payload = rec.get("body") or {}, rec.get("payload")
-                if payload is None:
-                    continue
-                sigs = [body.get("signature")]
-                extra = body.get("signatures")
-                if isinstance(extra, list):
-                    sigs.extend(s.get("signature") for s in extra if isinstance(s, dict))
-                for sig in sigs:
-                    try:
-                        pub.verify(
-                            bytes.fromhex(str(sig)),
-                            canonical_json_bytes(payload),
-                        )
-                        anchored = True
-                        break
-                    except Exception:  # noqa: BLE001 — sig miss means try next record
-                        continue
-                if anchored:
-                    break
-        except ValueError:
-            errors.append("genesis_pubkey_malformed")
-        if not anchored:
-            if root_path.joinpath("quality/checkpoint.json").is_file() or any(
-                root_path.glob("quality/checkpoints/*.json")
-            ):
-                errors.append("unanchored_genesis")
-            else:
-                notes.append("no_spine_anchor_available")
+        _genesis_anchor(root_path, genesis_pub, resets, errors, notes)
 
     return {
         "ok": not errors,
-        "verdict": "intact" if not errors else "broken",
-        "n_rotations": len(recs),
+        "verdict": lineage_verdict(errors, len(recs) - n_rotations),
+        "n_rotations": n_rotations,
+        "n_resets": len(recs) - n_rotations,
         "current_key_id": _key_id(terminus_pub or live or ""),
         "genesis_key_id": _key_id(genesis_pub) if genesis_pub else None,
         "lineage": lineage,
@@ -299,12 +326,16 @@ def rotation_contract_errors(payload: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     if payload.get("ok") and payload.get("errors"):
         errors.append("ok_with_errors")
-    if payload.get("verdict") == "intact" and not payload.get("ok"):
-        errors.append("intact_not_ok")
-    if payload.get("verdict") == "no_rotations" and payload.get("n_rotations"):
+    verdict = payload.get("verdict")
+    if verdict in ("intact", "reset") and not payload.get("ok"):
+        errors.append(f"{verdict}_not_ok")
+    if verdict == "no_rotations" and payload.get("n_rotations"):
         errors.append("no_rotations_with_records")
-    if payload.get("verdict") == "intact" and len(payload.get("lineage") or []) != payload.get(
-        "n_rotations"
-    ):
+    n_links = payload.get("n_rotations")
+    if isinstance(n_links, int):
+        n_links += int(payload.get("n_resets") or 0)
+    if verdict in ("intact", "reset") and len(payload.get("lineage") or []) != n_links:
         errors.append("lineage_length_mismatch")
+    if verdict == "reset" and not payload.get("n_resets"):
+        errors.append("reset_without_records")
     return errors

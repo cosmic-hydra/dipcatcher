@@ -227,6 +227,42 @@ integrity pins and the checkpoint. Authorized rotation, in order:
    genesis, live key is the chain terminus.
 5. `make checkpoint-chain` — the full spine must still walk cleanly.
 
+**Lost keys: reset, never swap.** A rotation needs the outgoing key. If no
+one can sign with it any more (never escrowed, destroyed, generated in an
+environment that is gone), record a key reset instead — a `key_reset.v1`
+file every verifier reports. The Lead authorizes it; do it in one PR:
+
+1. Generate the new Ed25519 gate key (and, if the witness key is lost too, a
+   new ECDSA P-256 witness key) on a machine you control. Store the private
+   keys in a password manager or HSM; never commit them or paste them into
+   CI logs. Key files for `--key-file` are `<priv_hex>:<pub_hex>`.
+2. `dipcatcher key-reset --key-file <new gate key> [--key-file <more> --threshold M]
+   [--witness-pub <new witness pub.pem>] --reason "<why the keys are lost>"
+   --authorized-by "<who>"` — binds the current `quality/checkpoint.json` as
+   the boundary, writes `quality/key_reset_<id>.json` (signed by every new
+   key), and installs `gate_signing.pub`, `gate_quorum.json` and, with
+   `--witness-pub`, `witness_signing.pub`. It refuses a key the lost set
+   already contains.
+3. `dipcatcher crown-jewels --write`, then `make stamp-epochs`.
+4. `dipcatcher quorum-sign --key-file <new gate key>` — re-sign the pins
+   under the new registry.
+5. `dipcatcher checkpoint --key-file <new gate key>` — the first new-era
+   checkpoint; it links directly to the boundary.
+6. `dipcatcher witness-checkpoint --key-file <new witness key.pem>` — Rekor
+   witness under the new witness key (network).
+7. Verify: `make verify-rotations` (verdict `reset`), `make checkpoint-chain`
+   (`n_resets`, a `key_reset:` note), `make verify-witness`,
+   `make tamper-drill`, `make evidence-audit`.
+8. In the PR, state why the keys are lost and who authorized the reset; a
+   reviewer checks the record's reason, boundary digest and new pubkeys.
+
+The reset cannot rewrite history: checkpoints up to the boundary keep
+verifying under the old keys, and any later signature by a lost key is
+rejected. It also cannot prove who authorized it — a lost key cannot sign
+its own retirement — so protect `quality/key_reset_*`, `gate_signing.pub`,
+`gate_quorum.json` and `witness_signing.pub` with CODEOWNERS and branch
+protection (see [EVIDENCE_INTEGRITY.md](EVIDENCE_INTEGRITY.md) "Key reset").
+
 Regenerating keys, pins, or signatures without the Lead and
 `GATE_SIGNING_KEY` is forbidden; signed state (`quality/checkpoint.json`,
 `gate_pins.sig`, `*.sig`, pin and anchor files) is immutable to ordinary

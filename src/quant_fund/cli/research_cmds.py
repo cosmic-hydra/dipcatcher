@@ -2833,6 +2833,8 @@ def verify_repo_cmd(
             state = "unsigned"
         if gate.get("skipped"):
             state = f"skipped({gate['skipped']})"
+        if gate.get("n_resets"):
+            state += f" (key resets on record: {gate['n_resets']})"
         typer.echo(f"verify-repo {name}: {state}")
     if not result["ok"]:
         raise typer.Exit(code=1)
@@ -2987,6 +2989,65 @@ def quorum_rotate_cmd(
         typer.echo(f"quorum-rotate: {exc}")
         raise typer.Exit(code=2) from exc
     typer.echo(f"rotation={out}")
+
+
+@app.command("key-reset")
+def key_reset_cmd(
+    root: Path = typer.Option(Path("."), "--root"),
+    key_file: list[Path] = typer.Option(
+        [],
+        "--key-file",
+        help="NEW signer key material ('<priv>:<pub>' or two lines). Repeatable; "
+        "the first key becomes the gate key, all of them form the new registry "
+        "and all of them sign the reset record.",
+    ),
+    threshold: int = typer.Option(1, "--threshold", min=1, help="New registry threshold."),
+    witness_pub: Path | None = typer.Option(
+        None,
+        "--witness-pub",
+        help="PEM ECDSA P-256 public key of the NEW witness key (installed as "
+        "quality/witness_signing.pub).",
+    ),
+    reason: str = typer.Option(..., "--reason", help="Why the keys are lost (recorded verbatim)."),
+    authorized_by: str = typer.Option(
+        ..., "--authorized-by", help="Who authorized the reset (a recorded claim, not a proof)."
+    ),
+) -> None:
+    """Declare the current signing keys LOST and install a new key set.
+
+    Only for keys nobody can sign with any more: if an outgoing key still
+    exists, use ``rotate-key`` / ``quorum-rotate``, which it authorizes.
+    Writes ``quality/key_reset_<id>.json`` binding the current checkpoint
+    (the boundary, verified under the lost keys) to the new keys (signed by
+    every one of them), then installs ``gate_signing.pub``,
+    ``gate_quorum.json`` and, with ``--witness-pub``, the witness key. Every
+    verifier reports the reset. Finish the ceremony in the same commit:
+    ``crown-jewels --write``, stamp epochs, ``quorum-sign``, ``checkpoint``,
+    ``witness-checkpoint``.
+    """
+    from quant_fund.research.key_reset import reset_keys
+
+    raws = [f.read_text().strip() for f in key_file]
+    if not raws:
+        typer.echo("key-reset: supply --key-file(s) of the NEW keys")
+        raise typer.Exit(code=2)
+    try:
+        signers = [pair for raw in raws for pair in _load_signer_pairs(raw)]
+        out = reset_keys(
+            root,
+            signers,
+            reason=reason,
+            authorized_by=authorized_by,
+            threshold=threshold,
+            witness_pubkey_pem=witness_pub.read_text() if witness_pub is not None else None,
+        )
+    except ValueError as exc:
+        typer.echo(f"key-reset: {exc}")
+        raise typer.Exit(code=2) from exc
+    typer.echo(f"reset={out}")
+    typer.echo(
+        "next: crown-jewels --write, stamp epochs, quorum-sign, checkpoint, witness-checkpoint"
+    )
 
 
 @app.command("quorum-sign")
@@ -3400,10 +3461,12 @@ def checkpoint_chain_cmd(
     typer.echo(
         f"checkpoint-chain: spine={result['spine_length']}/{result['n_records']} "
         f"forks={result['n_forks']} orphans={result['n_orphans']} "
-        f"verdict={result['verdict']}"
+        f"resets={result.get('n_resets', 0)} verdict={result['verdict']}"
     )
     for e in result["errors"]:
         typer.echo(f"  {e}")
+    for n in result.get("notes", []):
+        typer.echo(f"  note: {n}")
     if out is not None:
         path = write_chain_receipt(result, out)
         typer.echo(f"receipt={path}")
@@ -3427,8 +3490,8 @@ def verify_rotations_cmd(
 
     result = verify_rotations(root)
     typer.echo(
-        f"verify-rotations: n={result['n_rotations']} verdict={result['verdict']} "
-        f"current={result.get('current_key_id', '?')}"
+        f"verify-rotations: n={result['n_rotations']} resets={result.get('n_resets', 0)} "
+        f"verdict={result['verdict']} current={result.get('current_key_id', '?')}"
     )
     for e in result["errors"]:
         typer.echo(f"  {e}")

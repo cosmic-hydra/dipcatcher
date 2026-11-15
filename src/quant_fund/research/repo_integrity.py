@@ -256,6 +256,8 @@ def verify_repo(
     gates["key_rotation"] = {
         "ok": bool(rot["ok"]),
         "n_rotations": rot["n_rotations"],
+        "n_resets": rot.get("n_resets", 0),
+        "verdict": rot.get("verdict"),
         "errors": rot["errors"],
     }
 
@@ -265,6 +267,8 @@ def verify_repo(
     gates["quorum_rotations"] = {
         "ok": bool(qrot["ok"]),
         "n_rotations": qrot["n_rotations"],
+        "n_resets": qrot.get("n_resets", 0),
+        "verdict": qrot.get("verdict"),
         "errors": qrot["errors"],
     }
 

@@ -1826,6 +1826,7 @@ hmm
 hmm eisner
 hmm train
 ingest
+key-reset
 kronos-forecast
 kyle-ofi
 lab

@@ -103,6 +103,8 @@ DEFAULT_JEWELS: tuple[str, ...] = (
     "src/quant_fund/research/gate_signatures.py",
     "src/quant_fund/research/integrity_checkpoint.py",
     "src/quant_fund/research/integrity_witness.py",
+    "src/quant_fund/research/key_reset.py",  # audited custody break — the
+    # record every verifier accepts in place of a rotation the lost keys can't sign
     "src/quant_fund/research/key_rotation.py",
     "src/quant_fund/research/lane_contracts.py",
     "src/quant_fund/research/ots_anchor.py",
@@ -151,6 +153,7 @@ _VERIFIER_VOCABULARY = (
     "tamper",
     "witness",
     "rotation",
+    "key_reset",
     "fuzz",
     "custody",
     "attestation",

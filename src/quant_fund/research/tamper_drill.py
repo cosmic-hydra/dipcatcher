@@ -74,6 +74,35 @@ def _flip_first_byte(path: Path) -> None:
     path.write_bytes(bytes(data))
 
 
+def _reset_probes(quality: Path) -> list[tuple[str, Any]]:
+    """Key-reset attacks: tamper with a committed reset record, and forge a
+    fully valid reset that declares the live keys lost without the rest of
+    the ceremony (keys installed, epochs stamped, pins and checkpoint
+    re-signed). The forgery must still surface — terminus mismatch on both
+    lineages, an unstamped quality member."""
+    probes: list[tuple[str, Any]] = []
+    records = sorted(quality.glob("key_reset_*.json"))
+    if records:
+        probes.append(("flip_key_reset_record", lambda v=records[0]: _flip_first_byte(v)))
+    if (quality / "checkpoint.json").is_file() and (quality / "gate_signing.pub").is_file():
+
+        def _forged_reset() -> None:
+            from quant_fund.research.gate_signatures import generate_keypair
+            from quant_fund.research.key_reset import build_reset
+
+            name, raw, _ = build_reset(
+                quality.parent,
+                [generate_keypair()],
+                reason="forged: keys declared lost by an attacker",
+                authorized_by="nobody",
+                at="2000-01-01T00:00:00+00:00",
+            )
+            (quality / name).write_bytes(raw)
+
+        probes.append(("inject_forged_key_reset", _forged_reset))
+    return probes
+
+
 def _probes(clone: Path) -> list[tuple[str, Any]]:
     """The attack classes. Each returns a probe name + a mutation closure."""
     quality = clone / "quality"
@@ -225,6 +254,7 @@ def _probes(clone: Path) -> list[tuple[str, Any]]:
             (quality / "rotation_evil.json").write_text(json.dumps(body) + "\n")
 
         probes.append(("inject_unauthorized_rotation", _evil_rotation))
+    probes += _reset_probes(quality)
     return probes
 
 

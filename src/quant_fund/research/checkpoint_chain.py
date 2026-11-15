@@ -11,6 +11,13 @@ When Rekor witness proofs are present they supply an external total order:
 consecutive spine members must appear in the log in chain order — a
 replayed or re-sequenced chain violates the logIndex ordering Rekor
 recorded.
+
+A verified key reset (``key_reset``) lets the spine cross from a lost key
+set to a new one at exactly one place — its boundary checkpoint. The
+boundary must be on the spine, the first new-era checkpoint must link
+directly to it, no lost key or lost registry may sign or be claimed after
+it, and no new key may have signed anything up to it. Every reset is listed
+in ``notes`` and counted in ``n_resets``.
 """
 
 from __future__ import annotations
@@ -251,15 +258,26 @@ def checkpoint_spine(root: str | Path = ".") -> dict[str, Any]:
     # authorized — records verify under the key that was current in *their*
     # era, so a legitimate rotation doesn't retroactively invalidate the
     # spine, and a record signed by a never-authorized key flags.
-    from quant_fund.research.gate_signatures import load_quorum_registry
     from quant_fund.research.integrity_checkpoint import CHECKPOINT_SIG_SCHEMA_V2
+    from quant_fund.research.key_reset import (
+        load_resets,
+        reset_edge_verdict,
+        reset_notes,
+        reset_record_errors,
+        reset_spine_errors,
+        valid_resets,
+    )
     from quant_fund.research.key_rotation import load_keyring
+    from quant_fund.research.quorum_rotation import load_registry_lineage, prefield_registry
 
     ring = load_keyring(root_path)
-    quorum = load_quorum_registry(root_path)
-    from quant_fund.research.quorum_rotation import load_registry_lineage
-
+    # Pre-field v2 records (no quorum claim) verify under the lineage's
+    # genesis registry — the live one unless a rotation or reset moved it.
+    quorum = prefield_registry(root_path)
     lineage = load_registry_lineage(root_path)
+    all_resets = load_resets(root_path)
+    resets = valid_resets(all_resets)
+    errors.extend(reset_record_errors(all_resets))
     for rec in records.values():
         if (rec.get("body") or {}).get("schema") == CHECKPOINT_SIG_SCHEMA_V2:
             _verify_quorum_signature(rec, quorum, lineage)
@@ -422,6 +440,11 @@ def checkpoint_spine(root: str | Path = ".") -> dict[str, Any]:
     # Timestamp monotonicity genesis -> head (spine list is head-first).
     ordered = list(reversed(spine))
 
+    # Key resets: boundary on the spine, new keys fresh up to it, lost keys
+    # and the lost registry revoked after it.
+    errors.extend(reset_spine_errors(resets, records, ordered))
+    notes.extend(reset_notes(resets))
+
     # Quorum-registry continuity: adjacent members must name the same
     # authorizing registry, or the change needs a quorum_rotation.v1 record
     # signed to the predecessor registry's threshold. Registry introduction
@@ -430,6 +453,7 @@ def checkpoint_spine(root: str | Path = ".") -> dict[str, Any]:
     from quant_fund.research.quorum_rotation import (
         QUORUM_ROTATION_DIR,
         QUORUM_ROTATION_GLOB,
+        rotation_authorizes,
     )
     from quant_fund.research.quorum_rotation import (
         _record as _rotation_record,
@@ -462,6 +486,12 @@ def checkpoint_spine(root: str | Path = ".") -> dict[str, Any]:
         if cd not in lineage:
             errors.append(f"quorum_registry_unknown:{child[:12]}")
             continue
+        # Key reset: the era may change only from the reset's boundary.
+        reset_verdict = reset_edge_verdict(resets, parent, pd, cd)
+        if reset_verdict is not None:
+            if reset_verdict != "ok":
+                errors.append(f"key_reset_off_boundary:{child[:12]}")
+            continue
         if pd is None:
             # Registry introduction: the new quorum must share a signer with
             # the record it succeeds — an attacker-built set can't include a
@@ -472,46 +502,7 @@ def checkpoint_spine(root: str | Path = ".") -> dict[str, Any]:
             continue
         # Rotation edge: find a record chaining pd -> cd, authorized under
         # the predecessor registry the spine itself recorded.
-        link_ok = False
-        for rot in rot_recs:
-            payload = rot.get("payload") or {}
-            if (
-                str(payload.get("prev_registry_sha256")) == pd
-                and str(payload.get("registry_sha256")) == cd
-            ):
-                prev_reg = payload.get("prev_registry")
-                if isinstance(prev_reg, dict):
-                    try:
-                        registered = {str(e["key_id"]): str(e["pubkey"]) for e in prev_reg["keys"]}
-                        threshold = int(prev_reg["threshold"])
-                    except (KeyError, TypeError, ValueError):
-                        continue
-                    from cryptography.exceptions import InvalidSignature
-                    from cryptography.hazmat.primitives.asymmetric.ed25519 import (
-                        Ed25519PublicKey,
-                    )
-
-                    valid: set[str] = set()
-                    sigs = rot.get("body", {}).get("signatures")
-                    for entry in sigs if isinstance(sigs, list) else []:
-                        if not isinstance(entry, dict):
-                            continue
-                        kid = str(entry.get("key_id", ""))
-                        pub = registered.get(kid)
-                        if pub is None or kid in valid:
-                            continue
-                        try:
-                            Ed25519PublicKey.from_public_bytes(bytes.fromhex(pub)).verify(
-                                bytes.fromhex(str(entry.get("signature", ""))),
-                                canonical_json_bytes(payload),
-                            )
-                            valid.add(kid)
-                        except (InvalidSignature, ValueError):
-                            continue
-                    if len(valid) >= threshold:
-                        link_ok = True
-                        break
-        if not link_ok:
+        if not rotation_authorizes(rot_recs, pd, cd):
             errors.append(f"quorum_registry_unauthorized:{child[:12]}")
 
     order_ok = True
@@ -564,6 +555,7 @@ def checkpoint_spine(root: str | Path = ".") -> dict[str, Any]:
         "n_witnessed_on_spine": n_witnessed_on_spine,
         "n_forks": n_forks,
         "n_orphans": len(orphans),
+        "n_resets": len(resets),
         "order_ok": order_ok,
         "rekor_order_ok": rekor_order_ok,
         "errors": sorted(errors),

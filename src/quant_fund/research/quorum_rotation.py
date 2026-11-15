@@ -22,6 +22,11 @@ A rotation whose predecessor never governed anything is
 ``unanchored_genesis``. The live ``gate_quorum.json`` must equal the chain
 terminus — ``registry_not_terminus``.
 
+Key resets (``key_reset``) join the lineage as edges of kind ``reset``: the
+lost registry cannot sign, so a verified reset record (boundary under the
+lost registry, possession under the new) stands in for the predecessor's
+signatures, and the verdict reads ``reset`` so the break is never silent.
+
 Provenance evidence only; never a market or P&L claim.
 """
 
@@ -128,6 +133,58 @@ def _count_valid(
     return len(valid)
 
 
+def rotation_authorizes(rot_recs: list[dict[str, Any]], prev_digest: str, digest: str) -> bool:
+    """Some verified-shape rotation record chains ``prev_digest → digest``
+    with signatures reaching the predecessor registry's threshold."""
+    for rot in rot_recs:
+        payload = rot["payload"]
+        if (
+            str(payload.get("prev_registry_sha256")) != prev_digest
+            or str(payload.get("registry_sha256")) != digest
+        ):
+            continue
+        registered, threshold = _registered_map(payload["prev_registry"])
+        sigs = rot["body"].get("signatures")
+        if _count_valid(sigs, registered, threshold, payload, [], "rotation") >= threshold:
+            return True
+    return False
+
+
+def _rotation_records(root_path: Path) -> list[dict[str, Any]]:
+    """Every committed rotation record, parsed (``errors`` empty = usable)."""
+    rot_dir = root_path / QUORUM_ROTATION_DIR
+    if not rot_dir.is_dir():
+        return []
+    return [_record(f) for f in sorted(rot_dir.glob(QUORUM_ROTATION_GLOB))]
+
+
+def lineage_edges(root: str | Path) -> list[dict[str, Any]]:
+    """Usable rotation records + verified key resets, as lineage edges."""
+    from quant_fund.research.key_reset import load_resets, registry_edges
+
+    root_path = Path(root)
+    edges = [rec for rec in _rotation_records(root_path) if not rec["errors"]]
+    return edges + registry_edges(load_resets(root_path))
+
+
+def prefield_registry(root: str | Path) -> tuple[dict[str, str], int] | None:
+    """The registry pre-field v2 checkpoints (no ``quorum`` claim) verify under.
+
+    That is the genesis of the committed lineage (rotations + key resets) —
+    pre-field records predate every registry change. With no lineage, or an
+    ambiguous one (reported by ``verify_quorum_rotations``), it is the live
+    registry: on a tree that never rotated, the same set.
+    """
+    from quant_fund.research.gate_signatures import load_quorum_registry
+
+    edges = lineage_edges(root)
+    targets = {str(e["digest"]) for e in edges}
+    starts = [e for e in edges if str(e["prev_digest"]) not in targets]
+    if len(starts) != 1:
+        return load_quorum_registry(root)
+    return _registered_map(starts[0]["payload"]["prev_registry"])
+
+
 def rotate_quorum(
     root: str | Path,
     new_registry: dict[str, Any],
@@ -206,7 +263,8 @@ def rotate_quorum(
 
 def load_registry_lineage(root: str | Path) -> dict[str, tuple[dict[str, str], int]]:
     """``{registry_sha256: (registered_map, threshold)}`` for every registry
-    the committed rotation chain + the live registry admit."""
+    the committed rotation chain, verified key resets and the live registry
+    admit."""
     root_path = Path(root)
     lineage: dict[str, tuple[dict[str, str], int]] = {}
     live_file = root_path / DEFAULT_QUORUM_PATH
@@ -217,37 +275,86 @@ def load_registry_lineage(root: str | Path) -> dict[str, tuple[dict[str, str], i
                 lineage[registry_sha256(live)] = _registered_map(live)
         except (OSError, json.JSONDecodeError):
             pass
-    rot_dir = root_path / QUORUM_ROTATION_DIR
-    if rot_dir.is_dir():
-        for f in sorted(rot_dir.glob(QUORUM_ROTATION_GLOB)):
-            rec = _record(f)
-            if rec["errors"]:
-                continue
-            payload = rec["payload"]
-            lineage[str(payload["prev_registry_sha256"])] = _registered_map(
-                payload["prev_registry"]
-            )
-            lineage[str(payload["registry_sha256"])] = _registered_map(payload["registry"])
+    for edge in lineage_edges(root_path):
+        payload = edge["payload"]
+        lineage[str(payload["prev_registry_sha256"])] = _registered_map(payload["prev_registry"])
+        lineage[str(payload["registry_sha256"])] = _registered_map(payload["registry"])
     return lineage
+
+
+def _genesis_anchored(
+    root_path: Path, genesis_digest: str, genesis_reg: Any, notes: list[str]
+) -> bool:
+    """The chain's first predecessor governed real history: its digest is a
+    spine checkpoint's ``quorum.registry_sha256`` (post-field era) or its
+    key_ids overlap a spine signer (pre-field era continuity)."""
+    try:
+        from quant_fund.research.checkpoint_chain import collect_spine_records
+
+        records = collect_spine_records(root_path)
+        genesis_kids = (
+            {str(e["key_id"]) for e in genesis_reg["keys"]}
+            if isinstance(genesis_reg, dict) and isinstance(genesis_reg.get("keys"), list)
+            else set()
+        )
+        spine_kids: set[str] = set()
+        for rec in records.values():
+            payload = rec.get("payload")
+            if not isinstance(payload, dict):
+                continue
+            q = payload.get("quorum")
+            if isinstance(q, dict) and q.get("registry_sha256") == genesis_digest:
+                return True
+            body = rec.get("body") or {}
+            if body.get("key_id"):
+                spine_kids.add(str(body["key_id"]))
+            sigs = body.get("signatures")
+            if isinstance(sigs, list):
+                spine_kids.update(
+                    str(s["key_id"]) for s in sigs if isinstance(s, dict) and s.get("key_id")
+                )
+        return bool(genesis_kids & spine_kids)
+    except Exception:  # noqa: BLE001 — anchor is best-effort evidence
+        notes.append("genesis_anchor_unverifiable")
+        return False
 
 
 def verify_quorum_rotations(root: str | Path = ".") -> dict[str, Any]:
     """Verify the rotation chain: per-record quorum, links, genesis anchor,
-    live-terminus equality."""
+    live-terminus equality.
+
+    Verified key resets join the chain as ``reset`` edges (their authority is
+    the reset record, not predecessor signatures); invalid reset records are
+    errors.
+    """
+    from quant_fund.research.key_reset import (
+        boundary_anchors_registry,
+        lineage_verdict,
+        load_resets,
+        registry_edges,
+        reset_record_errors,
+    )
+
     root_path = Path(root)
     errors: list[str] = []
     notes: list[str] = []
-    files = (
-        sorted((root_path / QUORUM_ROTATION_DIR).glob(QUORUM_ROTATION_GLOB))
-        if (root_path / QUORUM_ROTATION_DIR).is_dir()
-        else []
-    )
     recs = []
-    for f in files:
-        rec = _record(f)
-        errors.extend(f"rotation_{e}:{f.name}" for e in rec["errors"])
+    for rec in _rotation_records(root_path):
+        errors.extend(f"rotation_{e}:{rec['file']}" for e in rec["errors"])
         if not rec["errors"]:
             recs.append(rec)
+
+    # Per-record authorization: signatures under the embedded predecessor.
+    for rec in recs:
+        payload = rec["payload"]
+        registered, threshold = _registered_map(payload["prev_registry"])
+        _count_valid(
+            rec["body"].get("signatures"), registered, threshold, payload, errors, "rotation"
+        )
+    n_rotations = len(recs)
+    resets = load_resets(root_path)
+    errors.extend(reset_record_errors(resets))
+    recs.extend(registry_edges(resets))
 
     live_file = root_path / DEFAULT_QUORUM_PATH
     live_digest: str | None = None
@@ -267,17 +374,10 @@ def verify_quorum_rotations(root: str | Path = ".") -> dict[str, Any]:
             "ok": not errors,
             "verdict": "no_rotations" if not errors else "broken",
             "n_rotations": 0,
+            "n_resets": 0,
             "errors": sorted(errors),
             "notes": notes,
         }
-
-    # Per-record authorization: signatures under the embedded predecessor.
-    for rec in recs:
-        payload = rec["payload"]
-        registered, threshold = _registered_map(payload["prev_registry"])
-        _count_valid(
-            rec["body"].get("signatures"), registered, threshold, payload, errors, "rotation"
-        )
 
     # Links: order by prev -> new digest; forks and orphans surface.
     claims: dict[str, list[dict[str, Any]]] = {}
@@ -317,54 +417,28 @@ def verify_quorum_rotations(root: str | Path = ".") -> dict[str, Any]:
         errors.append("registry_not_terminus")
 
     # Genesis anchor: the chain's first predecessor must have governed real
-    # history — its digest appears on the checkpoint spine (post-field era)
-    # or its key_ids overlap a spine signer (pre-field era continuity).
-    if genesis_digest:
-        anchored = False
-        try:
-            from quant_fund.research.checkpoint_chain import collect_spine_records
-
-            records = collect_spine_records(root_path)
-            genesis_reg = recs and starts and starts[0]["payload"].get("prev_registry")
-            genesis_kids = (
-                {str(e["key_id"]) for e in genesis_reg["keys"]}
-                if isinstance(genesis_reg, dict) and isinstance(genesis_reg.get("keys"), list)
-                else set()
-            )
-            spine_kids: set[str] = set()
-            for rec in records.values():
-                payload = rec.get("payload")
-                if not isinstance(payload, dict):
-                    continue
-                q = payload.get("quorum")
-                if isinstance(q, dict) and q.get("registry_sha256") == genesis_digest:
-                    anchored = True
-                    break
-                body = rec.get("body") or {}
-                if body.get("key_id"):
-                    spine_kids.add(str(body["key_id"]))
-                sigs = body.get("signatures")
-                if isinstance(sigs, list):
-                    spine_kids.update(
-                        str(s["key_id"]) for s in sigs if isinstance(s, dict) and s.get("key_id")
-                    )
-            if not anchored and genesis_kids & spine_kids:
-                anchored = True
-        except Exception:  # noqa: BLE001 — anchor is best-effort evidence
-            notes.append("genesis_anchor_unverifiable")
-        if not anchored:
-            errors.append("unanchored_genesis")
+    # history on the spine — or be a verified reset's lost registry, whose
+    # embedded boundary checkpoint reached that registry's threshold.
+    if genesis_digest and not (
+        _genesis_anchored(
+            root_path, genesis_digest, starts[0]["payload"].get("prev_registry"), notes
+        )
+        or boundary_anchors_registry(resets, genesis_digest)
+    ):
+        errors.append("unanchored_genesis")
 
     return {
         "schema": "quorum_rotations.v1",
         "ok": not errors,
-        "verdict": "intact" if not errors else "broken",
-        "n_rotations": len(recs),
+        "verdict": lineage_verdict(errors, len(recs) - n_rotations),
+        "n_rotations": n_rotations,
+        "n_resets": len(recs) - n_rotations,
         "genesis_registry_sha256": genesis_digest,
         "terminus_registry_sha256": terminus_digest,
         "lineage": [
             {
                 "file": r["file"],
+                "kind": r.get("kind", "rotation"),
                 "at": (r.get("payload") or {}).get("at"),
                 "prev": str(r["prev_digest"])[:16],
                 "registry": str(r["digest"])[:16],
@@ -388,4 +462,6 @@ def quorum_rotation_contract_errors(payload: Any) -> list[str]:
         errors.append("n_rotations_malformed")
     if payload.get("ok") and payload.get("errors"):
         errors.append("ok_with_errors")
+    if payload.get("verdict") == "reset" and not payload.get("n_resets"):
+        errors.append("reset_without_records")
     return errors

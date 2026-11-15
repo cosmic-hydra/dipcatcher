@@ -31,6 +31,7 @@ detects, and the boundary where detection stops.
 | Fuzz drill | `fuzz_drill.v1` | `dipcatcher fuzz-drill --seed N` | Metamorphic two-sided fuzzing of the substrate itself: seeded byte flips/truncations/key-renames across corpus members, jewels, pins, spine records, witness proofs, and checkpoints — plus benign probes (`docs/` write) that must NOT alarm. Grades `escaped`/`false_positive`; a `baseline_dirty` verdict refuses to drill on an already-drifted tree. First campaign: 4 real escapes found and closed (spine extent, checkpoint-absent fail-open, unstamped injection, witness-proof delete/byte-drift) — 6 seeds × 17 mutations (incl. crafted pin-rollback / forged-epoch / removal-laundering / foreign-extension-drop policy attacks) now fully `calibrated` |
 | Receipt fuzz | `receipt_fuzz.v1` | `dipcatcher fuzz-receipts --seed N` | Forge-and-reseal: mutates one claim leaf inside each committed receipt, then re-seals *honestly* (sha256 seals are integrity, not authenticity — a self-consistent forgery is free to mint). Maps the verification boundary: escapes = claim fields that are seal-bound but not contract re-derived (mostly `*_real_drill` result fields whose source streams aren't committed — they are *attested*, not *verified*). Deliberately a measurement lane, not a gate — the `replay_proof` lane closes the gap by pinning inputs and re-executing |
 | Key rotation | `rotation_*.json` (`key_rotation.v1`) | `dipcatcher verify-rotations` | Key substitution without authorization: each link is dual-signed — the outgoing key proves *authorization*, the incoming proves *possession* — and the first link's `old_pubkey` must re-verify a real spine signature (`unanchored_genesis` otherwise). The spine walks a **keyring** — live key + every authorized retired key — so records verify under their era's key (`signature_key_unknown` for a never-authorized signer). Live `gate_signing.pub` must equal the chain terminus |
+| Key reset | `key_reset_*.json` (`key_reset.v1`) | `dipcatcher key-reset` records it; `checkpoint-chain`, `verify-rotations` and `verify-repo` report it; `verify-bundle` and `scripts/verify_auditor_bundle.py` re-verify it from the bundle | Lost keys — the one key-set change the outgoing key cannot sign. The record embeds the last checkpoint signed under the lost set (the **boundary**, which must re-verify under that set), names the new gate key + registry (+ witness key), and is signed by the new registry's threshold including the new gate key (**possession**). On the spine the era may change only out of the boundary (`key_reset_off_boundary`); after it no lost key signs and no record claims the lost registry (`key_reset_revoked_signer` / `key_reset_revoked_registry`); no new key signed anything up to it (`key_reset_resurrects`). Lineage verdicts read `reset`, never `intact`, and `checkpoint-chain` lists every reset in `notes`. An invalid record contributes no key — the new era it names stays unauthorized (fail closed) |
 | Custody | `custody_proof.v1` (one JSON doc) | `dipcatcher custody --member X --out bundle.json`; `custody --check bundle.json --member-file F`; `custody --member X --timeline` | Per-member provenance with **zero repo access**: the bundle embeds the member's earliest-chain pinning epoch (proof of first committed state), the epoch→head hop files raw (digests re-derived on verify), inclusion merkle path, signed pins, checkpoint, both witness pubkeys, every committed Rekor proof, and the RFC 3161 timestamp dir — materialized into a synthetic root so the existing file verifiers run unmodified. Eight layers: member→inclusion→chain→pins→signature→checkpoint→witness→timestamps. `--timeline` enumerates a member's committed digests across epochs (byte-evolution lineage for mutable corpora) |
 | Admission | `receipt_admission.v1` | `dipcatcher admit-batch --strict` | A new receipt that breaks lattice/FDR on entry |
 | Retraction | `receipt_tombstone.v1` (`tombstone_<sha16>.json`) | `dipcatcher tombstone <receipt> --reason ...` | The corpus is append-only — a wrong/superseded receipt can't be deleted (epoch flags removal, lattice flags drift), so it is retracted: a sealed record pinned to the target's bytes excludes its claims from the lattice (`retracted:` block), honors partial `scope` per claim path, and fails closed if the target drifts (`tombstone_target_drift`) or the tombstone is unsealed |
@@ -127,6 +128,32 @@ outgoing key must have signed a real checkpoint. A substituted key whose
 holder never signed — i.e. never held authority — fails
 `unanchored_genesis`; a rotation recorded but never installed fails
 `live_key_not_terminus`.
+
+Key reset: a rotation needs the outgoing key. When nobody holds it any more
+(never escrowed, destroyed, generated somewhere that no longer exists),
+`dipcatcher key-reset` records a `key_reset.v1` file instead of a silent key
+swap. It binds the current checkpoint as the boundary — embedded byte-exact
+and re-verified under the lost key set — names the new gate key, registry and
+witness key, and is signed by the new keys. History up to the boundary keeps
+verifying under the old keys only; everything after it must be signed by the
+new ones, and a lost key that signs again is rejected, so a reset also
+retires keys that may have leaked rather than vanished.
+
+What a reset cannot prove is authorization: a lost key cannot sign its own
+retirement, so the reset is authorized by whoever can commit to the
+repository and `authorized_by` is a recorded claim, not a signature. The
+defense is visibility and review. `verify-rotations`, `checkpoint-chain`
+and `verify-repo` report the reset (`verdict=reset`, `n_resets`, a
+`key_reset:` note), both bundle verifiers re-check it, the record is a
+stamped `quality/` member pinned by every later checkpoint, and it cannot
+rewrite history — pre-boundary checkpoints stay bound to the old keys and to
+their Rekor entries. Treat a reset as a trust-root change: protect
+`quality/key_reset_*`, `quality/gate_signing.pub`, `quality/gate_quorum.json`
+and `quality/witness_signing.pub` with CODEOWNERS and branch protection, and
+review the record's reason and boundary like any other change to them.
+Residual risk, stated plainly: someone with commit access and no keys can
+forge a reset. It is loud — a new record, new pubkeys, `verdict=reset` in
+every report — but only review blocks it.
 
 ## Operator quick reference
 

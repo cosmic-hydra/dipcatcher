@@ -890,7 +890,7 @@ src/quant_fund/research/catalog/sweep.py:northset_vpin_sweep_fold_honesty_errors
 src/quant_fund/research/changepoint_localize.py:localize_changepoint 11
 src/quant_fund/research/checkpoint_chain.py:_verify_quorum_signature 12
 src/quant_fund/research/checkpoint_chain.py:chain_contract_errors 13
-src/quant_fund/research/checkpoint_chain.py:checkpoint_spine 64
+src/quant_fund/research/checkpoint_chain.py:checkpoint_spine 57
 src/quant_fund/research/coherence.py:run_coherence 16
 src/quant_fund/research/compare.py:RunComparison.to_markdown 14
 src/quant_fund/research/concordance.py:concordance_consistency_errors 15
@@ -973,7 +973,7 @@ src/quant_fund/research/integrity_checkpoint.py:checkpoint_contract_errors 19
 src/quant_fund/research/integrity_checkpoint.py:verify_checkpoint 40
 src/quant_fund/research/integrity_witness.py:verify_witness_online 14
 src/quant_fund/research/integrity_witness.py:verify_witness_record 17
-src/quant_fund/research/key_rotation.py:verify_rotations 23
+src/quant_fund/research/key_rotation.py:verify_rotations 14
 src/quant_fund/research/lane_contracts.py:_capacity_contract_errors 14
 src/quant_fund/research/lane_contracts.py:_measurement_claim_contract_errors 17
 src/quant_fund/research/lane_contracts.py:_p42_conformance_contract_errors 12
@@ -997,7 +997,7 @@ src/quant_fund/research/prospective_sota.py:_plan_forecast 10
 src/quant_fund/research/prospective_sota.py:_verified 19
 src/quant_fund/research/prospective_sota.py:validate_protocol 12
 src/quant_fund/research/quantile_ladder.py:_quantile_ladder_errors 39
-src/quant_fund/research/quorum_rotation.py:verify_quorum_rotations 27
+src/quant_fund/research/quorum_rotation.py:verify_quorum_rotations 19
 src/quant_fund/research/ranker_probability.py:ranker_prob_contract_errors 14
 src/quant_fund/research/real_benchmark.py:BenchmarkProtocol.validate 14
 src/quant_fund/research/real_benchmark.py:_load_bars 12
