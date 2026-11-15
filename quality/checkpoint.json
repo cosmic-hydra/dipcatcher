@@ -1,10 +1,10 @@
 {
   "algorithm": "ed25519",
   "payload": {
-    "at": "2026-11-15T14:57:49+00:00",
+    "at": "2026-11-15T16:29:02+00:00",
     "code": {
-      "revision": "c1fe47ef72fa23ff5644a9fe11a08c1fa1acf7a6",
-      "worktree_sha256": "3f4a28ab3d137021019c39f8cd831f0750385151cff7a077eec10b41aec0e3d4"
+      "revision": "65f4e01b7d00b902b6587d7983da02851682d229",
+      "worktree_sha256": "6ad0c4859b322057cff1477f1ec92ea51b0a0026491b0e95ba5d04062da5ec68"
     },
     "heads": {
       ".box-soft-verify/*": {
@@ -36,11 +36,11 @@
         "tree_root": "def6f3099d8f2fabca627059facf7b4adee956fe25c2e5a98682131d95b001ed"
       },
       ".github/workflows/*.yml": {
-        "chain_root": "65d4be74a7fe7afdae2ea9e1f39d561e78d63a038983c88b02e6ac949a2df944",
-        "n_epochs": 43,
-        "receipt": "corpus_epoch_4b75f7c185bdf34b.json",
-        "sha256": "128cb2b220ae3a3eb63d8e8b90d3f92e7a6f57081c31613b87dbc019b46aa341",
-        "tree_root": "5e154d7f5d04c32b890d413446d505b5a3a3d804b1d37c49a3d04741a0dd646c"
+        "chain_root": "8c9117f08bd36bbea53402c37c49493c375f75d4091f21f1c6775068c3ab40da",
+        "n_epochs": 44,
+        "receipt": "corpus_epoch_286f7379afbead8c.json",
+        "sha256": "9f35f5b2b9825c274113975923609eee7b55580c2757b337154a22aa35186c2c",
+        "tree_root": "8569aa504e02c88d3c2fc41feef8f4b1b47f8a973406459051248221d2c45f14"
       },
       "artifacts/*": {
         "chain_root": "7721f0fddc6df5124552c56da0443caf9bcede676dc4a393cfc81d5735953495",
@@ -169,11 +169,11 @@
         "tree_root": "6b9a44b1d6fec625c1270a131845d0690cc2f65bbdbb7da795f1dd77168b84f1"
       },
       "tests/*": {
-        "chain_root": "bd5753f14cddd751db1cf85725d2f3d06fccea7a9f38588853a1321b49d0c280",
-        "n_epochs": 43,
-        "receipt": "corpus_epoch_5f114781795f2edb.json",
-        "sha256": "62c4a0bf5e597fcf79544083507f1b157990047ddca4463e3dd7fbf51061222c",
-        "tree_root": "17f526598cb2a94fe4cf7336d2a72e84a33c3b47ed90dd85ebf8b11a77be6c2c"
+        "chain_root": "509ded12d7e06c07983f65bfef5daccdea56860e3ddac760906ffe8db99df399",
+        "n_epochs": 44,
+        "receipt": "corpus_epoch_cb52f4e2743df8e0.json",
+        "sha256": "929620ee31f46c90ad083d705a2692bad67366de09760305c07901b73132736d",
+        "tree_root": "b5b50a82350267a5e3f87e2d865e26abb4fcb60921e48b6f7a4b48d897f1256e"
       },
       "third_party/*": {
         "chain_root": "2be23061c4d447332331fd3c7d77ce5d501b195aba9302290178ca6d38cafecd",
@@ -206,12 +206,12 @@
     },
     "missing_pins": [],
     "pins": {
-      "gate_pins.sig": "4f04b283f36f7e9c67542b0c38660adcb103a55fc57ead36b15c15cdea0ce841",
+      "gate_pins.sig": "5895ec6f1e089cb3de5dcf6e498f98522b8f3023035c1284b7f424b6c4b2bd58",
       "quality/crown_jewels.json": "dc28f58d7d345e5b8d39e133d8d068f71ce822dd3f99d892d3e9120bb499afcb",
-      "quality/epoch_heads.json": "ba79e5155a6b943ea84da2ae90935a448de76bd5ec65e4fd17fbc067d599d7bb",
+      "quality/epoch_heads.json": "1a292692169b7a86d23be0ac9bd10c942fe19210a89ef45805a5e6de5a5138f8",
       "quality/gate_quorum.json": "fdf92b52042e49d3f631f0ba76aba858c963a4684e75341372a4830655813907"
     },
-    "prev_sha256": "4a36e79ffda5561de74e44a23fcbd7adcab3e2fe59b6069d775946caa7459ff8",
+    "prev_sha256": "08768ff21442952ddb3ec5f6d759da513b101d03e6530a1e12c8f8e0e0d47980",
     "quorum": {
       "n_keys": 1,
       "registry_sha256": "fdf92b52042e49d3f631f0ba76aba858c963a4684e75341372a4830655813907",
@@ -219,11 +219,11 @@
     },
     "schema": "integrity_checkpoint.v1",
     "spine": {
-      "n_archives": 141,
+      "n_archives": 142,
       "tip": "fee30986fbb26346_2bf77a74.json"
     },
     "witness": {
-      "n_proofs": 150,
+      "n_proofs": 151,
       "proofs": {
         "checkpoint.json_2884936358.json": "da2cc622df0b69d87589caebb754e20e4281c0f67f85822eda423fd563641669",
         "checkpoint.json_2885061641.json": "c33ef89dcadc8400ef3cca07972bda027e277ee8aeb05c14f7019c8de7d458c0",
@@ -374,7 +374,8 @@
         "checkpoint.json_3902483472.json": "b09b0abaf70272b238f55be94ebcd0a34a0a6502b0c1b143341d7ef0ba459c6f",
         "checkpoint.json_3902603737.json": "4f762120ed3968eb5f9c8f8b3d97cc129ec9050d707998ff63ca3af6f043f1b9",
         "checkpoint.json_3902673229.json": "55bf553cd9787a4def92c9df56960840de4bb115f6a7a10ac49e718b44db70ef",
-        "checkpoint.json_3902969461.json": "1c481b166f6da6823d35ed6558c756329ece3f996787b542a68421b0ece1c394"
+        "checkpoint.json_3902969461.json": "1c481b166f6da6823d35ed6558c756329ece3f996787b542a68421b0ece1c394",
+        "checkpoint.json_3904328467.json": "ae62ebd06e851dcb761247ffdedfc13f1a334307da0357bff634479c63edbbef"
       }
     }
   },
@@ -382,7 +383,7 @@
   "signatures": [
     {
       "key_id": "3a0b74beae314825",
-      "signature": "6f598ae05cebed8f6a1af7106b78766a17720e63601e44d713eccd5f1d602710616b31a3695006e0668c09dbcae2ae547c54e43523e46c0e85ec91a5eaa78d02"
+      "signature": "68ef116e1d78edb344ff461460812d5ad6146a0e349ab69c1a6ab9d7b1c6ccf27612b0917f840ed5689858d55f651d1a822d308c0c2eef0cd5bde813bfe8df05"
     }
   ]
 }
