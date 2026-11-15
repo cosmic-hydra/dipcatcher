@@ -3086,12 +3086,7 @@ def _mount_job_routes(
                 cur = job_store.get(job_id)
                 if cur is None:
                     return  # evicted from the bounded store mid-stream
-                # The worker mutates ``cur`` in place. Read the status
-                # *before* the snapshot: a terminal status read here is
-                # already in ``snap``, so the stream never closes on a
-                # terminal status it did not emit.
-                status = cur.status
-                snap = cur.model_dump_json()
+                status, snap = cur.status, cur.model_dump_json()  # status first: mutated in place
                 if snap != last:
                     last = snap
                     yield f"event: job\ndata: {snap}\n\n"
