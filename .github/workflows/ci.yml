@@ -164,7 +164,11 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    # 75 minutes for the fast suite (pull requests and pushes). The full suite
+    # (the nightly schedule, or workflow_dispatch with suite=full) adds the
+    # slow tests, and its heaviest py3.12 shard, which also collects coverage,
+    # was cancelled at 99% after 75 minutes (run 43728406466).
+    timeout-minutes: ${{ (github.event_name == 'schedule' || inputs.suite == 'full') && 120 || 75 }}
     env:
       HYPOTHESIS_PROFILE: ci
       # Makefile TEST_ENV block, mirrored (keep both sides identical).
