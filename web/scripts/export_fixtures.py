@@ -24,6 +24,7 @@ as ``scripts/gen_arch_diagrams.py --check``.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import filecmp
 import hashlib
 import io
@@ -33,6 +34,8 @@ import re
 import subprocess
 import sys
 import tempfile
+import threading
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -129,11 +132,59 @@ def _committed_bytes(oid: str) -> bytes:
     return subprocess.check_output(["git", "cat-file", "blob", oid], cwd=REPO_ROOT)
 
 
+def _iter_committed_blobs(oids: list[str]) -> Iterator[bytes]:
+    """Yield committed blob bytes in ``oids`` order from one ``git cat-file --batch``.
+
+    One subprocess per blob cost ~14k process spawns per export; the batch
+    protocol reads the same committed bytes through a single process.
+    """
+    proc = subprocess.Popen(
+        ["git", "cat-file", "--batch"],
+        cwd=REPO_ROOT,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+    )
+    assert proc.stdin is not None and proc.stdout is not None
+    stdin, stdout = proc.stdin, proc.stdout
+
+    def _feed() -> None:
+        # BrokenPipeError: the reader stopped early and killed git.
+        with contextlib.suppress(BrokenPipeError):
+            try:
+                for oid in oids:
+                    stdin.write(oid.encode("ascii") + b"\n")
+            finally:
+                stdin.close()
+
+    feeder = threading.Thread(target=_feed, daemon=True)
+    feeder.start()
+    complete = False
+    try:
+        for oid in oids:
+            header = stdout.readline().split()
+            if len(header) != 3 or header[0].decode("ascii") != oid or header[1] != b"blob":
+                raise RuntimeError(f"git cat-file --batch: unexpected header {header!r} for {oid}")
+            size = int(header[2])
+            raw = stdout.read(size)
+            if len(raw) != size or stdout.read(1) != b"\n":
+                raise RuntimeError(f"git cat-file --batch: truncated blob {oid}")
+            yield raw
+        complete = True
+    finally:
+        if not complete:
+            proc.kill()
+        stdout.close()
+        feeder.join()
+        if proc.wait() != 0 and complete:
+            raise subprocess.CalledProcessError(proc.returncode, proc.args)
+
+
 def _build_hash_index(files: dict[str, str] | None = None) -> dict[str, str]:
     """Map digests of committed blobs, including canonical JSON, to repo paths."""
     matches: dict[str, str] = {}
-    for rel, oid in sorted((files if files is not None else _committed_files()).items()):
-        raw = _committed_bytes(oid)
+    entries = sorted((files if files is not None else _committed_files()).items())
+    blobs = _iter_committed_blobs([oid for _, oid in entries])
+    for (rel, _oid), raw in zip(entries, blobs, strict=True):
         matches.setdefault(hashlib.sha256(raw).hexdigest(), rel)
         if rel.endswith(".json"):
             try:
@@ -287,14 +338,17 @@ def _export(fixtures_dir: Path) -> dict[str, int]:
     # ---- receipts: verbatim copies + index rows ---------------------------
     receipt_entries: list[dict[str, Any]] = []
     receipt_hash_matches: dict[str, str] = {}
-    for name in sorted(files):
-        if not name.startswith("receipts/") or name.count("/") != 1 or not name.endswith(".json"):
-            continue
+    receipt_names = [
+        name
+        for name in sorted(files)
+        if name.startswith("receipts/") and name.count("/") == 1 and name.endswith(".json")
+    ]
+    receipt_blobs = _iter_committed_blobs([files[name] for name in receipt_names])
+    for name, raw in zip(receipt_names, receipt_blobs, strict=True):
         src = REPO_ROOT / name
         rel = f"receipts/{src.name}"
         dst = fixtures_dir / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
-        raw = _committed_bytes(files[name])
         dst.write_bytes(raw)
         payload = json.loads(raw)
         hashes: list[str] = []
