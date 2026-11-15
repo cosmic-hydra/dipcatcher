@@ -13,6 +13,7 @@ from typing import Any
 import typer
 
 from .app import app
+from .receipt_pin_args import _ALLOWED_REMOVALS_HELP, _sha_pin_map
 from .support import _cfg, format_data_label, format_fdr_families
 
 
@@ -2991,65 +2992,6 @@ def quorum_rotate_cmd(
     typer.echo(f"rotation={out}")
 
 
-@app.command("key-reset")
-def key_reset_cmd(
-    root: Path = typer.Option(Path("."), "--root"),
-    key_file: list[Path] = typer.Option(
-        [],
-        "--key-file",
-        help="NEW signer key material ('<priv>:<pub>' or two lines). Repeatable; "
-        "the first key becomes the gate key, all of them form the new registry "
-        "and all of them sign the reset record.",
-    ),
-    threshold: int = typer.Option(1, "--threshold", min=1, help="New registry threshold."),
-    witness_pub: Path | None = typer.Option(
-        None,
-        "--witness-pub",
-        help="PEM ECDSA P-256 public key of the NEW witness key (installed as "
-        "quality/witness_signing.pub).",
-    ),
-    reason: str = typer.Option(..., "--reason", help="Why the keys are lost (recorded verbatim)."),
-    authorized_by: str = typer.Option(
-        ..., "--authorized-by", help="Who authorized the reset (a recorded claim, not a proof)."
-    ),
-) -> None:
-    """Declare the current signing keys LOST and install a new key set.
-
-    Only for keys nobody can sign with any more: if an outgoing key still
-    exists, use ``rotate-key`` / ``quorum-rotate``, which it authorizes.
-    Writes ``quality/key_reset_<id>.json`` binding the current checkpoint
-    (the boundary, verified under the lost keys) to the new keys (signed by
-    every one of them), then installs ``gate_signing.pub``,
-    ``gate_quorum.json`` and, with ``--witness-pub``, the witness key. Every
-    verifier reports the reset. Finish the ceremony in the same commit:
-    ``crown-jewels --write``, stamp epochs, ``quorum-sign``, ``checkpoint``,
-    ``witness-checkpoint``.
-    """
-    from quant_fund.research.key_reset import reset_keys
-
-    raws = [f.read_text().strip() for f in key_file]
-    if not raws:
-        typer.echo("key-reset: supply --key-file(s) of the NEW keys")
-        raise typer.Exit(code=2)
-    try:
-        signers = [pair for raw in raws for pair in _load_signer_pairs(raw)]
-        out = reset_keys(
-            root,
-            signers,
-            reason=reason,
-            authorized_by=authorized_by,
-            threshold=threshold,
-            witness_pubkey_pem=witness_pub.read_text() if witness_pub is not None else None,
-        )
-    except ValueError as exc:
-        typer.echo(f"key-reset: {exc}")
-        raise typer.Exit(code=2) from exc
-    typer.echo(f"reset={out}")
-    typer.echo(
-        "next: crown-jewels --write, stamp epochs, quorum-sign, checkpoint, witness-checkpoint"
-    )
-
-
 @app.command("quorum-sign")
 def quorum_sign_cmd(
     root: Path = typer.Option(Path("."), "--root"),
@@ -3610,30 +3552,6 @@ def fuzz_receipts_cmd(
         typer.echo(f"receipt={path}")
     if not result["ok"]:
         raise typer.Exit(code=1)
-
-
-def _sha_pin_map(path: Path | None, flag: str) -> dict[str, str] | None:
-    """Load a ``--<flag>`` JSON map of receipt filename -> 64-hex sha256."""
-    if path is None:
-        return None
-    if not path.is_file():
-        raise typer.BadParameter(f"{flag} file {path} does not exist")
-    try:
-        raw = json.loads(path.read_text())
-    except (OSError, ValueError) as exc:
-        raise typer.BadParameter(f"{flag} is not JSON: {exc}") from exc
-    if not isinstance(raw, dict) or not all(
-        isinstance(k, str) and isinstance(v, str) and len(v) == 64 for k, v in raw.items()
-    ):
-        raise typer.BadParameter(f"{flag} must be a JSON object mapping filename -> 64-hex sha256")
-    return dict(raw)
-
-
-_ALLOWED_REMOVALS_HELP = (
-    "JSON map of receipt filename -> sha256 whose removal from the corpus's "
-    "epoch chain is acknowledged (quality/epoch_allowed_removals.json), as "
-    "corpus-epoch --check and verify-repo apply it."
-)
 
 
 @app.command()

@@ -2,7 +2,7 @@
 # Each entry pins the module's CURRENT line count: the file may only shrink.
 # Split a module to lower or remove its pin; files not listed stay at 2000.
 # Pinned by tests/unit/test_architecture.py::test_modules_stay_under_max_lines.
-quant_fund/cli/research_cmds.py 4472
+quant_fund/cli/research_cmds.py 4467
 quant_fund/microstructure/multilevel_mm.py 2227
 quant_fund/microstructure/zi_lob_simulator.py 3460
 quant_fund/research/agent.py 5838
