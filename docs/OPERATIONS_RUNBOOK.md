@@ -248,7 +248,8 @@ and both bundle verifiers re-check. The Lead authorizes it; do it in one PR:
    witness key. Without `--witness-pub` the witness key is not declared lost
    and stays installed.
 3. `dipcatcher crown-jewels --write`, then `make stamp-epochs`; commit, then
-   re-export the web fixtures and re-stamp `web/` ("Checkpoint spine", step 1).
+   regenerate the receipt-derived artifacts and re-stamp `web/` and `docs/`
+   ("Checkpoint spine", step 1).
 4. `dipcatcher quorum-sign --key-file <new gate key>` — re-sign the pins
    under the new registry.
 5. `dipcatcher checkpoint --key-file <new gate key>` — the first new-era
@@ -330,13 +331,19 @@ touching any covered directory:
 
 1. `make stamp-epochs` — re-stamp every corpus-epoch chain + the head pin
    (`quality/epoch_heads.json`). Each run adds a `receipts/corpus_epoch_*.json`,
-   and the web explorer index must list every receipt
-   (`web/src/lib/fixtures.test.ts`, `tests/unit/web_explorer`). The exporter
-   reads committed files only, so commit the stamps, run
-   `uv run python web/scripts/export_fixtures.py`, then re-stamp `web/` alone:
-   `uv run dipcatcher corpus-epoch --corpus-dir web --glob '*' --out-dir web
-   --heads-pin quality/epoch_heads.json`. Another `make stamp-epochs` would add
-   a new receipts epoch and stale the index again.
+   and three generated artifacts must list every receipt: the web explorer
+   index (`web/src/lib/fixtures.test.ts`, `tests/unit/web_explorer`), the
+   evidence page `docs/evidence/index.md`
+   (`tests/regression/test_receipt_evidence_page.py`; the evidence audit's
+   `evidence_index_stale`) and `docs/research/findings.md`
+   (`tests/unit/research/test_research_findings.py`). The web exporter reads
+   committed files only, so commit the stamps, then run
+   `uv run python web/scripts/export_fixtures.py`, `make evidence` and
+   `uv run python scripts/research_findings.py`, and re-stamp `web/` and
+   `docs/` alone: `uv run dipcatcher corpus-epoch --corpus-dir web --glob '*'
+   --out-dir web --heads-pin quality/epoch_heads.json`, then the same with
+   `docs`. Another `make stamp-epochs` would add a new receipts epoch and stale
+   all three again.
 2. `make sign-pins` — Ed25519-sign the pins. Set `GATE_SIGNING_KEY` to the
    gate key file (or `<priv_hex>:<pub_hex>`). With `quality/gate_quorum.json`
    installed it runs `dipcatcher quorum-sign --key-file "$GATE_SIGNING_KEY"`
