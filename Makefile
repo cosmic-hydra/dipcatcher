@@ -407,6 +407,7 @@ admission-gate: ## CI gate: sequentially admit each diff-changed corpus receipt 
 	if [ -n "$$changed" ]; then \
 		uv run dipcatcher admit-batch $$changed --corpus-dir receipts --strict \
 			--known-inconsistent quality/lattice_known_inconsistent.json \
+			--allowed-removals quality/epoch_allowed_removals.json \
 			--out-dir "$${RUNNER_TEMP:-/tmp}/admission"; \
 	else \
 		echo "admission-gate: no corpus receipt changes vs $(ADMISSION_BASE)"; \

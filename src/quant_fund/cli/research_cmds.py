@@ -3612,6 +3612,30 @@ def fuzz_receipts_cmd(
         raise typer.Exit(code=1)
 
 
+def _sha_pin_map(path: Path | None, flag: str) -> dict[str, str] | None:
+    """Load a ``--<flag>`` JSON map of receipt filename -> 64-hex sha256."""
+    if path is None:
+        return None
+    if not path.is_file():
+        raise typer.BadParameter(f"{flag} file {path} does not exist")
+    try:
+        raw = json.loads(path.read_text())
+    except (OSError, ValueError) as exc:
+        raise typer.BadParameter(f"{flag} is not JSON: {exc}") from exc
+    if not isinstance(raw, dict) or not all(
+        isinstance(k, str) and isinstance(v, str) and len(v) == 64 for k, v in raw.items()
+    ):
+        raise typer.BadParameter(f"{flag} must be a JSON object mapping filename -> 64-hex sha256")
+    return dict(raw)
+
+
+_ALLOWED_REMOVALS_HELP = (
+    "JSON map of receipt filename -> sha256 whose removal from the corpus's "
+    "epoch chain is acknowledged (quality/epoch_allowed_removals.json), as "
+    "corpus-epoch --check and verify-repo apply it."
+)
+
+
 @app.command()
 def admit(
     receipt: Path = typer.Argument(..., help="Candidate receipt JSON to gate."),
@@ -3636,6 +3660,9 @@ def admit(
         "--strict",
         help="Exit nonzero unless the verdict is 'admit'.",
     ),
+    allowed_removals: Path | None = typer.Option(
+        None, "--allowed-removals", help=_ALLOWED_REMOVALS_HELP
+    ),
 ) -> None:
     """Receipt admission gate: may this receipt join the evidence corpus?
 
@@ -3652,22 +3679,11 @@ def admit(
         raise typer.BadParameter(f"candidate receipt {candidate} does not exist")
     if not root.is_dir():
         raise typer.BadParameter(f"corpus dir {root} does not exist")
-    pins: dict[str, str] | None = None
-    if known_inconsistent is not None:
-        if not known_inconsistent.is_file():
-            raise typer.BadParameter(f"known-inconsistent file {known_inconsistent} does not exist")
-        try:
-            raw_pins = json.loads(known_inconsistent.read_text())
-        except (OSError, ValueError) as exc:
-            raise typer.BadParameter(f"known-inconsistent is not JSON: {exc}") from exc
-        if not isinstance(raw_pins, dict) or not all(
-            isinstance(k, str) and isinstance(v, str) and len(v) == 64 for k, v in raw_pins.items()
-        ):
-            raise typer.BadParameter(
-                "known-inconsistent must be a JSON object mapping filename -> 64-hex sha256"
-            )
-        pins = dict(raw_pins)
-    result = admission_check(candidate, root, q=q, known_inconsistent=pins)
+    pins = _sha_pin_map(known_inconsistent, "known-inconsistent")
+    removals = _sha_pin_map(allowed_removals, "allowed-removals")
+    result = admission_check(
+        candidate, root, q=q, known_inconsistent=pins, allowed_removals=removals
+    )
     try:
         path = write_admission_receipt(result, out_dir, receipt_version=receipt_version)
     except ValueError as exc:
@@ -3709,6 +3725,9 @@ def admit_batch_cmd(
         "--strict",
         help="Exit nonzero unless every candidate's verdict is 'admit'.",
     ),
+    allowed_removals: Path | None = typer.Option(
+        None, "--allowed-removals", help=_ALLOWED_REMOVALS_HELP
+    ),
 ) -> None:
     """Batch admission gate for a diff of receipts.
 
@@ -3724,23 +3743,10 @@ def admit_batch_cmd(
     root = Path(corpus_dir)
     if not root.is_dir():
         raise typer.BadParameter(f"corpus dir {root} does not exist")
-    pins: dict[str, str] | None = None
-    if known_inconsistent is not None:
-        if not known_inconsistent.is_file():
-            raise typer.BadParameter(f"known-inconsistent file {known_inconsistent} does not exist")
-        try:
-            raw_pins = json.loads(known_inconsistent.read_text())
-        except (OSError, ValueError) as exc:
-            raise typer.BadParameter(f"known-inconsistent is not JSON: {exc}") from exc
-        if not isinstance(raw_pins, dict) or not all(
-            isinstance(k, str) and isinstance(v, str) and len(v) == 64 for k, v in raw_pins.items()
-        ):
-            raise typer.BadParameter(
-                "known-inconsistent must be a JSON object mapping filename -> 64-hex sha256"
-            )
-        pins = dict(raw_pins)
+    pins = _sha_pin_map(known_inconsistent, "known-inconsistent")
+    removals = _sha_pin_map(allowed_removals, "allowed-removals")
     try:
-        batch = admit_batch(receipts, root, q=q, known_inconsistent=pins)
+        batch = admit_batch(receipts, root, q=q, known_inconsistent=pins, allowed_removals=removals)
     except ValueError as exc:
         raise typer.BadParameter(str(exc)) from exc
     typer.echo(format_data_label(synthetic=True, data_source="SYNTHETIC"))

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from pathlib import Path
 
 import pytest
@@ -15,6 +16,7 @@ from quant_fund.research.admission import (
     write_admission_receipt,
 )
 from quant_fund.research.receipt_v2 import seal_receipt, verify_receipt_file
+from quant_fund.utils.hashing import hash_bytes
 
 
 def _write(dirpath: Path, name: str, body: dict, *, seal: bool = True) -> Path:
@@ -388,3 +390,205 @@ def test_retracted_bytes_rejected_end_to_end(tmp_path: Path) -> None:
     tomb2 = next(c for c in res2["checks"] if c["name"] == "tombstone")
     assert tomb2["reject_errors"] == ["retracted_bytes"]
     assert res2["verdict"] == "reject"
+
+
+# --------------------------------------------------------------------------- #
+# Epoch-stamped corpora: admission applies the chain the way the other epoch
+# gates do (removal acknowledgments, nested stamped members) and lands a
+# diff's files in an order a merge can actually produce.
+# --------------------------------------------------------------------------- #
+
+
+def _stamp(corpus: Path) -> Path:
+    from quant_fund.research.corpus_epoch import corpus_epoch, write_epoch_receipt
+
+    return write_epoch_receipt(corpus_epoch(corpus), corpus)
+
+
+def _fresh(tag: str) -> dict:
+    """A clean claim body whose fingerprints are unique to ``tag``."""
+    seed = hash_bytes(tag.encode())
+    return _claim_body(2.0, dataset=seed, inputs=hash_bytes(seed.encode()))
+
+
+def _chain_check(result: dict) -> dict:
+    return next(c for c in result["checks"] if c["name"] == "epoch_chain")
+
+
+@pytest.fixture()
+def shrunk_corpus(tmp_path: Path) -> tuple[Path, str]:
+    """A stamped corpus whose second epoch records ``old.json`` as removed."""
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    _write(corpus, "a.json", _claim_body(1.0))
+    gone = _write(corpus, "old.json", _fresh("old"))
+    _stamp(corpus)
+    sha = hash_bytes(gone.read_bytes())
+    gone.unlink()
+    _stamp(corpus)
+    return corpus, sha
+
+
+def test_acknowledged_removal_admits(shrunk_corpus: tuple[Path, str], tmp_path: Path) -> None:
+    corpus, sha = shrunk_corpus
+    candidate = _write(tmp_path, "c.json", _fresh("c"))
+    result = admission_check(candidate, corpus, allowed_removals={"old.json": sha})
+    assert _chain_check(result)["ok"], _chain_check(result)
+    assert result["verdict"] == "admit"
+    assert result["params"]["allowed_removals"] == ["old.json"]
+
+
+def test_unacknowledged_removal_quarantines(
+    shrunk_corpus: tuple[Path, str], tmp_path: Path
+) -> None:
+    corpus, sha = shrunk_corpus
+    candidate = _write(tmp_path, "c.json", _fresh("c"))
+    for removals in (None, {"old.json": "0" * 64}, {"other.json": sha}):
+        result = admission_check(candidate, corpus, allowed_removals=removals)
+        errors = _chain_check(result)["errors"]
+        assert any(e.startswith("member_removed:'old.json'") for e in errors), (removals, errors)
+        assert result["verdict"] == "quarantine"
+
+
+def test_admit_batch_passes_removal_acknowledgments(
+    shrunk_corpus: tuple[Path, str], tmp_path: Path
+) -> None:
+    corpus, sha = shrunk_corpus
+    candidate = _write(tmp_path, "c.json", _fresh("c"))
+    assert admit_batch([candidate], corpus)["verdict"] == "quarantine"
+    batch = admit_batch([candidate], corpus, allowed_removals={"old.json": sha})
+    assert batch["verdict"] == "admit", batch["results"][0]["checks"]
+
+
+def test_admit_batch_keeps_stamped_subtrees(tmp_path: Path) -> None:
+    """``legacy-unsealed/`` is no candidate and no lattice member, but the
+    epoch chain stamps it — the shadow corpus must still carry it."""
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    _write(corpus, "a.json", _claim_body(1.0))
+    (corpus / "legacy-unsealed").mkdir()
+    _write(corpus / "legacy-unsealed", "pre_seal.json", _fresh("legacy"), seal=False)
+    _stamp(corpus)
+    candidate = _write(tmp_path, "c.json", _fresh("c"))
+    batch = admit_batch([candidate], corpus)
+    chain = _chain_check(batch["results"][0])
+    assert chain["ok"], chain
+    assert batch["verdict"] == "admit"
+
+
+def test_admit_batch_lands_receipts_before_the_epoch_stamping_them(tmp_path: Path) -> None:
+    """``corpus_epoch_*`` sorts before ``z_*``: by name the epoch would be
+    checked first, and the receipt it stamps would read as removed."""
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    _write(corpus, "a.json", _claim_body(1.0))
+    _stamp(corpus)
+    late = _write(corpus, "z_late.json", _fresh("late"))
+    epoch = _stamp(corpus)
+    assert epoch.name < late.name
+
+    batch = admit_batch([epoch, late], corpus)
+    assert [r["candidate"] for r in batch["results"]] == [late.name, epoch.name]
+    assert batch["verdict"] == "admit", [_chain_check(r) for r in batch["results"]]
+
+
+def _stamp_until(corpus: Path, tag: str, keep: Callable[[Path], bool]) -> Path:
+    """Add a fresh receipt and stamp until the new epoch's name satisfies
+    ``keep`` — epoch names are digests, so each try is a coin flip."""
+    for i in range(64):
+        receipt = _write(corpus, f"{tag}_{i:02d}.json", _fresh(f"{tag}{i}"))
+        epoch = _stamp(corpus)
+        if keep(epoch):
+            return epoch
+        epoch.unlink()
+        receipt.unlink()
+    pytest.fail(f"no {tag} epoch name satisfied the order constraint in 64 stamps")
+
+
+def test_admit_batch_lands_parent_epoch_before_child(tmp_path: Path) -> None:
+    """Two stamps in one diff, the child's digest-name sorting first: by name
+    the child is an orphan and both read as heads."""
+    corpus = tmp_path / "corpus"
+    corpus.mkdir()
+    _write(corpus, "a.json", _claim_body(1.0))
+    _stamp(corpus)
+    parent = _stamp_until(corpus, "p", lambda e: e.name >= "corpus_epoch_8")
+    child = _stamp_until(corpus, "q", lambda e: e.name < "corpus_epoch_8")
+    assert json.loads(child.read_text())["prev_epoch_receipt"] == parent.name
+    diff = sorted((p for p in corpus.glob("[pq]_*.json")), key=lambda p: p.name)
+
+    batch = admit_batch([child, parent, *diff], corpus)
+    order = [r["candidate"] for r in batch["results"]]
+    assert order == [p.name for p in diff] + [parent.name, child.name]
+    assert batch["verdict"] == "admit", [_chain_check(r) for r in batch["results"]]
+
+
+def test_landing_order_is_parent_first(tmp_path: Path) -> None:
+    from quant_fund.research.admission import _landing_order
+
+    def epoch(name: str, prev: str | None) -> Path:
+        body = {"schema": "corpus_epoch.v1", "kind": "corpus_epoch.v1", "prev_epoch_receipt": prev}
+        return _write(tmp_path, name, body, seal=False)
+
+    e1 = epoch("corpus_epoch_c.json", "corpus_epoch_live_head.json")  # parent outside the diff
+    e2 = epoch("corpus_epoch_a.json", "corpus_epoch_c.json")
+    e3 = epoch("corpus_epoch_b.json", "corpus_epoch_a.json")
+    disguised = epoch("zz_epoch.json", "corpus_epoch_b.json")  # schema, not name, decides
+    plain = _write(tmp_path, "m.json", _claim_body(1.0))
+    junk = tmp_path / "corpus_epoch_junk.json"
+    junk.write_text("{not json")  # unreadable: a plain candidate, its seal check reports it
+
+    got = _landing_order([disguised, e3, plain, e2, junk, e1])
+    assert [p.name for p in got] == [
+        "corpus_epoch_junk.json",
+        "m.json",
+        "corpus_epoch_c.json",
+        "corpus_epoch_a.json",
+        "corpus_epoch_b.json",
+        "zz_epoch.json",
+    ]
+
+
+def test_landing_order_cycle_keeps_name_order(tmp_path: Path) -> None:
+    from quant_fund.research.admission import _landing_order
+
+    body = {"schema": "corpus_epoch.v1"}
+    a = _write(
+        tmp_path,
+        "corpus_epoch_a.json",
+        {**body, "prev_epoch_receipt": "corpus_epoch_b.json"},
+        seal=False,
+    )
+    b = _write(
+        tmp_path,
+        "corpus_epoch_b.json",
+        {**body, "prev_epoch_receipt": "corpus_epoch_a.json"},
+        seal=False,
+    )
+    assert _landing_order([b, a]) == [a, b]
+
+
+def test_admit_batch_cli_allowed_removals(shrunk_corpus: tuple[Path, str], tmp_path: Path) -> None:
+    from typer.testing import CliRunner
+
+    from quant_fund.cli.main import app
+
+    corpus, sha = shrunk_corpus
+    candidate = _write(tmp_path, "c.json", _fresh("c"))
+    removals = tmp_path / "removals.json"
+    removals.write_text(json.dumps({"old.json": sha}))
+    out = tmp_path / "out"
+    base = ["admit-batch", str(candidate), "--corpus-dir", str(corpus), "--out-dir", str(out)]
+
+    ok = CliRunner().invoke(app, [*base, "--strict", "--allowed-removals", str(removals)])
+    assert ok.exit_code == 0, ok.output
+    assert "verdict=admit" in ok.output
+
+    bare = CliRunner().invoke(app, [*base, "--strict"])
+    assert bare.exit_code == 1, bare.output
+    assert "epoch_chain" in bare.output
+
+    removals.write_text(json.dumps({"old.json": "short"}))
+    bad = CliRunner().invoke(app, [*base, "--allowed-removals", str(removals)])
+    assert bad.exit_code != 0
+    assert "allowed-removals must be a JSON object" in bad.output

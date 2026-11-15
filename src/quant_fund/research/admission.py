@@ -15,6 +15,9 @@ Checks, in order:
    candidate quarantines it.
 4. ``corpus``     — corpus_audit on both corpora; the survivor-set delta is
    recorded as evidence (BH families legitimately shift as members arrive).
+5. ``epoch_chain`` — the corpus's stamped epoch chain, with the same committed
+   removal acknowledgments every other epoch gate applies; a broken chain
+   quarantines.
 
 Verdicts: ``admit`` | ``quarantine`` | ``reject``. ``--strict`` exits
 nonzero on anything but ``admit``.
@@ -85,6 +88,67 @@ def _shadow_corpus(corpus_dir: Path, extra: Path | None = None) -> Path:
     return shadow
 
 
+def _mirror_subtrees(corpus_dir: Path, shadow: Path) -> None:
+    """Link every file below the corpus's subdirectories into ``shadow``.
+
+    Subtrees such as ``legacy-unsealed/`` are never candidates and never
+    lattice or FDR members (those read top-level ``*.json`` only), but the
+    epoch chain stamps them: a shadow without them reads as a corpus whose
+    stamped members vanished (``head_member_missing_live``)."""
+    for path in sorted(corpus_dir.rglob("*")):
+        rel = path.relative_to(corpus_dir)
+        if len(rel.parts) > 1 and path.is_file():
+            (shadow / rel).parent.mkdir(parents=True, exist_ok=True)
+            _link_or_copy(path, shadow / rel)
+
+
+def _epoch_parent(path: Path) -> tuple[bool, str | None]:
+    """``(is_epoch, prev_epoch_receipt)`` for a candidate file — recognised by
+    its ``corpus_epoch.v1`` schema like the chain reader does, not its name.
+    Unreadable files are plain candidates; their seal check reports them."""
+    from quant_fund.research.corpus_epoch import EPOCH_SCHEMA
+
+    try:
+        doc = json.loads(path.read_text())
+    except (OSError, UnicodeError, ValueError):
+        return False, None
+    body = _candidate_body(doc) if isinstance(doc, Mapping) else {}
+    if EPOCH_SCHEMA not in (body.get("schema"), body.get("kind")):
+        return False, None
+    prev = body.get("prev_epoch_receipt")
+    return True, prev if isinstance(prev, str) else None
+
+
+def _landing_order(candidates: Iterable[Path]) -> list[Path]:
+    """The order a diff's files can have been written in: receipts by name,
+    then corpus epoch receipts parent before child (ties by name).
+
+    ``admit_batch`` gates each candidate against the corpus holding every
+    candidate before it, so that order must be a real one. An epoch stamps
+    the receipts around it and extends its parent; by name alone a second
+    epoch in one diff, or an epoch sorting before a receipt it stamps, reads
+    as an orphaned head or a removed member though the merged corpus is
+    whole. The order only picks which intermediate states are checked: every
+    candidate still sees all earlier ones, so an intra-diff contradiction is
+    still caught on whichever file lands later. A cycle has no real order;
+    its members keep name order and the chain check flags them."""
+    ordered: list[Path] = []
+    parents: dict[Path, str | None] = {}
+    for path in sorted(candidates, key=lambda p: p.name):
+        is_epoch, prev = _epoch_parent(path)
+        if is_epoch:
+            parents[path] = prev
+        else:
+            ordered.append(path)
+    pending = list(parents)
+    while pending:
+        names = {p.name for p in pending}
+        ready = [p for p in pending if parents[p] not in names] or pending
+        ordered += ready
+        pending = [p for p in pending if p not in ready]
+    return ordered
+
+
 def _inconsistent_groups(lattice: Mapping[str, Any]) -> set[str]:
     """Fingerprints of the inconsistent claim groups in a lattice receipt."""
     out: set[str] = set()
@@ -109,8 +173,14 @@ def admission_check(
     q: float = 0.05,
     known_inconsistent: Mapping[str, str] | None = None,
     tombstone_dir: Path | str | None = None,
+    allowed_removals: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Gate a candidate receipt against an existing corpus.
+
+    ``allowed_removals`` (name -> sha256, ``quality/epoch_allowed_removals.json``)
+    is handed to the epoch-chain check exactly as ``corpus-epoch --check``
+    and ``verify-repo`` use it: a stamped member removed with acknowledged
+    bytes is recorded history, any other removal still quarantines.
 
     Fails closed: a missing candidate or unreadable corpus dir raises;
     per-check findings are recorded rather than swallowed.
@@ -170,6 +240,7 @@ def admission_check(
     before_shadow = _shadow_corpus(corpus_dir)
     after_shadow = _shadow_corpus(corpus_dir, extra=candidate)
     pins = dict(known_inconsistent or {})
+    removals = dict(allowed_removals or {})
     before = receipt_lattice(before_shadow, known_inconsistent=pins)
     after = receipt_lattice(after_shadow, known_inconsistent=pins)
     new_inconsistent = _inconsistent_groups(after) - _inconsistent_groups(before)
@@ -225,7 +296,7 @@ def admission_check(
     except ImportError:
         checks.append({"name": "epoch_chain", "ok": True, "skipped": "corpus_epoch_unavailable"})
     else:
-        chain_result = check_epoch_chain(corpus_dir)
+        chain_result = check_epoch_chain(corpus_dir, allowed_removals=removals or None)
         chain_errors = list(chain_result["errors"])
         # An unstamped corpus ("no_epoch_receipts") is benign — the gate
         # works fine before the first epoch stamp exists. Only a *broken
@@ -307,7 +378,12 @@ def admission_check(
         "simulated_only": False,
         "data_label": "CORPUS",
         "inputs_sha256": inputs_sha256,
-        "params": {"q": q, "corpus_dir": str(corpus_dir), "known_inconsistent": sorted(pins)},
+        "params": {
+            "q": q,
+            "corpus_dir": str(corpus_dir),
+            "known_inconsistent": sorted(pins),
+            "allowed_removals": sorted(removals),
+        },
         "candidate": candidate.name,
         "candidate_sha256": candidate_sha,
         "n_corpus_receipts": len(corpus_files),
@@ -327,6 +403,7 @@ def admit_batch(
     *,
     q: float = 0.05,
     known_inconsistent: Mapping[str, str] | None = None,
+    allowed_removals: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     """Gate a set of incoming receipts the way a merge actually lands them.
 
@@ -339,11 +416,14 @@ def admit_batch(
 
     which is exactly the intermediate state each file creates, so
     intra-diff contradictions are attributed to the file that introduces
-    them and no commit sneaks a contradiction in inside a batch.
+    them and no commit sneaks a contradiction in inside a batch. Files are
+    processed in ``_landing_order``: receipts by name, then epoch receipts
+    parent first.
 
     Only top-level ``*.json`` members of the corpus are gated: quarantined
     subtrees (``legacy-unsealed/``) and non-receipt files are not corpus
-    members and are skipped — they carry their own byte-pins elsewhere.
+    members and are skipped — they carry their own byte-pins elsewhere. The
+    shadow still carries those subtrees, because the epoch chain stamps them.
 
     Fails closed: a missing candidate, a candidate inside the corpus under a
     *different* name, or an unreadable corpus dir raises.
@@ -351,16 +431,18 @@ def admit_batch(
     corpus_dir = Path(corpus_dir)
     if not corpus_dir.is_dir():
         raise ValueError(f"corpus dir {corpus_dir} does not exist")
-    ordered = sorted((Path(c) for c in candidates), key=lambda p: p.name)
+    ordered = [Path(c) for c in candidates]
     for cand in ordered:
         if not cand.is_file():
             raise ValueError(f"candidate receipt {cand} does not exist")
+    ordered = _landing_order(ordered)
 
     changed_names = {c.name for c in ordered}
     shadow = Path(tempfile.mkdtemp(prefix="admit_batch_base_"))
     for path in sorted(corpus_dir.glob("*.json")):
         if path.is_file() and path.name not in changed_names:
             _link_or_copy(path, shadow / path.name)
+    _mirror_subtrees(corpus_dir, shadow)
 
     results: list[dict[str, Any]] = []
     for cand in ordered:
@@ -370,6 +452,7 @@ def admit_batch(
             q=q,
             known_inconsistent=known_inconsistent,
             tombstone_dir=corpus_dir,
+            allowed_removals=allowed_removals,
         )
         results.append(result)
         # Post-merge coexistence: a merged diff lands all of its files
