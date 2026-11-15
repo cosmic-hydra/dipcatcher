@@ -35,12 +35,20 @@ def _harvest_p_values(findings: Iterable[Any]) -> list[float]:
 
 
 @app.command()
-def research(config: Path = typer.Option(Path("configs/research.yaml"))) -> None:
+def research(
+    config: Path = typer.Option(Path("configs/research.yaml")),
+    jobs: int = typer.Option(
+        1,
+        "--jobs",
+        min=1,
+        help="Worker processes for the seeded live-optional benches (same families and receipt).",
+    ),
+) -> None:
     """Run Dipcatcher's proprietary research benches and write a labeled notebook."""
     from quant_fund.research.agent import format_p_value, run_research
 
     cfg = _cfg(config)
-    nb = run_research(cfg)
+    nb = run_research(cfg, jobs=jobs)
     # Always print DATA_LABEL + FDR families (regression-tested).
     typer.echo(format_data_label(synthetic=bool(nb.synthetic), data_source=str(nb.data_source)))
     if nb.synthetic:

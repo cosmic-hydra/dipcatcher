@@ -747,7 +747,7 @@ def test_research_non_synthetic_empty_families(
 ) -> None:
     monkeypatch.setattr(
         "quant_fund.research.agent.run_research",
-        lambda c: _research_nb(synthetic=False),
+        lambda c, **_kw: _research_nb(synthetic=False),
     )
     result = runner.invoke(app, ["research", "--config", str(_data_config(tmp_path))])
     assert result.exit_code == 0, result.output
@@ -755,6 +755,24 @@ def test_research_non_synthetic_empty_families(
     assert "DM x vs y" in result.output
     assert "ridge: IC=" in result.output
     assert "json=j.json" in result.output
+
+
+def test_research_jobs_flag_reaches_run_research(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    seen: list[object] = []
+
+    def fake(c: object, **kw: object) -> SimpleNamespace:
+        seen.append(kw.get("jobs"))
+        return _research_nb(synthetic=True)
+
+    monkeypatch.setattr("quant_fund.research.agent.run_research", fake)
+    cfg = str(_data_config(tmp_path))
+    assert runner.invoke(app, ["research", "--config", cfg]).exit_code == 0
+    assert runner.invoke(app, ["research", "--config", cfg, "--jobs", "3"]).exit_code == 0
+    rejected = runner.invoke(app, ["research", "--config", cfg, "--jobs", "0"])
+    assert rejected.exit_code == 2
+    assert seen == [1, 3]
 
 
 def test_research_echoes_all_family_blocks(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -803,7 +821,7 @@ def test_research_echoes_all_family_blocks(tmp_path: Path, monkeypatch: pytest.M
     }
     monkeypatch.setattr(
         "quant_fund.research.agent.run_research",
-        lambda c: _research_nb(synthetic=True, families=families),
+        lambda c, **_kw: _research_nb(synthetic=True, families=families),
     )
     result = runner.invoke(app, ["research", "--config", str(_data_config(tmp_path))])
     assert result.exit_code == 0, result.output

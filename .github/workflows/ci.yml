@@ -374,7 +374,9 @@ jobs:
       - name: Collect paper and analytics tests
         run: uv run pytest --collect-only -q -m smoke
       - name: Synthetic research smoke
-        run: uv run dipcatcher research --config configs/research.yaml
+        # 1400+ seeded live-optional benches: fan them out over the runner's
+        # cores (same families and scorecard; see docs/OPERATIONS_RUNBOOK.md).
+        run: uv run dipcatcher research --config configs/research.yaml --jobs "$(nproc)"
       - name: Data lineage health
         run: |
           uv run dipcatcher doctor --config configs/research.yaml | tee doctor.txt

@@ -37,6 +37,10 @@ packages, point-in-time status, and the versioned 23-family benchmark catalog.
 Synthetic output is diagnostic evidence only; it is not a live-performance
 claim.
 
+`--jobs N` runs the seeded live-optional benches over N worker processes (the
+CI smoke passes `--jobs "$(nproc)"`). Each bench is reseeded from the run seed,
+so N changes the wall clock, not the families or the scorecard.
+
 ### Research lanes with their own command
 
 Every documented research command is reachable from `dipcatcher`.
