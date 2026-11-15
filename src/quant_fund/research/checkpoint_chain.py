@@ -89,6 +89,15 @@ def _verify_signature(rec: dict[str, Any], pubkey: Any, pub_hex: str) -> None:
         rec["errors"].append("signature_invalid")
 
 
+def _installed_witness_key(root: Path) -> bytes | None:
+    """The committed witness public key's raw bytes — the same bytes the
+    witness verifier loads — or ``None`` when absent or unreadable."""
+    try:
+        return (root / _WITNESS_PUBKEY_PATH).read_bytes()
+    except OSError:
+        return None
+
+
 def _quorum_digest(rec: dict[str, Any]) -> str | None:
     """The registry digest a checkpoint's payload claims authorized it."""
     payload = rec.get("payload") or {}
@@ -451,14 +460,13 @@ def checkpoint_spine(root: str | Path = ".") -> dict[str, Any]:
 
     # Key resets: boundary on the spine, new keys fresh up to it, lost keys
     # and the lost registry revoked after it.
-    witness_pub = root_path / _WITNESS_PUBKEY_PATH
     errors.extend(
         reset_spine_errors(
             resets,
             records,
             ordered,
             lineage=lineage,
-            live_witness_pem=witness_pub.read_text() if witness_pub.is_file() else None,
+            live_witness_pem=_installed_witness_key(root_path),
         )
     )
     notes.extend(reset_notes(resets))

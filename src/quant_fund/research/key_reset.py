@@ -499,15 +499,31 @@ def _revoked(
 
 
 def _spki_or_none(pem: Any) -> bytes | None:
+    """DER SubjectPublicKeyInfo of a PEM key given as text or raw bytes, or
+    ``None`` when it does not parse. Raw bytes matter for the installed key:
+    the witness verifier loads the file's bytes, and a PEM with stray
+    non-UTF-8 bytes around it still loads there."""
     from cryptography.exceptions import UnsupportedAlgorithm
+    from cryptography.hazmat.primitives.serialization import (
+        Encoding,
+        PublicFormat,
+        load_pem_public_key,
+    )
 
     try:
-        return _witness_spki(pem) if isinstance(pem, str) else None
+        data = pem.encode() if isinstance(pem, str) else pem
+        if not isinstance(data, bytes):
+            return None
+        return load_pem_public_key(data).public_bytes(
+            Encoding.DER, PublicFormat.SubjectPublicKeyInfo
+        )
     except (ValueError, TypeError, UnsupportedAlgorithm):
-        return None  # a malformed installed key is the witness lane's finding
+        return None  # a malformed installed key is the witness checks' finding
 
 
-def _witness_reinstated(ordered_resets: list[dict[str, Any]], live_pem: str | None) -> list[str]:
+def _witness_reinstated(
+    ordered_resets: list[dict[str, Any]], live_pem: str | bytes | None
+) -> list[str]:
     """A witness key declared lost stays lost: no later reset installs it
     again, and it is not the installed key."""
     retired: set[bytes] = set()
@@ -530,7 +546,7 @@ def reset_spine_errors(
     records: dict[str, Any],
     ordered: list[str],
     lineage: dict[str, tuple[dict[str, str], int]] | None = None,
-    live_witness_pem: str | None = None,
+    live_witness_pem: str | bytes | None = None,
 ) -> list[str]:
     """Boundary on the spine, fresh new keys, revoked lost keys, and no lost
     witness key reinstated.
@@ -538,7 +554,7 @@ def reset_spine_errors(
     ``ordered`` is the walked spine, genesis first; ``records`` maps digest
     to ``checkpoint_chain`` record dicts; ``lineage`` maps registry digests
     to ``(key_id -> pubkey, threshold)``; ``live_witness_pem`` is the
-    installed ``witness_signing.pub``.
+    installed ``witness_signing.pub`` (its raw bytes).
     """
     position = {digest: i for i, digest in enumerate(ordered)}
     errors: list[str] = []

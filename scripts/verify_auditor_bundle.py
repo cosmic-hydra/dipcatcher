@@ -609,7 +609,7 @@ def _verify_reset_spine(
     era_of: dict[str, str | None],
     errors: list[str],
     lineage: dict[str, tuple[dict[str, str], int]],
-    live_witness_pem: str | None,
+    live_witness_pem: bytes | None,
 ) -> None:
     """Each reset's boundary sits on the spine; its new keys signed nothing
     at or before the boundary; past it, no lost key signs and no record
@@ -641,16 +641,29 @@ def _verify_reset_spine(
 
 
 def _spki_or_none(pem: Any) -> bytes | None:
+    """DER SubjectPublicKeyInfo of a PEM key given as text or raw bytes, or
+    ``None`` when it does not parse (raw bytes: a PEM with stray non-UTF-8
+    bytes around it still loads as a key)."""
     from cryptography.exceptions import UnsupportedAlgorithm
+    from cryptography.hazmat.primitives.serialization import (
+        Encoding,
+        PublicFormat,
+        load_pem_public_key,
+    )
 
     try:
-        return _witness_spki(pem) if isinstance(pem, str) else None
+        data = pem.encode() if isinstance(pem, str) else pem
+        if not isinstance(data, bytes):
+            return None
+        return load_pem_public_key(data).public_bytes(
+            Encoding.DER, PublicFormat.SubjectPublicKeyInfo
+        )
     except (ValueError, TypeError, UnsupportedAlgorithm):
         return None  # a malformed installed key is the witness checks' finding
 
 
 def _verify_witness_retirement(
-    ordered_resets: list[dict[str, Any]], live_witness_pem: str | None, errors: list[str]
+    ordered_resets: list[dict[str, Any]], live_witness_pem: bytes | None, errors: list[str]
 ) -> None:
     """A witness key declared lost stays lost: no later reset installs it
     again, and it is not the installed key."""
@@ -700,10 +713,11 @@ def _verify_archive_extent(
         errors.append("spine_tip_mismatch")
 
 
-def _live_witness_pem(files: dict[str, str]) -> str | None:
+def _live_witness_pem(files: dict[str, str]) -> bytes | None:
+    """The bundled witness public key's raw bytes (never text-decoded)."""
     try:
-        return base64.b64decode(files["quality/witness_signing.pub"]).decode()
-    except (KeyError, TypeError, ValueError):  # UnicodeDecodeError is a ValueError
+        return base64.b64decode(files["quality/witness_signing.pub"])
+    except (KeyError, TypeError, ValueError):
         return None
 
 

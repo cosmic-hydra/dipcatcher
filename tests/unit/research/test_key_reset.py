@@ -597,7 +597,20 @@ def test_a_witness_key_lost_by_an_earlier_reset_stays_lost(
     assert "spine_key_reset_reinstates_witness:live" in script
 
 
-def test_reinstalling_a_lost_witness_key_by_hand_is_flagged(tmp_path: Path) -> None:
+@pytest.mark.parametrize(
+    "wrap",
+    [
+        lambda pem: pem.encode(),
+        lambda pem: pem.replace("\n", "\r\n").encode(),
+        # Not UTF-8, yet the witness verifier still loads the key from it.
+        lambda pem: b"\xff\n" + pem.encode(),
+        lambda pem: pem.encode() + b"\xfe",
+    ],
+    ids=["verbatim", "crlf", "leading_non_utf8", "trailing_non_utf8"],
+)
+def test_reinstalling_a_lost_witness_key_by_hand_is_flagged(
+    tmp_path: Path, wrap: Callable[[str], bytes]
+) -> None:
     root, _gate = _tree(tmp_path)
     w1, w2 = _p256_pem(), _p256_pem()
     (root / "quality/witness_signing.pub").write_text(w1)
@@ -605,9 +618,20 @@ def test_reinstalling_a_lost_witness_key_by_hand_is_flagged(tmp_path: Path) -> N
     _reset(root, new, witness_pubkey_pem=w2)
     write_checkpoint(root, [new])
     _assert_reset_verified(root)
-    (root / "quality/witness_signing.pub").write_text(w1)
+    (root / "quality/witness_signing.pub").write_bytes(wrap(w1))
     assert "key_reset_reinstates_witness:live" in checkpoint_spine(root)["errors"]
     assert "spine_key_reset_reinstates_witness:live" in _standalone_errors(root)
+
+
+def test_an_unparseable_installed_witness_key_does_not_crash_the_spine(tmp_path: Path) -> None:
+    root, _gate = _tree(tmp_path)
+    (root / "quality/witness_signing.pub").write_text(_p256_pem())
+    new = generate_keypair()
+    _reset(root, new, witness_pubkey_pem=_p256_pem())
+    write_checkpoint(root, [new])
+    (root / "quality/witness_signing.pub").write_bytes(b"\xff\xfe not a key")
+    assert not any("reinstates_witness" in e for e in checkpoint_spine(root)["errors"])
+    assert not any("reinstates_witness" in e for e in _standalone_errors(root))
 
 
 def test_a_bundle_stripped_of_its_archives_is_not_pre_spine(tmp_path: Path) -> None:
