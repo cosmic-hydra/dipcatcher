@@ -84,7 +84,10 @@ def test_injected_side_chain_is_orphan_and_fork(tmp_path: Path) -> None:
     root, priv, pub = _repo(tmp_path)
     _spine(root, priv, pub, 2)
     forged = json.loads((root / "quality/checkpoint.json").read_text())
-    forged["signature"] = "0" + forged["signature"][1:]
+    sig = forged["signature"]
+    # Always change the first hex digit: a fixed "0" is a no-op whenever the
+    # fresh random key's signature already starts with "0" (p = 1/16).
+    forged["signature"] = ("1" if sig[:1] == "0" else "0") + sig[1:]
     (root / "quality/checkpoints/zz_injected.json").write_text(json.dumps(forged))
     res = checkpoint_spine(root)
     assert res["ok"] is False
