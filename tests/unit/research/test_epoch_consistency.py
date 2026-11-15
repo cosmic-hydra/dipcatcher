@@ -15,7 +15,7 @@ from quant_fund.research.epoch_consistency import (
     consistency_proof,
     verify_consistency,
 )
-from quant_fund.utils.hashing import hash_bytes
+from quant_fund.utils.hashing import canonical_json_bytes, hash_bytes
 
 
 def _corpus(tmp_path: Path, n_stamps: int = 3) -> Path:
@@ -136,6 +136,71 @@ def test_consistency_member_digest_binding(tmp_path: Path) -> None:
     # The successor's own bytes changed → its digest mismatches too.
     assert any(e.startswith("hop_digest_mismatch") for e in errors)
     assert f"hop_member_digest_mismatch:{succ}" in errors
+
+
+def _md_corpus(tmp_path: Path, n_stamps: int = 3) -> Path:
+    """``*.md`` corpus (like ``verifier/``): the glob excludes the epoch
+    receipts, so no successor can pin its predecessor as a member."""
+    c = tmp_path / "verifier"
+    c.mkdir()
+    (c / "r1.md").write_text("# one\n")
+    for i in range(n_stamps):
+        (c / f"r{i + 2}.md").write_text(f"# {i}\n")
+        write_epoch_receipt(corpus_epoch(c, pattern="*.md"), c)
+    return c
+
+
+def _rewrite_genesis(c: Path, *, reseal: bool) -> tuple[str, str]:
+    """Edit the genesis receipt in place; return (genesis, successor)."""
+    index = chain_index(c, pattern="*.md")
+    first = _genesis(index)
+    payload = json.loads((c / first).read_text())
+    payload["forged_marker"] = True
+    if reseal:
+        unsigned = {k: v for k, v in payload.items() if k != "receipt_sha256"}
+        payload["receipt_sha256"] = hash_bytes(canonical_json_bytes(unsigned))
+    (c / first).write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
+    succ = next(n for n, (_, e, _) in index.items() if e.get("prev_epoch_receipt") == first)
+    return first, succ
+
+
+def test_consistency_non_member_glob_binds_through_seal(tmp_path: Path) -> None:
+    c = _md_corpus(tmp_path)
+    index = chain_index(c, pattern="*.md")
+    proof = consistency_proof(c, _genesis(index), pattern="*.md")
+    assert proof["n_hops"] == 3
+    assert verify_consistency(proof, c) == []
+
+
+def test_consistency_non_member_glob_rejects_broken_seal(tmp_path: Path) -> None:
+    """A predecessor edited without resealing keeps its name, but its seal
+    no longer verifies — even a proof built over the edited tree fails."""
+    c = _md_corpus(tmp_path)
+    first, succ = _rewrite_genesis(c, reseal=False)
+    proof = consistency_proof(c, first, pattern="*.md")
+    assert f"hop_member_digest_mismatch:{succ}" in verify_consistency(proof, c)
+
+
+def test_consistency_non_member_glob_rejects_resealed_rename(tmp_path: Path) -> None:
+    """Resealing the edit makes the seal verify, but the file name no longer
+    embeds it — the name is what the successor's prev link commits to."""
+    c = _md_corpus(tmp_path)
+    first, succ = _rewrite_genesis(c, reseal=True)
+    proof = consistency_proof(c, first, pattern="*.md")
+    assert f"hop_member_digest_mismatch:{succ}" in verify_consistency(proof, c)
+
+
+def test_consistency_member_glob_never_falls_back_to_seal(tmp_path: Path) -> None:
+    """Where the glob covers receipts, a dropped member pin is an error even
+    though the predecessor's seal is intact."""
+    c = _corpus(tmp_path)
+    index = chain_index(c)
+    proof = consistency_proof(c, _genesis(index))
+    succ = proof["hops"][1]["name"]
+    path, payload, _ = index[succ]
+    payload["members"] = [m for m in payload["members"] if m["name"] != proof["hops"][0]["name"]]
+    path.write_text(json.dumps(payload))
+    assert f"hop_member_digest_mismatch:{succ}" in verify_consistency(proof, c)
 
 
 def test_verifier_coverage_ratchet() -> None:
