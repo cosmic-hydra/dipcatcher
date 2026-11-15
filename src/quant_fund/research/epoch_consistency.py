@@ -18,7 +18,8 @@ bytes hash to the listed digest — so linkage and content both bind. When the
 member glob excludes the receipts themselves (``*.md`` / ``*.yml`` corpora)
 no successor can pin its predecessor as a member; the predecessor is bound
 through its own seal instead: the seal must verify and the file name must
-embed it (``corpus_epoch_<receipt_sha256[:16]>.json``).
+embed it (``corpus_epoch_<receipt_sha256[:16]>.json``). That hop is bound to
+its successor only by the 16-hex (64-bit) name prefix, not a full digest.
 
 Provenance evidence only; never a market or P&L claim.
 """

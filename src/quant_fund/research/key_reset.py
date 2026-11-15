@@ -19,7 +19,8 @@ What a reset proves, and what it cannot:
   checkpoint to link directly to it — a reset never re-authorizes a side
   chain or a mid-history splice.
 - **Possession.** The new registry's threshold, including the new gate key,
-  signs the record, so the named new keys are held by someone.
+  signs the record, so those keys are held by someone. The new witness key
+  does not sign it.
 - **Revocation.** No spine checkpoint after the boundary may be signed by,
   or claim, a lost key or the lost registry — a reset also retires keys that
   may have leaked.

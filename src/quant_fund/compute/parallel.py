@@ -11,9 +11,9 @@ while the caller is single-threaded. Forking a process that has other live
 threads (a leaked executor, an HTTP server, a joblib/loky pool) copies any
 lock those threads hold into the child, where nothing will ever release it,
 so the pool can hang forever. With other threads alive the pool uses
-``forkserver`` instead. Tasks are pickled onto the call queue under every
-start method, so the choice does not change which callables are accepted or
-any result. A pool that cannot start falls back to the calling process; task
+``forkserver`` instead. Tasks are pickled under every start method; under
+forkserver the child re-imports the callable's module, so runtime-mutated
+module state is not inherited. A pool that cannot start runs inline; task
 exceptions still propagate. Below ``min_items`` the map stays inline.
 """
 

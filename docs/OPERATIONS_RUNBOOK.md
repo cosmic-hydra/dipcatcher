@@ -240,11 +240,13 @@ and both bundle verifiers re-check. The Lead authorizes it; do it in one PR:
 2. `dipcatcher key-reset --key-file <new gate key> [--key-file <more> --threshold M]
    [--witness-pub <new witness pub.pem>] --reason "<why the keys are lost>"
    --authorized-by "<who>"` — binds the current `quality/checkpoint.json` as
-   the boundary, writes `quality/key_reset_<id>.json` (signed by every new
-   key), and installs `gate_signing.pub`, `gate_quorum.json` and, with
-   `--witness-pub`, `witness_signing.pub`. It refuses a key the lost set
-   already contains, including the installed witness key. Without
-   `--witness-pub` the witness key is not declared lost and stays installed.
+   the boundary, writes `quality/key_reset_<id>.json` (signed by the new
+   registry at its threshold, including the new gate key; the new witness
+   key signs nothing until step 6), and installs `gate_signing.pub`,
+   `gate_quorum.json` and, with `--witness-pub`, `witness_signing.pub`. It
+   refuses a key the lost set already contains, including the installed
+   witness key. Without `--witness-pub` the witness key is not declared lost
+   and stays installed.
 3. `dipcatcher crown-jewels --write`, then `make stamp-epochs`.
 4. `dipcatcher quorum-sign --key-file <new gate key>` — re-sign the pins
    under the new registry.
@@ -264,11 +266,13 @@ checkpoint's Rekor proof (signed by the lost witness key) under the new key
 and reports `witness_signature_invalid` until step 5 replaces the head.
 
 The reset cannot rewrite history: checkpoints up to the boundary keep
-verifying under the old keys, and any later signature by a lost key is
-rejected. It also cannot prove who authorized it — a lost key cannot sign
-its own retirement — so protect `quality/key_reset_*`, `gate_signing.pub`,
-`gate_quorum.json` and `witness_signing.pub` with CODEOWNERS and branch
-protection (see [EVIDENCE_INTEGRITY.md](EVIDENCE_INTEGRITY.md) "Key reset").
+verifying under the old keys, and any later checkpoint signed by a lost gate
+key is rejected. Rekor entries made with a lost witness key are not watched
+(`witness-scan` sweeps only the installed key). It also cannot prove who
+authorized it — a lost key cannot sign its own retirement — so protect
+`quality/key_reset_*`, `gate_signing.pub`, `gate_quorum.json` and
+`witness_signing.pub` with CODEOWNERS and branch protection (see
+[EVIDENCE_INTEGRITY.md](EVIDENCE_INTEGRITY.md) "Key reset").
 
 Regenerating keys, pins, or signatures without the Lead and
 `GATE_SIGNING_KEY` is forbidden; signed state (`quality/checkpoint.json`,
