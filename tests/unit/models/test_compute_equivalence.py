@@ -5,8 +5,11 @@ SYNTHETIC inputs only. These checks are correctness tests, not market evidence.
 
 from __future__ import annotations
 
+import json
+import subprocess
 import sys
 import threading
+from pathlib import Path
 
 import numpy as np
 import polars as pl
@@ -406,32 +409,88 @@ def test_process_map_propagates_task_errors() -> None:
         process_map(_boom_task, [0, 1, 2, 3], base_seed=1)
 
 
-def test_garch_origin_tasks_match_across_processes() -> None:
-    from quant_fund.pipeline.train.volatility import _garch_origin_task
+# Runs in a fresh interpreter; see test_garch_origin_tasks_match_across_processes.
+_GARCH_CROSS_PROCESS_SCRIPT = """
+import json
+import multiprocessing
+import sys
+import threading
 
-    rng = np.random.default_rng(10)
-    spec = {
-        "p": 1,
-        "q": 1,
-        "dist": "normal",
-        "vol": "garch",
-        "min_obs": 40,
-        "mean": "Constant",
-        "power": 2.0,
-        "series_scope": "security_level_ret_1",
-    }
-    items = [
-        (spec, rng.normal(scale=0.01, size=90), 1, float(rng.normal(scale=0.01))) for _ in range(4)
-    ]
+import numpy as np
+
+from quant_fund.compute import parallel
+from quant_fund.compute.parallel import derive_seed, process_map
+from quant_fund.models.volatility import _GARCH_FIT_CACHE
+from quant_fund.pipeline.train.volatility import _garch_origin_task
+
+
+def summary(rows):
+    return [[row[0], row[1], row[2]["log_score"], row[2]["pit"]] for row in rows]
+
+
+rng = np.random.default_rng(10)
+spec = {
+    "p": 1,
+    "q": 1,
+    "dist": "normal",
+    "vol": "garch",
+    "min_obs": 40,
+    "mean": "Constant",
+    "power": 2.0,
+    "series_scope": "security_level_ret_1",
+}
+items = [
+    (spec, rng.normal(scale=0.01, size=90), 1, float(rng.normal(scale=0.01))) for _ in range(4)
+]
+out = {}
+for method in ("fork", "forkserver"):
+    if method not in multiprocessing.get_all_start_methods():
+        continue
+    if method == "fork":
+        assert threading.active_count() == 1, "fork needs a single-threaded parent"
+    parallel._start_method = lambda method=method: method
+    # Empty cache: forked workers must fit, not inherit the parent's fits.
     _GARCH_FIT_CACHE.clear()
-    try:
-        serial = [_garch_origin_task(item, derive_seed(0, i)) for i, item in enumerate(items)]
-        parallel = process_map(_garch_origin_task, items, base_seed=0, min_items=4)
-    finally:
-        _GARCH_FIT_CACHE.clear()
-    assert len(parallel) == len(serial)
-    for left, right in zip(parallel, serial, strict=True):
-        assert left[0] == pytest.approx(right[0], rel=1e-12, abs=1e-15)
-        assert left[1] == right[1]
-        assert left[2]["log_score"] == pytest.approx(right[2]["log_score"], rel=1e-12, abs=1e-12)
-        assert left[2]["pit"] == pytest.approx(right[2]["pit"], rel=1e-12, abs=1e-12)
+    out[method] = summary(
+        process_map(_garch_origin_task, items, base_seed=0, min_items=4, max_workers=2)
+    )
+_GARCH_FIT_CACHE.clear()
+out["serial"] = summary(
+    [_garch_origin_task(item, derive_seed(0, i)) for i, item in enumerate(items)]
+)
+with open(sys.argv[1], "w", encoding="utf-8") as fh:
+    json.dump(out, fh)
+"""
+
+
+def test_garch_origin_tasks_match_across_processes(tmp_path: Path) -> None:
+    """Pool workers reproduce the serial GARCH origin fits under fork and forkserver.
+
+    The comparison runs in a fresh interpreter. Inside a pytest worker, earlier
+    tests can leave threads alive, which switch ``process_map`` to forkserver,
+    and can leave process-wide numeric state that a forkserver worker does not
+    share; an in-worker comparison then depends on test order. Every pool here
+    starts from an empty ``_GARCH_FIT_CACHE``, so forked workers fit too.
+    """
+    out = tmp_path / "garch_cross_process.json"
+    proc = subprocess.run(
+        [sys.executable, "-c", _GARCH_CROSS_PROCESS_SCRIPT, str(out)],
+        capture_output=True,
+        text=True,
+        timeout=600,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stderr[-4000:]
+    results = json.loads(out.read_text(encoding="utf-8"))
+    serial = results.pop("serial")
+    if sys.platform == "linux":
+        assert sorted(results) == ["fork", "forkserver"]
+    if not results:
+        pytest.skip("neither fork nor forkserver is available on this platform")
+    for method, rows in results.items():
+        assert len(rows) == len(serial), method
+        for left, right in zip(rows, serial, strict=True):
+            assert left[0] == pytest.approx(right[0], rel=1e-12, abs=1e-15), method
+            assert left[1] == right[1], method
+            assert left[2] == pytest.approx(right[2], rel=1e-12, abs=1e-12), method
+            assert left[3] == pytest.approx(right[3], rel=1e-12, abs=1e-12), method
