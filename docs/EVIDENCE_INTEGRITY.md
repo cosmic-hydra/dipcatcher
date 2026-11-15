@@ -157,9 +157,11 @@ instead of reading as a pre-spine bundle.
 What a reset cannot prove is authorization: a lost key cannot sign its own
 retirement, so the reset is authorized by whoever can commit to the
 repository and `authorized_by` is a recorded claim, not a signature. The
-defense is visibility and review. `verify-rotations`, `checkpoint-chain`
-and `verify-repo` report the reset (`verdict=reset`, `n_resets`, a
-`key_reset:` note), both bundle verifiers re-check it, the record is a
+defense is visibility and review. `verify-rotations` reports
+`verdict=reset`, `verify-repo` counts the reset under both rotation gates,
+`checkpoint-chain` counts it (`n_resets`) and names the record in a
+`key_reset:` note (its spine verdict stays `intact` when every link
+verifies), both bundle verifiers re-check it, the record is a
 stamped `quality/` member pinned by every later checkpoint, and it cannot
 rewrite history — pre-boundary checkpoints stay bound to the old keys and to
 their Rekor entries. Treat a reset as a trust-root change: protect
@@ -167,8 +169,9 @@ their Rekor entries. Treat a reset as a trust-root change: protect
 and `quality/witness_signing.pub` with CODEOWNERS and branch protection, and
 review the record's reason and boundary like any other change to them.
 Residual risk, stated plainly: someone with commit access and no keys can
-forge a reset. It is loud — a new record, new pubkeys, `verdict=reset` in
-every report — but only review blocks it.
+forge a reset. It is loud — a new record, new pubkeys, and the reset named
+by `verify-rotations`, `verify-repo` and `checkpoint-chain` — but only review
+blocks it.
 
 ## Operator quick reference
 
