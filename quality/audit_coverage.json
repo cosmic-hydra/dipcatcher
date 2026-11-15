@@ -4,6 +4,12 @@
     "cli/__main__.py": {
       "status": "pending"
     },
+    "cli/key_reset_cmds.py": {
+      "status": "pending"
+    },
+    "cli/receipt_pin_args.py": {
+      "status": "pending"
+    },
     "utils/cli_errors.py": {
       "status": "pending"
     },
@@ -5335,7 +5341,7 @@
     },
     "research": {
       "doc": "docs/AUDIT_LEDGER.md",
-      "n_modules": 1861,
+      "n_modules": 1863,
       "reason": "Current module census; the expanded directory has not completed a line-level audit. Existing audit documents cover earlier reviewed scope only.",
       "status": "partial"
     },
@@ -5423,7 +5429,7 @@
       "status": "audited"
     },
     "cli": {
-      "n_modules": 19,
+      "n_modules": 21,
       "status": "audited"
     },
     "hedge_lab": {
