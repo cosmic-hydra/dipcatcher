@@ -475,6 +475,49 @@ def test_new_key_that_signed_before_the_boundary_is_rejected(tmp_path: Path) -> 
     assert f"spine_key_reset_resurrects:{key_id(new[1])}" in _standalone_errors(root)
 
 
+def _relabel_head_signature(root: Path, index: int) -> str:
+    """Give one head signature a key id no registry knows; returns the new
+    head digest."""
+    head = root / "quality/checkpoint.json"
+    body = json.loads(head.read_bytes())
+    body["signatures"][index]["key_id"] = "f" * 16
+    head.write_text(json.dumps(body, indent=2, sort_keys=True) + "\n")
+    return _sha(head.read_bytes())
+
+
+def test_relabelled_lost_key_signature_after_the_boundary_is_rejected(tmp_path: Path) -> None:
+    """A lost key's signature hidden behind an unknown key id still fails:
+    a spine record meeting its quorum may carry no unverifiable signature."""
+    root, gate = _tree(tmp_path)
+    new = generate_keypair()
+    _reset(root, new)
+    _forge_successor(
+        root, [new, gate], json.loads((root / "quality/gate_quorum.json").read_bytes())
+    )
+    digest = _relabel_head_signature(root, 1)
+    write_checkpoint(root, [new])
+
+    assert (
+        f"signature_invalid:{digest[:12]}:signature_key_unknown" in checkpoint_spine(root)["errors"]
+    )
+    assert f"spine_signature_key_unknown:{digest[:12]}" in _standalone_errors(root)
+
+
+def test_relabelled_new_key_signature_before_the_boundary_is_rejected(tmp_path: Path) -> None:
+    root, gate = _tree(tmp_path)
+    lost_registry = json.loads((root / "quality/gate_quorum.json").read_bytes())
+    new = generate_keypair()
+    _forge_successor(root, [gate, new], lost_registry)
+    digest = _relabel_head_signature(root, 1)
+    _reset(root, new)
+    write_checkpoint(root, [new])
+
+    assert (
+        f"signature_invalid:{digest[:12]}:signature_key_unknown" in checkpoint_spine(root)["errors"]
+    )
+    assert f"spine_signature_key_unknown:{digest[:12]}" in _standalone_errors(root)
+
+
 def test_boundary_off_spine_is_flagged_by_both_verifiers() -> None:
     reset = {"file": "key_reset_x.json", "rel": "quality/key_reset_x.json", "boundary": "f" * 64}
     assert reset_spine_errors([reset], {}, ["a" * 64]) == [

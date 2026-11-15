@@ -431,8 +431,16 @@ def checkpoint_spine(root: str | Path = ".") -> dict[str, Any]:
     for digest in orphans:
         errors.append(f"orphan_checkpoint:{digest[:12]}")
 
-    # Signature failures anywhere in the record set.
-    sig_failures = sorted(digest for digest, rec in records.items() if rec["sig_ok"] is False)
+    # Signature failures anywhere in the record set. A quorum record that
+    # meets its threshold still fails on any other signature that does not
+    # verify under its era (unknown key, malformed, invalid): the standalone
+    # verifier rejects those too, and an unattributable signature must not
+    # slip past the key-reset signer checks, which read key ids.
+    sig_failures = sorted(
+        digest
+        for digest, rec in records.items()
+        if rec["sig_ok"] is False or (rec["sig_ok"] is True and rec["errors"])
+    )
     for digest in sig_failures:
         rec = records[digest]
         errors.append(f"signature_invalid:{digest[:12]}:{','.join(rec['errors'])}")
