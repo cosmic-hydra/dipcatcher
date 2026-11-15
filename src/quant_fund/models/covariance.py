@@ -6,6 +6,7 @@ import numpy as np
 from numpy.typing import NDArray
 from sklearn.covariance import OAS, LedoitWolf
 
+from quant_fund.compute.numba_guard import call_kernel
 from quant_fund.models.quest import quest_covariance
 from quant_fund.utils.logging import get_logger
 
@@ -164,7 +165,7 @@ def ewma_cov(returns: Array, lam: float = 0.94, *, min_rows: int = 2) -> Array:
     x = np.ascontiguousarray(
         dcc_trailing_complete_window(returns, min_rows=min_rows), dtype=np.float64
     )
-    return np.asarray(_ewma_cov_nb(x, float(lam)), dtype=float)
+    return np.asarray(call_kernel(_ewma_cov_nb, x, float(lam)), dtype=float)
 
 
 def ledoit_wolf_cov(returns: Array) -> Array:

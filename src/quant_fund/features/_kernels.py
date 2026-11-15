@@ -12,9 +12,11 @@ import math
 import numpy as np
 from numba import njit
 
+from quant_fund.compute.numba_guard import call_kernel
+
 
 @njit(cache=True)
-def reset_bounds(weights: np.ndarray, threshold: float) -> np.ndarray:
+def _reset_bounds_nb(weights: np.ndarray, threshold: float) -> np.ndarray:
     """Bar-start indices for a reset accumulator (volume / dollar bars).
 
     Excess past the threshold is discarded, matching the Python loop.
@@ -42,7 +44,9 @@ def reset_bounds(weights: np.ndarray, threshold: float) -> np.ndarray:
 
 
 @njit(cache=True)
-def imbalance_bounds(values: np.ndarray, alpha: float, e_ticks: float, e_init: float) -> np.ndarray:
+def _imbalance_bounds_nb(
+    values: np.ndarray, alpha: float, e_ticks: float, e_init: float
+) -> np.ndarray:
     """Tick- or dollar-imbalance bar starts (AFML 2.5.2)."""
     n = values.shape[0]
     starts = np.empty(n, dtype=np.int64)
@@ -69,7 +73,7 @@ def imbalance_bounds(values: np.ndarray, alpha: float, e_ticks: float, e_init: f
 
 
 @njit(cache=True)
-def run_bounds(signs: np.ndarray, alpha: float, e_ticks: float) -> np.ndarray:
+def _run_bounds_nb(signs: np.ndarray, alpha: float, e_ticks: float) -> np.ndarray:
     """Tick-run bar starts. Zeros count as neither side, same as the slice sums."""
     n = signs.shape[0]
     starts = np.empty(n, dtype=np.int64)
@@ -106,7 +110,7 @@ def run_bounds(signs: np.ndarray, alpha: float, e_ticks: float) -> np.ndarray:
 
 
 @njit(cache=True)
-def goertzel_powers(demeaned: np.ndarray, periods: np.ndarray) -> np.ndarray:
+def _goertzel_powers_nb(demeaned: np.ndarray, periods: np.ndarray) -> np.ndarray:
     """Normalized Goertzel power at each period. ``periods`` are float bars."""
     n = demeaned.shape[0]
     n_periods = periods.shape[0]
@@ -123,3 +127,35 @@ def goertzel_powers(demeaned: np.ndarray, periods: np.ndarray) -> np.ndarray:
         power = s_prev2 * s_prev2 + s_prev * s_prev - coeff * s_prev * s_prev2
         out[pi] = power / n2
     return out
+
+
+def reset_bounds(weights: np.ndarray, threshold: float) -> np.ndarray:
+    """Bar-start indices. Numba when it compiles; the same loop otherwise."""
+    return call_kernel(_reset_bounds_nb, weights, threshold)
+
+
+reset_bounds.py_func = _reset_bounds_nb.py_func  # type: ignore[attr-defined]
+
+
+def imbalance_bounds(values: np.ndarray, alpha: float, e_ticks: float, e_init: float) -> np.ndarray:
+    """Tick- or dollar-imbalance bar starts. Numba when it compiles."""
+    return call_kernel(_imbalance_bounds_nb, values, alpha, e_ticks, e_init)
+
+
+imbalance_bounds.py_func = _imbalance_bounds_nb.py_func  # type: ignore[attr-defined]
+
+
+def run_bounds(signs: np.ndarray, alpha: float, e_ticks: float) -> np.ndarray:
+    """Tick-run bar starts. Numba when it compiles; the same loop otherwise."""
+    return call_kernel(_run_bounds_nb, signs, alpha, e_ticks)
+
+
+run_bounds.py_func = _run_bounds_nb.py_func  # type: ignore[attr-defined]
+
+
+def goertzel_powers(demeaned: np.ndarray, periods: np.ndarray) -> np.ndarray:
+    """Normalized Goertzel power at each period. ``periods`` are float bars."""
+    return call_kernel(_goertzel_powers_nb, demeaned, periods)
+
+
+goertzel_powers.py_func = _goertzel_powers_nb.py_func  # type: ignore[attr-defined]
