@@ -315,3 +315,52 @@ def test_calibration_drill_forged_eval_length_caught() -> None:
     forged["params"]["n_eval"] = forged["params"]["n_eval"] + 1
     errors = script_receipt_contract_errors(forged["schema"], forged)
     assert "n_eval_not_echoed" in errors
+
+
+def test_envelope_lane_receipts_satisfy_their_contract() -> None:
+    """Every committed envelope-contract receipt passes it as committed."""
+    from quant_fund.research.script_receipts import _ENVELOPE_SCHEMAS
+
+    seen: set[str] = set()
+    for path in sorted(RECEIPTS.glob("*.json")):
+        if path.name.endswith(".seal.json"):
+            continue
+        payload = json.loads(path.read_text())
+        schema = payload.get("schema")
+        # A numeric ``schema`` is a format version; the lane id lives on ``kind``.
+        key = schema if isinstance(schema, str) and schema else payload.get("kind")
+        if key in _ENVELOPE_SCHEMAS:
+            seen.add(key)
+            assert script_receipt_contract_errors(schema, payload) == [], path.name
+    assert seen == set(_ENVELOPE_SCHEMAS)
+
+
+def test_envelope_forged_ok_over_failing_probe_caught() -> None:
+    """A resealed ``ok: true`` over a failing probe fails full verification."""
+    from quant_fund.research.receipt_v2 import seal_receipt
+
+    forged = copy.deepcopy(_load("api_audit.json"))
+    results = forged["claim"]["results"]
+    assert forged["claim"]["ok"] is True
+    results[next(iter(results))] = False
+    forged = seal_receipt(forged)
+    result = verify_receipt_payload(forged, "forged.json")
+    errors = result["errors"] if isinstance(result, dict) else result.errors
+    assert any("claim_ok_not_conjunction_of_results" in e for e in errors)
+
+
+def test_envelope_forged_live_pnl_claim_caught() -> None:
+    forged = copy.deepcopy(_load("api_audit.json"))
+    forged["live_pnl_claim"] = True
+    errors = script_receipt_contract_errors(forged["schema"], forged)
+    assert "live_pnl_claim_not_false" in errors
+
+
+def test_vine_receipts_dispatch_to_lane_contracts() -> None:
+    panel = copy.deepcopy(_load("vine_panel.json"))
+    panel["claim"]["n_passed"] = 0
+    assert "n_passed_mismatch" in script_receipt_contract_errors(panel["schema"], panel)
+    dominance = copy.deepcopy(_load("vine_dominance.json"))
+    dominance["claim"]["tail_model"]["gaussian"]["joint_crash_prob"] = 2.0
+    errors = script_receipt_contract_errors(dominance["schema"], dominance)
+    assert "tail_model_shape" in errors
