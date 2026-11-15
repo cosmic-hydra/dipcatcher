@@ -1,0 +1,386 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "f8d365a7ced172b8d5405102c85a1a0cf88190d0c097bf2364ee1914eecb3979",
+  "inputs_sha256": "17e34109f41886a62ba23862601c28a2014ca335b78af387b14adbea7fb62c13",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "6bd1f003b15f3eadc177e91c4f59eb9ac96c3cab1853bc431f372d03ce67f399",
+  "members": [
+    {
+      "name": "chop_robustness/run_sweep.py",
+      "sha256": "63b9412682d16cbbabac3dc99a66f31b7242a73abe4f20d68ebf1718fa4ddb6e"
+    },
+    {
+      "name": "chop_robustness_20261007/receipts/sim_live_chop-W1_full.json",
+      "sha256": "fca29eb5beac1ede9ff7be84a1cb240df8cb7dd50c5171539229841deb59fce3"
+    },
+    {
+      "name": "chop_robustness_20261007/receipts/sim_live_chop-W2_last800d.json",
+      "sha256": "d88420a191e8c6475edefb026a056e78ec8dd0e5a09cb67b0a756dcb16ca209e"
+    },
+    {
+      "name": "chop_robustness_20261007/receipts/sim_live_chop-W3_last500d.json",
+      "sha256": "8312d27c6162bbea02e4b586091bbb9e59b4a7ff6edc3ee25521afa4f28ef885"
+    },
+    {
+      "name": "chop_robustness_20261007/receipts/sim_live_chop-W4_2018_05_8p3y.json",
+      "sha256": "18a1537ed3ee59d97ca5c5ede9de284b2da1e6fe2ca50e2ad73fd207ea09f1fc"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_BNBUSDT_ewma_emp94_5725886deaf06cfe.npz",
+      "sha256": "2e3dc967e731ce37c21f49a8ed1153b27741668456e4e95c2e5bd06601a96631"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_BNBUSDT_ewma_emp99_5da846507f43c1a3.npz",
+      "sha256": "89298a7d47d0c192e3b17451d0c45e1df229e1c2eb94d7cc11b56ba18e7b5912"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_BNBUSDT_ewma_emp_83699fba7616f472.npz",
+      "sha256": "57f9dea46ed8b6743ccdb07de92c97c9a56834678b73b0588fa53d5a82c5c335"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_BTCUSDT_ewma_emp94_051ff869a36723e8.npz",
+      "sha256": "97f35b2720acb9d981454ae78610527b906566f36f11ccbd748fa3ba9c988b91"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_BTCUSDT_ewma_emp94_39fd87f85b775e7e.npz",
+      "sha256": "5a2d29a99ea88103091396795b0152fb2cc960ff7e801294e2553108e4b09e72"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_BTCUSDT_ewma_emp99_934ad091db5d3978.npz",
+      "sha256": "5d045a6c16e90ef8090d63543e590d285af83236a35a6655e9bdddb589200613"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_BTCUSDT_ewma_emp99_cfc3d7e5066071cb.npz",
+      "sha256": "8d6600167b6a9b3d91ccdd012aac3df8c23ceae2948a404cbf8f8b8e8494f4e7"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_BTCUSDT_ewma_emp_adb76eec9464aac0.npz",
+      "sha256": "8ed3505dbcd1421beaa308e7e9d5bce43dd8ac1018d23b31b20e47adae597bd1"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_BTCUSDT_ewma_emp_b408896838dec059.npz",
+      "sha256": "e5b81c89433b09cf4c8345e30a1d405a124005fe2d12e83b41aefd81d2027665"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_ETHUSDT_ewma_emp94_546d4c3183f4002c.npz",
+      "sha256": "b4177e2b764aea48e2c0c7136858024aafc5e3b72de3507b1a66ed4c60a7940b"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_ETHUSDT_ewma_emp94_a791f92240e1b4b9.npz",
+      "sha256": "fb950498bd5528598f504de6d3518c785af09572fd4e72524bd5aa152592c9ab"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_ETHUSDT_ewma_emp99_43804af580672c77.npz",
+      "sha256": "e19ccd769b2541532b227ac0d57d4bc5444a117259684c5d677fdd05c9e6be45"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_ETHUSDT_ewma_emp99_d88284265d7a48cf.npz",
+      "sha256": "5b4c40472951658a15c1cb3906589a7e8cf46d7181360d41e4832b103c07715a"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_ETHUSDT_ewma_emp_1a214e03cdfc9488.npz",
+      "sha256": "868c2a590ec4bd71a89fe0b47016379a012b7cb92a8ef5a5b8539e3a73166e39"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_ETHUSDT_ewma_emp_6b2e99493e295535.npz",
+      "sha256": "086e919ba2953ed6e33e9113a9d3db3aa46cba578d7269a58b3a1df4b4a7ff13"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_SOLUSDT_ewma_emp94_0ba89c289183ba27.npz",
+      "sha256": "8e131f384882d7a2055364ac08d1e9c4323355cc5c1b7ba8f96c0ead2616c541"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_SOLUSDT_ewma_emp99_9a1665596d809505.npz",
+      "sha256": "f66e1a1b8e5a84221ec8b872354535b48a3625db6a7e60a2c85e6e93d607ed20"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_SOLUSDT_ewma_emp_01dcefb48918d542.npz",
+      "sha256": "4c7da6e45b85c99532096d2bba3485fdc2a53af295f4dd2b596527c06077ae33"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_XRPUSDT_ewma_emp94_3167ad3e240a28d4.npz",
+      "sha256": "9b701efc9f5e4fe32bfbcb3083521594c6231fc4c2606622d4eb9374283ab3c3"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_XRPUSDT_ewma_emp94_9bb4497dd9a8b16e.npz",
+      "sha256": "0066be6620864caf58a87c20a02c507621636052de00d5e520dc409c76a44eef"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_XRPUSDT_ewma_emp99_812702a8787b3099.npz",
+      "sha256": "af06349b838d7ca7c71b79c506549f65c80016d474bbff1c5405e3904b5cce07"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_XRPUSDT_ewma_emp99_a7caa9ab3874402a.npz",
+      "sha256": "b7af0bf8f60d2ad3e88eedaa70c7053ba04ca2f93b6577079bf733a678715b1c"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_XRPUSDT_ewma_emp_ac76779a546aa3d6.npz",
+      "sha256": "09a71890bd94e70ccb64a13fc56f380260d58122ce103186c18528540c3182b8"
+    },
+    {
+      "name": "chop_robustness_20261007b/qpanel_cache/qpanel_XRPUSDT_ewma_emp_c8c717c4a7b8ee63.npz",
+      "sha256": "d770c75a28b96dc01c4383a0bf301158cd8c0ebac8303e91db30ce90e0bfaeb5"
+    },
+    {
+      "name": "chop_robustness_20261007b/receipts/sim_live_chop-W1_full.json",
+      "sha256": "0ac0f77af9b8695c7db4102d7556a0076bdd5ae25a2adf77f569a4f28a5d0408"
+    },
+    {
+      "name": "chop_robustness_20261007b/receipts/sim_live_chop-W2_last800d.json",
+      "sha256": "9aaba72a5721eb5f65e161538a00504af5f9ac49f957082879bdfa24d2b0327a"
+    },
+    {
+      "name": "chop_robustness_20261007b/receipts/sim_live_chop-W3_last500d.json",
+      "sha256": "b0e8b9e3e08f2c3fb12d3229726db43bfaf6023ff02a6fa57c923b4019bc4a27"
+    },
+    {
+      "name": "chop_robustness_20261007b/receipts/sim_live_chop-W4_2018_05_8p3y.json",
+      "sha256": "68adaafa0df640778043215099e948f405ad1c3ef99048f955e990940dea813d"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/cells_verdicts.json",
+      "sha256": "45fd74468b38beeb61c8067e9073b5e7780648daf3fd7d7f38a5f4357920eae7"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_BNBUSDT_ewma_emp94_5725886deaf06cfe.npz",
+      "sha256": "2e3dc967e731ce37c21f49a8ed1153b27741668456e4e95c2e5bd06601a96631"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_BNBUSDT_ewma_emp99_5da846507f43c1a3.npz",
+      "sha256": "89298a7d47d0c192e3b17451d0c45e1df229e1c2eb94d7cc11b56ba18e7b5912"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_BNBUSDT_ewma_emp_83699fba7616f472.npz",
+      "sha256": "57f9dea46ed8b6743ccdb07de92c97c9a56834678b73b0588fa53d5a82c5c335"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_BTCUSDT_ewma_emp94_051ff869a36723e8.npz",
+      "sha256": "97f35b2720acb9d981454ae78610527b906566f36f11ccbd748fa3ba9c988b91"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_BTCUSDT_ewma_emp94_39fd87f85b775e7e.npz",
+      "sha256": "5a2d29a99ea88103091396795b0152fb2cc960ff7e801294e2553108e4b09e72"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_BTCUSDT_ewma_emp99_934ad091db5d3978.npz",
+      "sha256": "5d045a6c16e90ef8090d63543e590d285af83236a35a6655e9bdddb589200613"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_BTCUSDT_ewma_emp99_cfc3d7e5066071cb.npz",
+      "sha256": "8d6600167b6a9b3d91ccdd012aac3df8c23ceae2948a404cbf8f8b8e8494f4e7"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_BTCUSDT_ewma_emp_adb76eec9464aac0.npz",
+      "sha256": "8ed3505dbcd1421beaa308e7e9d5bce43dd8ac1018d23b31b20e47adae597bd1"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_BTCUSDT_ewma_emp_b408896838dec059.npz",
+      "sha256": "e5b81c89433b09cf4c8345e30a1d405a124005fe2d12e83b41aefd81d2027665"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_ETHUSDT_ewma_emp94_546d4c3183f4002c.npz",
+      "sha256": "b4177e2b764aea48e2c0c7136858024aafc5e3b72de3507b1a66ed4c60a7940b"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_ETHUSDT_ewma_emp94_a791f92240e1b4b9.npz",
+      "sha256": "fb950498bd5528598f504de6d3518c785af09572fd4e72524bd5aa152592c9ab"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_ETHUSDT_ewma_emp99_43804af580672c77.npz",
+      "sha256": "e19ccd769b2541532b227ac0d57d4bc5444a117259684c5d677fdd05c9e6be45"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_ETHUSDT_ewma_emp99_d88284265d7a48cf.npz",
+      "sha256": "5b4c40472951658a15c1cb3906589a7e8cf46d7181360d41e4832b103c07715a"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_ETHUSDT_ewma_emp_1a214e03cdfc9488.npz",
+      "sha256": "868c2a590ec4bd71a89fe0b47016379a012b7cb92a8ef5a5b8539e3a73166e39"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_ETHUSDT_ewma_emp_6b2e99493e295535.npz",
+      "sha256": "086e919ba2953ed6e33e9113a9d3db3aa46cba578d7269a58b3a1df4b4a7ff13"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_SOLUSDT_ewma_emp94_0ba89c289183ba27.npz",
+      "sha256": "8e131f384882d7a2055364ac08d1e9c4323355cc5c1b7ba8f96c0ead2616c541"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_SOLUSDT_ewma_emp99_9a1665596d809505.npz",
+      "sha256": "f66e1a1b8e5a84221ec8b872354535b48a3625db6a7e60a2c85e6e93d607ed20"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_SOLUSDT_ewma_emp_01dcefb48918d542.npz",
+      "sha256": "4c7da6e45b85c99532096d2bba3485fdc2a53af295f4dd2b596527c06077ae33"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_XRPUSDT_ewma_emp94_3167ad3e240a28d4.npz",
+      "sha256": "9b701efc9f5e4fe32bfbcb3083521594c6231fc4c2606622d4eb9374283ab3c3"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_XRPUSDT_ewma_emp94_9bb4497dd9a8b16e.npz",
+      "sha256": "0066be6620864caf58a87c20a02c507621636052de00d5e520dc409c76a44eef"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_XRPUSDT_ewma_emp99_812702a8787b3099.npz",
+      "sha256": "af06349b838d7ca7c71b79c506549f65c80016d474bbff1c5405e3904b5cce07"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_XRPUSDT_ewma_emp99_a7caa9ab3874402a.npz",
+      "sha256": "b7af0bf8f60d2ad3e88eedaa70c7053ba04ca2f93b6577079bf733a678715b1c"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_XRPUSDT_ewma_emp_ac76779a546aa3d6.npz",
+      "sha256": "09a71890bd94e70ccb64a13fc56f380260d58122ce103186c18528540c3182b8"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/qpanel_cache/qpanel_XRPUSDT_ewma_emp_c8c717c4a7b8ee63.npz",
+      "sha256": "d770c75a28b96dc01c4383a0bf301158cd8c0ebac8303e91db30ce90e0bfaeb5"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/receipts/sim_live_chop-W1_full.json",
+      "sha256": "67d8bf9442c5298cb5d297898688eb30c18bc47b5585d82b3d8d0df15453bff7"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/receipts/sim_live_chop-W2_last800d.json",
+      "sha256": "1847b37e77c8e5f5d0ab59b58072040b25649f0dd51b0a016dc639c2ff5dd5a3"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/receipts/sim_live_chop-W3_last500d.json",
+      "sha256": "4b81b104f6fda587dcf68e2f192d743a8eaf74312618e32ef469014b85c5b700"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/receipts/sim_live_chop-W4_2018_05_8p3y.json",
+      "sha256": "a2e726e634ce5902d8dda4b6e9431be52c12582f29918d3c5c61e69d691a4e6f"
+    },
+    {
+      "name": "chop_robustness_benchconfig_20261007/resolved_config.json",
+      "sha256": "58dbca9d8ee899f20bd60f5352fc86dddc80bcf3ea0d6ebbbcb5d85a69cf0610"
+    },
+    {
+      "name": "corpus_epoch_11ca956ead0ac00e.json",
+      "sha256": "49e296a6e7c5286ccc39ab10534765f7df848b093b3a90edcccaf2224ba57fea"
+    },
+    {
+      "name": "corpus_epoch_2af807cf57fcc44d.json",
+      "sha256": "0b2939a006af3a1417f12e79f657b533abf0cfd388d38dd3cf8af54d828a8a82"
+    },
+    {
+      "name": "corpus_epoch_4cae43b60f86610a.json",
+      "sha256": "f9feb366946b0be79001124b204a6ab7ac47b9662824ae40c021a0137c8b1442"
+    },
+    {
+      "name": "corpus_epoch_7d01145afc7e3e2f.json",
+      "sha256": "41d50aa33fa92e0908ec5c9fd863ea90247e6580d08e9b24a860c61bdb7db7e9"
+    },
+    {
+      "name": "corpus_epoch_7f05fbf3d313674c.json",
+      "sha256": "e5c33feeffe0d308ad31fbbee8b3996d9eb9fbb06e03830a2748223feb5dbe89"
+    },
+    {
+      "name": "corpus_epoch_df6587cc6abca6e9.json",
+      "sha256": "a9a8889a3b12ade68d5622862ac4811ccad93632dc742a58b4a47db96d365c56"
+    },
+    {
+      "name": "corpus_epoch_fb4160d72ee41f39.json",
+      "sha256": "d2a3e680a3c8f1733257c04695f06615126db8ffe980af8b746750e2899b2c8d"
+    },
+    {
+      "name": "real_benchmark_us_wide_20261007/manifest.json",
+      "sha256": "a0fcdcd109c8c839e8b4f6fea9b62de3c4a2ce9c5f2eb64d1c2871db83406719"
+    },
+    {
+      "name": "reality/README.md",
+      "sha256": "6f43512ceecaa6bb11ba2f89d1cf206a2ef386335c06af9f1d24c57058f2de00"
+    },
+    {
+      "name": "reality/studies/reality-us-liquid-daily-2026-09-27/audit/checkpoints.jsonl",
+      "sha256": "da5a783c331b8b4fd66cc134d3fc9a604daebf246f496a8ff58b66faf183e22d"
+    },
+    {
+      "name": "reality/studies/reality-us-liquid-daily-2026-09-27/audit/ed25519.pub",
+      "sha256": "54879d02aa54417db57a89dc3a2edcbe3770e049e1e7ff8f3a87f9289d2f9cea"
+    },
+    {
+      "name": "reality/studies/reality-us-liquid-daily-2026-09-27/audit/entries.jsonl",
+      "sha256": "9cf0b70ddedf2cce4deee3d9272a730ec15d6cea9e4b50397ff183786dad574a"
+    },
+    {
+      "name": "reality/studies/reality-us-liquid-daily-2026-09-27/audit/trust_pub.hex",
+      "sha256": "54879d02aa54417db57a89dc3a2edcbe3770e049e1e7ff8f3a87f9289d2f9cea"
+    },
+    {
+      "name": "reality/studies/reality-us-liquid-daily-2026-09-27/preregistration.json",
+      "sha256": "7cc62d9d4985add3afbb9b7963365ff6794c94561b604ad696d8a133d5fd2a38"
+    },
+    {
+      "name": "reality/studies/reality-us-liquid-daily-2026-09-27/receipt.json",
+      "sha256": "60a726be8ba6cf29e8454d9246f10431848d2552cdc458c42ff4d5833d580edc"
+    },
+    {
+      "name": "reality/studies/reality-us-liquid-daily-2026-09-27/returns.parquet",
+      "sha256": "92a2a62f7066a3f42cab162831c84d8fd3d378c867784418588c60d1b2ad1649"
+    },
+    {
+      "name": "reality/studies/reality-us-liquid-daily-2026-09-27/trials.csv",
+      "sha256": "9d6d6cc4e23f109ec16e64b93a7a601f7be8b8e3427f81fa522bd597e88e22b6"
+    },
+    {
+      "name": "reality/studies/reality-us-liquid-daily-2026-09-27/trials.jsonl",
+      "sha256": "34344796b05c2d847c56f471198896a2e133b48090d2e0acabcc9935e2f242a6"
+    },
+    {
+      "name": "reality/survivorship/audit/checkpoints.jsonl",
+      "sha256": "5adbf7af743703691913800118d7333751d57b8622a2fc1de482d1b931506334"
+    },
+    {
+      "name": "reality/survivorship/audit/ed25519.pub",
+      "sha256": "d82700886d1f9596daec82b2a1e844da08ad75f7b7dae8d51851fb989ff15662"
+    },
+    {
+      "name": "reality/survivorship/audit/entries.jsonl",
+      "sha256": "86a1f662682c929ce2e409b20186aeca542cdf353443869651e47bd05af556c6"
+    },
+    {
+      "name": "reality/survivorship/audit/trust_pub.hex",
+      "sha256": "d82700886d1f9596daec82b2a1e844da08ad75f7b7dae8d51851fb989ff15662"
+    },
+    {
+      "name": "reality/survivorship/membership.json",
+      "sha256": "6bedcb36dbf5713bec084f8b4c44ea7d59680a0a05a39a1214d712c52f00df19"
+    },
+    {
+      "name": "reality/survivorship/membership.provenance.json",
+      "sha256": "e675f1d857ec1fdcec71b9bb14f8bf6fae2a6b8739bbb9c934101d46d6ef0b21"
+    },
+    {
+      "name": "reality/survivorship/preregistration.json",
+      "sha256": "f7b0c71d6729790c68d6bc0d5ba3e1961e2abfd8a4e19f4abc64b4df8732a57b"
+    },
+    {
+      "name": "reality/survivorship/receipt.json",
+      "sha256": "8e798bee6dad41f9bcb3af9ef0d665f0ef0211b0ec7dd6667772c1314c71d420"
+    },
+    {
+      "name": "reality/survivorship/total_return/comparison.json",
+      "sha256": "f23a92d86dad661c9e952ff5f7403f4632f38e15f576b8add62f2a9b46d29652"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_df6587cc6abca6e9.json"
+  ],
+  "members_removed": [],
+  "n_members": 90,
+  "params": {
+    "head_sha": "ecf3e196075d87cea032baa1d8aeb6eae24ec817",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_df6587cc6abca6e9.json",
+  "prev_epoch_sha256": "f110b16564144904b7554d16eb52cac48b085949e159eda77c649209b89f29d3",
+  "receipt_sha256": "f96f3473d167a33cdd561c056e497977f4efc71ba2e9c33c6f0784fb99dadec2",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

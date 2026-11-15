@@ -1,0 +1,62 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "5eedb7a94db205a05d6c7f36266b0a8f293e3901e920ab77bde57c84a221f446",
+  "inputs_sha256": "61966577a1ca5c9a3986c46b88ead7bc4b4130128eecd7e77485750811a21417",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "7419403d5db8e81d9ca1f694f053c6d63e8222d4d22fd26c486166041c2e9b52",
+  "members": [
+    {
+      "name": "corpus_epoch_1014a77d52f96137.json",
+      "sha256": "e2e2fd2008a93efad31d503dd9bbfdb2d591fd2eb202ee2cf1972bb2856d207b"
+    },
+    {
+      "name": "corpus_epoch_1082ec3a7e7ac439.json",
+      "sha256": "8b2ce09f0381bf73f9d46e295def707f53a70eba22f7035b2776bf56dd39067f"
+    },
+    {
+      "name": "corpus_epoch_2b1ed034d42f34a0.json",
+      "sha256": "cc494b8e8c785c347cac3b7690c1cbb21e6c7719a1339dd9eb78210a3fc72e4d"
+    },
+    {
+      "name": "corpus_epoch_809f80352aba7ef0.json",
+      "sha256": "65535848873398b769b01cd494288e733c4b83135ee74879434eec7746b8cc20"
+    },
+    {
+      "name": "corpus_epoch_e800f329be176332.json",
+      "sha256": "1cffd9137165ccc89cf05128f94460a6ad2db8a9ed555fa9d84da11abb3b13b0"
+    },
+    {
+      "name": "tla/OrderLifecycle.cfg",
+      "sha256": "66a6f98faf7313a4b311f228266dd75077f48592a6ad1118b2ac26ddf8c6323d"
+    },
+    {
+      "name": "tla/OrderLifecycle.tla",
+      "sha256": "a578c79bd8e56242abb332b325f1b550f9da823228b5021e02c0094038ba7187"
+    },
+    {
+      "name": "tla/OrderLifecycleLiveness.cfg",
+      "sha256": "c7bb5af13ee4be33fa98441dca4ff172610f5ae01d284dd40faaf80cc074f8a4"
+    },
+    {
+      "name": "tla/README.md",
+      "sha256": "94ee0cc8b9865b2ce0768b87772abff19b738d4bd983abef18d9727c15624a2a"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_2b1ed034d42f34a0.json"
+  ],
+  "members_removed": [],
+  "n_members": 9,
+  "params": {
+    "head_sha": "ecf3e196075d87cea032baa1d8aeb6eae24ec817",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_2b1ed034d42f34a0.json",
+  "prev_epoch_sha256": "64ae036fb690fe64222b32dd593552999972590beb66794bf58a3a527513070d",
+  "receipt_sha256": "fe99cc0bd786653b98bba496079b09e0f9e866fdf5ca043f7f27238cfedfd3b9",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}
