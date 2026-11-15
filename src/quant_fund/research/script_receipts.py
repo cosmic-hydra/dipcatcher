@@ -415,12 +415,17 @@ def measurement_receipt_contract_errors(payload: Mapping[str, Any]) -> list[str]
 
 
 def _audit_claim_errors(payload: Mapping[str, Any]) -> list[str]:
-    """Re-derive ``claim.ok`` for probe-style audit receipts.
+    """Bound ``claim.ok`` for probe-style audit receipts.
 
-    When ``claim.results`` is a flat map of boolean probe outcomes, the
-    headline ``ok`` must be exactly their conjunction: a forged ``ok: true``
-    over a failing probe is caught without re-running the audit. Other
-    claim shapes are left to their lane contracts.
+    When ``claim.results`` is a flat map of boolean probe outcomes, ``ok``
+    must be a literal bool and ``ok: true`` requires every probe True: a
+    forged ``ok: true`` over a failing probe is caught without re-running
+    the audit. ``ok: false`` over all-True probes is allowed, because
+    producers also fail ``ok`` on conditions the map cannot show — a probe
+    count short of the audit's expected total (``quota2_audit``,
+    ``retrieval_audit``, ``vs_audit``) — and a receipt that declares its own
+    defect over-claims nothing. Other claim shapes are left to their lane
+    contracts.
     """
     claim = payload.get("claim")
     if not isinstance(claim, Mapping) or "ok" not in claim:
@@ -430,7 +435,8 @@ def _audit_claim_errors(payload: Mapping[str, Any]) -> list[str]:
         return []
     if not all(isinstance(v, bool) for v in results.values()):
         return []
-    if claim.get("ok") is not all(results.values()):
+    ok = claim.get("ok")
+    if not isinstance(ok, bool) or (ok and not all(results.values())):
         return ["claim_ok_not_conjunction_of_results"]
     return []
 

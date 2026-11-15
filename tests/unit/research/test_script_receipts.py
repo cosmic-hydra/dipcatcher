@@ -11,6 +11,7 @@ import copy
 import json
 import math
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -347,6 +348,29 @@ def test_envelope_forged_ok_over_failing_probe_caught() -> None:
     result = verify_receipt_payload(forged, "forged.json")
     errors = result["errors"] if isinstance(result, dict) else result.errors
     assert any("claim_ok_not_conjunction_of_results" in e for e in errors)
+
+
+def test_envelope_declared_defect_over_passing_probes_verifies() -> None:
+    """``ok: false`` over all-True probes is an honest defect, not a forgery.
+
+    Producers such as ``quota2_audit_bench`` also fail ``ok`` when the probe
+    count falls short of the audit's total, which the map alone cannot show.
+    """
+    from quant_fund.research.receipt_v2 import seal_receipt
+
+    receipt = copy.deepcopy(_load("api_audit.json"))
+    receipt["claim"]["results"] = {"probe": True}
+    receipt["claim"]["ok"] = False
+    result = verify_receipt_payload(seal_receipt(receipt), "defect.json")
+    assert (result["valid"] if isinstance(result, dict) else result.valid) is True
+
+
+@pytest.mark.parametrize("ok", [1, 0, None, "true"])
+def test_envelope_nonliteral_ok_over_boolean_probes_caught(ok: Any) -> None:
+    forged = copy.deepcopy(_load("api_audit.json"))
+    forged["claim"]["ok"] = ok
+    errors = script_receipt_contract_errors(forged["schema"], forged)
+    assert "claim_ok_not_conjunction_of_results" in errors
 
 
 def test_envelope_forged_live_pnl_claim_caught() -> None:
