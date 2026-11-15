@@ -141,6 +141,20 @@ def _witness_pem_ok(pem: Any) -> bool:
     return isinstance(pub, ec.EllipticCurvePublicKey) and isinstance(pub.curve, ec.SECP256R1)
 
 
+def _witness_spki(pem: str) -> bytes:
+    """DER SubjectPublicKeyInfo of a PEM public key: equal keys compare
+    equal however the PEM text is wrapped."""
+    from cryptography.hazmat.primitives.serialization import (
+        Encoding,
+        PublicFormat,
+        load_pem_public_key,
+    )
+
+    return load_pem_public_key(pem.encode()).public_bytes(
+        Encoding.DER, PublicFormat.SubjectPublicKeyInfo
+    )
+
+
 def signed_by(body: Any, pub_hex: str) -> bool:
     """Any signature on a checkpoint record body verifies under ``pub_hex``."""
     if not isinstance(body, dict):
@@ -228,7 +242,9 @@ def _boundary_era_ok(body: dict[str, Any], lost: dict[str, Any]) -> bool:
 
 
 def _relation_errors(payload: dict[str, Any]) -> list[str]:
-    """The new gate key is registered; the new set shares nothing with the lost."""
+    """The new gate key is registered; the new set shares nothing with the
+    lost. A witness key declared lost needs a different replacement — the
+    reset installs the new side, so a lost key must not stay live."""
     lost, new = payload["lost"], payload["new"]
     errors: list[str] = []
     registered, _ = _registered(new["registry"])
@@ -238,6 +254,12 @@ def _relation_errors(payload: dict[str, Any]) -> list[str]:
         key_id(pub) for pub in side_pubkeys(lost) & side_pubkeys(new)
     }
     errors.extend(f"reuses_lost_key:{kid}" for kid in sorted(shared))
+    lost_witness, new_witness = lost.get("witness_pubkey_pem"), new.get("witness_pubkey_pem")
+    if lost_witness is not None:
+        if new_witness is None:
+            errors.append("lost_witness_not_replaced")
+        elif _witness_spki(lost_witness) == _witness_spki(new_witness):
+            errors.append("reuses_lost_witness_key")
     return errors
 
 
@@ -483,8 +505,10 @@ def reset_notes(resets: list[dict[str, Any]]) -> list[str]:
 # ------------------------------------------------------------------ writer
 
 
-def _lost_side(root: Path) -> dict[str, Any]:
-    """The key set as committed now — the one being declared lost."""
+def _lost_side(root: Path, *, witness_replaced: bool) -> dict[str, Any]:
+    """The key set as committed now — the one being declared lost. The
+    witness key counts as lost only when the reset replaces it; otherwise it
+    stays installed and the record names no witness on either side."""
     pub = (root / DEFAULT_PUBKEY_PATH).read_text().strip().lower()
     quorum_file = root / DEFAULT_QUORUM_PATH
     registry = (
@@ -502,7 +526,9 @@ def _lost_side(root: Path) -> dict[str, Any]:
         "gate_key_id": key_id(pub),
         "registry": registry,
         "registry_sha256": registry_sha256(registry),
-        "witness_pubkey_pem": witness.read_text() if witness.is_file() else None,
+        "witness_pubkey_pem": (
+            witness.read_text() if witness_replaced and witness.is_file() else None
+        ),
     }
 
 
@@ -540,8 +566,9 @@ def build_reset(
     the first is the new gate key. Together they form the new registry at
     ``threshold``, and every one of them signs the record (possession). The
     lost side is read from the tree as it stands — ``gate_signing.pub``,
-    ``gate_quorum.json``, ``witness_signing.pub`` — and the current
-    ``checkpoint.json`` becomes the boundary. Returns ``(file_name,
+    ``gate_quorum.json`` and, when ``witness_pubkey_pem`` replaces it,
+    ``witness_signing.pub`` — and the current ``checkpoint.json`` becomes the
+    boundary. Returns ``(file_name,
     record_bytes, payload)`` once the same parser every verifier uses
     accepts the record.
     """
@@ -560,7 +587,7 @@ def build_reset(
             "checkpoint_sha256": hash_bytes(boundary_raw),
             "checkpoint_b64": base64.b64encode(boundary_raw).decode("ascii"),
         },
-        "lost": _lost_side(root_path),
+        "lost": _lost_side(root_path, witness_replaced=witness_pubkey_pem is not None),
         "new": _new_side(signers, threshold, witness_pubkey_pem),
     }
     message = canonical_json_bytes(payload)

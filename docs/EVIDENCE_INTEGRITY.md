@@ -137,7 +137,11 @@ and re-verified under the lost key set — names the new gate key, registry and
 witness key, and is signed by the new keys. History up to the boundary keeps
 verifying under the old keys only; everything after it must be signed by the
 new ones, and a lost key that signs again is rejected, so a reset also
-retires keys that may have leaked rather than vanished.
+retires keys that may have leaked rather than vanished. The witness key is
+declared lost only when the reset replaces it (`--witness-pub`); otherwise
+the record names no witness key on either side and the installed one stays.
+A record that declares a witness key lost must name a different one
+(`lost_witness_not_replaced`, `reuses_lost_witness_key`).
 
 What a reset cannot prove is authorization: a lost key cannot sign its own
 retirement, so the reset is authorized by whoever can commit to the

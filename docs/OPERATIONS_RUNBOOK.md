@@ -242,7 +242,8 @@ file every verifier reports. The Lead authorizes it; do it in one PR:
    the boundary, writes `quality/key_reset_<id>.json` (signed by every new
    key), and installs `gate_signing.pub`, `gate_quorum.json` and, with
    `--witness-pub`, `witness_signing.pub`. It refuses a key the lost set
-   already contains.
+   already contains, including the installed witness key. Without
+   `--witness-pub` the witness key is not declared lost and stays installed.
 3. `dipcatcher crown-jewels --write`, then `make stamp-epochs`.
 4. `dipcatcher quorum-sign --key-file <new gate key>` — re-sign the pins
    under the new registry.
@@ -255,6 +256,11 @@ file every verifier reports. The Lead authorizes it; do it in one PR:
    `make tamper-drill`, `make evidence-audit`.
 8. In the PR, state why the keys are lost and who authorized the reset; a
    reviewer checks the record's reason, boundary digest and new pubkeys.
+
+Run steps 2–6 in one go and commit only after step 7. In between, the tree is
+mid-ceremony: with `--witness-pub`, `verify-witness` re-checks the boundary
+checkpoint's Rekor proof (signed by the lost witness key) under the new key
+and reports `witness_signature_invalid` until step 5 replaces the head.
 
 The reset cannot rewrite history: checkpoints up to the boundary keep
 verifying under the old keys, and any later signature by a lost key is

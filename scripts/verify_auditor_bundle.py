@@ -460,8 +460,22 @@ def _boundary_in_lost_era(body: dict[str, Any], lost: dict[str, Any]) -> bool:
     )
 
 
+def _witness_spki(pem: str) -> bytes:
+    """DER SubjectPublicKeyInfo of a PEM public key (wrapping-independent)."""
+    from cryptography.hazmat.primitives.serialization import (
+        Encoding,
+        PublicFormat,
+        load_pem_public_key,
+    )
+
+    return load_pem_public_key(pem.encode()).public_bytes(
+        Encoding.DER, PublicFormat.SubjectPublicKeyInfo
+    )
+
+
 def _reset_relation_errors(payload: dict[str, Any]) -> list[str]:
-    """The new gate key is registered; the new set shares nothing with the lost."""
+    """The new gate key is registered; the new set shares nothing with the
+    lost; a witness key declared lost has a different replacement."""
     lost, new = payload["lost"], payload["new"]
     errors: list[str] = []
     registered, _threshold = _registered_map(new["registry"])
@@ -471,6 +485,12 @@ def _reset_relation_errors(payload: dict[str, Any]) -> list[str]:
         _key_id(pub) for pub in _side_pubs(lost) & _side_pubs(new)
     }
     errors.extend(f"reuses_lost_key:{kid}" for kid in sorted(shared))
+    lost_witness, new_witness = lost.get("witness_pubkey_pem"), new.get("witness_pubkey_pem")
+    if lost_witness is not None:
+        if new_witness is None:
+            errors.append("lost_witness_not_replaced")
+        elif _witness_spki(lost_witness) == _witness_spki(new_witness):
+            errors.append("reuses_lost_witness_key")
     return errors
 
 

@@ -315,6 +315,31 @@ def test_reset_records_and_installs_the_witness_key(tmp_path: Path) -> None:
     assert (root / "quality/witness_signing.pub").read_text() == new_pem
 
 
+def test_reset_without_a_witness_key_keeps_the_installed_one(tmp_path: Path) -> None:
+    """No replacement means the witness key is not declared lost: the record
+    names none on either side and the installed key stays."""
+    root, _gate = _tree(tmp_path)
+    pem, new = _p256_pem(), generate_keypair()
+    (root / "quality/witness_signing.pub").write_text(pem)
+    out = _reset(root, new)
+    payload = json.loads(out.read_bytes())["payload"]
+    assert payload["lost"]["witness_pubkey_pem"] is None
+    assert payload["new"]["witness_pubkey_pem"] is None
+    assert (root / "quality/witness_signing.pub").read_text() == pem
+    write_checkpoint(root, [new])
+    _assert_reset_verified(root)
+
+
+def test_reset_refuses_to_reinstall_the_lost_witness_key(tmp_path: Path) -> None:
+    root, gate = _tree(tmp_path)
+    pem = _p256_pem()
+    (root / "quality/witness_signing.pub").write_text(pem)
+    with pytest.raises(ValueError, match="reuses_lost_witness_key"):
+        _reset(root, generate_keypair(), witness_pubkey_pem=pem.replace("\n", "\r\n"))
+    assert load_resets(root) == []
+    assert (root / "quality/gate_signing.pub").read_text().strip() == gate[1]
+
+
 def test_reset_keys_refusals(tmp_path: Path) -> None:
     root, gate = _tree(tmp_path)
     with pytest.raises(ValueError, match="at least one new key"):
@@ -524,6 +549,8 @@ class _World:
         self.a, self.b, self.c, self.x = (generate_keypair() for _ in range(4))
         self.lost_registry = _registry([self.a[1]])
         self.lost = _side(self.a[1], self.lost_registry)
+        self.w1, self.w2 = _p256_pem(), _p256_pem()
+        self.w1_crlf = self.w1.replace("\n", "\r\n")  # same key, other text
 
     def payload(
         self, *, boundary: bytes | None = None, new: dict[str, Any] | None = None
@@ -564,6 +591,18 @@ def _tampered(w: _World) -> bytes:
     return json.dumps(body).encode()
 
 
+def _witnesses(lost: str | None, new: str | None) -> Callable[[_World], bytes]:
+    """An honest record whose witness keys are World attributes (or None)."""
+
+    def build(w: _World) -> bytes:
+        new_pem = None if new is None else getattr(w, new)
+        payload = w.payload(new=_side(w.b[1], _registry([w.b[1]]), new_pem))
+        payload["lost"]["witness_pubkey_pem"] = None if lost is None else getattr(w, lost)
+        return _record(payload, [w.b])
+
+    return build
+
+
 def _two_of_two(signers: str) -> Callable[[_World], bytes]:
     def build(w: _World) -> bytes:
         new = _side(w.b[1], _registry([w.b[1], w.c[1]], threshold=2))
@@ -580,6 +619,14 @@ CASES: dict[str, tuple[Callable[[_World], bytes], list[str] | Callable[[_World],
         [],
     ),
     "honest_two_of_two": (_two_of_two("bc"), []),
+    "honest_witness_replaced": (_witnesses("w1", "w2"), []),
+    "honest_witness_introduced": (_witnesses(None, "w2"), []),
+    "lost_witness_not_replaced": (_witnesses("w1", None), ["lost_witness_not_replaced"]),
+    "reuses_lost_witness_key": (_witnesses("w1", "w1"), ["reuses_lost_witness_key"]),
+    "reuses_lost_witness_key_rewrapped": (
+        _witnesses("w1", "w1_crlf"),
+        ["reuses_lost_witness_key"],
+    ),
     "malformed": (lambda w: b"{not json", ["malformed"]),
     "schema_unexpected": (
         lambda w: _record(w.payload(), [w.b], schema="key_reset.v0"),
