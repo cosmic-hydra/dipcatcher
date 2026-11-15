@@ -23,7 +23,7 @@
     "INFLIGHT": "40ae7f281e79bcf2c174ae846664fd7efbce623ef9f4e62b9ea30d32f080b86c",
     "LICENSE": "31fde330e3de31bc54d70b69f0179ed9ea5bbe87f45c61e29f24c68c8329cba6",
     "MATH_SPEC.md": "9f32d0899fda13a84a582311933c0e62b20ccc9bdd5b2d73c02f5a41575e7a06",
-    "Makefile": "57d53b6d8ec795d471a1f0d85197be26a10ee02df6517e16de21be905f2a5150",
+    "Makefile": "cb6e424d9c749cf2997262193719803eea931cf642d0d54bf30b5554ef8c52b8",
     "README.md": "8af05e65d04f14e163e324ddf4bdb22bce7c9f58a574dd00421d7c5328351ffc",
     "RESEARCH_REFERENCES.md": "3d29ff2fddf292fc9eb0c62788ed58abf897b9483395356502eb94b58e729593",
     "SECURITY.md": "42ad8a773c98dfedc5580a0ae782793e30c955ffd267f716485518ba0e885798",
@@ -51,14 +51,14 @@
     "src/quant_fund/research/corpus_inference.py": "e24176cadde4e02c85ecffa7aff2b02e77d7d8de38623438df4dec1f8d9a1449",
     "src/quant_fund/research/crown_jewels.py": "6018f1639713a74dac3e6e3f6f881a6d40a76444437fad86494d4709242d3fb7",
     "src/quant_fund/research/custody.py": "d56d92eab13434c0287219b8d5d734695193bfe54b1e6e7c44f3c57f1bb3d1e6",
-    "src/quant_fund/research/epoch_consistency.py": "02f86d603573afecba6450a5fbe75f684b82296ef8dbb7bd10096b1f7e7490e6",
+    "src/quant_fund/research/epoch_consistency.py": "b23122ef5083de51b713ba439f720852eae6d95b0c199e201582fc0db975c7d0",
     "src/quant_fund/research/epoch_delta.py": "97b5b5e583008a049fb9be44e4e1a079c8fe3184a59db17cb6e962f1fd695773",
     "src/quant_fund/research/epoch_merkle.py": "11ee0e0efc7b4119444f49d9bd885c9f6a72b860816e63bc45a31cd44bc61c13",
     "src/quant_fund/research/fuzz_drill.py": "8231cc2ac0964adac2a194f540331c6f8f92539b44e11123cfc99717a612e511",
     "src/quant_fund/research/gate_signatures.py": "d9c7bdab3bcd27667763f14594a7199fa3ef83a5cb877c9594aa66ad5e1fe14d",
     "src/quant_fund/research/integrity_checkpoint.py": "8ae2c64e2aeccd4bc0782fc1fb7296936b4588ec58cb53ffcedc16045a61687b",
     "src/quant_fund/research/integrity_witness.py": "85586dd844821086be097e8be69effd16e6480e649de4ab0d83381e8d2646e08",
-    "src/quant_fund/research/key_reset.py": "c3f73055c1998efab83d8e2dd85359ac13c59c95f9e7fb98aa689339bab1cc47",
+    "src/quant_fund/research/key_reset.py": "204d1770e74b2215f24c61e0a2e76c15502060ff7cdf89bb5d5e5c9aae69b03a",
     "src/quant_fund/research/key_rotation.py": "226d56faaa8ca02e785fd43e36801f710b94561e8226820f35a342ce4717aad2",
     "src/quant_fund/research/lane_contracts.py": "bc7b2f14ac6f606e81545f83a4c683d8294809168d80b0aa03b9f1eaec42e1c8",
     "src/quant_fund/research/ots_anchor.py": "7e9e2c10a47c3e71664e1e352034036336f9b5b31f49ab7d7f0be1cd8d432ac6",
@@ -76,7 +76,7 @@
     "src/quant_fund/utils/atomicio.py": "26b3c04a3c55cf7777989edb91dea774656ea97af86699bc214e7de7c7823ca1",
     "src/quant_fund/utils/hashing.py": "99d4720d78c3079f189c0f367b55e1631ac4ccf25f4c76e5682aaa241b6f5da0",
     "tests/conftest.py": "4d131820818878ef5f43992c0198dae2cd94e09d87b308791ff5310d974c7543",
-    "uv.lock": "a5c63776a7ca91c50d1e7461d87144a72b8a8c69e89791d526a6a651b95b263d"
+    "uv.lock": "613651daf8e1d5878ca65378006cf8c1e6da81de895d8b4f032a12c563df2ea1"
   },
   "schema": "crown_jewels.v1"
 }

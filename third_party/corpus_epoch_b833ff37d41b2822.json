@@ -1,0 +1,438 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "a7ef0431f792e10e86dcc847b2911e35609f03cc5bd2ff34c4b6f916ecaa1a4d",
+  "inputs_sha256": "e9fea4d808d9a84a3fde75d3d3ed29b6d08a376022b930c065619bff63cc08be",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "c5e9398b1f54dc16bc377bd2838d7d46b1a3f00c54cdf772af6697098b4fa06f",
+  "members": [
+    {
+      "name": "corpus_epoch_13c2e2d27e5b093f.json",
+      "sha256": "fa8ce7b5386d9f8765060d3ddfc9853da2b066b55e1cc1fd51214770c7e8e5b9"
+    },
+    {
+      "name": "corpus_epoch_71a882545ae5f06a.json",
+      "sha256": "88f5fc6ae2dd95a44970c5a6d5ca7bc579d94c08bdc313e8500e12fe15440fd8"
+    },
+    {
+      "name": "corpus_epoch_b1534bfc197ba6e4.json",
+      "sha256": "41f16e8f905580f2db9a9537892518cb5d286a97acb040f9a0ac5bfd7399215f"
+    },
+    {
+      "name": "corpus_epoch_bb4d1de952bfca99.json",
+      "sha256": "07af50f8bf1ffacfd103a8411fdd123cfd87478ccb4436fbb577952f6203d005"
+    },
+    {
+      "name": "corpus_epoch_bfd1bccd8bc3e289.json",
+      "sha256": "8861ed193ca2289201ef0552d56d4ef7d4910e4147d5b0183830eabd1fee8980"
+    },
+    {
+      "name": "corpus_epoch_cc1ef25918bb65da.json",
+      "sha256": "1a9be049b14555783157a8eebfd2523b9a7cfa66c6b077eeef6c24fbbaf38b6f"
+    },
+    {
+      "name": "corpus_epoch_cea278aa21094fce.json",
+      "sha256": "0083f0726b47531fab94c8e75f2e140282d5aa77104fa8d240ff5a3d82c93553"
+    },
+    {
+      "name": "corpus_epoch_d442c84e39572934.json",
+      "sha256": "89303d59f953def30c6cd537b2c2019111cb4de045d952a7f786b0df892963e8"
+    },
+    {
+      "name": "corpus_epoch_dd15195fae039705.json",
+      "sha256": "7e1afd59144caf87e61bf497007d124ff213d2e1bfea41c6747fa92e14e6192b"
+    },
+    {
+      "name": "corpus_epoch_ea2fd42810d26943.json",
+      "sha256": "386bad0a86bfdbecd670682e363eec577dc77bd5b1dab7062d2482d9e8d165b7"
+    },
+    {
+      "name": "kronos/.gitignore",
+      "sha256": "75f33054b0717c2055c8cc8a9ffb0b28fd669813edf9b1447a9cac71c3a4fcf3"
+    },
+    {
+      "name": "kronos/LICENSE",
+      "sha256": "acb2d194d378204e5f2be4dcd24d39ecac437903620c790c3315a96dab388fdc"
+    },
+    {
+      "name": "kronos/NOTICE",
+      "sha256": "92cf92c15b52f1d99d60e7af2a2dabfefe11af80afbfcb34a105bbde4067bdcc"
+    },
+    {
+      "name": "kronos/README.md",
+      "sha256": "92d236701da7bf3ca6292fc5c69eb08d4b429c0034e4afc2f74f5072f7ac28a6"
+    },
+    {
+      "name": "kronos/examples/get_akshare_date_2024-2025_x.py",
+      "sha256": "5991e21136ddb1ef725ead77bbb84a7198e6f366463e689769360779a792d790"
+    },
+    {
+      "name": "kronos/examples/get_date_new.py",
+      "sha256": "f4ca75691d4b186eb2ec47b9e43cc588b9f5d561f770df79ad5090b70b102581"
+    },
+    {
+      "name": "kronos/examples/prediction_akshare_2024-2025.py",
+      "sha256": "bae85a1f73fcf970f50151cc00c65c7218023683dadb4f1af6cb18e46b17ebd1"
+    },
+    {
+      "name": "kronos/examples/prediction_batch_example.py",
+      "sha256": "11e4c5b993c51fbd47b4d19bf48fe1c77cccebaa1f0e8c7676a4060951ff80af"
+    },
+    {
+      "name": "kronos/examples/prediction_cn_markets_day.py",
+      "sha256": "c3afa3ae3b1e0f37b779cc94f2d44957f470e296959d789d2d6ecf58e7b116f6"
+    },
+    {
+      "name": "kronos/examples/prediction_example.py",
+      "sha256": "b195403315a6f967d7e7cc1ba3b6259e4c94445b7d1119ac3e8ba18defbb37b5"
+    },
+    {
+      "name": "kronos/examples/prediction_new.py",
+      "sha256": "c4992690c7e401abcd315698c466d63e1b82dd0d3ddc9714075e0d834618746d"
+    },
+    {
+      "name": "kronos/examples/prediction_new_GUI.py",
+      "sha256": "e6b9880bf951f671febf5e5e08b76863f148f010a5526317a877174e87b70b5f"
+    },
+    {
+      "name": "kronos/examples/prediction_wo_vol_example.py",
+      "sha256": "052b02ab9e62af6558bd948880f80005f7fcef239b780d770b734ed275e8a41d"
+    },
+    {
+      "name": "kronos/examples/run_backtest_kronos.py",
+      "sha256": "7a3afbc2022a79a812f298905dc03521513b6c0c5ad92bdee77989084a9f1c5c"
+    },
+    {
+      "name": "kronos/examples/yuce/000021_comprehensive_analysis_report.json",
+      "sha256": "2766b78ab57a57bd2b8c3057c6397299b276f4e0145876909858ca68834e6759"
+    },
+    {
+      "name": "kronos/examples/yuce/000021_optimized_prediction.png",
+      "sha256": "531a03e19120d9a69fb8e4380341f1c2a9cc6b7b98ddd543989ed7fbe71106c5"
+    },
+    {
+      "name": "kronos/examples/yuce/002354_comprehensive_analysis_report.json",
+      "sha256": "37e98f985f88b75839097c48e5db9f5065f9fce9c77ef90b073c9fa64fc86704"
+    },
+    {
+      "name": "kronos/examples/yuce/002354_optimized_prediction.png",
+      "sha256": "8d85805a3001d717a1ffbd6ca8afa492e62760b2ca3061cfbbff850bea3b3f89"
+    },
+    {
+      "name": "kronos/examples/yuce/300207_comprehensive_analysis_report.json",
+      "sha256": "62f479820c239f01be909a08e1cffcbcdaa6441ae236e10413bd6d6696714af6"
+    },
+    {
+      "name": "kronos/examples/yuce/300207_optimized_prediction.png",
+      "sha256": "d932e80b049511934ac261b8868146a522acb8da3d2f0387931c42f79adb43e6"
+    },
+    {
+      "name": "kronos/examples/yuce/600580_comprehensive_analysis_report.json",
+      "sha256": "2578ddb7c39ade879f277ad87070ae619cc4d0e3eec7086279a2a2df4e9225ff"
+    },
+    {
+      "name": "kronos/examples/yuce/600580_optimized_prediction.png",
+      "sha256": "eeedf79aa21322dd64febdd4b3911519bdd871673ade2710cea08e185942fab8"
+    },
+    {
+      "name": "kronos/examples/yuce/historical_backtest.py",
+      "sha256": "1cd55b769354c7b8511d198574a6f532038326777cbcd3861a9338df4d19a61a"
+    },
+    {
+      "name": "kronos/examples/yuce/market_analysis_report.json",
+      "sha256": "0a5f35048ae70a83fe2e8d463c9cec190576cd6828bba4f33779b8423d88b689"
+    },
+    {
+      "name": "kronos/figures/backtest_result_example.png",
+      "sha256": "7b86fea2ac1a8d9a1c698039e64ae397d5453179557466a91da37431f331126c"
+    },
+    {
+      "name": "kronos/figures/logo.png",
+      "sha256": "b4a3bb66fed73a24f74b74f15f0798d5edf1b9729ee826a0cad8e5088dedda61"
+    },
+    {
+      "name": "kronos/figures/overview.png",
+      "sha256": "f5b4556a39883fdd82b35515a686899a4c94495f70ab8f3fc7a7ac1e3104cc50"
+    },
+    {
+      "name": "kronos/figures/prediction_example.png",
+      "sha256": "24ddc86256158658582687fc7cef4761f1dbb130ab8161e04957c8d178d323f9"
+    },
+    {
+      "name": "kronos/finetune/config.py",
+      "sha256": "00d80c8d2ff9a97d0eebc8cb497b6351bdcda8c5b9b00fe0f3eac4e581b40607"
+    },
+    {
+      "name": "kronos/finetune/dataset.py",
+      "sha256": "b66828ff791e37da28713be50efa7ad2ee1bb6aba2415490ff65c5e99c2d92f8"
+    },
+    {
+      "name": "kronos/finetune/qlib_data_preprocess.py",
+      "sha256": "3c8b7dea3c378d9d54f76da68c907e4f9c89e6f69095a9310ac96bc9542a07cd"
+    },
+    {
+      "name": "kronos/finetune/qlib_test.py",
+      "sha256": "619bc3cf3efb6048d598d3fe97e14357938f845a2d71f11ac5d421b85a83fbf6"
+    },
+    {
+      "name": "kronos/finetune/train_predictor.py",
+      "sha256": "407cb5391bf5b064c7d3c72ed3956c7c0e37d96e29a4b14c9750dc47d4488089"
+    },
+    {
+      "name": "kronos/finetune/train_tokenizer.py",
+      "sha256": "28a0e1cab6454cafb7f2aa7aa38ca3a22e449684287b2580db93902c9877ae7b"
+    },
+    {
+      "name": "kronos/finetune/utils/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "kronos/finetune/utils/training_utils.py",
+      "sha256": "d35da5be1a52de7619de7ef4c76c0082b1153e3ca216b4191a5e0b1b94c322ee"
+    },
+    {
+      "name": "kronos/finetune_csv/README.md",
+      "sha256": "97742b2bd0657d1bfc3c6827b8c8856ba04b08d5b8d869320be83f2752a0fac6"
+    },
+    {
+      "name": "kronos/finetune_csv/README_CN.md",
+      "sha256": "6ec258ce8ba96cf04762a4794535356c82a58169ba31209f5457dca91e1a5705"
+    },
+    {
+      "name": "kronos/finetune_csv/config_loader.py",
+      "sha256": "3ad832fe474ce37d5e5dd1e79ec314fc86d66a17a665201d61e173708de2d79d"
+    },
+    {
+      "name": "kronos/finetune_csv/configs/config_ali09988_candle-5min.yaml",
+      "sha256": "623b4cfeba27c92f5567e488e421aed23b119cd32279a2b08b1f3627752855e3"
+    },
+    {
+      "name": "kronos/finetune_csv/data/HK_ali_09988_kline_5min_all.csv",
+      "sha256": "65725aeebc3de8f59725f9b717b8621a1ce80b014288a6d64e05ac7a303f527f"
+    },
+    {
+      "name": "kronos/finetune_csv/examples/HK_ali_09988_kline_5min_all_historical_20250919_073929.png",
+      "sha256": "46fa743520e9564b778c5c0ac6fabfb70d792ed56a95d487181c305e4ff8e409"
+    },
+    {
+      "name": "kronos/finetune_csv/examples/HK_ali_09988_kline_5min_all_historical_20250919_073944.png",
+      "sha256": "3664566e7f8962066dd71cf1bd32b54cd791e94563a51595921af27280cf250d"
+    },
+    {
+      "name": "kronos/finetune_csv/examples/HK_ali_09988_kline_5min_all_historical_20250919_074012.png",
+      "sha256": "96845dba507340f83dbbeacc61b4772757fa7043b953841eab6bd62563ad09a4"
+    },
+    {
+      "name": "kronos/finetune_csv/examples/HK_ali_09988_kline_5min_all_historical_20250919_074042.png",
+      "sha256": "37633a5e9dfe0413589afb72dd0ca01b1649c2811b62daf240b0138b5bdde0ee"
+    },
+    {
+      "name": "kronos/finetune_csv/examples/HK_ali_09988_kline_5min_all_historical_20250919_074251.png",
+      "sha256": "0f0f24910675a4576820a17b70f109e821dd44d2324438411441e319a7d54dac"
+    },
+    {
+      "name": "kronos/finetune_csv/finetune_base_model.py",
+      "sha256": "5c05fd3598518cd3e9ecd68a5f3bbcb24a811f4b5a943706e8412c0fe51bb27e"
+    },
+    {
+      "name": "kronos/finetune_csv/finetune_tokenizer.py",
+      "sha256": "709701b94b40e50e1530efbdff22f7df45d854368599a24873024daa149ff7e5"
+    },
+    {
+      "name": "kronos/finetune_csv/train_sequential.py",
+      "sha256": "2af6faea4ddbf637d3cf943827e0f34d529b405d67ebc18582f60f0cf35f4cd4"
+    },
+    {
+      "name": "kronos/model/__init__.py",
+      "sha256": "54e6f0c8a8f6307068686cee14cec2d938cc7d8651aed92d2503d9aade3f1af2"
+    },
+    {
+      "name": "kronos/model/kronos.py",
+      "sha256": "d5564fbbc072a45d2428ff21332237f45d7363e678aec50309308c4009795bd1"
+    },
+    {
+      "name": "kronos/model/module.py",
+      "sha256": "ff5e93d712106b88c7f3dfad1a0964b2b22de171ae7eacae28d3e8fd8c19cb47"
+    },
+    {
+      "name": "kronos/requirements.txt",
+      "sha256": "4e507f48c4b92971e11732c0fdee23683bea13e5a98a75bd6b1d5d1257ae9365"
+    },
+    {
+      "name": "kronos/tests/data/generate_regression_output.py",
+      "sha256": "da2ebf33c34ac5255a988ccad38b6afca1c3b7cd0e4c61abe8f61f7b0158838d"
+    },
+    {
+      "name": "kronos/tests/data/regression_input.csv",
+      "sha256": "aa5efe0121b7cc098db1a169ed38f9878681ef14a93c85d54a618fd073048899"
+    },
+    {
+      "name": "kronos/tests/data/regression_output_256.csv",
+      "sha256": "5064d09ef7fe186b9c2aeed9dfdf234721b4b182a8305d92db9d3d5d6b37f29e"
+    },
+    {
+      "name": "kronos/tests/data/regression_output_512.csv",
+      "sha256": "bb69a96cbfcf385ba433b8db7e9630b45a4b3032d091d12a7b0bac5996bad18b"
+    },
+    {
+      "name": "kronos/tests/test_kronos_regression.py",
+      "sha256": "535cb5059d69f0f24bec7381727d0562d82bf211b2b4ca322803ca5372a1d6d5"
+    },
+    {
+      "name": "kronos/webui/README.md",
+      "sha256": "c7bc1a545ddacd8b94c31af2baae4b55d470952300d9bd96bb3c1d8e1d32baa6"
+    },
+    {
+      "name": "kronos/webui/app.py",
+      "sha256": "5147a087ec323db47afc3f7bb787252881d702f87c0b2e095bf92be32e0ae8e7"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_163800.json",
+      "sha256": "bb9a1478ac36303264550920c7a75b42c92dc08784f0a114f8ffb44e4f913e57"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_164030.json",
+      "sha256": "59c8501626e9efe8a3f74f8b9c59f06611b461c039e565868d44989d6d2f9035"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_164422.json",
+      "sha256": "c9ef045e6afc79b85d4249fc9d31cd4e5be4b4ff8b5da9daf27aa3e9c03e056c"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_170831.json",
+      "sha256": "9691103cc9a701417d8b07a404f549ddd5fdea5e6e2f5cd0008902779a4af21b"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_171720.json",
+      "sha256": "2967bfbf1066f113010db2949672957e59a280123403eaf2ca98197148114caf"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_171913.json",
+      "sha256": "df3a2676d0b247ac5d25435ea37a5bb299ec0750bcea4aad1e21ff8279a00f12"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_172031.json",
+      "sha256": "529ced845fc285d5eea7f9cf7772361fb9d3608af590b9752665b53db9376fd9"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_172153.json",
+      "sha256": "7f043bc02cd116a56d8d805df0a42b9112733c257709aa2bd66e466ab62f43b1"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_172740.json",
+      "sha256": "1cc8b60771abe2dc928c434c8d695bad38d624e83092fba7b40915476180b584"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_173322.json",
+      "sha256": "b8f30a82a5fa5ddda34b369e927f0933a52281e39ec04eb0dbeda752e379f000"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_173455.json",
+      "sha256": "061db8899d1139acbb9b19e407d55a24617ddee157a7ca7e4a47219603302ba6"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_174410.json",
+      "sha256": "f88f4d5525e536a421220775e243484c770298fd4abd12bfb934250a1686eea2"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_174809.json",
+      "sha256": "4d442c5296dfbb526f588614a97fe9d2c0af19bbe1cbd756be91aa19129f0804"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_175057.json",
+      "sha256": "92f7ab4f2bf500d244986dcffa5f58332474b5aff884181497b9e8a637ac6029"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_175135.json",
+      "sha256": "a0be9971233a491e2481ff8ab7a49a9da2026e7a73951fff76e88f981c4bfffe"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_175909.json",
+      "sha256": "a2efbdfdf1c3c357e1da4e24f124eef41045ee2cede72b221fe8f5aafaec78bb"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_180308.json",
+      "sha256": "6412df92947aca2423e9641de071e6aa6908db8573f16b3475ac4f8876a6dd6f"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_180632.json",
+      "sha256": "987c174145e8ac31676bfa7d36ebcba54e26f02109ee56f2833f356edd63b5c7"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_180745.json",
+      "sha256": "c3587af841cfb65747135d2657a08112000e7ec4e962d517693099d3d61feb2c"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_180806.json",
+      "sha256": "506ca9cdb780c6366b3d0d6bb30fea81b963177bfaab9e5ca1a139a704f8da7b"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_181012.json",
+      "sha256": "2ba2cb4d3b399c73dc153e6cee796194a8a3243080b2d8291c8453c7b3307b14"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_181139.json",
+      "sha256": "de5a8a0ae4a40174f29ebff89f5c82839ee993bbb6dd1b99e4078b3027ae4210"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_181240.json",
+      "sha256": "080d04640bccbaa02d703b3c2e1e5d234f6bfd774b9229329b6c95519d630000"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_181434.json",
+      "sha256": "11bfdcef6f0e3aadd5930e4dd0bc17aca47d893d8edb50f34ed73e585afc1c58"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_181513.json",
+      "sha256": "c6519d65e75a198f83ee49e6027dc30bab41c8f2c636e30bc4840cba03b4d3ad"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_181612.json",
+      "sha256": "ef7dc400ac99a57ca76cb3a81771cc7267bd4db57373d00df912b17e5f6d37da"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_181648.json",
+      "sha256": "058a8108e68751920d9fb119c3745369d721381ca3056659daa2b4cb3ea5b6dc"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_181800.json",
+      "sha256": "1846f0fcae78c1c00942b7c1206ea16d6d2b11ed135c6fe7e127a0e0fad92409"
+    },
+    {
+      "name": "kronos/webui/prediction_results/prediction_20250826_181932.json",
+      "sha256": "58b3bb971ed95fac095ee380a4947739026ce5ef331f74eb06dc8ce2e7473598"
+    },
+    {
+      "name": "kronos/webui/requirements.txt",
+      "sha256": "295937910305ea97c154a610d80b2858fa2389ac867fab0f1b605668ad092373"
+    },
+    {
+      "name": "kronos/webui/run.py",
+      "sha256": "0390ea2bfb9fe8bb4c59539515bebe79b23f6dab0ed466782bd94163e18ac2c3"
+    },
+    {
+      "name": "kronos/webui/start.sh",
+      "sha256": "09b4dbbd1e4b94e57661ea202a6b7fd896510c89802f512bac6b94f68dba55f3"
+    },
+    {
+      "name": "kronos/webui/templates/index.html",
+      "sha256": "94995c6cf0b5e83053736b11024cc7103d67b8ae73e6bfa2d4091ea59ebc4e99"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_13c2e2d27e5b093f.json"
+  ],
+  "members_removed": [],
+  "n_members": 103,
+  "params": {
+    "head_sha": "f16d9f223813181867088c84a42ac5030c2f2cdf",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_13c2e2d27e5b093f.json",
+  "prev_epoch_sha256": "ef3ccbe862b8491a2bca29e698ca6672a39b5aaec78dd7238cbab9b385d041a5",
+  "receipt_sha256": "b833ff37d41b2822cba9679ab817fab177d79cd29f91e31ce085b977848c8988",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}
