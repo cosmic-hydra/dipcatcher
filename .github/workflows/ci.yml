@@ -679,7 +679,17 @@ jobs:
         run: uv sync --frozen --all-groups
       - name: TLC downloader regression tests (offline)
         run: python scripts/test_run_tlc.py
+      # The jar is content-pinned and run_tlc.sh re-verifies SHA-256 + size on
+      # every run, cached or not, so a cache hit only skips the download. The
+      # job token lifts anonymous api.github.com's 60/hour shared-IP limit.
+      - name: Cache TLC tools jar
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .tla
+          key: tla2tools-1.7.4-936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
       - name: TLC order-lifecycle model check
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: bash scripts/run_tlc.sh
       - name: SMT proofs, conformance, and stateful tests
         run: uv run pytest tests/formal -q --tb=short

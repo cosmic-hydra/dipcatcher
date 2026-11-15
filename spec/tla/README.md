@@ -46,6 +46,13 @@ An invalid existing cache is reported with actual/expected digests and sizes,
 not silently replaced. Remove that file deliberately after investigating it.
 The default versioned filename avoids reusing older `.tla/tla2tools.jar` caches.
 
+Anonymous `api.github.com` requests share a 60/hour limit per IP, and shared
+CI runners exhaust it (`curl: (22) ... 403`). When `GITHUB_TOKEN` is set, the
+download authenticates from a temporary 0600 header file, so the token never
+appears in argv; curl drops the header on the cross-host redirect to the asset
+store. CI passes the job token and caches `.tla/` under a key that embeds the
+pinned SHA-256; cached bytes still pass the same digest and size check.
+
 For upgrades, establish official artifact provenance and a fixed asset ID,
 verify bytes independently before running them, update SHA-256/size/version
 alongside this record, and rerun both model configs and the offline downloader
