@@ -144,12 +144,15 @@ A record that declares a witness key lost must name a different one
 (`lost_witness_not_replaced`, `reuses_lost_witness_key`). Lost stays lost
 across resets: no later reset, rotation or hand edit may bring back a gate
 key, registry member or witness key an earlier reset declared lost
-(`key_reset_revoked_registry`, `key_reset_reinstates_witness`), and
-`key-reset` refuses to write such a record (`reinstates_lost_key`,
-`reinstates_lost_witness_key`). A bundle whose head signs an archive or
-witness-proof extent, or that carries a reset, is always walked as a spine
-bundle, so stripping its history fails (`spine_archive_count`) instead of
-reading as a pre-spine bundle.
+(`key_reset_reinstates_key`, `key_reset_revoked_registry`,
+`key_reset_reinstates_witness`), and `key-reset` refuses to write such a
+record (`reinstates_lost_key`, `reinstates_lost_witness_key`). Reset records
+and their boundaries are strict JSON: NaN, Infinity, numbers that overflow to
+infinity and unpaired surrogates make them `malformed` in both verifiers,
+since canonical signing bytes cannot carry them. A bundle whose head signs an
+archive or witness-proof extent, or that carries a reset, is always walked as
+a spine bundle, so stripping its history fails (`spine_archive_count`)
+instead of reading as a pre-spine bundle.
 
 What a reset cannot prove is authorization: a lost key cannot sign its own
 retirement, so the reset is authorized by whoever can commit to the

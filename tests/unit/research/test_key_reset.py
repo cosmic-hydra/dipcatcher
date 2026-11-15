@@ -564,6 +564,22 @@ def test_a_key_lost_by_an_earlier_reset_stays_revoked(
     assert f"spine_key_reset_revoked_registry:{head}" in _standalone_errors(tmp_path)
 
 
+def test_a_pending_reset_reinstating_a_lost_key_is_flagged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The record itself is the finding: before anything is signed under its
+    registry, a reset naming a key an earlier reset declared lost already
+    fails both verifiers."""
+    _gate, dormant, _first = _members_world(tmp_path)
+    monkeypatch.setattr(key_reset_module, "_reinstated_refusals", lambda *_args: [])
+    out = _reset(tmp_path, generate_keypair(), dormant)
+    library = checkpoint_spine(tmp_path)["errors"]
+    assert f"key_reset_reinstates_key:{out.name}" in library
+    assert not any("revoked" in e for e in library)  # nothing signed under it yet
+    script = _standalone_errors(tmp_path)
+    assert f"spine_key_reset_reinstates_key:{ascii('quality/' + out.name)}" in script
+
+
 def test_two_resets_without_reinstatement_verify(tmp_path: Path) -> None:
     """Control for the scenario above: fresh keys at the second reset."""
     _members_world(tmp_path)
@@ -795,6 +811,44 @@ def _non_finite(value: float) -> Callable[[_World], bytes]:
     return build
 
 
+def _lost_era_boundary(w: _World, extra: bytes) -> bytes:
+    """A v2 boundary the lost key signed over ``extra: null``, carrying the
+    wire text ``extra`` there instead."""
+    payload = {
+        "schema": "integrity_checkpoint.v2",
+        "prev_sha256": "0" * 64,
+        "quorum": _quorum_claim(w.lost_registry),
+        "extra": None,
+    }
+    body = {
+        "schema": "integrity_checkpoint_sig.v2",
+        "algorithm": "ed25519",
+        "signatures": [{"key_id": key_id(w.a[1]), "signature": _sig(w.a[0], payload)}],
+        "payload": payload,
+    }
+    raw = json.dumps(body).encode()
+    assert raw.count(b'"extra": null') == 1
+    return raw.replace(b'"extra": null', b'"extra": ' + extra)
+
+
+def _unrepresentable(extra: bytes, *, in_boundary: bool = False) -> Callable[[_World], bytes]:
+    """Signed over ``extra: null``, carrying wire text canonical signing bytes
+    cannot hold instead: a number that overflows to infinity (signed as
+    null, so a lax parser verifies a record that says something else) or an
+    unpaired surrogate (not encodable as UTF-8, so a lax parser crashes)."""
+
+    def build(w: _World) -> bytes:
+        if in_boundary:
+            return _record(w.payload(boundary=_lost_era_boundary(w, extra)), [w.b])
+        payload = w.payload()
+        payload["extra"] = None
+        raw = _record(payload, [w.b])
+        assert raw.count(b'"extra": null') == 1
+        return raw.replace(b'"extra": null', b'"extra": ' + extra)
+
+    return build
+
+
 def _two_of_two(signers: str) -> Callable[[_World], bytes]:
     def build(w: _World) -> bytes:
         new = _side(w.b[1], _registry([w.b[1], w.c[1]], threshold=2))
@@ -822,6 +876,17 @@ CASES: dict[str, tuple[Callable[[_World], bytes], list[str] | Callable[[_World],
     "malformed": (lambda w: b"{not json", ["malformed"]),
     "nan": (_non_finite(float("nan")), ["malformed"]),
     "negative_infinity": (_non_finite(float("-inf")), ["malformed"]),
+    "honest_finite_float": (_edit(("extra",), 1.5e300), []),
+    "honest_astral_text": (_edit(("reason",), "keys lost \U0001f511"), []),  # escaped as a pair
+    "overflow": (_unrepresentable(b"1e999"), ["malformed"]),
+    "negative_overflow": (_unrepresentable(b"-1E1000000"), ["malformed"]),
+    "boundary_overflow": (_unrepresentable(b"1e999", in_boundary=True), ["boundary_malformed"]),
+    "unpaired_surrogate": (_unrepresentable(b'"\\ud800"'), ["malformed"]),
+    "unpaired_surrogate_key": (_unrepresentable(b'{"\\udc00": 1}'), ["malformed"]),
+    "boundary_unpaired_surrogate": (
+        _unrepresentable(b'"x\\udfff"', in_boundary=True),
+        ["boundary_malformed"],
+    ),
     "boundary_nan": (
         lambda w: _record(
             w.payload(boundary=b'{"schema": "integrity_checkpoint_sig.v2", "payload": {"x": NaN}}'),

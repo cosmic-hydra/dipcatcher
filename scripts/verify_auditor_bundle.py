@@ -43,6 +43,7 @@ import argparse
 import base64
 import hashlib
 import json
+import math
 import sys
 import urllib.request
 from pathlib import Path
@@ -428,10 +429,21 @@ def _reject_constant(token: str) -> Any:
     raise ValueError(f"non-finite number: {token}")
 
 
+def _finite_float(token: str) -> float:
+    value = float(token)
+    if not math.isfinite(value):  # 1e999 overflows to inf without a constant token
+        raise ValueError(f"non-finite number: {token}")
+    return value
+
+
 def _strict_loads(raw: bytes) -> Any:
-    """``json.loads`` refusing NaN/Infinity: canonical signing bytes cannot
-    represent them, so a record carrying one is malformed, not re-encoded."""
-    return json.loads(raw, parse_constant=_reject_constant)
+    """``json.loads`` refusing what canonical signing bytes cannot carry:
+    NaN/Infinity, numbers that overflow to infinity, and unpaired surrogates
+    (not encodable as UTF-8; ``UnicodeEncodeError`` is a ``ValueError``). A
+    record carrying one is malformed, not re-encoded."""
+    value = json.loads(raw, parse_constant=_reject_constant, parse_float=_finite_float)
+    json.dumps(value, ensure_ascii=False).encode("utf-8")
+    return value
 
 
 def _reset_boundary(boundary: Any) -> tuple[dict[str, Any] | None, str | None]:
@@ -441,7 +453,7 @@ def _reset_boundary(boundary: Any) -> tuple[dict[str, Any] | None, str | None]:
     try:
         raw = base64.b64decode(str(boundary.get("checkpoint_b64", "")), validate=True)
         body = _strict_loads(raw)
-    except ValueError:  # binascii.Error, JSONDecodeError, UnicodeDecodeError
+    except ValueError:  # binascii.Error, JSONDecodeError, Unicode{De,En}codeError
         return None, "boundary_malformed"
     if _sha(raw).hex() != boundary["checkpoint_sha256"]:
         return None, "boundary_digest_mismatch"
@@ -614,7 +626,7 @@ def _verify_reset_spine(
     """Each reset's boundary sits on the spine; its new keys signed nothing
     at or before the boundary; past it, no lost key signs and no record
     claims the lost registry or any registry holding a lost key; no lost
-    witness key comes back."""
+    gate, registry or witness key comes back."""
     position = {digest: i for i, digest in enumerate(ordered)}
     placed: list[tuple[int, str, dict[str, Any]]] = []
     for r in resets:
@@ -637,7 +649,9 @@ def _verify_reset_spine(
             ):
                 errors.append(f"spine_key_reset_revoked_registry:{digest[:12]}")
     placed.sort(key=lambda item: (item[0], item[1]))
-    _verify_witness_retirement([r for _idx, _rel, r in placed], live_witness_pem, errors)
+    in_order = [r for _idx, _rel, r in placed]
+    _verify_key_retirement(in_order, errors)
+    _verify_witness_retirement(in_order, live_witness_pem, errors)
 
 
 def _spki_or_none(pem: Any) -> bytes | None:
@@ -660,6 +674,16 @@ def _spki_or_none(pem: Any) -> bytes | None:
         )
     except (ValueError, TypeError, UnsupportedAlgorithm):
         return None  # a malformed installed key is the witness checks' finding
+
+
+def _verify_key_retirement(ordered_resets: list[dict[str, Any]], errors: list[str]) -> None:
+    """A key declared lost stays lost: no later reset names it in its new
+    set, whether or not anything has been signed under that set yet."""
+    retired: set[str] = set()
+    for r in ordered_resets:
+        if r["new_kids"] & retired:
+            errors.append(f"spine_key_reset_reinstates_key:{ascii(r['rel'])}")
+        retired |= r["lost_kids"]
 
 
 def _verify_witness_retirement(

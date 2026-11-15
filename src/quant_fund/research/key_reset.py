@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import base64
 import json
+import math
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -203,11 +204,22 @@ def _reject_constant(token: str) -> Any:
     raise ValueError(f"non-finite number: {token}")
 
 
+def _finite_float(token: str) -> float:
+    value = float(token)
+    if not math.isfinite(value):  # 1e999 overflows to inf without a constant token
+        raise ValueError(f"non-finite number: {token}")
+    return value
+
+
 def _strict_loads(raw: bytes) -> Any:
-    """``json.loads`` refusing NaN/Infinity. Canonical signing bytes turn them
-    into null, so a record carrying one would verify while saying something
-    else; the standalone verifier refuses them too."""
-    return json.loads(raw, parse_constant=_reject_constant)
+    """``json.loads`` refusing what canonical signing bytes cannot carry:
+    NaN/Infinity and numbers that overflow to infinity (signed as null, so
+    the record would verify while saying something else) and unpaired
+    surrogates (not encodable as UTF-8). The standalone verifier refuses the
+    same; ``UnicodeEncodeError`` is a ``ValueError`` like the others."""
+    value = json.loads(raw, parse_constant=_reject_constant, parse_float=_finite_float)
+    json.dumps(value, ensure_ascii=False).encode("utf-8")
+    return value
 
 
 def _boundary_body(boundary: Any) -> tuple[dict[str, Any] | None, str | None]:
@@ -217,7 +229,7 @@ def _boundary_body(boundary: Any) -> tuple[dict[str, Any] | None, str | None]:
     try:
         raw = base64.b64decode(str(boundary.get("checkpoint_b64", "")), validate=True)
         body = _strict_loads(raw)
-    except ValueError:  # binascii.Error, JSONDecodeError, UnicodeDecodeError
+    except ValueError:  # binascii.Error, JSONDecodeError, Unicode{De,En}codeError
         return None, "boundary_malformed"
     if hash_bytes(raw) != boundary["checkpoint_sha256"]:
         return None, "boundary_digest_mismatch"
@@ -521,6 +533,18 @@ def _spki_or_none(pem: Any) -> bytes | None:
         return None  # a malformed installed key is the witness checks' finding
 
 
+def _keys_reinstated(ordered_resets: list[dict[str, Any]]) -> list[str]:
+    """A key declared lost stays lost: no later reset names it in its new
+    set, whether or not anything has been signed under that set yet."""
+    retired: set[str] = set()
+    errors: list[str] = []
+    for r in ordered_resets:
+        if r["new_kids"] & retired:
+            errors.append(f"key_reset_reinstates_key:{r['file']}")
+        retired |= r["lost_kids"]
+    return errors
+
+
 def _witness_reinstated(
     ordered_resets: list[dict[str, Any]], live_pem: str | bytes | None
 ) -> list[str]:
@@ -549,7 +573,7 @@ def reset_spine_errors(
     live_witness_pem: str | bytes | None = None,
 ) -> list[str]:
     """Boundary on the spine, fresh new keys, revoked lost keys, and no lost
-    witness key reinstated.
+    gate, registry or witness key reinstated.
 
     ``ordered`` is the walked spine, genesis first; ``records`` maps digest
     to ``checkpoint_chain`` record dicts; ``lineage`` maps registry digests
@@ -568,7 +592,9 @@ def reset_spine_errors(
         errors += _resurrected(r, [records[d] for d in ordered[: idx + 1]])
         errors += _revoked(r, ordered[idx + 1 :], records, lineage or {})
     placed.sort(key=lambda item: (item[0], item[1]))
-    errors += _witness_reinstated([r for _idx, _file, r in placed], live_witness_pem)
+    in_order = [r for _idx, _file, r in placed]
+    errors += _keys_reinstated(in_order)
+    errors += _witness_reinstated(in_order, live_witness_pem)
     return errors
 
 
