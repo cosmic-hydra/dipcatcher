@@ -1,6 +1,6 @@
 """Key-reset command.
 
-Split out of ``research_cmds``. Import the parent path; it re-exports these names.
+Split out of ``research_cmds``. Import ``quant_fund.cli.main``; it re-exports these names.
 """
 
 from __future__ import annotations

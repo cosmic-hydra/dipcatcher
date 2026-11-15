@@ -22,8 +22,8 @@ What a reset proves, and what it cannot:
   signs the record, so those keys are held by someone. The new witness key
   does not sign it.
 - **Revocation.** No spine checkpoint after the boundary may be signed by,
-  or claim, a lost key or the lost registry — a reset also retires keys that
-  may have leaked.
+  or claim, a lost key or the lost registry — a reset also retires gate keys
+  that may have leaked. A lost witness key is not watched.
 - **Freshness.** New keys share nothing with the lost set and never signed
   anything at or before the boundary.
 - **Authorization is not cryptographic.** The lost keys cannot sign, by

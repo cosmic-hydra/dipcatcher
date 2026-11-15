@@ -338,10 +338,15 @@ touching any covered directory:
 3. `make anchor-pins` — RFC 3161-anchor both pin files (network; quiet
    points).
 4. `make checkpoint` — sign the pin state into `quality/checkpoint.json`
-   (needs `GATE_SIGNING_KEY`). Run **last**: it binds the current signature.
-5. Optional: `make anchor-checkpoint` (RFC 3161 anchor of the checkpoint),
-   `make witness-checkpoint` (public Rekor witness; needs
-   `WITNESS_SIGNING_KEY`), verified offline by `make verify-witness`.
+   (needs `GATE_SIGNING_KEY`). Run it after the pins are signed: it binds the
+   current signature. `make anchor-checkpoint` does the same and also
+   RFC 3161-anchors the new checkpoint (network); run one or the other.
+5. `make witness-checkpoint` — witness the new checkpoint in the public Rekor
+   log (network; needs `WITNESS_SIGNING_KEY`), verified offline by
+   `make verify-witness`. Not optional: once any head has been witnessed,
+   `checkpoint-chain` fails `head_unwitnessed` until the new head is. Run it
+   once per checkpoint; a second proof for the same head fails
+   `witness_proof_unpinned`.
 
 Verification sequence — any failure is an integrity alarm, not a formatting
 problem:
