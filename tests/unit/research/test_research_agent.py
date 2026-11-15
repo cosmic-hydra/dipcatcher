@@ -1,8 +1,10 @@
 import math
+import os
 from pathlib import Path
 
 import numpy as np
 import polars as pl
+import pytest
 
 from quant_fund.config import load_config
 from quant_fund.research.agent import (
@@ -81,7 +83,9 @@ def test_research_recovers_synthetic_oracle(tmp_path: Path) -> None:
     cfg.validation.train_bars = 80
     cfg.validation.val_bars = 20
     cfg.validation.test_bars = 20
-    nb = run_research(cfg)
+    # Every family's scorecard is asserted below, so the 1400+ seeded
+    # live-optional benches stay in; the pool only spreads them over cores.
+    nb = run_research(cfg, jobs=min(4, os.cpu_count() or 1))
     assert nb.synthetic is True
     assert nb.data_source == "SYNTHETIC"
     assert len(nb.provenance["run_id"]) == 64
@@ -269,12 +273,17 @@ def test_research_recovers_synthetic_oracle(tmp_path: Path) -> None:
         next(h for h in nb.hypotheses if h.id == hid)
 
 
-def test_research_receipt_records_runtime_fingerprint(tmp_path: Path) -> None:
+def test_research_receipt_records_runtime_fingerprint(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     cfg = load_config("configs/research.yaml")
     cfg.data.root = tmp_path
     cfg.data.synthetic_n_assets = 6
     cfg.data.synthetic_n_days = 50
     cfg.universe.min_history_bars = 10
+    # Only the runtime provenance is asserted; the live-optional benches are
+    # covered by test_research_recovers_synthetic_oracle's scorecard.
+    monkeypatch.setattr("quant_fund.research.agent._live_optional_family_blobs", lambda **_kw: {})
     nb = run_research(cfg)
 
     runtime = nb.provenance["runtime"]
