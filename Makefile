@@ -358,8 +358,22 @@ stamp-epochs: ## Re-stamp all corpus-epoch chains + head pin after touching any 
 	  uv run dipcatcher corpus-epoch --corpus-dir "$$spec" --glob '*' --out-dir "$$spec" --heads-pin quality/epoch_heads.json || exit 1; \
 	done
 
-sign-pins: ## Ed25519-sign the integrity pins (needs GATE_SIGNING_KEY or --key-file); run LAST, after stamp-epochs
-	uv run dipcatcher sign-pins
+sign-pins: ## Ed25519-sign the integrity pins; run LAST, after stamp-epochs. With quality/gate_quorum.json: quorum-sign with GATE_SIGNING_KEY (key file or priv:pub) or GATE_QUORUM_KEYS, never a new key; else sign-pins (GATE_SIGNING_KEY)
+	@if [ -e quality/gate_quorum.json ]; then \
+	  key="$${GATE_SIGNING_KEY:-}"; \
+	  if [ -n "$${GATE_QUORUM_KEYS:-}" ]; then \
+	    uv run dipcatcher quorum-sign; \
+	  elif [ -z "$$key" ]; then \
+	    echo "sign-pins: quality/gate_quorum.json is installed; set GATE_SIGNING_KEY to a registered gate key file (or GATE_QUORUM_KEYS). Refusing to sign with an ephemeral key." >&2; exit 2; \
+	  elif [ -f "$$key" ]; then \
+	    uv run dipcatcher quorum-sign --key-file "$$key"; \
+	  else case "$$key" in \
+	    *:*) GATE_QUORUM_KEYS="$$key" uv run dipcatcher quorum-sign ;; \
+	    *) echo "sign-pins: GATE_SIGNING_KEY is neither an existing key file nor <priv_hex>:<pub_hex> (value not shown)" >&2; exit 2 ;; \
+	  esac; fi; \
+	else \
+	  uv run dipcatcher sign-pins; \
+	fi
 
 anchor-pins: ## RFC 3161 timestamp-anchor both pin files via FreeTSA (network); run after sign-pins, at quiet points only — every stamp-epochs stales the anchors
 	uv run dipcatcher anchor-timestamp --file quality/epoch_heads.json

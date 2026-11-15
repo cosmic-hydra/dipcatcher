@@ -185,7 +185,7 @@ Authoring order, when authorized (from
 
 ```bash
 make stamp-epochs     # re-stamp every corpus-epoch chain + the head pin
-make sign-pins        # Ed25519-sign the pins; needs GATE_SIGNING_KEY or --key-file
+make sign-pins        # sign the pins; needs GATE_SIGNING_KEY (quorum-sign when gate_quorum.json exists)
 make anchor-pins      # RFC 3161 anchor; network, quiet points only
 make checkpoint       # sign the pin state; run last, binds the current signature
 ```
