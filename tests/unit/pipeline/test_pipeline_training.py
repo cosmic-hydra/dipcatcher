@@ -290,22 +290,30 @@ def test_train_family_unknown_models_fail_closed() -> None:
         train_family(cfg, "tail", "bogus_tail")
 
 
-def test_train_family_dispatches_calibration(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_train_family_dispatches_calibration(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     cfg = load_config("configs/research.yaml")
+    # train_family always writes evidence_report.* under <data.root>/metadata/reports.
+    # The default root is the repo's real data/ tree, whose metadata epoch audit
+    # counts every on-disk file (ignored or not), so keep the write in tmp_path.
+    cfg.data.root = tmp_path / "data"
     monkeypatch.setattr(
         "quant_fund.pipeline.train.train_calibration",
         lambda config, model: {"model": model, "research_only": True},
     )
     result = train_family(cfg, "calibration", "platt")
+    reports = tmp_path / "data" / "metadata" / "reports"
     assert result == {
         "model": "platt",
         "research_only": True,
         "data_source": "SYNTHETIC",
         "evidence_report": {
-            "json": "data/metadata/reports/evidence_report.json",
-            "markdown": "data/metadata/reports/evidence_report.md",
+            "json": (reports / "evidence_report.json").as_posix(),
+            "markdown": (reports / "evidence_report.md").as_posix(),
         },
     }
+    assert (reports / "evidence_report.json.sha256").is_file()
 
 
 def test_train_ranking_empty_panel_fail_closed(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -465,8 +473,10 @@ def test_train_regime_empty_panel_fail_closed(monkeypatch: pytest.MonkeyPatch) -
         train_regime(cfg, "hmm")
 
 
-def test_train_family_passthrough_families_do_not_train() -> None:
+def test_train_family_passthrough_families_do_not_train(tmp_path: Path) -> None:
     cfg = load_config("configs/research.yaml")
+    # train_family writes evidence_report.* under <data.root>; keep it out of the repo tree.
+    cfg.data.root = tmp_path / "data"
     cov = train_family(cfg, "covariance")
     liq = train_family(cfg, "liquidity")
     assert "note" in cov and "metrics" in cov
