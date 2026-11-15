@@ -230,7 +230,8 @@ integrity pins and the checkpoint. Authorized rotation, in order:
 **Lost keys: reset, never swap.** A rotation needs the outgoing key. If no
 one can sign with it any more (never escrowed, destroyed, generated in an
 environment that is gone), record a key reset instead — a `key_reset.v1`
-file every verifier reports. The Lead authorizes it; do it in one PR:
+file that `verify-rotations`, `checkpoint-chain` and `verify-repo` report
+and both bundle verifiers re-check. The Lead authorizes it; do it in one PR:
 
 1. Generate the new Ed25519 gate key (and, if the witness key is lost too, a
    new ECDSA P-256 witness key) on a machine you control. Store the private

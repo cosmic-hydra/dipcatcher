@@ -211,6 +211,6 @@ cannot re-sign and must not try:
 [`OPERATIONS_RUNBOOK.md`](OPERATIONS_RUNBOOK.md); rollback of a key is
 revocation, not an edit to the signed files. If a key is **lost** — no holder
 can sign a rotation — follow "Lost keys: reset, never swap" in the same
-section: `dipcatcher key-reset` records a `key_reset.v1` file that every
-verifier reports. Never swap `gate_signing.pub` or `gate_quorum.json` by
-hand.
+section: `dipcatcher key-reset` records a `key_reset.v1` file that
+`verify-rotations`, `checkpoint-chain` and `verify-repo` report. Never swap
+`gate_signing.pub` or `gate_quorum.json` by hand.

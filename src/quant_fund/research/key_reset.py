@@ -6,8 +6,8 @@ exists — the old key authorizes the new. When every outgoing key is *lost*
 other moves are a silent key swap, which every verifier rightly rejects, or
 rewriting history. A reset record is the honest third option: a committed,
 epoch-chained, checkpoint-pinned file that says "the keys that signed history
-up to checkpoint B are lost; these new keys sign everything after B", and
-every verifier reports it.
+up to checkpoint B are lost; these new keys sign everything after B", which
+``verify-rotations``, ``checkpoint-chain`` and ``verify-repo`` all report.
 
 What a reset proves, and what it cannot:
 
