@@ -1,0 +1,54 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "1a13f314eb089b2ab53a9610847b6003b350f973f7d140146d8d4d418944a4e5",
+  "inputs_sha256": "4a49a844f9f769e2c2c2ddbd3d4249d64e8b896ba1fbcd304b8f3c97d9f97f49",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "6aaf6d53ee1a10ba98b2cd328c902312021d8b231cff32f38c5188bf5c722319",
+  "members": [
+    {
+      "name": "corpus_epoch_01a94d650190d99f.json",
+      "sha256": "fc8b54e55f9e53200bb72974c3d6a8e0a1cfbbc18ef9fb548c9a9c87b1f57b2d"
+    },
+    {
+      "name": "corpus_epoch_6463895907cf5567.json",
+      "sha256": "7b4a1bc45ef5ca31ac7a0005c5f3668d8d66cbbff37351fa1ed29343b8ae7543"
+    },
+    {
+      "name": "corpus_epoch_7d2bfd80e23c65bb.json",
+      "sha256": "ebbd1174b47bd5879ff30502718ea882debaa565d41439cc74e39a861f801e99"
+    },
+    {
+      "name": "corpus_epoch_e07a64b76949ae56.json",
+      "sha256": "88a9f4d3cc6f8aa4e627079b96b94f53a215d815af61df2ecf76e5c7ea070825"
+    },
+    {
+      "name": "corpus_epoch_fe416fbfe9a8f39c.json",
+      "sha256": "3d9d6e83d02e4e75d490a204221c67a7a60e86536346d2ae0735955a5fc36e2b"
+    },
+    {
+      "name": "environment.json",
+      "sha256": "cb41c9b9bf037abef26d47236fccb02408e44f3529c3ef23d43c42ff5d299c10"
+    },
+    {
+      "name": "install.sh",
+      "sha256": "1d88604d9dcb668cedb5e69facd5ab98d338a607a913f441ca2b9b1e13826960"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_e07a64b76949ae56.json"
+  ],
+  "members_removed": [],
+  "n_members": 7,
+  "params": {
+    "head_sha": "63803a472d1b1457ece3f393247cabed78e38e48",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_e07a64b76949ae56.json",
+  "prev_epoch_sha256": "a5efc6cbdaa3906b3bd6b4dde5392dd4884b34616fb5940a156100e1aa18b119",
+  "receipt_sha256": "96658843dbd6170bcbb324dd76411e6a3a7e8378b233cb76a3ad7931992e4227",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

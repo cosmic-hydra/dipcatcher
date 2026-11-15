@@ -2,15 +2,15 @@
   "algorithm": "ed25519",
   "payload": {
     "files": {
-      "quality/crown_jewels.json": "20c2e0eaec2377d775cf2ec60b36b6bd524499684229c2fe57f0f2f97744e0b2",
-      "quality/epoch_heads.json": "6d4402b861c02b365122880125776872c1ce531be7425512f01398ffd9d688cb"
+      "quality/crown_jewels.json": "a3ba7839af1cd48e08dcc37bddd63ca584011f263cd4501c231c29389d86eb77",
+      "quality/epoch_heads.json": "c99dc78022694093a0b5fd8d3fe302966fd45961af4cb31968c4ba429ab29427"
     }
   },
   "schema": "gate_signatures.v2",
   "signatures": [
     {
       "key_id": "3a0b74beae314825",
-      "signature": "d6450ad3bf54cec7b67fe101a3098bb60bc169231e12bc328e6bea4d2e948171b2bab2f70313f5b00bef5bed358155d4a5e95202eb6f7cfb05cc86feb30df609"
+      "signature": "e043176022bfaebfc7b1b459b011d58bdace291045dd971665030751cce854c57de5fd59240c0e1d2e122db19981dce559e61cb0b22ba659711a86644746050c"
     }
   ]
 }
