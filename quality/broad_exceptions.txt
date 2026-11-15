@@ -41,7 +41,6 @@ src/quant_fund/research/benches/intervals.py 3
 src/quant_fund/research/expert_mixture.py 1
 src/quant_fund/research/fleet_eval.py 1
 src/quant_fund/research/identity_sweep.py 1
-src/quant_fund/research/key_rotation.py 1
 src/quant_fund/research/ots_anchor.py 3
 src/quant_fund/research/quorum_rotation.py 1
 src/quant_fund/research/reality_sweep.py 1
