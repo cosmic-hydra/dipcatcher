@@ -1,0 +1,120 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "24b52e047abd30d2cf569ee5dbfdc8efe5b6892aaad229a321d239534daac984",
+  "inputs_sha256": "ccab74a548879db7f40aadf9b2db83ddf68018df9e8d3def7fac5d49c75c2f56",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "3ecbdb04fad8c2660a3bc3b21cd6748b235db33c04905c08c28e62b26932c59d",
+  "members": [
+    {
+      "name": "README.md",
+      "sha256": "d8d0da2111741ca648d678f34ea774fbb64c8d6c49ca1bea553ec0754619bd5c"
+    },
+    {
+      "name": "runs/2026-09-25T09-13Z_v7.md",
+      "sha256": "a912b9f826faa1f3b0649cf205bad06c9f83daeb24a9e78b44580c30b3a95920"
+    },
+    {
+      "name": "runs/2026-09-25T12-43Z_v7.md",
+      "sha256": "4189762c391af086d2f75fd21ed89436e71af258f942ef94feebab4d0e0b8809"
+    },
+    {
+      "name": "runs/2026-09-25T12-43Z_v8.md",
+      "sha256": "bcd2e3830ee549955ba119c6b7574861ea52c87c3809a0d609097aef80be763b"
+    },
+    {
+      "name": "runs/2026-09-25T12-55Z_v8.md",
+      "sha256": "1b138a1b3d966482cc53989ec8e89d103e80dee418c052f7a26411d72ef3fb9d"
+    },
+    {
+      "name": "runs/2026-09-25T14-16Z_v8.md",
+      "sha256": "3c364c635fa5290c3d0bdcb283a8462d524f7eaad9b2011aac321a03f6596d2d"
+    },
+    {
+      "name": "runs/2026-09-25T14-30Z_v8.md",
+      "sha256": "237e9373f78911999a5f6ab04d0e2a86f373651af5fafb494a1cad892890d8cf"
+    },
+    {
+      "name": "runs/2026-09-25T14-45Z_v1.md",
+      "sha256": "77981c63b22e6069cf5e7bc5842b96b2d9953ff3d08c7188a9c49dda953f51ce"
+    },
+    {
+      "name": "runs/2026-09-25T14-45Z_v8.md",
+      "sha256": "86d00d4dcb3632aa589a5568801debec69c6a9a921a3d61182ee28f0fc0e1428"
+    },
+    {
+      "name": "runs/2026-09-25T15-10Z_v2.md",
+      "sha256": "082365b98bb01928afc61fab19bc5f6b010d6cd41bf2bfe3c06870114dd076db"
+    },
+    {
+      "name": "runs/2026-09-25T15-20Z_v8.md",
+      "sha256": "aed5e2df2fe00ab5b70f86eb7569cd16bd1395e015675266788959933b8f098b"
+    },
+    {
+      "name": "runs/2026-09-25T15-40Z_v3.md",
+      "sha256": "4b940a7797509d848509e7dafa25d88af8b373a77cfde8bab9199e3ba41cb540"
+    },
+    {
+      "name": "runs/2026-09-25T16-20Z_v4.md",
+      "sha256": "a4c7e6286ac60040b123c8db0402aa6dac05464bb48f8a8990998b0af3488828"
+    },
+    {
+      "name": "runs/2026-09-25T17-00Z_v5.md",
+      "sha256": "f6b4e55c240dd7f523ec1e2f3070a114bd93ae47b0e859e2509129f2885a5eb8"
+    },
+    {
+      "name": "runs/2026-09-25T17-45Z_v5.md",
+      "sha256": "143d90b1161d6ffaf017602430386a02f075afe39608565ee4766ed28d8d39a2"
+    },
+    {
+      "name": "runs/2026-09-25T18-20Z_v6.md",
+      "sha256": "12597957ed103261cf335f196cb16ebb9020579edeea69948851624a6f07b103"
+    },
+    {
+      "name": "v1/acceptance.md",
+      "sha256": "d6953a30de59f8496da1fde2294b4fbe4693515380b0655bc6eb56a75ad7940a"
+    },
+    {
+      "name": "v2/acceptance.md",
+      "sha256": "5c858e5bcacd55267ba371f5da43723c7f5edfba2ec5c5ec00beb0258e051ee3"
+    },
+    {
+      "name": "v3/acceptance.md",
+      "sha256": "d32bd90ba98a12677da073e52e8d58c50b307350842184c8be980e57961e5c29"
+    },
+    {
+      "name": "v4/acceptance.md",
+      "sha256": "e2fdc4d0e53c9ba0a0ac58d8f79f804f54071db9a516663e8b5670885ae5e95e"
+    },
+    {
+      "name": "v5/acceptance.md",
+      "sha256": "bbddf11426f866028c7e83a4a7d20775aa836226a5b50d61327fd5a10423b228"
+    },
+    {
+      "name": "v6/acceptance.md",
+      "sha256": "0927a5f3a3259fbf22212b536b44b99ea0094b7f536edc4b2ee7b50bebc4616e"
+    },
+    {
+      "name": "v7/acceptance.md",
+      "sha256": "4341293edc70fbb77ec806f9ecf228f0708110e40cad823d91f909b0bdb15c11"
+    },
+    {
+      "name": "v8/acceptance.md",
+      "sha256": "7a0bb30ff87642c532dd1912f49e09954bc7f494f471812ae03fe8f9a1071293"
+    }
+  ],
+  "members_added": [],
+  "members_removed": [],
+  "n_members": 24,
+  "params": {
+    "head_sha": "c8c792fc7cc9a8c516ea9d5d983ad24853f19dc8",
+    "pattern": "*.md"
+  },
+  "prev_epoch_receipt": "corpus_epoch_df083ff2714c79f3.json",
+  "prev_epoch_sha256": "24b52e047abd30d2cf569ee5dbfdc8efe5b6892aaad229a321d239534daac984",
+  "receipt_sha256": "5f3c2d2b824b096d6def9291d41565a70b94287566ea3351039402aea4e7c944",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

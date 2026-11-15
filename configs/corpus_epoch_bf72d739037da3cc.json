@@ -1,0 +1,286 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "11ed44ec15256167d0904c6f0e83c257ff1f0a83fd27fa9e8d9b05969d002071",
+  "inputs_sha256": "3d253915928143ec16809300d08e4c85890d8a6b983d2c6ef44758171a61a6d2",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "10125eb1d7efbcf7e0f4aabfe7055e7f42196b70736a5f2f35e398fb60df8bb4",
+  "members": [
+    {
+      "name": "arch_boundaries.toml",
+      "sha256": "2329524958bf6529e29d39b71455d0265999171f0e8d022b9bb21f1613749e60"
+    },
+    {
+      "name": "backtest.yaml",
+      "sha256": "b9b5ff8cbc033f0fbfdd2acf3134538e475a511e0e400f97a9b9a2412fb6427c"
+    },
+    {
+      "name": "base.yaml",
+      "sha256": "df0918e055a86d681acbd9df0c6532dbcc29b0abe90c27e32f9fda3dd98762db"
+    },
+    {
+      "name": "configs/backtest.yaml",
+      "sha256": "b9b5ff8cbc033f0fbfdd2acf3134538e475a511e0e400f97a9b9a2412fb6427c"
+    },
+    {
+      "name": "configs/base.yaml",
+      "sha256": "9d6cd452ed35b798d95cac2573bcf78fb150006083622524424c2ee1b9af455a"
+    },
+    {
+      "name": "configs/paper.yaml",
+      "sha256": "d4e8f8892e0be5a18b85ae872153ceb8ca884ccd92b0dbd4f7b75b665a49fded"
+    },
+    {
+      "name": "configs/production.yaml",
+      "sha256": "b585ec0f8a8c3289ed3482ea5a4943a31753da6059739e8623b46db03e21f16e"
+    },
+    {
+      "name": "configs/research.yaml",
+      "sha256": "fc9a12dd28c9bea5d1265bf6dcd456badf25230c3dad8f7afbbe39755a1a480f"
+    },
+    {
+      "name": "corpus_epoch_04c0883bc2991757.json",
+      "sha256": "08fbe933abe93516eea0acd20e4b49483646934af2648f8a2c9382240d33aee9"
+    },
+    {
+      "name": "corpus_epoch_05df0f34dc55e836.json",
+      "sha256": "13025f8a87144c64d563692708ab17897757865ae189e3c720d3f28c234dac0c"
+    },
+    {
+      "name": "corpus_epoch_0c3fab9ae380cd1a.json",
+      "sha256": "9b06d26cc1c30cd3cfdd70f3dad1b058aedd98268b9069fde4d2093b8fa1b40f"
+    },
+    {
+      "name": "corpus_epoch_0f9752e7c31f8596.json",
+      "sha256": "c59780d853d0f62d924a3bb673430c93ef060ecb8be9fc006a0c7fa5b815a479"
+    },
+    {
+      "name": "corpus_epoch_1f5dfc016c6b2900.json",
+      "sha256": "73f4d2bda5f74d9180e11c7f3b6a901c0cc150335ea5ee56368c1b2ebdd853f7"
+    },
+    {
+      "name": "corpus_epoch_21bb5ae8a916baa2.json",
+      "sha256": "581457537738636e15d83624601083213c9533d545e0ed33659d44bee78d31fe"
+    },
+    {
+      "name": "corpus_epoch_23b077293661ac0f.json",
+      "sha256": "a7311b603d8419886465886f18c418e4360d3b7e20735a6b276bd8c915a307b4"
+    },
+    {
+      "name": "corpus_epoch_26aeca1fff2249a9.json",
+      "sha256": "b494c6b2e5f8f53b2ca3a1666f56e3d63d81a372c250bf654b3a739f2333792e"
+    },
+    {
+      "name": "corpus_epoch_28f944c2b420b363.json",
+      "sha256": "5e5fa1cdd1fd4901439275b0fe84e662b2ad38ff4012a260e7231f4752ea8abc"
+    },
+    {
+      "name": "corpus_epoch_2ce230a437269d85.json",
+      "sha256": "9f33eb462ade135906c095e7b481751c4af34ed0720da1973e6be213b443d7f7"
+    },
+    {
+      "name": "corpus_epoch_2da7c445c2caf6df.json",
+      "sha256": "5553b7e77a83231714fb0b360a5ef9b91d609bfd6db0cb0be60559b8152c1a3f"
+    },
+    {
+      "name": "corpus_epoch_31d0be79cb9cb53e.json",
+      "sha256": "f4b8f2d4fd1089f6f91b1429100e4826fcb6a23298b2da5fdc3111a599368f0a"
+    },
+    {
+      "name": "corpus_epoch_36c6f35b81954a0b.json",
+      "sha256": "e00c12cab97d2180454ea35025dfc4cca63b6dc9105df8847f2d7d024ae22083"
+    },
+    {
+      "name": "corpus_epoch_39b9bba19bbb7504.json",
+      "sha256": "2020df29f196be5c934ca7269e592c06276f9634c3a19a6de6bb5d945c946898"
+    },
+    {
+      "name": "corpus_epoch_3c319fb43ab0351e.json",
+      "sha256": "01268826f737dc0fc1fc7e28555ce3aeb54760c7d759a29bf6ad7c8be3c59e64"
+    },
+    {
+      "name": "corpus_epoch_3d8a017551cd3f27.json",
+      "sha256": "bb48d75da4100834d95c0a03f12e97e1d60442f7e17c33405ace515966139a89"
+    },
+    {
+      "name": "corpus_epoch_52094a88d0faebab.json",
+      "sha256": "2f347eac9b877a6968d017b8246647f801a634463f2f063555909c8db5d15a2f"
+    },
+    {
+      "name": "corpus_epoch_57c3e033f1c50158.json",
+      "sha256": "a026b1bf20fd2a206acc32472c2be5046c55c256870c63288060e086c9b53aff"
+    },
+    {
+      "name": "corpus_epoch_5b29a3316d0663a3.json",
+      "sha256": "247c62f04ffc54509fe60a8690b5e287c59a4895ae2dcb3aaaed53414aba22e7"
+    },
+    {
+      "name": "corpus_epoch_6120e4244f87ca42.json",
+      "sha256": "068a48b08a8f70da482dea284a67072ec67c257bdc74e8ff6c62208e17c3e604"
+    },
+    {
+      "name": "corpus_epoch_67509d68b8abd10c.json",
+      "sha256": "1795b05b30ff6a637b6f764af2e8d96db26a3aa37c3329e368cfb8d1583b6cad"
+    },
+    {
+      "name": "corpus_epoch_898438ded615da96.json",
+      "sha256": "14dae359e3ff7ade2ce711fc84a17db17973bfd850211f08c8d9cc0f1497328d"
+    },
+    {
+      "name": "corpus_epoch_8b61fc95d0570680.json",
+      "sha256": "9de70cc4b55f31108f65a975863613008e579d2f5f7e3480558da9316ca206ae"
+    },
+    {
+      "name": "corpus_epoch_964d4f81da22979e.json",
+      "sha256": "34afc9be3cf10246660d5ff1192ac9a1e0ea50bb4835597526f1599da37ed12a"
+    },
+    {
+      "name": "corpus_epoch_9cfb95d86b5633e3.json",
+      "sha256": "46d6eea1a430e5762ab3de9a2c929527a7955019e47e2389f5c0ef67db49a507"
+    },
+    {
+      "name": "corpus_epoch_ac16e3e9fc93ec03.json",
+      "sha256": "1ab3f40cde174ed27e8d82efeaacbeb7e62a66da91e7f801107e9a6555f9a0d3"
+    },
+    {
+      "name": "corpus_epoch_b1c8b8cdf549e98e.json",
+      "sha256": "0f78144927874c822759fb2d43172477d8ed890b15ae4563adb1d59d01aa34f4"
+    },
+    {
+      "name": "corpus_epoch_bb88b9759b4e232b.json",
+      "sha256": "6952a3f11642bddec43c83e9026bcd2b9699e69f59fe760ba60552e85eb20518"
+    },
+    {
+      "name": "corpus_epoch_d3b31d3fef7ac915.json",
+      "sha256": "e0ba5d27311a89fe69c6191bd8089161858e97b1cd0eecae6cce3a759c7a081f"
+    },
+    {
+      "name": "corpus_epoch_dcbcc3c08df49758.json",
+      "sha256": "9bd9b9f254da3b31e58f3df1130527e8d62387a9d4a76606f0a7feb5d3da1b6c"
+    },
+    {
+      "name": "corpus_epoch_dcf0d8e9d5337c24.json",
+      "sha256": "b947be50a8b9288521a245481f4e6a93d8e40c49433d28347ab039c252483d05"
+    },
+    {
+      "name": "corpus_epoch_e31afb270445933f.json",
+      "sha256": "83e7056ae0ff285d88efa7654af1f9b59fceeba3f296fa06c9c4e9cefd5a2b11"
+    },
+    {
+      "name": "corpus_epoch_e8f0e22e2a696c0e.json",
+      "sha256": "6fdbc3cf7de96d8a09092ae9d2c1528f29aa01beb4ac494b8b68622fcd69c012"
+    },
+    {
+      "name": "corpus_epoch_eff4dcefac9e5410.json",
+      "sha256": "49cb3017ebe8c774a1ed19cb1e646968f9422b0f4839e165b23e5494bf6421ce"
+    },
+    {
+      "name": "cost_aware_tournament.json",
+      "sha256": "4538d4a67d5dbca91b14d98b41e0450b7a9e7a307d2708d67f2da9b7e5741c52"
+    },
+    {
+      "name": "demo.yaml",
+      "sha256": "e2342320f85c0057493bb4fcadb244a00357ae2e16f4af775485d463f58872e1"
+    },
+    {
+      "name": "demo_minute.yaml",
+      "sha256": "21a0463250d0466088c1193301dd64435dce67f8679cac14b6d0e2279cb3f167"
+    },
+    {
+      "name": "forward_shadow.example.json",
+      "sha256": "e053bc225b674153e4aa73485948c6a50551021c019b19c25c431f03b49b1fe4"
+    },
+    {
+      "name": "fx1_harness.example.yaml",
+      "sha256": "94200fcaa43f1c09fcb07ec82e68edb274992969aff1ace00083bb8a4aaa45af"
+    },
+    {
+      "name": "fx1_run.example.json",
+      "sha256": "8896dae11303e20ee27895fb438ffb7415aa951c34ebf7862f487310cda1ea41"
+    },
+    {
+      "name": "hedge_lab.yaml",
+      "sha256": "c067c65e8509f77ddd437b46f2c277cc1d4b1b048d9737f4f8cd13eff6180d0d"
+    },
+    {
+      "name": "hedge_lab_wide.yaml",
+      "sha256": "68afa83e7c8742d287110ca0ddae6014cb5815100ee846a082234cb0fc2e8690"
+    },
+    {
+      "name": "live.yaml",
+      "sha256": "d03046ba45782d4cb9910a345ef7edf3540696d3463fe03d33cc650bfa16ea0c"
+    },
+    {
+      "name": "net_tournament.json",
+      "sha256": "b5aa826c080914c8f57360f2973d2492aed9113c0765038bdef7eab1f5e571aa"
+    },
+    {
+      "name": "paper.yaml",
+      "sha256": "d4e8f8892e0be5a18b85ae872153ceb8ca884ccd92b0dbd4f7b75b665a49fded"
+    },
+    {
+      "name": "pretrade_risk.yaml",
+      "sha256": "8e99eb0068b144f3a6c2d2ffc780f518e147b74c2a2abf48d5c3c60aadf3d503"
+    },
+    {
+      "name": "production.yaml",
+      "sha256": "b585ec0f8a8c3289ed3482ea5a4943a31753da6059739e8623b46db03e21f16e"
+    },
+    {
+      "name": "real_benchmark_us_wide.json",
+      "sha256": "2eb3a9e979121b6c749612278269386fb5a82cfc8a3fba3b839110361bb736b5"
+    },
+    {
+      "name": "research.yaml",
+      "sha256": "6d4d2cf35a83d7fc43c0842d4458850ddc0ec0f41ced98f31d994aec01e964c9"
+    },
+    {
+      "name": "sim_live.yaml",
+      "sha256": "ca4e566f306e13785a6f3b8ae669066dc3d4ae4a6243a51555571bf94f35e3ed"
+    },
+    {
+      "name": "sota_file.yaml",
+      "sha256": "6a8021ec1fe81b2660d3f91994463611716342695af80ae3590c26073612a145"
+    },
+    {
+      "name": "sota_file_uk.yaml",
+      "sha256": "3121a4d19a39f46a0ed77492b82c3b9f09f9b1f23fe4ff85f714b67c52fa7fc9"
+    },
+    {
+      "name": "sota_g1.yaml",
+      "sha256": "008452ad7fe38ef02b75e6ca9f47886e77c89bc6305ffbc50d5598a765354876"
+    },
+    {
+      "name": "sota_protocol.yaml",
+      "sha256": "8e3bc74363445e4c7cd0bf15d95d59115d554f817a66828e9f79fb55fc117205"
+    },
+    {
+      "name": "sota_protocol_v2.yaml",
+      "sha256": "6007e652f2d7974de8fddef3e904be2a25c28e7a68ff8f9b69b8c8e00b538eb2"
+    },
+    {
+      "name": "sota_protocol_v2_lanes.yaml",
+      "sha256": "35123173415cd281f0a4c191f45c0b87d14ddd537229c3d337223857703e5390"
+    },
+    {
+      "name": "stress_research.yaml",
+      "sha256": "587e5e20c4242b7afed49d4158e5363c0304ef694ae34781208c4cf1455a1d8a"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_8b61fc95d0570680.json"
+  ],
+  "members_removed": [],
+  "n_members": 65,
+  "params": {
+    "head_sha": "c8c792fc7cc9a8c516ea9d5d983ad24853f19dc8",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_8b61fc95d0570680.json",
+  "prev_epoch_sha256": "dccb7fa619c8d780bf14413090771d45c42f83422a62163b665340ac03d6c661",
+  "receipt_sha256": "bf72d739037da3cccd6fc72b24cd04471aa4e655c70a37514820d9ef3d92c9db",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

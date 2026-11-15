@@ -1,0 +1,62 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "55cab656da1b32297141cae5684ed5b49bc1273ebbc9db62a096f98d003d4728",
+  "inputs_sha256": "a332cd78e6e53a3cf8eb2f925a8fa819e04b0e483714e56c137b550de130c68b",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "15ccf1f98662bba0a4cc956f43b1c0031802f5e4d43176942c142ad1617a897e",
+  "members": [
+    {
+      "name": "corpus_epoch_28fe8c2e9108f3d8.json",
+      "sha256": "38dc8fcab78792d9f9fd5e0316043fba7494f7b026514276fdba0d0099d127c3"
+    },
+    {
+      "name": "corpus_epoch_369451cc65585fbc.json",
+      "sha256": "22697d81bf8de41e77a7cbc979edbd6e7e7a8733504aaa7d5735a66f7367d78b"
+    },
+    {
+      "name": "corpus_epoch_6e69c0f57abb1d34.json",
+      "sha256": "34c3be7de7c63c5fea12146c76c1a275ffd9cfa47b484bda448ccb5028e74980"
+    },
+    {
+      "name": "corpus_epoch_77f54e38f1d47a78.json",
+      "sha256": "cfcca0bd49f6f78a9f5cc397d20afa777b890af81e8240a0b364bfe0916fe0fe"
+    },
+    {
+      "name": "corpus_epoch_9dd3ca9d33fc6d76.json",
+      "sha256": "400b0a0edad2e3bdb50c77026da855b81d56f2d5b4ac243a02d76c7d385852d9"
+    },
+    {
+      "name": "corpus_epoch_a28d110a12643e2a.json",
+      "sha256": "9c1589efbe5bc17e5dc4f3a9b1c72d56db3aebbbdc041c74c9dfc3ace8287b5e"
+    },
+    {
+      "name": "corpus_epoch_c2b24dba7fd4bdc9.json",
+      "sha256": "afbac52f1e20ec5a118d87810bae4441dde3a627b820cc0222357cb53420b08f"
+    },
+    {
+      "name": "corpus_epoch_caf7fd11cd148fac.json",
+      "sha256": "b00e88a3b124ed8cb73ef829ca6193036082b3258baecc94b57145538f0aa3db"
+    },
+    {
+      "name": "cvxpy/__init__.pyi",
+      "sha256": "ca55213b1b4c12dbcace0e9dfe86ef87984d4408f6c36cd854e2aa6d15931e9c"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_6e69c0f57abb1d34.json"
+  ],
+  "members_removed": [],
+  "n_members": 9,
+  "params": {
+    "head_sha": "c8c792fc7cc9a8c516ea9d5d983ad24853f19dc8",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_6e69c0f57abb1d34.json",
+  "prev_epoch_sha256": "7fe3427d226f236bc76c5231590d725da820fb8107cf29c3ec66bc365603d381",
+  "receipt_sha256": "4fd4e43eaebb7cbc14e5100da6c1b194208c78a09a4dc7c7fbc66b0c4318fc37",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}
