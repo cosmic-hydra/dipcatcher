@@ -247,7 +247,8 @@ and both bundle verifiers re-check. The Lead authorizes it; do it in one PR:
    refuses a key the lost set already contains, including the installed
    witness key. Without `--witness-pub` the witness key is not declared lost
    and stays installed.
-3. `dipcatcher crown-jewels --write`, then `make stamp-epochs`.
+3. `dipcatcher crown-jewels --write`, then `make stamp-epochs`; commit, then
+   re-export the web fixtures and re-stamp `web/` ("Checkpoint spine", step 1).
 4. `dipcatcher quorum-sign --key-file <new gate key>` — re-sign the pins
    under the new registry.
 5. `dipcatcher checkpoint --key-file <new gate key>` — the first new-era
@@ -328,7 +329,14 @@ The integrity chain is append-only and ordered. Authoring sequence after
 touching any covered directory:
 
 1. `make stamp-epochs` — re-stamp every corpus-epoch chain + the head pin
-   (`quality/epoch_heads.json`).
+   (`quality/epoch_heads.json`). Each run adds a `receipts/corpus_epoch_*.json`,
+   and the web explorer index must list every receipt
+   (`web/src/lib/fixtures.test.ts`, `tests/unit/web_explorer`). The exporter
+   reads committed files only, so commit the stamps, run
+   `uv run python web/scripts/export_fixtures.py`, then re-stamp `web/` alone:
+   `uv run dipcatcher corpus-epoch --corpus-dir web --glob '*' --out-dir web
+   --heads-pin quality/epoch_heads.json`. Another `make stamp-epochs` would add
+   a new receipts epoch and stale the index again.
 2. `make sign-pins` — Ed25519-sign the pins. Set `GATE_SIGNING_KEY` to the
    gate key file (or `<priv_hex>:<pub_hex>`). With `quality/gate_quorum.json`
    installed it runs `dipcatcher quorum-sign --key-file "$GATE_SIGNING_KEY"`

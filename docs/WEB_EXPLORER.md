@@ -37,7 +37,9 @@ equity parquets to compact JSON rows, normalizes strategy stat blobs into a
 `{segments, extras, provenance}` shape, resolves embedded `*sha256` digests
 against committed files (raw bytes and canonical-JSON encodings), and writes
 `index.json`. Receipts are immutable: if a sealed receipt changes, re-run the
-script and commit the drift (a pytest guard flags it).
+script and commit the drift (a pytest guard flags it). Every `make stamp-epochs`
+adds a `receipts/corpus_epoch_*.json`, so re-export after each re-stamp too
+(`docs/OPERATIONS_RUNBOOK.md`, "Checkpoint spine", step 1).
 
 ## Develop / build
 
