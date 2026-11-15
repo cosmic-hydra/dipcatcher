@@ -15,14 +15,24 @@ finding, not an assertion the author hoped for.
 Fail-closed: any probe the clone does NOT catch is a drill failure; the
 emitted receipt (``tamper_drill.v1``) is sealed like any other.
 
+Each probe runs on a pristine clone (full snapshot restore after every
+probe) and re-runs every non-epoch gate plus the epoch gates of the corpora
+it touched — ``verify_repo(epoch_scope=...)``. The baseline is a full run
+and must be clean, so skipping an untouched corpus can only drop errors,
+never add them: a scoped catch is a full catch. Re-chaining all 28 corpora
+for every probe made the drill O(probes x tree) — about half an hour on the
+closed-world tree — for gates whose inputs the probe never touched.
+
 Provenance evidence only; never a market or P&L claim.
 """
 
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import tempfile
+import time
 from pathlib import Path
 from typing import Any
 
@@ -64,6 +74,57 @@ def _clone_state(root: Path, clone: Path) -> None:
             if src.is_file() and not dst.exists():
                 dst.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(src, dst)
+
+
+def _tree_state(clone: Path) -> dict[str, tuple[int, int, int, int, int]]:
+    """``lstat`` fingerprint of every entry under ``clone`` — files, dirs and
+    symlinks, links not followed. A delete drops an entry, a drop adds one,
+    and any write or metadata change stamps the kernel-set ctime (userspace
+    can't set it) — so once ``_await_fresh_ctime`` has run, the before/after
+    diff names every path a probe touched."""
+    state: dict[str, tuple[int, int, int, int, int]] = {}
+    for dirpath, dirnames, filenames in os.walk(clone):
+        for name in (*dirnames, *filenames):
+            full = os.path.join(dirpath, name)
+            st = os.lstat(full)
+            rel = os.path.relpath(full, clone).replace(os.sep, "/")
+            state[rel] = (st.st_mode, st.st_size, st.st_mtime_ns, st.st_ctime_ns, st.st_ino)
+    return state
+
+
+# Kernel file timestamps come from a clock that advances once per tick
+# (<= 10 ms at HZ >= 100); waiting out two ticks past the newest ctime makes
+# every later change stamp a strictly newer one.
+_CTIME_SETTLE_NS = 25_000_000
+
+
+def _await_fresh_ctime(state: dict[str, tuple[int, int, int, int, int]]) -> None:
+    """Block until the clock is past every ctime in ``state`` by more than a
+    timestamp tick, so a change can't reuse the ctime it replaces. A drill
+    clone was last written a full verify run earlier — this almost never
+    waits. Bounded: after a backwards clock step it gives up, which can only
+    make a probe look like an escape (fail loud), never like a catch."""
+    newest = max((v[3] for v in state.values()), default=0)
+    deadline = time.monotonic() + 0.5
+    while time.time_ns() <= newest + _CTIME_SETTLE_NS and time.monotonic() < deadline:
+        time.sleep(0.005)
+
+
+def _probe_scope(
+    before: dict[str, tuple[int, int, int, int, int]],
+    after: dict[str, tuple[int, int, int, int, int]],
+) -> frozenset[str] | None:
+    """Epoch corpora a probe touched, or ``None`` (re-run every epoch gate)
+    when it touched a shared epoch input. Nested corpora both claim a path:
+    ``.github/workflows/x.yml`` is under ``.github`` too."""
+    from quant_fund.research.repo_integrity import CORPORA, EPOCH_SHARED_INPUTS
+
+    touched = {p for p in before.keys() | after.keys() if before.get(p) != after.get(p)}
+    if touched & EPOCH_SHARED_INPUTS:
+        return None
+    return frozenset(
+        c[0] for c in CORPORA if any(t == c[0] or t.startswith(f"{c[0]}/") for t in touched)
+    )
 
 
 def _flip_first_byte(path: Path) -> None:
@@ -298,12 +359,15 @@ def tamper_drill(root: str | Path) -> dict[str, Any]:
         for name, mutate in _probes(clone):
             shutil.rmtree(snapshot, ignore_errors=True)
             shutil.copytree(clone, snapshot)
+            before = _tree_state(clone)
+            _await_fresh_ctime(before)
             try:
                 mutate()
             except (OSError, ValueError) as exc:
                 probes.append({"probe": name, "error": f"probe_setup:{exc}", "caught": False})
             else:
-                res = verify_repo(clone)
+                scope = _probe_scope(before, _tree_state(clone))
+                res = verify_repo(clone, epoch_scope=scope)
                 gate_errors = sorted(
                     f"{g}:{e}"
                     for g, gate in res.get("gates", {}).items()
@@ -314,6 +378,7 @@ def tamper_drill(root: str | Path) -> dict[str, Any]:
                         "probe": name,
                         "caught": not res.get("ok", True),
                         "errors": gate_errors[:12],
+                        "epoch_scope": "all" if scope is None else sorted(scope),
                     }
                 )
             finally:

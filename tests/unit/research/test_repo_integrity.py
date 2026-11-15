@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from quant_fund.research.crown_jewels import DEFAULT_JEWELS
 from quant_fund.research.receipt_v2 import verify_receipt_file
 from quant_fund.research.repo_integrity import (
@@ -149,6 +151,57 @@ def test_verify_repo_local_only_corpus_skips_on_clone(tmp_path: Path) -> None:
     gate = res["gates"]["epoch:data/metadata"]
     assert gate == {"ok": True, "skipped": "local_only_no_receipts", "errors": []}
     assert res["ok"], res
+
+
+def test_verify_repo_epoch_scope_runs_only_named_epoch_gates(tmp_path: Path) -> None:
+    """The drills' scoped re-verify: every non-epoch gate still runs, only
+    the named corpora re-chain, the rest report an explicit skip."""
+    root = _git_repo(tmp_path)
+    (root / "docs" / "seed").write_text("tampered")
+    scoped = verify_repo(root, epoch_scope={"docs"})
+    assert not scoped["ok"]
+    assert scoped["gates"]["epoch:docs"]["errors"]
+    assert scoped["gates"]["epoch:src"] == {
+        "ok": True,
+        "errors": [],
+        "skipped": "outside_probe_scope",
+    }
+    assert set(scoped["gates"]) == set(verify_repo(root)["gates"])
+    # A scope that misses the touched corpus misses the tamper: the drills
+    # derive the scope from what the probe touched, never by hand.
+    assert verify_repo(root, epoch_scope={"src"})["ok"]
+    # Empty scope: non-epoch gates only — a jewel flip is still caught.
+    (root / "pyproject.toml").write_text("tampered")
+    res = verify_repo(root, epoch_scope=frozenset())
+    assert res["gates"]["crown_jewels"]["errors"] == ["jewel_mutated:pyproject.toml"]
+    assert all(
+        g.get("skipped") == "outside_probe_scope"
+        for n, g in res["gates"].items()
+        if n.startswith("epoch:")
+    )
+
+
+def test_verify_repo_epoch_scope_rejects_unknown_corpus(tmp_path: Path) -> None:
+    root = _git_repo(tmp_path)
+    with pytest.raises(ValueError, match="unknown corpora"):
+        verify_repo(root, epoch_scope={"docs", "nope"})
+
+
+def test_repo_integrity_contract_rejects_scoped_verdict(tmp_path: Path) -> None:
+    """A scoped run is drill-internal: sealed as an attestation, its skips
+    are invalid — a partial verdict can't pass as a full-tree one."""
+    from quant_fund.research.repo_integrity import (
+        repo_integrity_contract_errors,
+        repo_integrity_receipt,
+    )
+
+    root = _git_repo(tmp_path)
+    body = dict(repo_integrity_receipt(root))
+    body["gates"] = verify_repo(root, epoch_scope={"docs"})["gates"]
+    errs = repo_integrity_contract_errors(body)
+    assert "gate_skip_invalid:epoch:src" in errs
+    assert "gate_skip_invalid:epoch:receipts" in errs
+    assert not any(e.endswith(":epoch:docs") for e in errs)
 
 
 def test_repo_integrity_contract_clean_fixture(tmp_path: Path) -> None:
