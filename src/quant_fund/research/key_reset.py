@@ -199,13 +199,24 @@ def _side_errors(side: Any, tag: str) -> list[str]:
     return errors
 
 
+def _reject_constant(token: str) -> Any:
+    raise ValueError(f"non-finite number: {token}")
+
+
+def _strict_loads(raw: bytes) -> Any:
+    """``json.loads`` refusing NaN/Infinity. Canonical signing bytes turn them
+    into null, so a record carrying one would verify while saying something
+    else; the standalone verifier refuses them too."""
+    return json.loads(raw, parse_constant=_reject_constant)
+
+
 def _boundary_body(boundary: Any) -> tuple[dict[str, Any] | None, str | None]:
     """Decode the embedded boundary checkpoint; its digest must match."""
     if not isinstance(boundary, dict) or not _is_hex(boundary.get("checkpoint_sha256"), 32):
         return None, "boundary_malformed"
     try:
         raw = base64.b64decode(str(boundary.get("checkpoint_b64", "")), validate=True)
-        body = json.loads(raw)
+        body = _strict_loads(raw)
     except ValueError:  # binascii.Error, JSONDecodeError, UnicodeDecodeError
         return None, "boundary_malformed"
     if hash_bytes(raw) != boundary["checkpoint_sha256"]:
@@ -315,7 +326,7 @@ def parse_reset(raw: bytes, name: str) -> dict[str, Any]:
     """Parse + fully verify one reset record; ``errors == []`` means usable."""
     rec: dict[str, Any] = {"file": name, "errors": []}
     try:
-        body = json.loads(raw)
+        body = _strict_loads(raw)
     except ValueError:
         rec["errors"] = ["malformed"]
         return rec
@@ -462,8 +473,15 @@ def _resurrected(reset: dict[str, Any], before: list[dict[str, Any]]) -> list[st
     return [f"key_reset_resurrects:{kid}" for kid in sorted(reset["new_kids"] & used)]
 
 
-def _revoked(reset: dict[str, Any], after: list[str], records: dict[str, Any]) -> list[str]:
-    """Past the boundary, lost keys and the lost registry are revoked."""
+def _revoked(
+    reset: dict[str, Any],
+    after: list[str],
+    records: dict[str, Any],
+    lineage: dict[str, tuple[dict[str, str], int]],
+) -> list[str]:
+    """Past the boundary the lost keys are revoked: none signs, and no record
+    claims the lost registry or any later registry that holds a lost key
+    again (a later reset or rotation cannot reinstate one)."""
     from quant_fund.research.checkpoint_chain import _quorum_digest, _signer_key_ids
 
     errors: list[str] = []
@@ -471,8 +489,39 @@ def _revoked(reset: dict[str, Any], after: list[str], records: dict[str, Any]) -
         rec = records[digest]
         if _signer_key_ids(rec) & reset["lost_kids"]:
             errors.append(f"key_reset_revoked_signer:{digest[:12]}")
-        if _quorum_digest(rec) == reset["lost_digest"]:
+        claimed = _quorum_digest(rec)
+        if claimed is not None and (
+            claimed == reset["lost_digest"]
+            or (claimed in lineage and set(lineage[claimed][0]) & reset["lost_kids"])
+        ):
             errors.append(f"key_reset_revoked_registry:{digest[:12]}")
+    return errors
+
+
+def _spki_or_none(pem: Any) -> bytes | None:
+    from cryptography.exceptions import UnsupportedAlgorithm
+
+    try:
+        return _witness_spki(pem) if isinstance(pem, str) else None
+    except (ValueError, TypeError, UnsupportedAlgorithm):
+        return None  # a malformed installed key is the witness lane's finding
+
+
+def _witness_reinstated(ordered_resets: list[dict[str, Any]], live_pem: str | None) -> list[str]:
+    """A witness key declared lost stays lost: no later reset installs it
+    again, and it is not the installed key."""
+    retired: set[bytes] = set()
+    errors: list[str] = []
+    for r in ordered_resets:
+        new_spki = _spki_or_none(r["new"].get("witness_pubkey_pem"))
+        if new_spki is not None and new_spki in retired:
+            errors.append(f"key_reset_reinstates_witness:{r['file']}")
+        lost_spki = _spki_or_none(r["lost"].get("witness_pubkey_pem"))
+        if lost_spki is not None:
+            retired.add(lost_spki)
+    live = _spki_or_none(live_pem)
+    if live is not None and live in retired:
+        errors.append("key_reset_reinstates_witness:live")
     return errors
 
 
@@ -480,21 +529,30 @@ def reset_spine_errors(
     resets: list[dict[str, Any]],
     records: dict[str, Any],
     ordered: list[str],
+    lineage: dict[str, tuple[dict[str, str], int]] | None = None,
+    live_witness_pem: str | None = None,
 ) -> list[str]:
-    """Boundary on the spine, fresh new keys, revoked lost keys.
+    """Boundary on the spine, fresh new keys, revoked lost keys, and no lost
+    witness key reinstated.
 
     ``ordered`` is the walked spine, genesis first; ``records`` maps digest
-    to ``checkpoint_chain`` record dicts.
+    to ``checkpoint_chain`` record dicts; ``lineage`` maps registry digests
+    to ``(key_id -> pubkey, threshold)``; ``live_witness_pem`` is the
+    installed ``witness_signing.pub``.
     """
     position = {digest: i for i, digest in enumerate(ordered)}
     errors: list[str] = []
+    placed: list[tuple[int, str, dict[str, Any]]] = []
     for r in resets:
         idx = position.get(r["boundary"])
         if idx is None:
             errors.append(f"key_reset_boundary_off_spine:{r['file']}")
             continue
+        placed.append((idx, r["file"], r))
         errors += _resurrected(r, [records[d] for d in ordered[: idx + 1]])
-        errors += _revoked(r, ordered[idx + 1 :], records)
+        errors += _revoked(r, ordered[idx + 1 :], records, lineage or {})
+    placed.sort(key=lambda item: (item[0], item[1]))
+    errors += _witness_reinstated([r for _idx, _file, r in placed], live_witness_pem)
     return errors
 
 
@@ -600,10 +658,29 @@ def build_reset(
         ],
     }
     raw = (json.dumps(body, indent=2, sort_keys=True) + "\n").encode()
-    errors = parse_reset(raw, "pending")["errors"]
+    errors = parse_reset(raw, "pending")["errors"] or _reinstated_refusals(root_path, payload)
     if errors:
         raise ValueError(f"key reset refused: {errors}")
     return f"key_reset_{payload['new']['gate_key_id']}.json", raw, payload
+
+
+def _reinstated_refusals(root: Path, payload: dict[str, Any]) -> list[str]:
+    """A key an earlier reset declared lost stays lost; refuse to name one in
+    the new key set rather than write a record the spine check rejects."""
+    retired_kids: set[str] = set()
+    retired_witness: set[bytes] = set()
+    for r in valid_resets(load_resets(root)):
+        retired_kids |= r["lost_kids"]
+        spki = _spki_or_none(r["lost"].get("witness_pubkey_pem"))
+        if spki is not None:
+            retired_witness.add(spki)
+    errors = [
+        f"reinstates_lost_key:{kid}" for kid in sorted(side_key_ids(payload["new"]) & retired_kids)
+    ]
+    new_witness = _spki_or_none(payload["new"].get("witness_pubkey_pem"))
+    if new_witness is not None and new_witness in retired_witness:
+        errors.append("reinstates_lost_witness_key")
+    return errors
 
 
 def reset_keys(

@@ -20,6 +20,7 @@ from typing import Any
 import pytest
 from scripts.verify_auditor_bundle import _parse_reset, _verify_reset_spine, _verify_spine
 
+from quant_fund.research import key_reset as key_reset_module
 from quant_fund.research.checkpoint_chain import chain_contract_errors, checkpoint_spine
 from quant_fund.research.gate_signatures import (
     generate_keypair,
@@ -189,17 +190,20 @@ def _library_errors(root: Path) -> list[str]:
     return [e for result in _library(root).values() for e in result["errors"]]
 
 
-def _standalone_errors(root: Path) -> list[str]:
-    """The standalone verifier's spine walk over the tree's bundle members."""
+def _standalone_errors(root: Path, *, archives: bool = True) -> list[str]:
+    """The standalone verifier's spine walk over the tree's bundle members
+    (``archives=False`` strips the archived predecessors, as a truncated
+    bundle would)."""
     q = root / "quality"
     paths = [
         q / "checkpoint.json",
-        *sorted((q / "checkpoints").glob("*.json")),
+        *(sorted((q / "checkpoints").glob("*.json")) if archives else []),
         *sorted(q.glob("key_reset_*.json")),
         *sorted((q / "quorum_rotations").glob("*.json")),
     ]
-    if (q / "gate_quorum.json").is_file():
-        paths.append(q / "gate_quorum.json")
+    for optional in ("gate_quorum.json", "witness_signing.pub"):
+        if (q / optional).is_file():
+            paths.append(q / optional)
     files = {
         p.relative_to(root).as_posix(): base64.b64encode(p.read_bytes()).decode() for p in paths
     }
@@ -524,8 +528,102 @@ def test_boundary_off_spine_is_flagged_by_both_verifiers() -> None:
         "key_reset_boundary_off_spine:key_reset_x.json"
     ]
     errors: list[str] = []
-    _verify_reset_spine([reset], ["a" * 64], {}, {}, errors)
+    _verify_reset_spine([reset], ["a" * 64], {}, {}, errors, {}, None)
     assert errors == ["spine_key_reset_boundary_off_spine:'quality/key_reset_x.json'"]
+
+
+def _members_world(root: Path) -> tuple[Pair, Pair, Pair]:
+    """Gate + a dormant member (1-of-2), three checkpoints, a reset to
+    ``first`` and one checkpoint under it."""
+    gate, dormant, first = (generate_keypair() for _ in range(3))
+    _base(root, gate)
+    init_quorum(root, [gate[1], dormant[1]], threshold=1)
+    for _ in range(3):
+        write_checkpoint(root, [gate])
+    _reset(root, first)
+    write_checkpoint(root, [first])
+    return gate, dormant, first
+
+
+def test_a_key_lost_by_an_earlier_reset_stays_revoked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The dormant member was declared lost with the first registry; a later
+    reset that registers it again is refused, and a forced one leaves every
+    record claiming that registry revoked in both verifiers."""
+    _gate, dormant, _first = _members_world(tmp_path)
+    second = generate_keypair()
+    with pytest.raises(ValueError, match=f"reinstates_lost_key:{key_id(dormant[1])}"):
+        _reset(tmp_path, second, dormant)
+    assert len(load_resets(tmp_path)) == 1
+    monkeypatch.setattr(key_reset_module, "_reinstated_refusals", lambda *_args: [])
+    _reset(tmp_path, second, dormant)
+    write_checkpoint(tmp_path, [second])
+    head = _sha((tmp_path / "quality/checkpoint.json").read_bytes())[:12]
+    assert f"key_reset_revoked_registry:{head}" in checkpoint_spine(tmp_path)["errors"]
+    assert f"spine_key_reset_revoked_registry:{head}" in _standalone_errors(tmp_path)
+
+
+def test_two_resets_without_reinstatement_verify(tmp_path: Path) -> None:
+    """Control for the scenario above: fresh keys at the second reset."""
+    _members_world(tmp_path)
+    second = generate_keypair()
+    _reset(tmp_path, second)
+    write_checkpoint(tmp_path, [second])
+    _assert_reset_verified(tmp_path, n_resets=2)
+
+
+def test_a_witness_key_lost_by_an_earlier_reset_stays_lost(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """W1 -> W2 -> W1 across two resets: each record alone is fine (its new
+    key differs from its own lost key), but W1 was declared lost first."""
+    root, _gate = _tree(tmp_path)
+    w1, w2 = _p256_pem(), _p256_pem()
+    (root / "quality/witness_signing.pub").write_text(w1)
+    first, second = generate_keypair(), generate_keypair()
+    _reset(root, first, witness_pubkey_pem=w2)
+    write_checkpoint(root, [first])
+    with pytest.raises(ValueError, match="reinstates_lost_witness_key"):
+        _reset(root, second, witness_pubkey_pem=w1)
+    monkeypatch.setattr(key_reset_module, "_reinstated_refusals", lambda *_args: [])
+    out = _reset(root, second, witness_pubkey_pem=w1.replace("\n", "\r\n"))
+    write_checkpoint(root, [second])
+    library = checkpoint_spine(root)["errors"]
+    assert f"key_reset_reinstates_witness:{out.name}" in library
+    assert "key_reset_reinstates_witness:live" in library
+    script = _standalone_errors(root)
+    assert f"spine_key_reset_reinstates_witness:{ascii('quality/' + out.name)}" in script
+    assert "spine_key_reset_reinstates_witness:live" in script
+
+
+def test_reinstalling_a_lost_witness_key_by_hand_is_flagged(tmp_path: Path) -> None:
+    root, _gate = _tree(tmp_path)
+    w1, w2 = _p256_pem(), _p256_pem()
+    (root / "quality/witness_signing.pub").write_text(w1)
+    new = generate_keypair()
+    _reset(root, new, witness_pubkey_pem=w2)
+    write_checkpoint(root, [new])
+    _assert_reset_verified(root)
+    (root / "quality/witness_signing.pub").write_text(w1)
+    assert "key_reset_reinstates_witness:live" in checkpoint_spine(root)["errors"]
+    assert "spine_key_reset_reinstates_witness:live" in _standalone_errors(root)
+
+
+def test_a_bundle_stripped_of_its_archives_is_not_pre_spine(tmp_path: Path) -> None:
+    """The head signs its archive extent and a reset is bundled: dropping
+    the archived predecessors must not skip the spine walk."""
+    root, _gate = _tree(tmp_path)
+    new = generate_keypair()
+    _reset(root, new)
+    write_checkpoint(root, [new])
+    assert _standalone_errors(root) == []
+    n = len(list((root / "quality/checkpoints").glob("*.json")))
+    errors = _standalone_errors(root, archives=False)
+    assert f"spine_archive_count:{n}!=0" in errors
+    assert "spine_tip_mismatch" in errors
+    assert any(e.startswith("spine_dangling_prev:") for e in errors)
+    assert any(e.startswith("spine_key_reset_boundary_off_spine:") for e in errors)
 
 
 # -- record parsing: library and standalone verifier agree ---------------------
@@ -646,6 +744,33 @@ def _witnesses(lost: str | None, new: str | None) -> Callable[[_World], bytes]:
     return build
 
 
+def _registry_key_field(side: str, field: str, value: Any) -> Callable[[_World], bytes]:
+    """An honest record whose ``side`` registry's first entry has ``field``
+    replaced (unhashable values included), re-signed by B."""
+
+    def build(w: _World) -> bytes:
+        payload = w.payload()
+        payload[side]["registry"]["keys"][0][field] = value
+        return _record(payload, [w.b])
+
+    return build
+
+
+def _non_finite(value: float) -> Callable[[_World], bytes]:
+    """Signed with ``extra: null``, then carrying NaN/Infinity there:
+    canonical signing bytes map both to null, so a lax parser would still
+    verify the signature over a record that says something else."""
+
+    def build(w: _World) -> bytes:
+        payload = w.payload()
+        payload["extra"] = None
+        body = json.loads(_record(payload, [w.b]))
+        body["payload"]["extra"] = value
+        return json.dumps(body).encode()
+
+    return build
+
+
 def _two_of_two(signers: str) -> Callable[[_World], bytes]:
     def build(w: _World) -> bytes:
         new = _side(w.b[1], _registry([w.b[1], w.c[1]], threshold=2))
@@ -671,6 +796,23 @@ CASES: dict[str, tuple[Callable[[_World], bytes], list[str] | Callable[[_World],
         ["reuses_lost_witness_key"],
     ),
     "malformed": (lambda w: b"{not json", ["malformed"]),
+    "nan": (_non_finite(float("nan")), ["malformed"]),
+    "negative_infinity": (_non_finite(float("-inf")), ["malformed"]),
+    "boundary_nan": (
+        lambda w: _record(
+            w.payload(boundary=b'{"schema": "integrity_checkpoint_sig.v2", "payload": {"x": NaN}}'),
+            [w.b],
+        ),
+        ["boundary_malformed"],
+    ),
+    "lost_registry_key_id_unhashable": (
+        _registry_key_field("lost", "key_id", []),
+        ["lost_registry_malformed"],
+    ),
+    "new_registry_key_id_unhashable": (
+        _registry_key_field("new", "key_id", {}),
+        ["new_registry_malformed"],
+    ),
     "schema_unexpected": (
         lambda w: _record(w.payload(), [w.b], schema="key_reset.v0"),
         ["schema_unexpected"],

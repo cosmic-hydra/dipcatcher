@@ -272,7 +272,13 @@ def verify_bundle(
         # and cryptographically verify every bundled proof.
         spine_rels = [r for r in decoded if r.startswith(SPINE_PREFIXES[0])]
         witness_rels = [r for r in decoded if r.startswith(SPINE_PREFIXES[1])]
-        if spine_rels or witness_rels:
+        # A head that signs an archive or witness-proof extent, or a bundled
+        # key reset, makes this a spine bundle: stripping the members must
+        # not downgrade it to the pre-spine path that skips these checks.
+        claims_history = _claims_history(decoded["quality/checkpoint.json"]) or any(
+            r.startswith("quality/key_reset_") for r in decoded
+        )
+        if spine_rels or witness_rels or claims_history:
             from quant_fund.research.checkpoint_chain import checkpoint_spine
             from quant_fund.research.integrity_witness import verify_witnesses
 
@@ -281,7 +287,7 @@ def verify_bundle(
             # checkpoint file is a member record, not an archive entry.
             for e in spine_res.get("errors", []):
                 errors.append(f"spine:{e}")
-            if spine_rels and spine_res.get("verdict") != "intact":
+            if (spine_rels or claims_history) and spine_res.get("verdict") != "intact":
                 errors.append(f"spine_not_intact:{spine_res.get('verdict')}")
             if len(witness_rels) > 1:
                 all_wit = verify_witnesses(tmp_root)
@@ -320,6 +326,20 @@ def verify_bundle(
         "spine_members": len([r for r in decoded if r.startswith(SPINE_PREFIXES[0])]),
         "witness_proofs": len([r for r in decoded if r.startswith(SPINE_PREFIXES[1])]),
     }
+
+
+def _claims_history(checkpoint_raw: bytes) -> bool:
+    """The head checkpoint signs a non-empty archive or witness-proof
+    extent, so a bundle without those members is truncated, not pre-spine."""
+    try:
+        payload = json.loads(checkpoint_raw).get("payload") or {}
+        spine, witness = payload.get("spine"), payload.get("witness")
+    except (ValueError, AttributeError):
+        return False  # verify_checkpoint reports the malformed head
+    return bool(
+        (isinstance(spine, dict) and spine.get("n_archives"))
+        or (isinstance(witness, dict) and witness.get("proofs"))
+    )
 
 
 def bundle_contract_errors(body: Mapping[str, Any]) -> list[str]:

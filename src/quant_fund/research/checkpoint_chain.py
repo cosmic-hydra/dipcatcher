@@ -35,6 +35,7 @@ CHECKPOINT_PATH = Path("quality/checkpoint.json")
 ARCHIVE_DIR = Path("quality/checkpoints")
 _PUBKEY_PATH = Path("quality/gate_signing.pub")
 _WITNESS_DIR = Path("quality/witness")
+_WITNESS_PUBKEY_PATH = Path("quality/witness_signing.pub")
 
 
 def _record(file: Path, rel: str) -> dict[str, Any]:
@@ -450,7 +451,16 @@ def checkpoint_spine(root: str | Path = ".") -> dict[str, Any]:
 
     # Key resets: boundary on the spine, new keys fresh up to it, lost keys
     # and the lost registry revoked after it.
-    errors.extend(reset_spine_errors(resets, records, ordered))
+    witness_pub = root_path / _WITNESS_PUBKEY_PATH
+    errors.extend(
+        reset_spine_errors(
+            resets,
+            records,
+            ordered,
+            lineage=lineage,
+            live_witness_pem=witness_pub.read_text() if witness_pub.is_file() else None,
+        )
+    )
     notes.extend(reset_notes(resets))
 
     # Quorum-registry continuity: adjacent members must name the same

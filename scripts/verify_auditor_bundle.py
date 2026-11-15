@@ -424,13 +424,23 @@ def _reset_side_errors(side: Any, tag: str) -> list[str]:
     return errors
 
 
+def _reject_constant(token: str) -> Any:
+    raise ValueError(f"non-finite number: {token}")
+
+
+def _strict_loads(raw: bytes) -> Any:
+    """``json.loads`` refusing NaN/Infinity: canonical signing bytes cannot
+    represent them, so a record carrying one is malformed, not re-encoded."""
+    return json.loads(raw, parse_constant=_reject_constant)
+
+
 def _reset_boundary(boundary: Any) -> tuple[dict[str, Any] | None, str | None]:
     """Decode the embedded boundary checkpoint; its digest must match."""
     if not isinstance(boundary, dict) or not _hex_bytes(boundary.get("checkpoint_sha256"), 32):
         return None, "boundary_malformed"
     try:
         raw = base64.b64decode(str(boundary.get("checkpoint_b64", "")), validate=True)
-        body = json.loads(raw)
+        body = _strict_loads(raw)
     except ValueError:  # binascii.Error, JSONDecodeError, UnicodeDecodeError
         return None, "boundary_malformed"
     if _sha(raw).hex() != boundary["checkpoint_sha256"]:
@@ -513,7 +523,7 @@ def _reset_authority_errors(body: dict[str, Any], payload: dict[str, Any]) -> li
 def _parse_reset(raw: bytes) -> tuple[dict[str, Any] | None, list[str]]:
     """Fully verify one key_reset.v1 record -> (summary, []) or (None, errors)."""
     try:
-        body = json.loads(raw)
+        body = _strict_loads(raw)
     except ValueError:
         return None, ["malformed"]
     payload = body.get("payload") if isinstance(body, dict) else None
@@ -548,6 +558,8 @@ def _parse_reset(raw: bytes) -> tuple[dict[str, Any] | None, list[str]]:
         "new_registry": new["registry"],
         "lost_kids": _side_kids(lost),
         "new_kids": _side_kids(new),
+        "lost_witness": lost.get("witness_pubkey_pem"),
+        "new_witness": new.get("witness_pubkey_pem"),
     }, []
 
 
@@ -596,16 +608,21 @@ def _verify_reset_spine(
     signers_of: dict[str, set[str]],
     era_of: dict[str, str | None],
     errors: list[str],
+    lineage: dict[str, tuple[dict[str, str], int]],
+    live_witness_pem: str | None,
 ) -> None:
     """Each reset's boundary sits on the spine; its new keys signed nothing
     at or before the boundary; past it, no lost key signs and no record
-    claims the lost registry."""
+    claims the lost registry or any registry holding a lost key; no lost
+    witness key comes back."""
     position = {digest: i for i, digest in enumerate(ordered)}
+    placed: list[tuple[int, str, dict[str, Any]]] = []
     for r in resets:
         idx = position.get(r["boundary"])
         if idx is None:
             errors.append(f"spine_key_reset_boundary_off_spine:{ascii(r['rel'])}")
             continue
+        placed.append((idx, r["rel"], r))
         used: set[str] = set()
         for digest in ordered[: idx + 1]:
             used |= signers_of.get(digest, set())
@@ -613,8 +630,81 @@ def _verify_reset_spine(
         for digest in ordered[idx + 1 :]:
             if signers_of.get(digest, set()) & r["lost_kids"]:
                 errors.append(f"spine_key_reset_revoked_signer:{digest[:12]}")
-            if era_of.get(digest) == r["lost_digest"]:
+            claimed = era_of.get(digest)
+            if claimed is not None and (
+                claimed == r["lost_digest"]
+                or (claimed in lineage and set(lineage[claimed][0]) & r["lost_kids"])
+            ):
                 errors.append(f"spine_key_reset_revoked_registry:{digest[:12]}")
+    placed.sort(key=lambda item: (item[0], item[1]))
+    _verify_witness_retirement([r for _idx, _rel, r in placed], live_witness_pem, errors)
+
+
+def _spki_or_none(pem: Any) -> bytes | None:
+    from cryptography.exceptions import UnsupportedAlgorithm
+
+    try:
+        return _witness_spki(pem) if isinstance(pem, str) else None
+    except (ValueError, TypeError, UnsupportedAlgorithm):
+        return None  # a malformed installed key is the witness checks' finding
+
+
+def _verify_witness_retirement(
+    ordered_resets: list[dict[str, Any]], live_witness_pem: str | None, errors: list[str]
+) -> None:
+    """A witness key declared lost stays lost: no later reset installs it
+    again, and it is not the installed key."""
+    retired: set[bytes] = set()
+    for r in ordered_resets:
+        new_spki = _spki_or_none(r.get("new_witness"))
+        if new_spki is not None and new_spki in retired:
+            errors.append(f"spine_key_reset_reinstates_witness:{ascii(r['rel'])}")
+        lost_spki = _spki_or_none(r.get("lost_witness"))
+        if lost_spki is not None:
+            retired.add(lost_spki)
+    live = _spki_or_none(live_witness_pem)
+    if live is not None and live in retired:
+        errors.append("spine_key_reset_reinstates_witness:live")
+
+
+def _claims_history(decoded_checkpoint: bytes) -> bool:
+    """The head checkpoint signs a non-empty archive or witness-proof
+    extent, so a bundle without those members is truncated, not pre-spine."""
+    try:
+        payload = json.loads(decoded_checkpoint).get("payload") or {}
+        spine, witness = payload.get("spine"), payload.get("witness")
+    except (ValueError, AttributeError):
+        return False  # the head's own checks report it
+    return bool(
+        (isinstance(spine, dict) and spine.get("n_archives"))
+        or (isinstance(witness, dict) and witness.get("proofs"))
+    )
+
+
+def _verify_archive_extent(
+    files: dict[str, str], live_payload: dict[str, Any], errors: list[str]
+) -> None:
+    """The live checkpoint signs its archive extent (count and newest name):
+    dropping archived predecessors must not verify as a shorter history."""
+    claim = live_payload.get("spine")
+    if not isinstance(claim, dict):
+        return
+    names = sorted(
+        rel.rsplit("/", 1)[-1]
+        for rel in files
+        if rel.startswith(SPINE_PREFIXES[0]) and rel.endswith(".json")
+    )
+    if claim.get("n_archives") != len(names):
+        errors.append(f"spine_archive_count:{claim.get('n_archives')}!={len(names)}")
+    if claim.get("tip") != (names[-1] if names else None):
+        errors.append("spine_tip_mismatch")
+
+
+def _live_witness_pem(files: dict[str, str]) -> str | None:
+    try:
+        return base64.b64decode(files["quality/witness_signing.pub"]).decode()
+    except (KeyError, TypeError, ValueError):  # UnicodeDecodeError is a ValueError
+        return None
 
 
 def _prefield_quorum(
@@ -836,7 +926,7 @@ def _verify_spine(
     # Key resets are re-verified even in a pre-spine bundle: an invalid
     # record is a finding wherever it sits.
     resets = _verify_resets(files, declared, errors)
-    if not records and not witnessed:
+    if not records and not witnessed and not resets and not _claims_history(decoded_checkpoint):
         return  # pre-spine bundle — nothing more to check
 
     # The live checkpoint is a record too — it is the spine head.
@@ -1023,7 +1113,9 @@ def _verify_spine(
             continue
         if (pd, cd) not in authorized_rots:
             errors.append(f"spine_quorum_unauthorized:{child[:12]}")
-    _verify_reset_spine(resets, ordered, signers_of, era_of, errors)
+    _verify_reset_spine(
+        resets, ordered, signers_of, era_of, errors, lineage, _live_witness_pem(files)
+    )
 
     # Witnessed-but-absent digests: grandfather pre-retention history
     # (integrated before the earliest recorded proof), flag the rest.
@@ -1042,6 +1134,7 @@ def _verify_spine(
         live_payload = json.loads(decoded_checkpoint).get("payload") or {}
     except json.JSONDecodeError:
         live_payload = {}
+    _verify_archive_extent(files, live_payload, errors)
     witness_claim = live_payload.get("witness")
     if isinstance(witness_claim, dict):
         claimed_raw = witness_claim.get("proofs")
