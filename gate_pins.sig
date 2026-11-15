@@ -3,14 +3,14 @@
   "payload": {
     "files": {
       "quality/crown_jewels.json": "dc28f58d7d345e5b8d39e133d8d068f71ce822dd3f99d892d3e9120bb499afcb",
-      "quality/epoch_heads.json": "bad737b124b93cfb71a2b34adc8cf14893617dc6b1c7dd3b0e2c7291c5bfdf20"
+      "quality/epoch_heads.json": "bb58c18050a5f601da65a0b4815ece1e7b757d45651019fa9ed183f8139a7d78"
     }
   },
   "schema": "gate_signatures.v2",
   "signatures": [
     {
       "key_id": "3a0b74beae314825",
-      "signature": "392d80e7de306329a760b0d6d8d3cd28c8ee17197ab81816283dbe970bad08e6e30c11cb9050d2326466693e7cc5d93f37d2388437406cc51f41c2947a398a07"
+      "signature": "91db2ba40772528c1332bf1ef5968207bdb664b9eebfa87e079c75d2f1680b80fe9117d6ce89dd104b2b5f67d52bafce1952780b9055fa2a8c13f4f9cec17804"
     }
   ]
 }
