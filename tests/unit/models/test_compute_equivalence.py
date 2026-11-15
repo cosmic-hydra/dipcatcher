@@ -5,6 +5,9 @@ SYNTHETIC inputs only. These checks are correctness tests, not market evidence.
 
 from __future__ import annotations
 
+import sys
+import threading
+
 import numpy as np
 import polars as pl
 import pytest
@@ -336,6 +339,55 @@ def test_process_map_falls_back_when_fork_is_unavailable(
     items = [(i, np.ones(4)) for i in range(4)]
     expected = [_seeded_dot(item, derive_seed(3, i)) for i, item in enumerate(items)]
     assert process_map(_seeded_dot, items, base_seed=3, max_workers=2) == expected
+
+
+def _record_start_methods(monkeypatch: pytest.MonkeyPatch) -> list[str]:
+    import multiprocessing
+
+    real = multiprocessing.get_context
+    seen: list[str] = []
+
+    def recording(method: str) -> object:
+        seen.append(method)
+        return real(method)
+
+    monkeypatch.setattr("quant_fund.compute.parallel.multiprocessing.get_context", recording)
+    return seen
+
+
+@pytest.mark.skipif(sys.platform != "linux", reason="fork/forkserver are Linux start methods")
+def test_process_map_avoids_fork_while_other_threads_are_alive(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A fork with live threads can copy a held lock into the child and hang the pool."""
+    seen = _record_start_methods(monkeypatch)
+    held = threading.Lock()
+    release = threading.Event()
+
+    def hold_lock() -> None:
+        with held:
+            release.wait(30)
+
+    holder = threading.Thread(target=hold_lock, daemon=True)
+    holder.start()
+    try:
+        items = [(i, np.ones(4)) for i in range(4)]
+        expected = [_seeded_dot(item, derive_seed(5, i)) for i, item in enumerate(items)]
+        assert process_map(_seeded_dot, items, base_seed=5, max_workers=2) == expected
+    finally:
+        release.set()
+        holder.join(30)
+    assert seen == ["forkserver"]
+
+
+@pytest.mark.skipif(sys.platform != "linux", reason="fork/forkserver are Linux start methods")
+def test_process_map_forks_when_single_threaded(monkeypatch: pytest.MonkeyPatch) -> None:
+    seen = _record_start_methods(monkeypatch)
+    monkeypatch.setattr("quant_fund.compute.parallel.threading.active_count", lambda: 1)
+    items = [(i, np.ones(4)) for i in range(4)]
+    expected = [_seeded_dot(item, derive_seed(6, i)) for i, item in enumerate(items)]
+    assert process_map(_seeded_dot, items, base_seed=6, max_workers=2) == expected
+    assert seen == ["fork"]
 
 
 def test_process_map_short_input_stays_inline() -> None:

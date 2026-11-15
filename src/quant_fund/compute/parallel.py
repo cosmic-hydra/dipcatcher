@@ -6,15 +6,22 @@ completion order. Callers that draw random numbers must use that seed.
 Callers whose existing math is deterministic ignore it so published numbers
 stay on the original formula.
 
-Linux uses ``fork`` so workers inherit the already-imported parent. A pool
-that cannot start falls back to the calling process; task exceptions still
-propagate. Below ``min_items`` the map stays inline.
+Linux uses ``fork`` so workers inherit the already-imported parent, but only
+while the caller is single-threaded. Forking a process that has other live
+threads (a leaked executor, an HTTP server, a joblib/loky pool) copies any
+lock those threads hold into the child, where nothing will ever release it,
+so the pool can hang forever. With other threads alive the pool uses
+``forkserver`` instead. Tasks are pickled onto the call queue under every
+start method, so the choice does not change which callables are accepted or
+any result. A pool that cannot start falls back to the calling process; task
+exceptions still propagate. Below ``min_items`` the map stays inline.
 """
 
 from __future__ import annotations
 
 import multiprocessing
 import os
+import threading
 from collections.abc import Callable, Sequence
 from concurrent.futures import ProcessPoolExecutor
 
@@ -37,6 +44,11 @@ def derive_seed(base_seed: int, index: int) -> int:
 def _invoke[T, R](payload: tuple[Callable[[T, int], R], int, T]) -> R:
     fn, seed, item = payload
     return fn(item, seed)
+
+
+def _start_method() -> str:
+    """``fork`` only when no other thread can be holding a lock at fork time."""
+    return "fork" if threading.active_count() == 1 else "forkserver"
 
 
 def process_map[T, R](
@@ -63,10 +75,10 @@ def process_map[T, R](
         return _serial()
     payloads = [(fn, seed, item) for seed, item in zip(seeds, sequenced, strict=True)]
     try:
-        ctx = multiprocessing.get_context("fork")
+        ctx = multiprocessing.get_context(_start_method())
         pool = ProcessPoolExecutor(max_workers=workers, mp_context=ctx)
     except (OSError, ValueError):
-        # fork is unavailable, or the pool cannot be created.
+        # The start method is unavailable, or the pool cannot be created.
         return _serial()
     try:
         return list(pool.map(_invoke, payloads))
