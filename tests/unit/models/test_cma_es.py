@@ -27,9 +27,17 @@ def test_ellipsoid_handles_conditioning():
 
 
 def test_rastrigin_reasonable():
+    # Rastrigin is multimodal: which basin a fixed-lambda run settles in is
+    # chaotic in last-ulp rounding, and that rounding follows the OpenBLAS
+    # kernel the CPU selects (eigh/gemm). A single seed is therefore a
+    # per-machine coin flip (seed 3: 4.97 on SkylakeX, 27.86 on Haswell/Zen).
+    # Judge the optimizer on a fixed seed panel instead: measured over seeds
+    # 0..19 on 13 OpenBLAS kernels, >= 19/20 runs reach f < 20 and the median
+    # is <= 7.96.
     x0 = np.full(6, 3.0)
-    r = cma_es(rastrigin, x0, sigma0=1.5, budget=6000, seed=3)
-    assert r["best_f"] < 20.0
+    finals = [cma_es(rastrigin, x0, sigma0=1.5, budget=6000, seed=s)["best_f"] for s in range(20)]
+    assert sum(f < 20.0 for f in finals) >= 18, finals
+    assert float(np.median(finals)) < 10.0, finals
 
 
 def test_deterministic():

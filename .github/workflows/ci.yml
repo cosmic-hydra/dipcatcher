@@ -164,7 +164,11 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 75
+    # 75 minutes for the fast suite (pull requests and pushes). The full suite
+    # (the nightly schedule, or workflow_dispatch with suite=full) adds the
+    # slow tests, and its heaviest py3.12 shard, which also collects coverage,
+    # was cancelled at 99% after 75 minutes (run 43728406466).
+    timeout-minutes: ${{ (github.event_name == 'schedule' || inputs.suite == 'full') && 120 || 75 }}
     env:
       HYPOTHESIS_PROFILE: ci
       # Makefile TEST_ENV block, mirrored (keep both sides identical).
@@ -374,7 +378,9 @@ jobs:
       - name: Collect paper and analytics tests
         run: uv run pytest --collect-only -q -m smoke
       - name: Synthetic research smoke
-        run: uv run dipcatcher research --config configs/research.yaml
+        # 1400+ seeded live-optional benches: fan them out over the runner's
+        # cores (same families and scorecard; see docs/OPERATIONS_RUNBOOK.md).
+        run: uv run dipcatcher research --config configs/research.yaml --jobs "$(nproc)"
       - name: Data lineage health
         run: |
           uv run dipcatcher doctor --config configs/research.yaml | tee doctor.txt
@@ -677,14 +683,27 @@ jobs:
         run: uv sync --frozen --all-groups
       - name: TLC downloader regression tests (offline)
         run: python scripts/test_run_tlc.py
+      # The jar is content-pinned and run_tlc.sh re-verifies SHA-256 + size on
+      # every run, cached or not, so a cache hit only skips the download. The
+      # job token lifts anonymous api.github.com's 60/hour shared-IP limit.
+      - name: Cache TLC tools jar
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .tla
+          key: tla2tools-1.7.4-936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88
       - name: TLC order-lifecycle model check
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: bash scripts/run_tlc.sh
       - name: SMT proofs, conformance, and stateful tests
         run: uv run pytest tests/formal -q --tb=short
 
   evidence-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Measured on a 4-core box: about 15 min end to end, including about
+    # 5.5 min of tamper-drill and 4 min of fuzz-drill, which clone the whole
+    # closed-world tree for every probe. 30 min leaves 2x for slower runners.
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0

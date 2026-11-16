@@ -76,6 +76,7 @@ Sealed ``quota_audit.v1`` (fx1-side receipt).
 
 from __future__ import annotations
 
+import functools
 import json
 import os
 import tempfile
@@ -166,6 +167,7 @@ _H_ANTH_RESET = "anthropic-ratelimit-requests-reset"
 _RATE_WINDOW_CONST = "_RATE_WINDOW_S"
 _TINY_WINDOW_S = 0.05
 _WINDOW_RECOVER_S = 0.08
+_KEY_STORE_CLASS = "ApiKeyStore"
 
 _U6 = {"prompt_tokens": 2, "completion_tokens": 4, "total_tokens": 6}
 _U5 = {"prompt_tokens": 2, "completion_tokens": 3, "total_tokens": 5}
@@ -288,6 +290,23 @@ class _BareBackend:
         """No resources to release — the stub holds nothing."""
 
 
+class _SteppedClock:
+    """Key-store clock for the rate-window probes: frozen at construction
+    and moved only by ``advance``. Window edges are then decided by the
+    probe's scripted steps, not by how long a request took — a >50 ms
+    stall between two calls on a loaded runner used to expire the patched
+    window and admit the call the probe expects refused."""
+
+    def __init__(self) -> None:
+        self._now = time.time()
+
+    def __call__(self) -> float:
+        return self._now
+
+    def advance(self, seconds: float) -> None:
+        self._now += seconds
+
+
 def _client(
     backend_map: dict[str, Any],
     api_key: str | None = None,
@@ -295,9 +314,11 @@ def _client(
     state_dir: Path | None = None,
     rate_limit_rps: float = 0.0,
     max_inflight: int = 16,
+    key_clock: Callable[[], float] | None = None,
 ) -> tuple[TestClient, ModuleType]:
     """(TestClient, api_module) — isolated env per construction; backends
-    resolve from ``backend_map[name]`` zero-arg factories."""
+    resolve from ``backend_map[name]`` zero-arg factories. ``key_clock``
+    binds the app's key store to an injected clock (``_SteppedClock``)."""
     from fastapi.testclient import TestClient
 
     import fx1.serve.api as api_mod
@@ -316,15 +337,21 @@ def _client(
             os.environ.pop(_API_KEY_ENV, None)
         else:
             os.environ[_API_KEY_ENV] = api_key
-        app = api_mod.create_app(
-            harness=Harness(runner=fake_runner),
-            backend_resolver=lambda name, *a, **k: backend_map[name](),
-            state_dir=state_dir if state_dir is not None else isolated / "state",
-            receipts_dir=receipts,
-            ft_dir=isolated / "fine_tuning",
-            rate_limit_rps=rate_limit_rps,
-            max_inflight=max_inflight,
-        )
+        real_store = getattr(api_mod, _KEY_STORE_CLASS)
+        if key_clock is not None:
+            setattr(api_mod, _KEY_STORE_CLASS, functools.partial(real_store, clock=key_clock))
+        try:
+            app = api_mod.create_app(
+                harness=Harness(runner=fake_runner),
+                backend_resolver=lambda name, *a, **k: backend_map[name](),
+                state_dir=state_dir if state_dir is not None else isolated / "state",
+                receipts_dir=receipts,
+                ft_dir=isolated / "fine_tuning",
+                rate_limit_rps=rate_limit_rps,
+                max_inflight=max_inflight,
+            )
+        finally:
+            setattr(api_mod, _KEY_STORE_CLASS, real_store)
         resources.callback(app.state.jobs_executor.shutdown, wait=True, cancel_futures=True)
         client = TestClient(app, raise_server_exceptions=False)
         resources.callback(client.close)
@@ -505,8 +532,11 @@ def _rpm_window_probes() -> dict[str, Any]:  # NOSONAR(S3776) — scripted traff
     out["rpm_refusal_no_slot_backfill"] = card["window_remaining"] == 0
 
     # --- window expiry re-admits ----------------------------------------------
+    clock2 = _SteppedClock()
     client2, api_mod2 = _client(
-        {"byok": lambda: _MeterBackend("byok-model", dict(_U6))}, api_key=_ROOT
+        {"byok": lambda: _MeterBackend("byok-model", dict(_U6))},
+        api_key=_ROOT,
+        key_clock=clock2,
     )
     keys_mod2 = _keys_mod()
     saved_window = float(getattr(keys_mod2, _RATE_WINDOW_CONST))
@@ -516,7 +546,7 @@ def _rpm_window_probes() -> dict[str, Any]:  # NOSONAR(S3776) — scripted traff
         w_h = {_H_KEY: w_raw}
         first = _complete(client2, w_h)
         denied = _complete(client2, w_h)
-        time.sleep(_WINDOW_RECOVER_S)
+        clock2.advance(_WINDOW_RECOVER_S)
         third = _complete(client2, w_h)
         out["rpm_window_expiry_readmits"] = (
             first.status_code == 200 and denied.status_code == 429 and third.status_code == 200
@@ -1059,8 +1089,11 @@ def _client_probes() -> dict[str, Any]:
     from fx1.serve.client import HarnessClient, HarnessTransportError  # noqa: PLC0415
 
     out: dict[str, Any] = {}
+    clock = _SteppedClock()
     client, _api_mod = _client(
-        {"byok": lambda: _MeterBackend("byok-model", dict(_U6))}, api_key=_ROOT
+        {"byok": lambda: _MeterBackend("byok-model", dict(_U6))},
+        api_key=_ROOT,
+        key_clock=clock,
     )
     root_h = {_H_KEY: _ROOT}
     keys_mod = _keys_mod()
@@ -1117,7 +1150,7 @@ def _client_probes() -> dict[str, Any]:
             transport=spy3,
             max_retries=4,
             retry_writes=True,
-            sleep=lambda s: time.sleep(min(s, _WINDOW_RECOVER_S)),
+            sleep=lambda s: clock.advance(min(s, _WINDOW_RECOVER_S)),
         )
         hc3.complete([{"role": "user", "content": "a"}], backend="byok")
         ok_retry = hc3.complete([{"role": "user", "content": "b"}], backend="byok")

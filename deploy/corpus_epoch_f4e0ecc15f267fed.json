@@ -1,0 +1,86 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "81685d313f8275c8eeecf39f6568143a534da5cb07f26aee81950fe4b56d7d13",
+  "inputs_sha256": "4942b888116388b372a1bcd3b40dc3734138e3347bb664fd7b2ea4a16be5a406",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "25cccf0d3077d198fba6a958bf112f0c2decc6b4ef4f6f515447ba7244be4709",
+  "members": [
+    {
+      "name": "corpus_epoch_0804099d5c1e883a.json",
+      "sha256": "246dee13bd281747c3c711f61fa1bb0061caba76159d31b0752bbf403616d647"
+    },
+    {
+      "name": "corpus_epoch_0af17173d2e2d838.json",
+      "sha256": "baa08bd57ef89d0a089aed786c4639030778cd1e2f89d02e9abdf88c37d16112"
+    },
+    {
+      "name": "corpus_epoch_38d7139f41d1696f.json",
+      "sha256": "ce0b70f14418f389eb111b0603dccf6f3fa125a4ca2740c8eeaaee0c435521e7"
+    },
+    {
+      "name": "corpus_epoch_42003ac55034faa4.json",
+      "sha256": "5657868445c5ce4b49e92cea56f076ed383cbafd5fa9dead27b65aff14fb8e7b"
+    },
+    {
+      "name": "corpus_epoch_660c5e2c6360d9d6.json",
+      "sha256": "c3915c95a1c2c8c2314142f2600f4c4ad50af16304d010d540d5cf5581ecba32"
+    },
+    {
+      "name": "corpus_epoch_7f742ea75f61a23e.json",
+      "sha256": "04c378a8b7310516a344014f464680c67f1356ac4ad0a6ea4c355662df4b3b34"
+    },
+    {
+      "name": "corpus_epoch_98b7d4dbd5652bab.json",
+      "sha256": "2482a850954b22a22cbe3222edc7b297af7358c105af5be2e4fc2602828cc919"
+    },
+    {
+      "name": "corpus_epoch_ba45975ab40a88af.json",
+      "sha256": "3c043a1df5940e10d70aebcff0353e55c0ef02832a3ac87346bd4986eb4fe8b4"
+    },
+    {
+      "name": "observability/docker-compose.yml",
+      "sha256": "ac0cad1d8ccfab5dd474d5752f6c68d6f3841f3b323ade54fe3b61ebe99f12e0"
+    },
+    {
+      "name": "observability/grafana/dashboards/dipcatcher.json",
+      "sha256": "a82b8fbef6b9ad7fe4cc9affb51b67c7f2df381f9924d3c72157d60a398c8474"
+    },
+    {
+      "name": "observability/grafana/provisioning/dashboards/dashboards.yml",
+      "sha256": "62c815be126d1b6d188c1e778954f66dbd6d9a60a6419e871abf51aa349199b7"
+    },
+    {
+      "name": "observability/grafana/provisioning/datasources/datasource.yml",
+      "sha256": "72305a9fded6b40fe740ec82dac495f006990e6e37de754d1fcd01d93da4834a"
+    },
+    {
+      "name": "observability/otel-collector.yaml",
+      "sha256": "b0c83dc0e453e259ccedcad804f46256e45012c3c3359fc394435c06f8608e02"
+    },
+    {
+      "name": "observability/prometheus.yml",
+      "sha256": "2348696d94a69d95002f93e17e9420a774542d07b21d5ba91ce750454dfeb8aa"
+    },
+    {
+      "name": "observability/slo.yml",
+      "sha256": "89ada49fcb79c281ff0ddd0cae5801343eedc8f84e13630889836713a775c92e"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_0af17173d2e2d838.json"
+  ],
+  "members_removed": [],
+  "n_members": 15,
+  "params": {
+    "head_sha": "1df495b0872a2bf1afa726ad825f260a52a87937",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_0af17173d2e2d838.json",
+  "prev_epoch_sha256": "574657170da2ba17c0fb28b47ac8cc71deed5494ec84577721d4de20d2186cd2",
+  "receipt_sha256": "f4e0ecc15f267fed7968af8e55e4ffb230c8b9973bf1515ee45bbb796b161152",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

@@ -314,6 +314,32 @@ def test_factor_covariance_rejects_invalid_inputs() -> None:
         factor_cov(np.eye(2), np.array([[1.0, 2.0], [2.0, 1.0]]), np.ones(2))
 
 
+def _garch11_panel(
+    rng: np.random.Generator,
+    n: int,
+    k: int,
+    *,
+    omega: float = 7e-6,
+    alpha: float = 0.08,
+    beta: float = 0.85,
+    burn: int = 100,
+) -> np.ndarray:
+    """Independent Gaussian GARCH(1,1) columns (decimal returns, ~1% vol).
+
+    White noise is a degenerate stage-1 input: its GARCH MLE sits on the
+    alpha=0 / alpha+beta=1 boundary, so whether persistence lands at
+    1 - 2e-13 (fitted) or >= 1 (fail-closed) depends on the OpenBLAS
+    kernel. A genuine GARCH panel has an interior MLE far from it.
+    """
+    z = rng.standard_normal((n + burn, k))
+    x = np.empty_like(z)
+    s2 = np.full(k, omega / (1.0 - alpha - beta))
+    for t in range(n + burn):
+        x[t] = np.sqrt(s2) * z[t]
+        s2 = omega + alpha * x[t] ** 2 + beta * s2
+    return x[burn:]
+
+
 def test_ewma_rejects_invalid_lambda_and_dcc_is_finite() -> None:
     with np.testing.assert_raises(ValueError):
         ewma_variance_1d(np.ones(3), lam=1.1)
@@ -326,8 +352,7 @@ def test_ewma_rejects_invalid_lambda_and_dcc_is_finite() -> None:
         # `nonstationary_persistence`. macOS-only; identical code passes on
         # Linux and Windows. Mirrored disclosure in PROOF.md.
         pytest.xfail("arch 8.0.0 DCC boundary on macOS arm64 (fail-closed path)")
-    rng = np.random.default_rng(11)
-    sigma, params = dcc_gaussian(rng.normal(size=(240, 4)) * 0.01)
+    sigma, params = dcc_gaussian(_garch11_panel(np.random.default_rng(11), 500, 4))
     assert np.isfinite(sigma).all()
     assert min_eigenvalue(sigma) >= -1e-8
     assert 0.0 <= float(params["a"]) + float(params["b"]) < 0.999

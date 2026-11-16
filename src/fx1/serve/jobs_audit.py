@@ -250,6 +250,28 @@ def _wait_hits(sink: Any, n: int, timeout: float = _WAIT_S) -> None:
         time.sleep(0.05)
 
 
+def _drain_executor(client: TestClient, timeout: float = _WAIT_S) -> bool:
+    """Barrier: return once every task queued on the app's job executor
+    before this call has finished — including the worker's ``finally``
+    that frees its inflight slot, which runs *after* the record already
+    reads terminal. One rendezvous task per worker: all of them running
+    at once means no earlier task still holds a worker (FIFO queue)."""
+    from typing import cast as _cast
+
+    from fastapi import FastAPI  # noqa: PLC0415
+
+    executor = _cast(FastAPI, client.app).state.jobs_executor
+    workers = int(getattr(executor, "_max_workers", 1))  # noqa: SLF001
+    barrier = threading.Barrier(workers + 1)
+    for _ in range(workers):
+        executor.submit(barrier.wait, timeout)
+    try:
+        barrier.wait(timeout)
+    except threading.BrokenBarrierError:
+        return False
+    return True
+
+
 def _busy_executor(client: TestClient, sleep_s: float = 1.5) -> None:
     """Park every worker thread on a raw sleeper — outside the inflight
     accounting — so a submitted job acquires its slot yet stays
@@ -740,7 +762,9 @@ def _gate_probes() -> dict[str, bool]:
     out["over_capacity_retry_after"] = int(r_cap.headers.get("Retry-After", "0")) >= 1
     out["over_capacity_no_record"] = client2.get(_JOBS, params={"limit": 500}).json()["total"] == 1
     gate2.set()
-    out["capacity_recovers_after_release"] = _submit(client2).status_code == 202
+    # recovery is measured after the release, not raced against it
+    released = _drain_executor(client2)
+    out["capacity_recovers_after_release"] = released and _submit(client2).status_code == 202
     return out
 
 

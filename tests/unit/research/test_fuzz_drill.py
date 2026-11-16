@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
+
+import pytest
 
 from quant_fund.research.fuzz_drill import (
     _mutations,
@@ -63,6 +66,67 @@ def test_baseline_dirty_fails_closed(tmp_path: Path) -> None:
     assert res["ok"] is False
     assert res["verdict"] == "baseline_dirty"
     assert res["baseline_errors"]
+
+
+def test_scoped_fuzz_verdicts_match_full_verifier(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Must-fail mutations re-verify scoped and agree with a full run;
+    must-pass ones never run scoped (a scoped pass proves nothing)."""
+    import quant_fund.research.repo_integrity as ri
+    from tests.unit.research.test_repo_integrity import _git_repo
+
+    root = _git_repo(tmp_path)
+    real = ri.verify_repo
+    compared: list[str] = []
+
+    def errors(res: dict[str, Any]) -> set[str]:
+        return {f"{g}:{e}" for g, gate in res["gates"].items() for e in gate["errors"]}
+
+    def scoped_and_full(clone: Path, **kw: Any) -> dict[str, Any]:
+        res = real(clone, **kw)
+        if kw.get("epoch_scope") is not None:
+            full = real(clone)
+            assert res["ok"] == full["ok"], kw
+            assert errors(res) <= errors(full), kw
+            compared.append(",".join(sorted(kw["epoch_scope"])))
+        return res
+
+    monkeypatch.setattr(ri, "verify_repo", scoped_and_full)
+    res = fuzz_drill(root, seed=7)
+    assert res["verdict"] == "calibrated", res
+    assert compared
+    graded = [m for m in res["mutations"] if "outcome" in m]
+    assert {m["epoch_scope"] for m in graded if m["expect"] == "ok"} == {"all"}
+    assert any(m["epoch_scope"] != "all" for m in graded if m["expect"] == "fail")
+
+
+def test_skipped_mutation_restores_clone(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A mutation skipped after a partial write — setup raised, or the
+    closure reported ``no_*`` — must not leak residue into the next one."""
+    import quant_fund.research.fuzz_drill as fd
+    from tests.unit.research.test_repo_integrity import _git_repo
+
+    root = _git_repo(tmp_path)
+    leaked: list[bool] = []
+
+    def fake_mutations(clone: Path, rng: Any) -> list[tuple[str, str, Any]]:
+        def make(name: str, fail_setup: bool) -> Any:
+            def mutate() -> str:
+                leaked.append(any((clone / "docs").glob("residue_*")))
+                (clone / "docs" / f"residue_{name}").write_text("x")
+                if fail_setup:
+                    raise OSError("setup failed mid-write")
+                return "no_target"
+
+            return mutate
+
+        return [(f"m{i}", "fail", make(f"m{i}", i % 2 == 0)) for i in range(4)]
+
+    monkeypatch.setattr(fd, "_mutations", fake_mutations)
+    res = fd.fuzz_drill(root, seed=1)
+    assert leaked == [False] * 4
+    assert all("skipped" in m for m in res["mutations"])
 
 
 def test_contract_coherence() -> None:

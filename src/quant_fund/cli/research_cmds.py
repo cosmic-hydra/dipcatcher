@@ -13,6 +13,7 @@ from typing import Any
 import typer
 
 from .app import app
+from .receipt_pin_args import _ALLOWED_REMOVALS_HELP, _sha_pin_map
 from .support import _cfg, format_data_label, format_fdr_families
 
 
@@ -35,12 +36,20 @@ def _harvest_p_values(findings: Iterable[Any]) -> list[float]:
 
 
 @app.command()
-def research(config: Path = typer.Option(Path("configs/research.yaml"))) -> None:
+def research(
+    config: Path = typer.Option(Path("configs/research.yaml")),
+    jobs: int = typer.Option(
+        1,
+        "--jobs",
+        min=1,
+        help="Worker processes for the seeded live-optional benches (same families and receipt).",
+    ),
+) -> None:
     """Run Dipcatcher's proprietary research benches and write a labeled notebook."""
     from quant_fund.research.agent import format_p_value, run_research
 
     cfg = _cfg(config)
-    nb = run_research(cfg)
+    nb = run_research(cfg, jobs=jobs)
     # Always print DATA_LABEL + FDR families (regression-tested).
     typer.echo(format_data_label(synthetic=bool(nb.synthetic), data_source=str(nb.data_source)))
     if nb.synthetic:
@@ -2825,6 +2834,8 @@ def verify_repo_cmd(
             state = "unsigned"
         if gate.get("skipped"):
             state = f"skipped({gate['skipped']})"
+        if gate.get("n_resets"):
+            state += f" (key resets on record: {gate['n_resets']})"
         typer.echo(f"verify-repo {name}: {state}")
     if not result["ok"]:
         raise typer.Exit(code=1)
@@ -3392,10 +3403,12 @@ def checkpoint_chain_cmd(
     typer.echo(
         f"checkpoint-chain: spine={result['spine_length']}/{result['n_records']} "
         f"forks={result['n_forks']} orphans={result['n_orphans']} "
-        f"verdict={result['verdict']}"
+        f"resets={result.get('n_resets', 0)} verdict={result['verdict']}"
     )
     for e in result["errors"]:
         typer.echo(f"  {e}")
+    for n in result.get("notes", []):
+        typer.echo(f"  note: {n}")
     if out is not None:
         path = write_chain_receipt(result, out)
         typer.echo(f"receipt={path}")
@@ -3419,8 +3432,8 @@ def verify_rotations_cmd(
 
     result = verify_rotations(root)
     typer.echo(
-        f"verify-rotations: n={result['n_rotations']} verdict={result['verdict']} "
-        f"current={result.get('current_key_id', '?')}"
+        f"verify-rotations: n={result['n_rotations']} resets={result.get('n_resets', 0)} "
+        f"verdict={result['verdict']} current={result.get('current_key_id', '?')}"
     )
     for e in result["errors"]:
         typer.echo(f"  {e}")
@@ -3565,6 +3578,9 @@ def admit(
         "--strict",
         help="Exit nonzero unless the verdict is 'admit'.",
     ),
+    allowed_removals: Path | None = typer.Option(
+        None, "--allowed-removals", help=_ALLOWED_REMOVALS_HELP
+    ),
 ) -> None:
     """Receipt admission gate: may this receipt join the evidence corpus?
 
@@ -3581,22 +3597,11 @@ def admit(
         raise typer.BadParameter(f"candidate receipt {candidate} does not exist")
     if not root.is_dir():
         raise typer.BadParameter(f"corpus dir {root} does not exist")
-    pins: dict[str, str] | None = None
-    if known_inconsistent is not None:
-        if not known_inconsistent.is_file():
-            raise typer.BadParameter(f"known-inconsistent file {known_inconsistent} does not exist")
-        try:
-            raw_pins = json.loads(known_inconsistent.read_text())
-        except (OSError, ValueError) as exc:
-            raise typer.BadParameter(f"known-inconsistent is not JSON: {exc}") from exc
-        if not isinstance(raw_pins, dict) or not all(
-            isinstance(k, str) and isinstance(v, str) and len(v) == 64 for k, v in raw_pins.items()
-        ):
-            raise typer.BadParameter(
-                "known-inconsistent must be a JSON object mapping filename -> 64-hex sha256"
-            )
-        pins = dict(raw_pins)
-    result = admission_check(candidate, root, q=q, known_inconsistent=pins)
+    pins = _sha_pin_map(known_inconsistent, "known-inconsistent")
+    removals = _sha_pin_map(allowed_removals, "allowed-removals")
+    result = admission_check(
+        candidate, root, q=q, known_inconsistent=pins, allowed_removals=removals
+    )
     try:
         path = write_admission_receipt(result, out_dir, receipt_version=receipt_version)
     except ValueError as exc:
@@ -3638,6 +3643,9 @@ def admit_batch_cmd(
         "--strict",
         help="Exit nonzero unless every candidate's verdict is 'admit'.",
     ),
+    allowed_removals: Path | None = typer.Option(
+        None, "--allowed-removals", help=_ALLOWED_REMOVALS_HELP
+    ),
 ) -> None:
     """Batch admission gate for a diff of receipts.
 
@@ -3653,23 +3661,10 @@ def admit_batch_cmd(
     root = Path(corpus_dir)
     if not root.is_dir():
         raise typer.BadParameter(f"corpus dir {root} does not exist")
-    pins: dict[str, str] | None = None
-    if known_inconsistent is not None:
-        if not known_inconsistent.is_file():
-            raise typer.BadParameter(f"known-inconsistent file {known_inconsistent} does not exist")
-        try:
-            raw_pins = json.loads(known_inconsistent.read_text())
-        except (OSError, ValueError) as exc:
-            raise typer.BadParameter(f"known-inconsistent is not JSON: {exc}") from exc
-        if not isinstance(raw_pins, dict) or not all(
-            isinstance(k, str) and isinstance(v, str) and len(v) == 64 for k, v in raw_pins.items()
-        ):
-            raise typer.BadParameter(
-                "known-inconsistent must be a JSON object mapping filename -> 64-hex sha256"
-            )
-        pins = dict(raw_pins)
+    pins = _sha_pin_map(known_inconsistent, "known-inconsistent")
+    removals = _sha_pin_map(allowed_removals, "allowed-removals")
     try:
-        batch = admit_batch(receipts, root, q=q, known_inconsistent=pins)
+        batch = admit_batch(receipts, root, q=q, known_inconsistent=pins, allowed_removals=removals)
     except ValueError as exc:
         raise typer.BadParameter(str(exc)) from exc
     typer.echo(format_data_label(synthetic=True, data_source="SYNTHETIC"))

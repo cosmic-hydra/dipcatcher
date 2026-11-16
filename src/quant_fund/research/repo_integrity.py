@@ -17,7 +17,7 @@ Provenance evidence only; never a market or P&L claim.
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping
+from collections.abc import Collection, Mapping
 from pathlib import Path
 from typing import Any
 
@@ -146,12 +146,47 @@ LOCAL_ONLY_CORPORA: frozenset[str] = frozenset({"data/metadata"})
 # is still ``corpus_missing``; an absent code corpus reports a skip.
 EVIDENCE_CORPORA: frozenset[str] = frozenset(c[0] for c in CORPORA[:8])
 
+# Files every epoch gate reads besides its own corpus dir: the committed heads
+# pin (each corpus's expected head) and the removal acknowledgments. A drill
+# probe touching either re-runs every epoch gate (see ``epoch_scope``).
+EPOCH_SHARED_INPUTS: frozenset[str] = frozenset(
+    {"quality/epoch_heads.json", "quality/epoch_allowed_removals.json"}
+)
+
+
+def _checked_epoch_scope(epoch_scope: Collection[str] | None) -> frozenset[str] | None:
+    """``verify_repo``'s ``epoch_scope`` as a set; unknown corpus names raise
+    — a typo must not silently skip the gate it meant to run."""
+    if epoch_scope is None:
+        return None
+    scope = frozenset(epoch_scope)
+    unknown = sorted(scope - {c[0] for c in CORPORA})
+    if unknown:
+        raise ValueError(f"epoch_scope names unknown corpora: {unknown}")
+    return scope
+
+
+def _epoch_skip(
+    corpus_dir: str, *, evidence_only: bool, scope: frozenset[str] | None
+) -> str | None:
+    """Why ``verify_repo`` skips a corpus's epoch gate, or ``None`` to run it.
+
+    A non-evidence corpus dir can still be *present* in a bundle as the
+    parent of an evidence corpus (``.github`` holding ``.github/workflows``)
+    — presence is containment, not coverage."""
+    if evidence_only and corpus_dir not in EVIDENCE_CORPORA:
+        return "evidence_only"
+    if scope is not None and corpus_dir not in scope:
+        return "outside_probe_scope"
+    return None
+
 
 def verify_repo(
     root: Path | str = ".",
     *,
     heads_pin: Path | str = "quality/epoch_heads.json",
     evidence_only: bool = False,
+    epoch_scope: Collection[str] | None = None,
 ) -> dict[str, Any]:
     """Run every integrity gate against the live tree.
 
@@ -165,8 +200,21 @@ def verify_repo(
     cover ``src/`` and can't be checked, so that gate reports a skipped
     marker instead of a pass. The attestation records the mode so a partial
     verdict can never masquerade as a full-tree one.
+
+    ``epoch_scope`` exists for the self-attack drills only. After a full run
+    over a drill clone came back clean, a probe that touched files in corpora
+    ``S`` re-runs every non-epoch gate plus the epoch gates of ``S``; every
+    other corpus reports ``{"ok": True, "errors": [], "skipped":
+    "outside_probe_scope"}``. Those gates were clean at baseline and nothing
+    they read changed (an epoch gate reads its own corpus dir plus
+    ``EPOCH_SHARED_INPUTS``; touching a shared input means a full run), and
+    no gate has side effects, so a scoped run reports a subset of the full
+    run's errors: a probe it catches, the full gate catches too. Scoped
+    results can't be sealed as an attestation — the receipt contract only
+    admits ``evidence_only`` skips. Unknown corpus names raise.
     """
     root = Path(root)
+    scope = _checked_epoch_scope(epoch_scope)
     pin_path = root / heads_pin if not Path(heads_pin).is_absolute() else Path(heads_pin)
     # Committed removal acknowledgments — moving a stamped member (e.g. to
     # legacy-unsealed/) or a transient corpus blip is recorded history, not
@@ -256,6 +304,8 @@ def verify_repo(
     gates["key_rotation"] = {
         "ok": bool(rot["ok"]),
         "n_rotations": rot["n_rotations"],
+        "n_resets": rot.get("n_resets", 0),
+        "verdict": rot.get("verdict"),
         "errors": rot["errors"],
     }
 
@@ -265,6 +315,8 @@ def verify_repo(
     gates["quorum_rotations"] = {
         "ok": bool(qrot["ok"]),
         "n_rotations": qrot["n_rotations"],
+        "n_resets": qrot.get("n_resets", 0),
+        "verdict": qrot.get("verdict"),
         "errors": qrot["errors"],
     }
 
@@ -280,15 +332,9 @@ def verify_repo(
         heads = {}
     for corpus_dir, pattern, require_stamped, allow_updates, exempt in CORPORA:
         cdir = root / corpus_dir
-        if evidence_only and corpus_dir not in EVIDENCE_CORPORA:
-            # A non-evidence corpus dir can still be *present* in a bundle as
-            # the parent of an evidence corpus (`.github` holding
-            # `.github/workflows`) — presence is containment, not coverage.
-            gates[f"epoch:{corpus_dir}"] = {
-                "ok": True,
-                "skipped": "evidence_only",
-                "errors": [],
-            }
+        skip = _epoch_skip(corpus_dir, evidence_only=evidence_only, scope=scope)
+        if skip is not None:
+            gates[f"epoch:{corpus_dir}"] = {"ok": True, "skipped": skip, "errors": []}
             continue
         if not cdir.is_dir():
             gates[f"epoch:{corpus_dir}"] = {

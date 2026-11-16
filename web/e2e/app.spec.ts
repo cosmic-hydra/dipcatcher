@@ -1,4 +1,14 @@
+import { readdirSync } from "node:fs";
+import { join } from "node:path";
 import { expect, test } from "@playwright/test";
+
+// One row per committed receipt. Count receipts/*.json the way the vitest
+// fixture check does, so the new receipts/corpus_epoch_*.json that every
+// `make stamp-epochs` adds doesn't need a hand edit here.
+const RECEIPT_COUNT = readdirSync(
+  join(import.meta.dirname, "..", "..", "receipts"),
+).filter((f) => f.endsWith(".json")).length;
+if (RECEIPT_COUNT === 0) throw new Error("no committed receipts found");
 
 test.describe("research explorer", () => {
   test("loads the overview with strategies and receipts", async ({ page }) => {
@@ -12,7 +22,7 @@ test.describe("research explorer", () => {
     await expect(table.locator("tbody tr")).toHaveCount(9);
     await expect(
       page.getByTestId("receipt-summary-table").locator("tbody tr"),
-    ).toHaveCount(396);
+    ).toHaveCount(RECEIPT_COUNT);
   });
 
   test("navigates to a strategy detail and renders charts", async ({
@@ -56,7 +66,7 @@ test.describe("research explorer", () => {
   test("receipt list and verification panel render", async ({ page }) => {
     await page.goto("/#/receipts");
     const table = page.getByTestId("receipt-table");
-    await expect(table.locator("tbody tr")).toHaveCount(396);
+    await expect(table.locator("tbody tr")).toHaveCount(RECEIPT_COUNT);
     await table
       .getByRole("link", { name: "corpus_epoch_d479e96760271bba" })
       .click();

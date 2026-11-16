@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit && tsc --noEmit --strict --skipLibCheck --module esnext --moduleResolution bundler --target es2022 playwright.config.ts tests/viewer.spec.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc --ignoreConfig --noEmit --strict --skipLibCheck --module esnext --moduleResolution bundler --target es2022 --types node playwright.config.ts tests/viewer.spec.ts",
     "serve": "node scripts/serve.mjs",
     "test": "playwright test",
     "gen:fixture": "python3 scripts/gen_fixture.py"

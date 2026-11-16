@@ -15,9 +15,11 @@ SIZE="2274532"
 
 DOWNLOAD=""
 META=""
+HEADERS=""
 cleanup() {
   [[ -z "$DOWNLOAD" ]] || rm -f -- "$DOWNLOAD"
   [[ -z "$META" ]] || rm -rf -- "$META"
+  [[ -z "$HEADERS" ]] || rm -f -- "$HEADERS"
   return 0
 }
 trap cleanup EXIT
@@ -40,11 +42,25 @@ verify_jar() {
 if [[ ! -f "$JAR" ]]; then
   mkdir -p "$(dirname "$JAR")"
   DOWNLOAD="$(mktemp "${JAR}.download.XXXXXX")"
+  # Anonymous api.github.com calls share 60/hour per IP; busy CI runners hit
+  # 403. With GITHUB_TOKEN set, authenticate from a 0600 header file so the
+  # token stays out of argv. curl drops it on the cross-host redirect.
+  auth=()
+  if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+    HEADERS="$(mktemp)"
+    printf 'Authorization: Bearer %s\n' "$GITHUB_TOKEN" > "$HEADERS"
+    auth=(-H "@$HEADERS")
+  fi
   curl --fail --silent --show-error --location \
     --proto '=https' --proto-redir '=https' \
     --connect-timeout 30 --max-time 180 \
     -H 'Accept: application/octet-stream' \
+    ${auth[@]+"${auth[@]}"} \
     -o "$DOWNLOAD" "$URL"
+  if [[ -n "$HEADERS" ]]; then
+    rm -f -- "$HEADERS"
+    HEADERS=""
+  fi
   verify_jar "$DOWNLOAD"
   mv -T -- "$DOWNLOAD" "$JAR"
   DOWNLOAD=""

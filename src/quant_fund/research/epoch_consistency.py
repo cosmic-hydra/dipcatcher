@@ -14,14 +14,21 @@ Proof shape: the ordered hop list ``[{name, sha256}]`` from the held head to
 the current head. Verification re-reads the receipt files and checks per hop:
 the successor's ``prev_epoch_receipt`` names the predecessor, the
 successor's member map pins the predecessor's file digest, and each file's
-bytes hash to the listed digest — so linkage and content both bind.
+bytes hash to the listed digest — so linkage and content both bind. When the
+member glob excludes the receipts themselves (``*.md`` / ``*.yml`` corpora)
+no successor can pin its predecessor as a member; the predecessor is bound
+through its own seal instead: the seal must verify and the file name must
+embed it (``corpus_epoch_<receipt_sha256[:16]>.json``). That hop is bound to
+its successor only by the 16-hex (64-bit) name prefix, not a full digest.
 
 Provenance evidence only; never a market or P&L claim.
 """
 
 from __future__ import annotations
 
+import json
 from collections.abc import Mapping
+from fnmatch import fnmatch
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +36,46 @@ from quant_fund.research.corpus_epoch import _epoch_receipts
 from quant_fund.utils.hashing import canonical_json_bytes, hash_bytes
 
 CONSISTENCY_SCHEMA = "epoch_consistency.v1"
+
+
+def _seal_binds_name(path: Path) -> bool:
+    """True iff the receipt at ``path`` is validly sealed and named after
+    its seal — the binding for a hop its successor cannot pin as a member."""
+    from quant_fund.research.receipt_v2 import verify_receipt_file
+
+    try:
+        doc = json.loads(path.read_text())
+    except (OSError, UnicodeError, ValueError):
+        return False
+    digest = doc.get("receipt_sha256") if isinstance(doc, Mapping) else None
+    if not _digest_hex(digest) or path.name != f"corpus_epoch_{str(digest)[:16]}.json":
+        return False
+    return bool(verify_receipt_file(path)["valid"])
+
+
+def _predecessor_bound(
+    payload: Mapping[str, Any],
+    prev: Mapping[str, Any],
+    prev_path: Path | None,
+    pattern: str,
+) -> bool:
+    """Does the successor ``payload`` bind its predecessor hop ``prev``?
+
+    The successor's member map must pin the predecessor's bytes — linkage
+    alone could point at a file that isn't this hop. Where the member glob
+    excludes receipts, no successor can list one, so the predecessor binds
+    through its own verified seal instead."""
+    member_sha = next(
+        (
+            m.get("sha256")
+            for m in payload.get("members") or []
+            if isinstance(m, Mapping) and m.get("name") == prev["name"]
+        ),
+        None,
+    )
+    if member_sha is not None or fnmatch(str(prev["name"]), pattern):
+        return bool(member_sha == prev["sha256"])
+    return prev_path is not None and _seal_binds_name(prev_path)
 
 
 def _digest_hex(value: Any) -> bool:
@@ -122,17 +169,17 @@ def verify_consistency(
     if errors:
         return errors
     hops = proof["hops"]
-    index = chain_index(
-        corpus_dir,
-        pattern=str(proof.get("pattern") or "*.json"),
-    )
+    pattern = str(proof.get("pattern") or "*.json")
+    index = chain_index(corpus_dir, pattern=pattern)
     if held_sha256 is not None and hops[0]["sha256"] != held_sha256:
         errors.append("held_head_digest_mismatch")
     prev = None
+    prev_path: Path | None = None
     for hop in hops:
         entry = index.get(hop["name"])
         if entry is None:
             errors.append(f"hop_missing:{hop['name']}")
+            prev, prev_path = hop, None
             continue
         path, payload, digest = entry
         if digest != hop["sha256"]:
@@ -140,19 +187,9 @@ def verify_consistency(
         if prev is not None:
             if payload.get("prev_epoch_receipt") != prev["name"]:
                 errors.append(f"hop_link_broken:{hop['name']}")
-            # The successor's member map must pin the predecessor's bytes —
-            # linkage alone could point at a file that isn't this hop.
-            member_sha = next(
-                (
-                    m.get("sha256")
-                    for m in payload.get("members") or []
-                    if isinstance(m, Mapping) and m.get("name") == prev["name"]
-                ),
-                None,
-            )
-            if member_sha != prev["sha256"]:
+            if not _predecessor_bound(payload, prev, prev_path, pattern):
                 errors.append(f"hop_member_digest_mismatch:{hop['name']}")
-        prev = hop
+        prev, prev_path = hop, path
     # The `to` endpoint must be a live chain head — proof of extension to a
     # mid-chain node is vacuous (a fork could still rewrite the suffix).
     if hops:

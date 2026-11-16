@@ -325,10 +325,12 @@ def quorum_registry_errors(registry: object) -> list[str]:
             errors.append("registry_key_malformed")
             continue
         if kid != key_id(pub):
+            # Not necessarily a string (or hashable): never use it as a key.
             errors.append(f"registry_key_id_mismatch:{kid}")
-        if kid in seen:
+        elif kid in seen:
             errors.append(f"registry_key_duplicate:{kid}")
-        seen.add(str(kid))
+        else:
+            seen.add(kid)
     return sorted(errors)
 
 

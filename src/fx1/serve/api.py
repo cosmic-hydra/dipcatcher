@@ -3086,12 +3086,12 @@ def _mount_job_routes(
                 cur = job_store.get(job_id)
                 if cur is None:
                     return  # evicted from the bounded store mid-stream
-                snap = cur.model_dump_json()
+                status, snap = cur.status, cur.model_dump_json()  # status first: mutated in place
                 if snap != last:
                     last = snap
                     yield f"event: job\ndata: {snap}\n\n"
                 now = time.monotonic()
-                if cur.status in _TERMINAL_JOB_STATUS or now >= deadline:
+                if status in _TERMINAL_JOB_STATUS or now >= deadline:
                     return
                 if now >= next_keep:
                     yield ": keepalive\n\n"

@@ -185,7 +185,7 @@ Authoring order, when authorized (from
 
 ```bash
 make stamp-epochs     # re-stamp every corpus-epoch chain + the head pin
-make sign-pins        # Ed25519-sign the pins; needs GATE_SIGNING_KEY or --key-file
+make sign-pins        # sign the pins; needs GATE_SIGNING_KEY (quorum-sign when gate_quorum.json exists)
 make anchor-pins      # RFC 3161 anchor; network, quiet points only
 make checkpoint       # sign the pin state; run last, binds the current signature
 ```
@@ -209,4 +209,8 @@ cannot re-sign and must not try:
 
 **Never commit a secret.** If a key is exposed, follow "Gate-key rotation" in
 [`OPERATIONS_RUNBOOK.md`](OPERATIONS_RUNBOOK.md); rollback of a key is
-revocation, not an edit to the signed files.
+revocation, not an edit to the signed files. If a key is **lost** — no holder
+can sign a rotation — follow "Lost keys: reset, never swap" in the same
+section: `dipcatcher key-reset` records a `key_reset.v1` file that
+`verify-rotations`, `checkpoint-chain` and `verify-repo` report. Never swap
+`gate_signing.pub` or `gate_quorum.json` by hand.

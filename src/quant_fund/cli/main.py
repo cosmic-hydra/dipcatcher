@@ -76,6 +76,7 @@ from quant_fund.cli.research_cmds import (
     expert_mixture_cmd,
     compare,
 )
+from quant_fund.cli.key_reset_cmds import key_reset_cmd
 from quant_fund.cli.book_cmds import (
     session_book_cmd,
     vendor_book_map_cmd,
@@ -228,6 +229,7 @@ __all__ = [
     "multih_fleet_cmd",
     "expert_mixture_cmd",
     "compare",
+    "key_reset_cmd",
     "session_book_cmd",
     "vendor_book_map_cmd",
     "book_panel_cmd",

@@ -31,6 +31,7 @@ class DownloaderTests(unittest.TestCase):
         self.fixture.write_bytes(PAYLOAD)
         self.calls = self.root / "java-calls"
         self.curl_calls = self.root / "curl-calls"
+        self.curl_headers = self.root / "curl-headers"
         self.bin = self.root / "bin"
         self.bin.mkdir()
         self.stub("java", 'printf "%s\\n" "$*" >> "$JAVA_CALLS"\n')
@@ -39,6 +40,10 @@ class DownloaderTests(unittest.TestCase):
             'printf "%s\\n" "$*" >> "$CURL_CALLS"\n'
             "while [[ $# -gt 0 ]]; do\n"
             '  if [[ "$1" == "-o" ]]; then out="$2"; shift; fi\n'
+            '  if [[ "$1" == -H && "$2" == @* ]]; then\n'
+            '    stat -c %a "${2#@}" >> "$CURL_HEADERS"\n'
+            '    cat "${2#@}" >> "$CURL_HEADERS"\n'
+            "  fi\n"
             "  shift\n"
             "done\n"
             'cp "$FIXTURE" "$out"\n'
@@ -51,8 +56,10 @@ class DownloaderTests(unittest.TestCase):
             FIXTURE=str(self.fixture),
             JAVA_CALLS=str(self.calls),
             CURL_CALLS=str(self.curl_calls),
+            CURL_HEADERS=str(self.curl_headers),
             TMPDIR=str(self.root),
         )
+        self.env.pop("GITHUB_TOKEN", None)
 
     def stub(self, name, body):
         path = self.bin / name
@@ -82,6 +89,28 @@ class DownloaderTests(unittest.TestCase):
         self.assertIn("Accept: application/octet-stream", request)
         self.assertIn("--proto =https --proto-redir =https", request)
         self.assertEqual(list(self.root.rglob("*.download.*")), [])
+        self.assertEqual(list(self.root.glob("tmp.*")), [])
+
+    def test_anonymous_download_sends_no_credentials(self):
+        self.assertEqual(self.run_script().returncode, 0)
+        self.assertNotIn("Authorization", self.curl_calls.read_text())
+        self.assertFalse(self.curl_headers.exists())
+
+    def test_token_authenticates_from_private_file_not_argv(self):
+        token = "ghs_fixture-token-not-real"
+        self.env["GITHUB_TOKEN"] = token
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertNotIn(token, self.curl_calls.read_text())
+        mode, header = self.curl_headers.read_text().splitlines()
+        self.assertEqual(mode, "600")
+        self.assertEqual(header, f"Authorization: Bearer {token}")
+        self.assertEqual(list(self.root.glob("tmp.*")), [])
+
+    def test_token_file_removed_when_download_fails(self):
+        self.env["GITHUB_TOKEN"] = "ghs_fixture-token-not-real"
+        self.env["CURL_STATUS"] = "22"
+        self.assert_clean_failure(self.run_script())
         self.assertEqual(list(self.root.glob("tmp.*")), [])
 
     def test_directory_override_does_not_retain_download(self):

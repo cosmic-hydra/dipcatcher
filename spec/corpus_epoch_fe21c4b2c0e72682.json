@@ -1,0 +1,78 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "e6735c69c40cbf439fe08c093e91550f02f1d738fbb009961cf3c8863646a87f",
+  "inputs_sha256": "61966577a1ca5c9a3986c46b88ead7bc4b4130128eecd7e77485750811a21417",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "a9b8c6a1360216e9ed7b665cbf63229c549fe7c9c8d3ca2888ae67d272271630",
+  "members": [
+    {
+      "name": "corpus_epoch_1014a77d52f96137.json",
+      "sha256": "e2e2fd2008a93efad31d503dd9bbfdb2d591fd2eb202ee2cf1972bb2856d207b"
+    },
+    {
+      "name": "corpus_epoch_1082ec3a7e7ac439.json",
+      "sha256": "8b2ce09f0381bf73f9d46e295def707f53a70eba22f7035b2776bf56dd39067f"
+    },
+    {
+      "name": "corpus_epoch_2b1ed034d42f34a0.json",
+      "sha256": "cc494b8e8c785c347cac3b7690c1cbb21e6c7719a1339dd9eb78210a3fc72e4d"
+    },
+    {
+      "name": "corpus_epoch_42f0275d6b2579e5.json",
+      "sha256": "79027daba81a24cd2356b489f545336d158b30817f551ae962035fd1933d1483"
+    },
+    {
+      "name": "corpus_epoch_466284e4349f451b.json",
+      "sha256": "0df70e4c6d3d53d5da5053bf229260d2c1cce04a39a0c33721ce6e7ef5f89765"
+    },
+    {
+      "name": "corpus_epoch_809f80352aba7ef0.json",
+      "sha256": "65535848873398b769b01cd494288e733c4b83135ee74879434eec7746b8cc20"
+    },
+    {
+      "name": "corpus_epoch_e800f329be176332.json",
+      "sha256": "1cffd9137165ccc89cf05128f94460a6ad2db8a9ed555fa9d84da11abb3b13b0"
+    },
+    {
+      "name": "corpus_epoch_edecb3b24a104d44.json",
+      "sha256": "4dd44af9ace96ab049819efbb040fea05d6dad70714ffd1cb050c75290c62782"
+    },
+    {
+      "name": "corpus_epoch_fe99cc0bd786653b.json",
+      "sha256": "2eae0e1b541e8937a5452194aafade92c1b99adc2b40bbe53f2782327b4d3d80"
+    },
+    {
+      "name": "tla/OrderLifecycle.cfg",
+      "sha256": "66a6f98faf7313a4b311f228266dd75077f48592a6ad1118b2ac26ddf8c6323d"
+    },
+    {
+      "name": "tla/OrderLifecycle.tla",
+      "sha256": "a578c79bd8e56242abb332b325f1b550f9da823228b5021e02c0094038ba7187"
+    },
+    {
+      "name": "tla/OrderLifecycleLiveness.cfg",
+      "sha256": "c7bb5af13ee4be33fa98441dca4ff172610f5ae01d284dd40faaf80cc074f8a4"
+    },
+    {
+      "name": "tla/README.md",
+      "sha256": "94ee0cc8b9865b2ce0768b87772abff19b738d4bd983abef18d9727c15624a2a"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_42f0275d6b2579e5.json"
+  ],
+  "members_removed": [],
+  "n_members": 13,
+  "params": {
+    "head_sha": "f16d9f223813181867088c84a42ac5030c2f2cdf",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_42f0275d6b2579e5.json",
+  "prev_epoch_sha256": "8f84f2372c8d7bef26ecaa907c87f9a71bbb50eb436d484db627ee465a6992b8",
+  "receipt_sha256": "fe21c4b2c0e72682d76fef198551d7991aaa16b9764d83798641083d85d8c4a8",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

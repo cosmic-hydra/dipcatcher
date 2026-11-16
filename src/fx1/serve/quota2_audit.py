@@ -102,6 +102,7 @@ crash-durability, or live-provider evidence. Sealed ``quota2_audit.v1``
 
 from __future__ import annotations
 
+import functools
 import json
 import os
 import tempfile
@@ -116,6 +117,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from fx1.serve.quota_audit import _SteppedClock
 from quant_fund.utils.hashing import canonical_json_bytes, hash_bytes
 from quant_fund.utils.reproducibility import git_revision
 
@@ -187,6 +189,7 @@ _RATE_WINDOW_CONST = "_RATE_WINDOW_S"
 _REAL_WINDOW_S = 60.0
 _TINY_WINDOW_S = 0.05
 _WINDOW_RECOVER_S = 0.08
+_KEY_STORE_CLASS = "ApiKeyStore"
 
 _U6 = {"prompt_tokens": 2, "completion_tokens": 4, "total_tokens": 6}
 
@@ -232,9 +235,11 @@ def _client(
     state_dir: Path | None = None,
     rate_limit_rps: float = 0.0,
     max_inflight: int = 16,
+    key_clock: Callable[[], float] | None = None,
 ) -> tuple[TestClient, ModuleType]:
     """(TestClient, api_module) — isolated env per construction; backends
-    resolve from ``backend_map[name]`` zero-arg factories."""
+    resolve from ``backend_map[name]`` zero-arg factories. ``key_clock``
+    binds the app's key store to an injected clock (``_SteppedClock``)."""
     from fastapi.testclient import TestClient
 
     import fx1.serve.api as api_mod
@@ -253,15 +258,21 @@ def _client(
             os.environ.pop(_API_KEY_ENV, None)
         else:
             os.environ[_API_KEY_ENV] = api_key
-        app = api_mod.create_app(
-            harness=Harness(runner=fake_runner),
-            backend_resolver=lambda name, *a, **k: backend_map[name](),
-            state_dir=state_dir if state_dir is not None else isolated / "state",
-            receipts_dir=receipts,
-            ft_dir=isolated / "fine_tuning",
-            rate_limit_rps=rate_limit_rps,
-            max_inflight=max_inflight,
-        )
+        real_store = getattr(api_mod, _KEY_STORE_CLASS)
+        if key_clock is not None:
+            setattr(api_mod, _KEY_STORE_CLASS, functools.partial(real_store, clock=key_clock))
+        try:
+            app = api_mod.create_app(
+                harness=Harness(runner=fake_runner),
+                backend_resolver=lambda name, *a, **k: backend_map[name](),
+                state_dir=state_dir if state_dir is not None else isolated / "state",
+                receipts_dir=receipts,
+                ft_dir=isolated / "fine_tuning",
+                rate_limit_rps=rate_limit_rps,
+                max_inflight=max_inflight,
+            )
+        finally:
+            setattr(api_mod, _KEY_STORE_CLASS, real_store)
         resources.callback(app.state.jobs_executor.shutdown, wait=True, cancel_futures=True)
         client = TestClient(app, raise_server_exceptions=False)
         resources.callback(client.close)
@@ -745,18 +756,24 @@ def _window_edge_probes() -> dict[str, Any]:
 
     # --- fixed-window anchor: a two-deep window drops whole at the
     # elapsed boundary — a sliding window would still hold the second
-    # call's slot. Window 1.2s; call1 at t≈0, call2 at t≈0.7 (full),
-    # call3 at t≈1.4 — past the anchor, inside call2's sliding expiry.
+    # call's slot. Window 1.2s; call1 at t=0, call2 at t=0.7 (full),
+    # call3 at t=1.4 — past the anchor, inside call2's sliding expiry.
+    # The key store runs on a stepped clock, so t is exact, not wall time.
+    clock = _SteppedClock()
     saved_window = float(getattr(keys_mod, _RATE_WINDOW_CONST))
     try:
         setattr(keys_mod, _RATE_WINDOW_CONST, 1.2)
-        client, _ = _client({"byok": lambda: _MeterBackend("byok-model", dict(_U6))}, api_key=_ROOT)
+        client, _ = _client(
+            {"byok": lambda: _MeterBackend("byok-model", dict(_U6))},
+            api_key=_ROOT,
+            key_clock=clock,
+        )
         w_raw, w_id = _mint(client, root_h, rpm=2)
         w_h = {_H_KEY: w_raw}
         assert _complete(client, w_h).status_code == 200
-        time.sleep(0.7)
+        clock.advance(0.7)
         assert _complete(client, w_h).status_code == 200
-        time.sleep(0.7)
+        clock.advance(0.7)
         third = _complete(client, w_h)
         # sliding would report remaining 0 (call2's slot still live);
         # the declared fixed anchor drops the whole occupancy
@@ -772,7 +789,7 @@ def _window_edge_probes() -> dict[str, Any]:
         e_h = {_H_KEY: e_raw}
         first = _complete(client, e_h)
         denied = _complete(client, e_h)
-        time.sleep(_WINDOW_RECOVER_S)
+        clock.advance(_WINDOW_RECOVER_S)
         third2 = _complete(client, e_h)
         out["window_expiry_readmits"] = (
             first.status_code == 200 and denied.status_code == 429 and third2.status_code == 200
@@ -947,7 +964,8 @@ def _persistence_probes() -> dict[str, Any]:  # NOSONAR(S3776)
 def _metering_probes() -> dict[str, Any]:
     out: dict[str, Any] = {}
     meter = _MeterBackend("byok-model", dict(_U6))
-    client, _ = _client({"byok": lambda: meter}, api_key=_ROOT)
+    clock = _SteppedClock()
+    client, _ = _client({"byok": lambda: meter}, api_key=_ROOT, key_clock=clock)
     root_h = {_H_KEY: _ROOT}
 
     # --- a rate-limit refusal bills nothing: no use, no tokens, and the
@@ -985,7 +1003,7 @@ def _metering_probes() -> dict[str, Any]:
         t_h = {_H_KEY: t_raw}
         first = _complete(client, t_h)
         denied = _complete(client, t_h)
-        time.sleep(_WINDOW_RECOVER_S)
+        clock.advance(_WINDOW_RECOVER_S)
         second = _complete(client, t_h)
         t_card = _usage_card(client, root_h, t_id)
         out["retry_sequence_bills_admitted_only"] = (

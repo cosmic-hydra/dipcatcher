@@ -47,10 +47,12 @@ src/quant_fund/cli/audit_cmds.py
 src/quant_fund/cli/book_cmds.py
 src/quant_fund/cli/data_cmds.py
 src/quant_fund/cli/forecast_cmds.py
+src/quant_fund/cli/key_reset_cmds.py
 src/quant_fund/cli/lake_cmds.py
 src/quant_fund/cli/main.py
 src/quant_fund/cli/micro_cmds.py
 src/quant_fund/cli/ops_cmds.py
+src/quant_fund/cli/receipt_pin_args.py
 src/quant_fund/cli/report_cmds.py
 src/quant_fund/cli/research_cmds.py
 src/quant_fund/cli/support.py
@@ -767,6 +769,7 @@ src/quant_fund/research/forward_evidence.py
 src/quant_fund/research/forward_shadow.py
 src/quant_fund/research/garch_benchmark.py
 src/quant_fund/research/identity_sweep.py
+src/quant_fund/research/live_optional_pool.py
 src/quant_fund/research/mean_eprocess.py
 src/quant_fund/research/net_replay.py
 src/quant_fund/research/net_tournament.py

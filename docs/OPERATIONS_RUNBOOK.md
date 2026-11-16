@@ -37,6 +37,10 @@ packages, point-in-time status, and the versioned 23-family benchmark catalog.
 Synthetic output is diagnostic evidence only; it is not a live-performance
 claim.
 
+`--jobs N` runs the seeded live-optional benches over N worker processes (the
+CI smoke passes `--jobs "$(nproc)"`). Each bench is reseeded from the run seed,
+so N changes the wall clock, not the families or the scorecard.
+
 ### Research lanes with their own command
 
 Every documented research command is reachable from `dipcatcher`.
@@ -223,6 +227,55 @@ integrity pins and the checkpoint. Authorized rotation, in order:
    genesis, live key is the chain terminus.
 5. `make checkpoint-chain` — the full spine must still walk cleanly.
 
+**Lost keys: reset, never swap.** A rotation needs the outgoing key. If no
+one can sign with it any more (never escrowed, destroyed, generated in an
+environment that is gone), record a key reset instead — a `key_reset.v1`
+file that `verify-rotations`, `checkpoint-chain` and `verify-repo` report
+and both bundle verifiers re-check. The Lead authorizes it; do it in one PR:
+
+1. Generate the new Ed25519 gate key (and, if the witness key is lost too, a
+   new ECDSA P-256 witness key) on a machine you control. Store the private
+   keys in a password manager or HSM; never commit them or paste them into
+   CI logs. Key files for `--key-file` are `<priv_hex>:<pub_hex>`.
+2. `dipcatcher key-reset --key-file <new gate key> [--key-file <more> --threshold M]
+   [--witness-pub <new witness pub.pem>] --reason "<why the keys are lost>"
+   --authorized-by "<who>"` — binds the current `quality/checkpoint.json` as
+   the boundary, writes `quality/key_reset_<id>.json` (signed by the new
+   registry at its threshold, including the new gate key; the new witness
+   key signs nothing until step 6), and installs `gate_signing.pub`,
+   `gate_quorum.json` and, with `--witness-pub`, `witness_signing.pub`. It
+   refuses a key the lost set already contains, including the installed
+   witness key. Without `--witness-pub` the witness key is not declared lost
+   and stays installed.
+3. `dipcatcher crown-jewels --write`, then `make stamp-epochs`; commit, then
+   regenerate the receipt-derived artifacts and re-stamp `web/` and `docs/`
+   ("Checkpoint spine", step 1).
+4. `dipcatcher quorum-sign --key-file <new gate key>` — re-sign the pins
+   under the new registry.
+5. `dipcatcher checkpoint --key-file <new gate key>` — the first new-era
+   checkpoint; it links directly to the boundary.
+6. `dipcatcher witness-checkpoint --key-file <new witness key.pem>` — Rekor
+   witness under the new witness key (network).
+7. Verify: `make verify-rotations` (verdict `reset`), `make checkpoint-chain`
+   (`n_resets`, a `key_reset:` note), `make verify-witness`,
+   `make tamper-drill`, `make evidence-audit`.
+8. In the PR, state why the keys are lost and who authorized the reset; a
+   reviewer checks the record's reason, boundary digest and new pubkeys.
+
+Run steps 2–6 in one go and commit only after step 7. In between, the tree is
+mid-ceremony: with `--witness-pub`, `verify-witness` re-checks the boundary
+checkpoint's Rekor proof (signed by the lost witness key) under the new key
+and reports `witness_signature_invalid` until step 5 replaces the head.
+
+The reset cannot rewrite history: checkpoints up to the boundary keep
+verifying under the old keys, and any later checkpoint signed by a lost gate
+key is rejected. Rekor entries made with a lost witness key are not watched
+(`witness-scan` sweeps only the installed key). It also cannot prove who
+authorized it — a lost key cannot sign its own retirement — so protect
+`quality/key_reset_*`, `gate_signing.pub`, `gate_quorum.json` and
+`witness_signing.pub` with CODEOWNERS and branch protection (see
+[EVIDENCE_INTEGRITY.md](EVIDENCE_INTEGRITY.md) "Key reset").
+
 Regenerating keys, pins, or signatures without the Lead and
 `GATE_SIGNING_KEY` is forbidden; signed state (`quality/checkpoint.json`,
 `gate_pins.sig`, `*.sig`, pin and anchor files) is immutable to ordinary
@@ -277,16 +330,38 @@ The integrity chain is append-only and ordered. Authoring sequence after
 touching any covered directory:
 
 1. `make stamp-epochs` — re-stamp every corpus-epoch chain + the head pin
-   (`quality/epoch_heads.json`).
-2. `make sign-pins` — Ed25519-sign the pins (needs `GATE_SIGNING_KEY` or
-   `--key-file`).
+   (`quality/epoch_heads.json`). Each run adds a `receipts/corpus_epoch_*.json`,
+   and three generated artifacts must list every receipt: the web explorer
+   index (`web/src/lib/fixtures.test.ts`, `tests/unit/web_explorer`), the
+   evidence page `docs/evidence/index.md`
+   (`tests/regression/test_receipt_evidence_page.py`; the evidence audit's
+   `evidence_index_stale`) and `docs/research/findings.md`
+   (`tests/unit/research/test_research_findings.py`). The web exporter reads
+   committed files only, so commit the stamps, then run
+   `uv run python web/scripts/export_fixtures.py`, `make evidence` and
+   `uv run python scripts/research_findings.py`, and re-stamp `web/` and
+   `docs/` alone: `uv run dipcatcher corpus-epoch --corpus-dir web --glob '*'
+   --out-dir web --heads-pin quality/epoch_heads.json`, then the same with
+   `docs`. Another `make stamp-epochs` would add a new receipts epoch and stale
+   all three again.
+2. `make sign-pins` — Ed25519-sign the pins. Set `GATE_SIGNING_KEY` to the
+   gate key file (or `<priv_hex>:<pub_hex>`). With `quality/gate_quorum.json`
+   installed it runs `dipcatcher quorum-sign --key-file "$GATE_SIGNING_KEY"`
+   (or uses `GATE_QUORUM_KEYS`) and fails if neither is set; it never
+   generates a key or rewrites `gate_signing.pub`. Without a registry it runs
+   `dipcatcher sign-pins`.
 3. `make anchor-pins` — RFC 3161-anchor both pin files (network; quiet
    points).
 4. `make checkpoint` — sign the pin state into `quality/checkpoint.json`
-   (needs `GATE_SIGNING_KEY`). Run **last**: it binds the current signature.
-5. Optional: `make anchor-checkpoint` (RFC 3161 anchor of the checkpoint),
-   `make witness-checkpoint` (public Rekor witness; needs
-   `WITNESS_SIGNING_KEY`), verified offline by `make verify-witness`.
+   (needs `GATE_SIGNING_KEY`). Run it after the pins are signed: it binds the
+   current signature. `make anchor-checkpoint` does the same and also
+   RFC 3161-anchors the new checkpoint (network); run one or the other.
+5. `make witness-checkpoint` — witness the new checkpoint in the public Rekor
+   log (network; needs `WITNESS_SIGNING_KEY`), verified offline by
+   `make verify-witness`. Not optional: once any head has been witnessed,
+   `checkpoint-chain` fails `head_unwitnessed` until the new head is. Run it
+   once per checkpoint; a second proof for the same head fails
+   `witness_proof_unpinned`.
 
 Verification sequence — any failure is an integrity alarm, not a formatting
 problem:

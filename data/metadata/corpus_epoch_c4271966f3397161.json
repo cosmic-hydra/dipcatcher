@@ -1,0 +1,162 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "3a33eb461e88d9a2d729a39d00853f01a2ece6e61f0f1f1b2913ceee7a357b9b",
+  "inputs_sha256": "e15b4dbb78f1dffc2d683ed2a68b040cf3d4f825151fed914aafdf4aabef9204",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "5c2e9ab9f8f05b9096a2fae02e90e82ff704da7880e36a50f5aa2e626d078cfb",
+  "members": [
+    {
+      "name": ".gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "corpus_epoch_07c03e6124f7fc6c.json",
+      "sha256": "d5cb5f2f983c15d0144b8eaca4a9d047af548659ced4180b36d47d83c3d2716c"
+    },
+    {
+      "name": "corpus_epoch_3ea16584db64f1b1.json",
+      "sha256": "c363199f76a98052919cb640dafb6b945ccf9d579e7b0e08cadc76b65da5073b"
+    },
+    {
+      "name": "corpus_epoch_3fde0cd30d53bd9f.json",
+      "sha256": "56ac700ee32d3f65880491d95b266c17ad3b509d22b006010c0f1af8f63026dc"
+    },
+    {
+      "name": "corpus_epoch_622e44359e93a6d4.json",
+      "sha256": "54747015bc367c40b9e6876ca54d3f53041dba0a85f56177c32501b1a394db40"
+    },
+    {
+      "name": "corpus_epoch_768ae9d6b32ab689.json",
+      "sha256": "9cfbd3178010548c27697a148c011157a5c484891230da072c0c3262050136d4"
+    },
+    {
+      "name": "corpus_epoch_778a445c8ff3fe9f.json",
+      "sha256": "db0eb94abee09db599d597921ba63c995675597be4204cec10a81db623b21e74"
+    },
+    {
+      "name": "corpus_epoch_f536cc16b176edc0.json",
+      "sha256": "d6bba03ff663aa00055680e78baa7b31d5df8b8970c6fff9e4a443256f8190b0"
+    },
+    {
+      "name": "corpus_epoch_fc200621205c1b15.json",
+      "sha256": "cf8b848e7055f11b6282a38ac1d69b7036a893b149a2ca799af7bb3c3794ad4f"
+    },
+    {
+      "name": "cost_aware_tournament/us_wide_20260925/manifest.json",
+      "sha256": "ea26eaf805da7963eea40d81ffb69078199d3695bed6669b281a38947160a763"
+    },
+    {
+      "name": "cost_aware_tournament/us_wide_20260925/validation.attempt.json",
+      "sha256": "1fe173b736824f8372d5e94c7c09cb7f8d30c71b4020796db3802babfca3efa5"
+    },
+    {
+      "name": "cost_aware_tournament/us_wide_20260925/validation.json.gz",
+      "sha256": "67c1a4738e479fb3c54a95d422e1e32e9a276c7dc63d1c876f554e0fc50f4273"
+    },
+    {
+      "name": "net_tournament/us_wide_20260925/manifest.json",
+      "sha256": "a4a8f384c14b4a7805fbab5f52158a11a38aa78d87368a65c933acd061054eaf"
+    },
+    {
+      "name": "net_tournament/us_wide_20260925/test.attempt.json",
+      "sha256": "1f87f6ca24f8787a812ab6f757ec1d6f5e2f96c805433b9c9def538bdbda9c9c"
+    },
+    {
+      "name": "net_tournament/us_wide_20260925/test.json.gz",
+      "sha256": "61f2a1cd147f5d418e190c685e2b7845e09e8a44746e64a3726797bea48b3efe"
+    },
+    {
+      "name": "net_tournament/us_wide_20260925/validation.attempt.json",
+      "sha256": "d4ffa0198f2bab8da516a96bb4829726d1e3ef900b015cd5a010117b28f98ff2"
+    },
+    {
+      "name": "net_tournament/us_wide_20260925/validation.json.gz",
+      "sha256": "abf8037e85987750fcc6cff42b53137464612e0409e97642e64a43ec961ece36"
+    },
+    {
+      "name": "real_benchmark/us_wide_20260925/manifest.json",
+      "sha256": "b4b4ec2f1f41eec36862747f64697a175f30858d05f7753fcc6f766e98b979f8"
+    },
+    {
+      "name": "real_benchmark/us_wide_20260925/test.json",
+      "sha256": "2a9a4d5bf16a78ae396eaaa5f8cf89b03db45c8286795f4a1adc902b5d0e75f5"
+    },
+    {
+      "name": "real_benchmark/us_wide_20260925/validation.json",
+      "sha256": "73f2c74d1f7f62caa76f0ca2760badfa80bb5844d4d0069afb71ddbd8185f86e"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/MANIFEST.json",
+      "sha256": "0955bcf4d32c1550c09f0a1c174c0e8e2fe6016257c7f13b860c019cdcba9e6e"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/bandit_report.json",
+      "sha256": "809cd6121547aa0fe7ba43a02bee5b7d032cf7677b4e186f697e3afad325118c"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/bandit_strict.txt",
+      "sha256": "87a0d55d41533af09c000df7e63d6fa0aa38f2a585fda3748f2d824c1713a822"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/deptry_src.txt",
+      "sha256": "ff6a683d5c49cc51f281f71b0d33bdd6b3b3f6a98cc32e827d42489cdb26b6a9"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/environment.txt",
+      "sha256": "51db324590116cdb29cde79a5e84e163b558ad5205ca99de5982ca5bd9413649"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/export_all.txt",
+      "sha256": "9fbf64df6666d2cfa7f4c6e7ffb8da02d4f0a55c16c8fc6519c46d851518730b"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/gitleaks_report.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/licenses_all.json",
+      "sha256": "a6fd604a5b417cae275fab6b11a080394bc8d3081e7c647ea1022caa4efd5121"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/pip_audit.json",
+      "sha256": "049e4778f823e4f6e95ea20dc9426dde053a1920d865b5912e5509c74ec29ba6"
+    },
+    {
+      "name": "reports/deps_hygiene_20260928/uv_audit.json",
+      "sha256": "737891e2dfea09ce5a31b82b8a023663d03d6f2de336f16f2d8e492275e04e21"
+    },
+    {
+      "name": "research/PHASE1_CODE_RESEAL.md",
+      "sha256": "80c9fb43c5c3090c517d13ec791ae325a133c6d932253c3f3392d6225817b54c"
+    },
+    {
+      "name": "research/PHASE1_PROVENANCE_CORRECTION.md",
+      "sha256": "38011bedb4d6bca772da35a03378aaf3b8897a8bfc2859316c6266bdcf779560"
+    },
+    {
+      "name": "research/phase1_20260925.md",
+      "sha256": "50ca01e0f2801e1ad84293a6b65c7e7dbe1c41fbcbbae78d9d427b80b85c041d"
+    },
+    {
+      "name": "research/phase1_evidence_index.json",
+      "sha256": "3e8d28e2ad08137d5e0ea7b8703600d710cdda37ebe83e384afc50fbc94d1f7a"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_f536cc16b176edc0.json"
+  ],
+  "members_removed": [],
+  "n_members": 34,
+  "params": {
+    "head_sha": "1df495b0872a2bf1afa726ad825f260a52a87937",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_f536cc16b176edc0.json",
+  "prev_epoch_sha256": "c16cfbe229198bd3bf4f3efe09bd176bad236e6f474715a146685838268a9ff0",
+  "receipt_sha256": "c4271966f339716157cffd6f7b6421283e51a9f3855205b63095cbdc4911dd2b",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}

@@ -52,6 +52,7 @@ from quant_fund.research.benches_w17 import (
     bench_adaptive_eps,
     bench_conformal_oce,
     bench_diffusion_forecaster,
+    bench_extra_conformal,
     bench_greek_neutral,
 )
 from quant_fund.research.catalog import (
@@ -84,6 +85,7 @@ _FAMILIES = (
 _NUMPY_BLOBS = (
     "conformal_oce",
     "adaptive_eps",
+    "extra_conformal",
 )
 
 
@@ -95,6 +97,11 @@ def conformal_oce() -> dict[str, float]:
 @pytest.fixture(scope="module")
 def adaptive_eps() -> dict[str, float]:
     return bench_adaptive_eps()
+
+
+@pytest.fixture(scope="module")
+def extra_conformal() -> dict[str, float]:
+    return bench_extra_conformal()
 
 
 @pytest.fixture(scope="module")
@@ -236,11 +243,13 @@ def test_diffusion_forecaster_crps_gain_and_calibration(
 def test_numpy_benches_are_deterministic(
     conformal_oce: dict[str, float],
     adaptive_eps: dict[str, float],
+    extra_conformal: dict[str, float],
 ) -> None:
     # Seeded from module constants, so a fresh call must reproduce each fixture
     # bit-for-bit.
     assert bench_conformal_oce() == conformal_oce
     assert bench_adaptive_eps() == adaptive_eps
+    assert bench_extra_conformal() == extra_conformal
 
 
 @requires_torch
@@ -255,3 +264,32 @@ def test_diffusion_forecaster_is_deterministic(diffusion_forecaster: dict[str, f
     # The DiffPTS / NGBoost / TORF fits and every MC sampling pass are seeded,
     # so a fresh shrunk run reproduces the fixture bit-for-bit.
     assert bench_diffusion_forecaster() == diffusion_forecaster
+
+
+def test_extra_conformal_reads_the_synthetic_keys(extra_conformal: dict[str, float]) -> None:
+    # The 2026-10-07 synthetic_* bench-key sweep renamed the model bench keys;
+    # this adapter kept reading the bare ones, so a KeyError fell into the
+    # broad except and the family shipped as {} (executed=False) until the
+    # research oracle test caught it. Pin every re-keyed field.
+    assert set(extra_conformal) == {
+        "xc_coverage",
+        "xc_mean_width",
+        "xc_unweighted_coverage",
+        "xc_coverage_error",
+        "xc_unweighted_coverage_error",
+        "xc_ess_fraction",
+        "xc_alpha",
+        "xc_n_cal",
+        "xc_harm_coverage",
+        "xc_harm_unweighted_coverage",
+        "xc_harm_coverage_gap",
+        "xc_harm_ess_fraction",
+    }
+
+
+def test_extra_conformal_weighting_beats_unweighted(extra_conformal: dict[str, float]) -> None:
+    # Planted covariate shift: the tilt-weighted quantile tracks nominal
+    # coverage more closely than the unweighted split-conformal baseline.
+    assert extra_conformal["xc_coverage_error"] < extra_conformal["xc_unweighted_coverage_error"]
+    assert 0.0 < extra_conformal["xc_ess_fraction"] <= 1.0
+    assert 0.0 < extra_conformal["xc_harm_ess_fraction"] <= 1.0

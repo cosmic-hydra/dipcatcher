@@ -414,6 +414,63 @@ def measurement_receipt_contract_errors(payload: Mapping[str, Any]) -> list[str]
     return errors
 
 
+def _audit_claim_errors(payload: Mapping[str, Any]) -> list[str]:
+    """Bound ``claim.ok`` for probe-style audit receipts.
+
+    When ``claim.results`` is a flat map of boolean probe outcomes, ``ok``
+    must be a literal bool and ``ok: true`` requires every probe True: a
+    forged ``ok: true`` over a failing probe is caught without re-running
+    the audit. ``ok: false`` over all-True probes is allowed, because
+    producers also fail ``ok`` on conditions the map cannot show — a probe
+    count short of the audit's expected total (``quota2_audit``,
+    ``retrieval_audit``, ``vs_audit``) — and a receipt that declares its own
+    defect over-claims nothing. Other claim shapes are left to their lane
+    contracts.
+    """
+    claim = payload.get("claim")
+    if not isinstance(claim, Mapping) or "ok" not in claim:
+        return []
+    results = claim.get("results")
+    if not isinstance(results, Mapping) or not results:
+        return []
+    if not all(isinstance(v, bool) for v in results.values()):
+        return []
+    ok = claim.get("ok")
+    if not isinstance(ok, bool) or (ok and not all(results.values())):
+        return ["claim_ok_not_conjunction_of_results"]
+    return []
+
+
+def envelope_receipt_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """Shared-envelope contract for lanes that have no lane contract yet.
+
+    The measurement envelope (honesty markers, data label, revision, seal,
+    no headline metric key), plus ``live_pnl_claim`` pinned ``False`` when
+    present and ``claim.ok`` re-derived from boolean probe results. This
+    bounds what a forged body can claim; it does not re-derive each lane's
+    own numbers.
+    """
+    errors = measurement_receipt_contract_errors(payload)
+    if "live_pnl_claim" in payload and payload.get("live_pnl_claim") is not False:
+        errors.append("live_pnl_claim_not_false")
+    errors.extend(_audit_claim_errors(payload))
+    return errors
+
+
+def vine_panel_receipt_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """Envelope plus the lane's own ``vine_panel.v1`` re-derivation."""
+    from quant_fund.research.vine_panel import vine_panel_contract_errors
+
+    return envelope_receipt_contract_errors(payload) + vine_panel_contract_errors(payload)
+
+
+def vine_dominance_receipt_contract_errors(payload: Mapping[str, Any]) -> list[str]:
+    """Envelope plus the lane's own ``vine_dominance.v1`` re-derivation."""
+    from quant_fund.research.vine_dominance import vine_dominance_contract_errors
+
+    return envelope_receipt_contract_errors(payload) + vine_dominance_contract_errors(payload)
+
+
 def joint_tune_v2_contract_errors(payload: Mapping[str, Any]) -> list[str]:
     """Check the frozen v2 numerical/provenance contract; v1 is unchanged."""
     from quant_fund.microstructure.joint_tune_contract import contract_errors
@@ -763,6 +820,141 @@ _MEASUREMENT_SCHEMAS = (
 )
 
 
+#: Receipt schemas committed from 2026-09-30 onward without a lane contract
+#: (the schema-coverage pin in tests/unit/research/test_script_receipts.py
+#: has failed since). They are held to the shared envelope — see
+#: ``envelope_receipt_contract_errors`` — so none verifies on its seal
+#: alone. That is weaker than re-deriving each lane's claims: lane-specific
+#: contracts are still owed, and a schema should move out of this tuple
+#: when its contract lands.
+_ENVELOPE_SCHEMAS = (
+    "alert_budget.v1",
+    "anthropic_sdk_audit.v1",
+    "api_audit.v1",
+    "api_fuzz.v1",
+    "asof_audit.v1",
+    "attestation_audit.v1",
+    "attribution.v1",
+    "auth_audit.v1",
+    "backend_parity.v1",
+    "bank_audit.v1",
+    "boundary_audit.v1",
+    "byok_audit.v1",
+    "cache_audit.v1",
+    "cancel_gradient.v1",
+    "cancel_lead.v1",
+    "cap_audit.v1",
+    "capability_audit.v1",
+    "causality_scan.v1",
+    "cli_audit.v1",
+    "client_audit.v1",
+    "contamination_audit.v1",
+    "contract_probe.v1",
+    "corpus_audit.v1",
+    "decay_watch.v1",
+    "dip_audit.v1",
+    "dip_run_audit.v1",
+    "disclosure_audit.v1",
+    "dispatch_audit.v1",
+    "diversity.v1",
+    "doctor_audit.v1",
+    "drain_audit.v1",
+    "ds_audit.v1",
+    "duration_check.v1",
+    "e2e_audit.v1",
+    "em_audit.v1",
+    "engine_fuzz.v1",
+    "error_shape.v1",
+    "eval_core_audit.v1",
+    "eval_lifecycle_audit.v1",
+    "ext_bench_audit.v1",
+    "fault_audit.v1",
+    "fifo_priority.v1",
+    "forecast_core_audit.v1",
+    "forecast_data_audit.v1",
+    "forecast_infra_audit.v1",
+    "fx1_contract_audit.v1",
+    "fx1_tail_audit.v1",
+    "grad_fidelity.v1",
+    "harness_audit.v1",
+    "hmm_stability.v1",
+    "hmm_verify.v1",
+    "honesty_audit.v1",
+    "hypotheses_audit.v1",
+    "imbalance_predict.v1",
+    "inherit_audit.v1",
+    "initiative_fade.v1",
+    "intraday_exec.v1",
+    "jobs_audit.v1",
+    "journal_audit.v1",
+    "kill_audit.v1",
+    "label_horizon_map.v1",
+    "label_stability.v1",
+    "ledger_audit.v1",
+    "lineage_dag.v1",
+    "lob_invariants.v1",
+    "map_parity.v1",
+    "masking_audit.v1",
+    "meta_model.v1",
+    "middleware_audit.v1",
+    "modelcard_audit.v1",
+    "mrm_audit.v1",
+    "native_conformance.v1",
+    "oai_sdk_audit.v1",
+    "ops_audit.v1",
+    "options_audit.v1",
+    "parity_audit.v1",
+    "parity_leak_audit.v1",
+    "perf_audit.v1",
+    "pipeline_audit.v1",
+    "pipeline_flat_audit.v1",
+    "promotion_gate.v1",
+    "quality_audit.v1",
+    "queue_class.v1",
+    "queue_fate.v1",
+    "queue_jump.v1",
+    "queue_occupancy.v1",
+    "quota2_audit.v1",
+    "receipts_audit.v1",
+    "replay_audit.v1",
+    "report_audit.v1",
+    "retrieval_audit.v1",
+    "reward_audit.v1",
+    "rt_audit.v1",
+    "rubric_audit.v1",
+    "run_audit.v1",
+    "sbom_audit.v1",
+    "schema_drift.v1",
+    "schema_fingerprint.v1",
+    "sdk_audit.v1",
+    "seed_audit.v1",
+    "seed_sweep_demo.v1",
+    "serve_audit.v1",
+    "side_imbalance.v1",
+    "sim_sensitivity.v1",
+    "sources_audit.v1",
+    "spec_audit.v1",
+    "stack_invariance.v1",
+    "stack_watch.v1",
+    "sweep_bound.v1",
+    "sweep_width.v1",
+    "tail_quota.v1",
+    "tape_surgery.v1",
+    "timepart_audit.v1",
+    "trade_decomp.v1",
+    "train_infra_audit.v1",
+    "train_receipt_audit.v1",
+    "trust_step.v1",
+    "ts_reasoning_audit.v1",
+    "usage_audit.v1",
+    "validator_fuzz.v1",
+    "vine_audit.v1",
+    "vs_audit.v1",
+    "warmup_spec.v1",
+    "webhook_audit.v1",
+)
+
+
 SCRIPT_RECEIPT_CONTRACTS: dict[str, Any] = {
     "adaptive_mix_band_search.v1": band_search_contract_errors,
     "adaptive_mix_replay.v1": adaptive_mix_replay_contract_errors,
@@ -776,6 +968,9 @@ SCRIPT_RECEIPT_CONTRACTS: dict[str, Any] = {
     "queue_priority.v1": queue_priority_contract_errors,
     "calibration_audit.drill.v1": calibration_audit_drill_contract_errors,
     **{s: measurement_receipt_contract_errors for s in _MEASUREMENT_SCHEMAS},
+    "vine_dominance.v1": vine_dominance_receipt_contract_errors,
+    "vine_panel.v1": vine_panel_receipt_contract_errors,
+    **{s: envelope_receipt_contract_errors for s in _ENVELOPE_SCHEMAS},
 }
 
 

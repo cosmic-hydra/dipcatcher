@@ -58,6 +58,7 @@ def test_build_bundle_contains_all_members(tmp_path: Path) -> None:
                 "quality/witness/",
                 "quality/rotation_",
                 "quality/quorum_rotations/",
+                "quality/key_reset_",
             )
         )
     }
@@ -312,6 +313,64 @@ def test_bundle_rejects_unexpected_member(tmp_path: Path) -> None:
     res = verify_bundle(bad, rekor_url=None)
     assert not res["ok"]
     assert any("unexpected_member" in e for e in res["errors"])
+
+
+@requires_tree
+def test_bundle_stripped_of_its_history_fails_both_implementations(tmp_path: Path) -> None:
+    """Dropping every archive and witness proof must not downgrade the
+    bundle to the pre-spine path: the head signs the extent it had."""
+    import subprocess
+    import sys
+
+    bundle = _build(tmp_path)
+    body = json.loads(bundle.read_text())
+    history = ("quality/checkpoints/", "quality/witness/")
+    for rel in [r for r in body["files"] if r.startswith(history)]:
+        body["files"].pop(rel)
+        body["files_sha256"].pop(rel)
+    bad = tmp_path / "stripped.json"
+    bad.write_text(json.dumps(body))
+
+    from quant_fund.research.auditor_bundle import verify_bundle
+
+    res = verify_bundle(bad, rekor_url=None)
+    assert not res["ok"]
+    assert any(e.startswith("spine:spine_archive_count:") for e in res["errors"]), res["errors"]
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(REPO_ROOT / "scripts/verify_auditor_bundle.py"),
+            str(bad),
+            "--offline",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert proc.returncode == 1, proc.stdout
+    assert "spine_archive_count:" in proc.stdout
+
+
+@pytest.mark.parametrize(
+    ("payload", "claims"),
+    [
+        ({"spine": {"n_archives": 3, "tip": "x.json"}}, True),
+        ({"witness": {"proofs": {"checkpoint.json_1.json": "0" * 64}}}, True),
+        ({"spine": {"n_archives": 0, "tip": None}, "witness": {"proofs": {}}}, False),
+        ({}, False),
+        (None, False),
+        ([1], False),
+    ],
+)
+def test_claims_history_reads_the_signed_extent(payload: object, claims: bool) -> None:
+    from scripts.verify_auditor_bundle import _claims_history as standalone
+
+    from quant_fund.research.auditor_bundle import _claims_history as library
+
+    raw = json.dumps({"payload": payload}).encode()
+    assert library(raw) is claims
+    assert standalone(raw) is claims
+    assert library(b"not json") is standalone(b"[]") is False
 
 
 # --- Quorum-era drills against the standalone verifier's internals ---------

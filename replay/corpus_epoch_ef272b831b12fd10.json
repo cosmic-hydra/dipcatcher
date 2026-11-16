@@ -1,0 +1,126 @@
+{
+  "data_label": "CORPUS",
+  "epoch_root_sha256": "fdbe6458c5cc9e5c54648f1b8168efba68a0260de9baf1a592212081ba211a3e",
+  "inputs_sha256": "2abaa407abb8d13afcb0ddedbef944e0b91b8dfc3b5fd4a0261a1c71a7e6bbd6",
+  "kind": "corpus_epoch.v1",
+  "live_pnl_claim": false,
+  "member_tree_root": "9e5b57f4bc075506c2f74a9e402fe533cc8abbcd12562fc686ef415061e466cb",
+  "members": [
+    {
+      "name": ".gitignore",
+      "sha256": "463b5f9362420aaa6bbf70c200b7cef361af47f34e60e6767851406f3091a39a"
+    },
+    {
+      "name": "corpus_epoch_07371e8c38e24427.json",
+      "sha256": "62449b099623c5522b7b4d1eb7c21dae52df434757feceae7fa0c40b92f2ba96"
+    },
+    {
+      "name": "corpus_epoch_41e45c2e48b01f47.json",
+      "sha256": "2d0d80b40f5317fbcddd5217e71d4dfc175f7d5c8044e4448be7228ad531dffa"
+    },
+    {
+      "name": "corpus_epoch_500c16bb96ba4e69.json",
+      "sha256": "54cb3be8344579ab07202226a118ee19c805c0c9aeac701bc456714c209fdf50"
+    },
+    {
+      "name": "corpus_epoch_637f496a89b01ed5.json",
+      "sha256": "e4c061635fe98d6082c23010af7ebfffea90d915b292d8c67faa32613cbddf94"
+    },
+    {
+      "name": "corpus_epoch_7b494e2b946a1b31.json",
+      "sha256": "90a414519154c7e2307cd61fdc662097217fd649ac211911a36e69276a2a5920"
+    },
+    {
+      "name": "index.html",
+      "sha256": "dea2c4c423dc6bd0b5023175a5ff61787a8640a07ea3b56fb5e688c59910fff0"
+    },
+    {
+      "name": "package-lock.json",
+      "sha256": "ce288917dab17742f6dc608f4e724f7eace426b6f6e2b07390391a51cc15202e"
+    },
+    {
+      "name": "package.json",
+      "sha256": "d21e25f36c543044d3287a6b70257b9053072e2fe253766c849863dedd89f5f2"
+    },
+    {
+      "name": "playwright.config.ts",
+      "sha256": "046e6f290cdb5bb3b1efbd617646a6ff98a963faf0394c64c797e3159acfc2c0"
+    },
+    {
+      "name": "public/fixtures/session.synthetic.json",
+      "sha256": "191e369d8a836963b25dcc2ed6aa5f040b3a4c2a93f727b4fa781b25fe80a03d"
+    },
+    {
+      "name": "scripts/gen_fixture.py",
+      "sha256": "7996abaf055de72c0bdc39f7f091c131a4356b9825d137b37d185fd523b07a87"
+    },
+    {
+      "name": "scripts/serve.mjs",
+      "sha256": "352d305781a4bef3fc5e9695b8710ea70a37ba68cd11207d0e0376c8e92e6eab"
+    },
+    {
+      "name": "src/bench.ts",
+      "sha256": "d5c8823ecb7b8be38d83dbd53dd64bb9042318acfdcbc8f20c62761fe38b7239"
+    },
+    {
+      "name": "src/chart.ts",
+      "sha256": "212684dc59b60f5837aff5191fd20985728eb60122734c1a4e18299a262b7230"
+    },
+    {
+      "name": "src/depth.ts",
+      "sha256": "0c64ff27695a1e004c56765029c8039018fc33260633993f58bda5b60dc5b80b"
+    },
+    {
+      "name": "src/main.ts",
+      "sha256": "bfe3ea8afb0e92c74445f3b9f2063f965ed92f56818a18a0d96ee70f6e12ed9d"
+    },
+    {
+      "name": "src/session.ts",
+      "sha256": "55d4d3f21c93a4322bd6d0e4dd3e7fb3b107e248d9aca5d06b00711c92e0d51f"
+    },
+    {
+      "name": "src/synth.ts",
+      "sha256": "eaadd2f27db57c0c86dd85a6e57d27e3d716ed55d1caf00a121dddd3c654ccf0"
+    },
+    {
+      "name": "src/tape.ts",
+      "sha256": "bee29977117222ca4776b3e263ec6a3cfe61f5885f149849ab1909041611cde9"
+    },
+    {
+      "name": "src/timeline.ts",
+      "sha256": "f7fd8d181747fff95cee2ced589295090535fda3bbe20378494e853e85e09405"
+    },
+    {
+      "name": "src/types.ts",
+      "sha256": "e4262ffc06bd35b199aa03ba114891c466fdfb4e6a47a2670d29d0de53b3b5cf"
+    },
+    {
+      "name": "src/view.ts",
+      "sha256": "43a0c673db8a0c7ebb9923505a7fe085725b03b6bc638361a0d4a469ed6891a8"
+    },
+    {
+      "name": "tests/viewer.spec.ts",
+      "sha256": "58841f539cf3e7fe587a67bf919e25ef9e147a39d3f6d4274f4705dda8e0fd9b"
+    },
+    {
+      "name": "tsconfig.json",
+      "sha256": "b846b1fd129f36a0c6697eacb4ef5b865c34ddb01ab8c9d9af187d3d0b1f54d0"
+    }
+  ],
+  "members_added": [
+    "corpus_epoch_07371e8c38e24427.json"
+  ],
+  "members_removed": [],
+  "n_members": 25,
+  "params": {
+    "head_sha": "ecf3e196075d87cea032baa1d8aeb6eae24ec817",
+    "pattern": "*"
+  },
+  "prev_epoch_receipt": "corpus_epoch_07371e8c38e24427.json",
+  "prev_epoch_sha256": "92615a104ae9a998d7c866b76d03e340375e487b8bf5f3cb25673636585b2326",
+  "receipt_sha256": "ef272b831b12fd1058b374317677ddefb3bd00e5450279733a9dcd873796011f",
+  "research_only": true,
+  "schema": "corpus_epoch.v1",
+  "simulated_only": false,
+  "verdict": "advancing"
+}
